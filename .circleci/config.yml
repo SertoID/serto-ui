@@ -1,0 +1,180 @@
+version: 2.1
+orbs:
+  node: circleci/node@2.0.2
+  aws-ecr: circleci/aws-ecr@6.8.2
+  # aws-eks: circleci/aws-eks@0.2.7
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.13.0
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install modules
+          command: yarn --frozen-lockfile install
+      - save_cache:
+          name: Save yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - run:
+          name: Building services
+          command: yarn build
+          no_output_timeout: 30m
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build
+            - src
+            - public
+            - devops
+            - .git
+            - node_modules
+            - codecov.yml
+            - yarn.lock
+            - package.json
+            - jest.json
+            - tsconfig.json
+
+  test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ./
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Running tests
+          command: echo "No test yet"
+      - save_cache:
+          name: Save yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - coverage
+
+  lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ./
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Running lint
+          # command: yarn lint
+          command: echo "No linting yet"
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+
+  codecov:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ./
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Running code coverage
+          command: echo "No codecov yet"
+
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+
+  push-image:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Prepare directory
+          command: |
+            ls .
+            cp -r ./Dockerfile .
+            TAG=`echo $CIRCLE_BRANCH | sed 's/\\//_/g'`
+            echo "TAG is $TAG"
+            echo "export TAG=$TAG" >> $BASH_ENV
+      # These envvars are set in CircleCI
+      - aws-ecr/build-and-push-image:
+          setup-remote-docker: true
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: AWS_REGION
+          create-repo: true
+          checkout: false
+          repo: vcexplorerdemo
+          tag: "$TAG,$TAG-$CIRCLE_SHA1"
+
+  # These deployments can go to "staging" and additional set going to "production"
+  deploy-image:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Set up tag var
+          command: |
+            TAG=`echo $CIRCLE_BRANCH | sed 's/\\//_/g'`
+            echo "TAG is $TAG"
+            echo "export TAG=$TAG" >> $BASH_ENV
+      - run:
+          name: Update k8s tenant deployment
+          command: |
+            echo "Not implemented yet"
+      # - aws-eks/update-container-image:
+      #     aws-region: us-east-2
+      #     cluster-name: vcexplorer
+      #     resource-name: deployment/tenant
+      #     namespace: staging
+      #     dry-run: true # for testing
+      #     show-kubectl-command: true
+      #     container-image-updates: "admin=$AWS_ECR_ACCOUNT_URL/vcexplorer-tenant:$TAG-$CIRCLE_SHA1"
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - lint:
+          requires:
+            - build
+      - codecov:
+          requires:
+            - test
+      - push-image:
+          requires:
+            - build
+            - test
+            - lint
+            - codecov
+          filters:
+            branches:
+              only:
+                - master
+                - sruddy/circleci-setup
+      - deploy-image:
+          requires:
+            - push-image
+          filters:
+            branches:
+              only:
+                - master
+                - sruddy/circleci-setup
