@@ -53,7 +53,7 @@ jobs:
           key: node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Running tests
-          command: echo "No test yet"
+          command: yarn test
       - save_cache:
           name: Save yarn cache
           key: node-modules-{{ checksum "yarn.lock" }}
@@ -91,7 +91,6 @@ jobs:
       - run:
           name: Running code coverage
           command: echo "No codecov yet"
-
       - restore_cache:
           name: Restore yarn cache
           key: node-modules-{{ checksum "yarn.lock" }}
