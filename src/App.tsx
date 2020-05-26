@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Explore } from "./components/Dashboard/Explore";
 import { ContentView } from "./components/Content/ContentView";
+import { AdminPage } from "./components/Admin/AdminPage";
 import { LoginPage } from "./components/auth/LoginPage";
 import { TrustAgencyContext } from "./context/TrustAgentProvider";
 import {
@@ -27,6 +28,7 @@ export const App = () => {
           <Switch>
             <Route path="/content/:contentId?" component={ContentView} />
             <Route path="/login" component={LoginPage} />
+            <Route path="/admin" component={AdminPage} />
             <Route path="/" component={Explore} />
           </Switch>
         </React.Suspense>

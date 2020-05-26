@@ -5372,7 +5372,7 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
-fast-deep-equal@^2.0.1:
+fast-deep-equal@2.0.1, fast-deep-equal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
 
@@ -11177,6 +11177,12 @@ svgo@^1.0.0, svgo@^1.2.2:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+swr@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.2.2.tgz#6e1b3e5c0e545c4fdb36ae3aa38cd94d0f9a88b7"
+  dependencies:
+    fast-deep-equal "2.0.1"
 
 symbol-observable@^1.0.2, symbol-observable@^1.0.4:
   version "1.2.0"

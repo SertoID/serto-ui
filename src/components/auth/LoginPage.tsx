@@ -1,4 +1,6 @@
 import * as React from "react";
+import { Redirect } from "react-router-dom";
+import { Box, Button, Card, Field, Heading, Input } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 
@@ -7,10 +9,12 @@ export const LoginPage = () => {
 
   const [error, setError] = React.useState<string | undefined>();
   const [tenants, setTenants] = React.useState<any[] | undefined>();
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   async function doLogin() {
-    const tenantID = "admin";
-    const token = "CHANGE ME";
+    const tenantID = username;
+    const token = password;
     try {
       await TrustAgent.login(tenantID, token);
       setTenants([]);
@@ -20,28 +24,40 @@ export const LoginPage = () => {
     }
   }
 
-  async function getTenants() {
-    try {
-      const data = await TrustAgent.getTenants();
-      setTenants(data);
-    } catch (err) {
-      console.error();
-      setError(err.message);
-    }
-  }
-
   return (
-    <div>
-      <div>test page</div>
-      <div>
+    <Card width={"auto"} maxWidth={"400px"}>
+      <Heading as={"h1"}>Login</Heading>
+      <Box width={[1]} mb={10}>
+        <Field label="Username">
+          <Input
+            value={username}
+            onChange={(event: any) => setUsername(event.target.value)}
+            name="username"
+            type="text"
+            required={true}
+          />
+        </Field>
+      </Box>
+      <Box width={[1]} mb={10}>
+        <Field label="Password">
+          <Input
+            value={password}
+            onChange={(event: any) => setPassword(event.target.value)}
+            name="password"
+            type="password"
+            required={true}
+          />
+        </Field>
+      </Box>
+      <Box width={[1]}>
         {TrustAgent.isAuthenticated() ? (
-          <button onClick={getTenants}>Get Tenants</button>
+          <Redirect to={"/admin"} />
         ) : (
-          <button onClick={doLogin}>Login</button>
+          <Button onClick={doLogin}>Login</Button>
         )}
-      </div>
+      </Box>
       <div>{error ? `error: ${error}` : undefined}</div>
       <div>{tenants ? `tenants: ${JSON.stringify(tenants)}` : undefined}</div>
-    </div>
+    </Card>
   );
 };
