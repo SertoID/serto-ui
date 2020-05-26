@@ -1,4 +1,4 @@
-## Licensing Demo
+## VC Explorer Demo
 
 ### `yarn start`
 

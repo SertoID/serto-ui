@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Explore } from "./components/Dashboard/Explore";
 import { ContentView } from "./components/Content/ContentView";
 
-function App() {
+export const App = () => {
   return (
     <BrowserRouter>
       <React.Suspense fallback={<></>}>
@@ -15,5 +15,3 @@ function App() {
     </BrowserRouter>
   );
 }
-
-export default App;
