@@ -42,6 +42,7 @@ jobs:
             - package.json
             - jest.json
             - tsconfig.json
+            - Dockerfile
 
   test:
     <<: *defaults
