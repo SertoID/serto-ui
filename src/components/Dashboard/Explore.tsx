@@ -2,7 +2,7 @@ import * as React from "react";
 import { ListItem } from "./ListItem";
 import { dummyData } from "../types";
 import { Table } from "rimble-ui";
-import { GlobalLayout } from "../GlobalLayout";
+import { GlobalLayout } from "../Global";
 import { Container } from "../elements";
 
 export const Explore: React.FunctionComponent = props => {

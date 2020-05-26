@@ -12,7 +12,7 @@ const ContentDetailHeader = styled.div`
 
 const Label = styled.label`
   color: #afafaf;
-  font-family: ${fonts.SANS_SERIF};
+  font-family: ${fonts.sansSerif};
   font-weight: 600;
   font-size: 12px;
   line-height: 18px;
@@ -21,7 +21,7 @@ const Label = styled.label`
 
 const Value = styled.span`
   color: #5758f6;
-  font-family: ${fonts.SANS_SERIF};
+  font-family: ${fonts.sansSerif};
   font-size: 18px;
   line-height: 27px;
 `;

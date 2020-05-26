@@ -1,5 +1,5 @@
 import * as React from "react";
-import { colors } from "../colors";
+import { baseColors } from "../themes";
 
 export interface ExpandDownArrowProps {
   color?: string;
@@ -9,7 +9,7 @@ export interface ExpandDownArrowProps {
 }
 
 export const ExpandDownArrow: React.FunctionComponent<ExpandDownArrowProps> = props => {
-  const color = props.color || colors.basic.WHITE;
+  const color = props.color || baseColors.white;
   const width = (props.width || 8).toString();
   const height = (props.height || 12).toString();
   const opacity = (props.opacity || 0.86).toString();

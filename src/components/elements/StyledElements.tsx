@@ -1,10 +1,9 @@
 import styled from "styled-components";
-import { colors } from "./colors";
+import { baseColors } from "./themes";
 
 export const Container = styled.div`
-  background-color: ${colors.basic.WHITE};
+  background-color: ${baseColors.white};
   border-radius: 8px;
-  height: 100%;
   padding: 10px;
   width: 100%;
 `;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { dummyData } from "../types";
-import { GlobalLayout } from "../GlobalLayout";
+import { GlobalLayout } from "../Global";
 import { ContentDetails } from "./ContentDetails";
 import { ContentTimeline } from "./ContentTimeline";
 import { ContentVCFeed } from "./ContentVCFeed";

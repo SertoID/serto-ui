@@ -1,5 +1,5 @@
 import * as React from "react";
-import { colors, ExpandDownArrow } from "../../";
+import { ExpandDownArrow } from "../../";
 import { DashboardTabProps } from "./DashboardTab";
 import {
   DashboardLayoutContainer,
@@ -8,6 +8,7 @@ import {
   DashboardTabBtnContainer,
   DashboardContent
 } from "./DashboardLayoutStyled";
+import { baseColors } from "../../themes";
 
 export interface DashboardLayoutProps {
   activeIndex?: number;
@@ -72,8 +73,8 @@ export class DashboardLayout extends React.Component<
   public render(): JSX.Element {
     const DashboardNav = this.props.DashboardNavCustom || DashboardNavDefault;
     const arrowColor = this.state.isResponsiveTabsetVisible
-      ? colors.primary.BLUE
-      : colors.basic.GRAY_500;
+      ? baseColors.blurple
+      : baseColors.black;
 
     return (
       <DashboardLayoutContainer>
