@@ -106,7 +106,6 @@ jobs:
           name: Prepare directory
           command: |
             ls .
-            cp -r ./Dockerfile .
             TAG=`echo $CIRCLE_BRANCH | sed 's/\\//_/g'`
             echo "TAG is $TAG"
             echo "export TAG=$TAG" >> $BASH_ENV
