@@ -25,7 +25,30 @@ export class TrustAgencyService {
     const auth = { tenantID, token };
     this.setAuth(auth);
 
+    if (tenantID === "admin") {
+      try {
+        const tenants = await this.getTenants();
+        console.log("logged in successfully as admin");
+      } catch (err) {
+        this.logout();
+        throw new Error("invalid admin token");
+      }
+    } else {
+      try {
+        await this.getTenantIdentifiers();
+        console.log("logged in successfully as tenant");
+      } catch (err) {
+        console.error("error on tenant ping:", err);
+        this.logout();
+        throw new Error("invalid tenant credentials");
+      }
+    }
+
     return auth;
+  }
+
+  public async logout() {
+    this.clearAuth();
   }
 
   public isAuthenticated(): boolean {
@@ -33,15 +56,44 @@ export class TrustAgencyService {
   }
 
   public async getTenants(): Promise<any> {
+    return this.request('/v1/admin');
+  }
+
+  public async createTenant(name: string): Promise<any> {
+    return this.request('/v1/admin', "POST", { name });
+  }
+
+  public async getTenantIdentifiers(): Promise<any> {
+    return this.request('/v1/tenant/identifiers');
+  }
+
+  public async createTenantIdentifier(): Promise<any> {
+    return this.request('/v1/tenant/identifiers', "POST");
+  }
+
+  private async request(path: string, method: "GET" | "POST" = "GET", body?: any): Promise<any> {
     this.ensureAuthenticated();
-    const response = await fetch(`${this.url}/v1/admin`, {
-      headers: {
-        authorization: `Bearer ${this.auth?.token}`,
-      },
+
+    const headers: any = {}
+    if (this.auth?.token) {
+      headers.authorization = `Bearer ${this.auth?.token}`;
+    }
+    if (this.auth?.tenantID !== "admin") {
+      headers.tenant = this.auth?.tenantID;
+    }
+    if (body) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    const response = await fetch(`${this.url}${path}`, {
+      method,
+      headers,
+      body: JSON.stringify(body),
     });
-    if (response.status !== 200) {
-      console.error("api error", response.status);
-      throw new Error("api error");
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      console.error("api error", response.status, errorMessage);
+      throw new Error("api error: " + errorMessage);
     }
     const data = await response.json();
 
@@ -51,6 +103,11 @@ export class TrustAgencyService {
   private setAuth(auth: Auth) {
     this.auth = auth;
     localStorage.setItem(AUTH_LOCALSTORAGE_KEY, JSON.stringify(auth));
+  }
+
+  private clearAuth() {
+    delete this.auth;
+    localStorage.removeItem(AUTH_LOCALSTORAGE_KEY);
   }
 
   private ensureAuthenticated() {

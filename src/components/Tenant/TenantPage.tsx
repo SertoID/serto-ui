@@ -1,36 +1,35 @@
 import * as React from "react";
-import { Box, Button, Heading, Input } from "rimble-ui";
 import { useHistory } from "react-router-dom";
+import { Box, Button, Heading, Input } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 
-export const AdminPage: React.FunctionComponent = props => {
+export const TenantPage: React.FunctionComponent = props => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
 
   const [error, setError] = React.useState<string | undefined>();
-  const [tenants, setTenants] = React.useState<any[]>([]);
-  const [tenantName, setTenantName] = React.useState("");
+  const [identifiers, setIdentifiers] = React.useState<any[]>([]);
   const history = useHistory();
 
-  async function getTenants() {
+  async function getIdentifiers() {
     try {
-      const data = await TrustAgent.getTenants();
-      setTenants(data);
+      const data = await TrustAgent.getTenantIdentifiers();
+      setIdentifiers(data);
     } catch (err) {
       console.error();
       setError(err.message);
     }
   }
 
-  async function createTenant() {
+  async function createIdentifier() {
     try {
-      const newTenant = await TrustAgent.createTenant(tenantName);
+      await TrustAgent.createTenantIdentifier();
     } catch (err) {
       console.error();
       setError(err.message);
       return;
     }
-    await getTenants();
+    getIdentifiers();
   }
 
   function logOut(event: React.MouseEvent) {
@@ -41,25 +40,18 @@ export const AdminPage: React.FunctionComponent = props => {
 
   return (
     <div>
-      <Heading as={"h1"}>Admin</Heading>
+      <Heading as={"h1"}>Tenant</Heading>
       <Box width={[1]} mb={10}>
-        <Input
-          type="text"
-          required={true}
-          placeholder="Tenant name"
-          value={tenantName}
-          onChange={(event: any) => setTenantName(event.target.value)}
-        />
-        <Button onClick={createTenant}>Create Tenant</Button>
+        <Button onClick={createIdentifier}>Create Identifier</Button>
       </Box>
       <Box width={[1]} mb={10}>
-        <Button onClick={getTenants}>Get Tenants</Button>
+        <Button onClick={getIdentifiers}>Get Identifiers</Button>
       </Box>
       <Box width={[1]} mb={10}>
         <a href="#" onClick={logOut}>Log Out</a>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
-      <pre style={{whiteSpace: "pre-wrap"}}>{tenants ? `tenants: ${JSON.stringify(tenants)}` : undefined}</pre>
+      <pre>{identifiers ? `identifiers: ${JSON.stringify(identifiers)}` : undefined}</pre>
     </div>
   );
 };

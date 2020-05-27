@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Explore } from "./components/Dashboard/Explore";
 import { ContentView } from "./components/Content/ContentView";
 import { AdminPage } from "./components/Admin/AdminPage";
+import { TenantPage } from "./components/Tenant/TenantPage";
 import { LoginPage } from "./components/auth/LoginPage";
 import { TrustAgencyContext } from "./context/TrustAgentProvider";
 import {
@@ -11,7 +12,7 @@ import {
 } from "./services/TrustAgencyService";
 
 const serviceConfig: TrustAgencyServiceConfig = {
-  url: "https://alpha.trustagent.civil.co/",
+  url: "https://alpha.trustagent.civil.co",
   // url: "http://localhost:8000",
 };
 
@@ -29,6 +30,7 @@ export const App = () => {
             <Route path="/content/:contentId?" component={ContentView} />
             <Route path="/login" component={LoginPage} />
             <Route path="/admin" component={AdminPage} />
+            <Route path="/tenant" component={TenantPage} />
             <Route path="/" component={Explore} />
           </Switch>
         </React.Suspense>
