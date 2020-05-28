@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Button, Heading, Input } from "rimble-ui";
+import { Box, Button, Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 
@@ -48,7 +48,7 @@ export const TenantPage: React.FunctionComponent = props => {
         <Button onClick={getIdentifiers}>Get Identifiers</Button>
       </Box>
       <Box width={[1]} mb={10}>
-        <a href="#" onClick={logOut}>Log Out</a>
+        <Button onClick={logOut}>Log Out</Button>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
       <pre>{identifiers ? `identifiers: ${JSON.stringify(identifiers)}` : undefined}</pre>

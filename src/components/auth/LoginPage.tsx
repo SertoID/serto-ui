@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Box, Button, Card, Field, Heading, Input } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
@@ -52,8 +52,9 @@ export const LoginPage = () => {
       <Box width={[1]}>
         <Button onClick={doLogin}>Login</Button>
       </Box>
-      <pre><h4>admin</h4>ID: admin<br />API key: 02a52238-900a-4206-bb11-2842082f3b66</pre>
-      <pre><h4>tenant "Noodle"</h4>Tenant ID: a83b4c2d-3faa-4e1c-b1ea-d68f30e9336d<br />API key: 59d7f74b-11c5-4709-812d-422355d757ab</pre>
+      <h5><i>test creds:</i></h5>
+      <pre><h5>admin</h5>ID: admin<br />API key: 02a52238-900a-4206-bb11-2842082f3b66</pre>
+      <pre><h5>tenant "Noodle"</h5>ID: a83b4c2d-3faa-4e1c-b1ea-d68f30e9336d<br />API key: 59d7f74b-11c5-4709-812d-422355d757ab</pre>
       <pre>{error ? `error: ${error}` : undefined}</pre>
     </Card>
   );

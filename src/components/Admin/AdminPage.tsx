@@ -24,7 +24,7 @@ export const AdminPage: React.FunctionComponent = props => {
 
   async function createTenant() {
     try {
-      const newTenant = await TrustAgent.createTenant(tenantName);
+      TrustAgent.createTenant(tenantName);
     } catch (err) {
       console.error();
       setError(err.message);
@@ -56,7 +56,7 @@ export const AdminPage: React.FunctionComponent = props => {
         <Button onClick={getTenants}>Get Tenants</Button>
       </Box>
       <Box width={[1]} mb={10}>
-        <a href="#" onClick={logOut}>Log Out</a>
+        <Button onClick={logOut}>Log Out</Button>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
       <pre style={{whiteSpace: "pre-wrap"}}>{tenants ? `tenants: ${JSON.stringify(tenants)}` : undefined}</pre>

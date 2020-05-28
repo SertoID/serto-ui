@@ -27,7 +27,7 @@ export class TrustAgencyService {
 
     if (tenantID === "admin") {
       try {
-        const tenants = await this.getTenants();
+        await this.getTenants();
         console.log("logged in successfully as admin");
       } catch (err) {
         this.logout();
