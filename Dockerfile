@@ -1,8 +1,9 @@
-FROM node:12
-WORKDIR /usr/src/app
-COPY package.json yarn.lock ./
-RUN yarn
-COPY . ./
-RUN yarn build
+FROM nginx:1.12-alpine
+ADD ./build /usr/share/nginx/html
+ADD ./devops/nginx.conf /etc/nginx/conf.d/default.conf
+ADD ./devops/start.sh /start.sh
+RUN chmod u+x /start.sh
 EXPOSE 3000
-CMD ["yarn", "start"]
+ENV ENVIRONMENT="{}"
+
+CMD /start.sh
