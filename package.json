@@ -24,6 +24,7 @@
     "react-scripts": "3.4.1",
     "rimble-ui": "^0.14.0",
     "styled-components": "^5.0.1",
+    "swr": "^0.2.2",
     "typescript": "^3.8.3"
   },
   "scripts": {
