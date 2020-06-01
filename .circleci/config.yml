@@ -1,8 +1,10 @@
 version: 2.1
 orbs:
   node: circleci/node@2.0.2
+  kubernetes: circleci/kubernetes@0.11.0
   aws-ecr: circleci/aws-ecr@6.8.2
-  # aws-eks: circleci/aws-eks@0.2.7
+  aws-eks: circleci/aws-eks@0.2.7
+  aws-cli: circleci/aws-cli@0.1.4
 
 defaults: &defaults
   docker:
@@ -99,6 +101,11 @@ jobs:
 
   push-image:
     <<: *defaults
+    parameters:
+      deployment-name:
+        description: |
+          Name of the deployment
+        type: string
     steps:
       - attach_workspace:
           at: ./
@@ -121,9 +128,17 @@ jobs:
           repo: vcexplorerdemo
           tag: "$TAG,$TAG-$CIRCLE_SHA1"
 
-  # These deployments can go to "staging" and additional set going to "production"
   deploy-image:
     <<: *defaults
+    parameters:
+      deployment-name:
+        description: |
+          Name of the deployment
+        type: string
+      cluster-name:
+        description: |
+          Name of the cluster
+        type: string
     steps:
       - attach_workspace:
           at: ./
@@ -133,18 +148,20 @@ jobs:
             TAG=`echo $CIRCLE_BRANCH | sed 's/\\//_/g'`
             echo "TAG is $TAG"
             echo "export TAG=$TAG" >> $BASH_ENV
-      - run:
-          name: Update k8s tenant deployment
+      - aws-cli/install
+      - aws-cli/configure:
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-region: $AWS_REGION
+      - aws-eks/update-kubeconfig-with-authenticator:
+          aws-region: $AWS_REGION
+          install-kubectl: true
+          verbose: true
+          cluster-name: << parameters.cluster-name >>
+      - deploy:
+          name: Update Kubernetes Deployment
           command: |
-            echo "Not implemented yet"
-      # - aws-eks/update-container-image:
-      #     aws-region: us-east-2
-      #     cluster-name: vcexplorer
-      #     resource-name: deployment/tenant
-      #     namespace: staging
-      #     dry-run: true # for testing
-      #     show-kubectl-command: true
-      #     container-image-updates: "admin=$AWS_ECR_ACCOUNT_URL/vcexplorer-tenant:$TAG-$CIRCLE_SHA1"
+            TAG=`echo $CIRCLE_BRANCH | sed 's/\\//_/g'`
+            kubectl set image deployment/<< parameters.deployment-name >> << parameters.deployment-name >>=$AWS_ECR_ACCOUNT_URL/vcexplorerdemo:$TAG-$CIRCLE_SHA1
 
 workflows:
   build-test-deploy:
@@ -160,6 +177,8 @@ workflows:
           requires:
             - test
       - push-image:
+          name: push-ui-image
+          deployment-name: ui
           requires:
             - build
             - test
@@ -169,12 +188,15 @@ workflows:
             branches:
               only:
                 - master
-                - sruddy/circleci-setup
+                - sruddy/continuous-deploy
       - deploy-image:
+          name: deploy-ui-image
+          deployment-name: ui
+          cluster-name: alpha
           requires:
-            - push-image
+            - push-ui-image
           filters:
             branches:
               only:
                 - master
-                - sruddy/circleci-setup
+                - sruddy/continuous-deploy
