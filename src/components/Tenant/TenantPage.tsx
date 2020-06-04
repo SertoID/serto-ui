@@ -16,7 +16,7 @@ export const TenantPage: React.FunctionComponent = props => {
       const data = await TrustAgent.getTenantIdentifiers();
       setIdentifiers(data);
     } catch (err) {
-      console.error();
+      console.error("failed to get identifiers:", err);
       setError(err.message);
     }
   }, [TrustAgent]);
@@ -25,7 +25,7 @@ export const TenantPage: React.FunctionComponent = props => {
     try {
       await TrustAgent.createTenantIdentifier();
     } catch (err) {
-      console.error();
+      console.error("failled to create identifier:", err);
       setError(err.message);
       return;
     }

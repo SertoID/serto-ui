@@ -17,16 +17,16 @@ export const AdminPage: React.FunctionComponent = props => {
       const data = await TrustAgent.getTenants();
       setTenants(data);
     } catch (err) {
-      console.error();
+      console.error("failed to get tenants:", err);
       setError(err.message);
     }
   }, [TrustAgent])
 
   async function createTenant() {
     try {
-      TrustAgent.createTenant(tenantName);
+      await TrustAgent.createTenant(tenantName);
     } catch (err) {
-      console.error();
+      console.error("failed to create tenant:", err);
       setError(err.message);
       return;
     }
