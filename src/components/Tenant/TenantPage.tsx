@@ -11,7 +11,7 @@ export const TenantPage: React.FunctionComponent = props => {
   const [identifiers, setIdentifiers] = React.useState<any[]>([]);
   const history = useHistory();
 
-  async function getIdentifiers() {
+  const getIdentifiers = React.useCallback(async () => {
     try {
       const data = await TrustAgent.getTenantIdentifiers();
       setIdentifiers(data);
@@ -19,7 +19,7 @@ export const TenantPage: React.FunctionComponent = props => {
       console.error();
       setError(err.message);
     }
-  }
+  }, [TrustAgent]);
 
   async function createIdentifier() {
     try {
@@ -38,6 +38,10 @@ export const TenantPage: React.FunctionComponent = props => {
     history.push("/login");
   }
 
+  React.useEffect(() => {
+    getIdentifiers();
+  }, [getIdentifiers]);
+
   return (
     <div>
       <Heading as={"h1"}>Tenant</Heading>
@@ -45,7 +49,7 @@ export const TenantPage: React.FunctionComponent = props => {
         <Button onClick={createIdentifier}>Create Identifier</Button>
       </Box>
       <Box width={[1]} mb={10}>
-        <Button onClick={getIdentifiers}>Get Identifiers</Button>
+        <Button onClick={getIdentifiers}>Refresh Identifiers</Button>
       </Box>
       <Box width={[1]} mb={10}>
         <Button onClick={logOut}>Log Out</Button>
