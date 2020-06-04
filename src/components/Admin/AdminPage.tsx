@@ -12,21 +12,21 @@ export const AdminPage: React.FunctionComponent = props => {
   const [tenantName, setTenantName] = React.useState("");
   const history = useHistory();
 
-  async function getTenants() {
+  const getTenants = React.useCallback(async () => {
     try {
       const data = await TrustAgent.getTenants();
       setTenants(data);
     } catch (err) {
-      console.error();
+      console.error("failed to get tenants:", err);
       setError(err.message);
     }
-  }
+  }, [TrustAgent])
 
   async function createTenant() {
     try {
-      TrustAgent.createTenant(tenantName);
+      await TrustAgent.createTenant(tenantName);
     } catch (err) {
-      console.error();
+      console.error("failed to create tenant:", err);
       setError(err.message);
       return;
     }
@@ -38,6 +38,10 @@ export const AdminPage: React.FunctionComponent = props => {
     TrustAgent.logout();
     history.push("/login");
   }
+
+  React.useEffect(() => {
+    getTenants();
+  }, [getTenants]);
 
   return (
     <div>
@@ -53,7 +57,7 @@ export const AdminPage: React.FunctionComponent = props => {
         <Button onClick={createTenant}>Create Tenant</Button>
       </Box>
       <Box width={[1]} mb={10}>
-        <Button onClick={getTenants}>Get Tenants</Button>
+        <Button onClick={getTenants}>Refresh Tenants</Button>
       </Box>
       <Box width={[1]} mb={10}>
         <Button onClick={logOut}>Log Out</Button>
