@@ -60,7 +60,7 @@ export class TrustAgencyService {
   }
 
   public async createTenant(name: string): Promise<any> {
-    return this.request('/v1/admin', "POST", { name });
+    return this.request('/v1/admin/tenants', "POST", { name });
   }
 
   public async getTenantIdentifiers(): Promise<any> {
