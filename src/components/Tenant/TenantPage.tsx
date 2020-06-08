@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Box, Button, Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { IssueVc } from "./IssueVc";
 
 export const TenantPage: React.FunctionComponent = props => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -49,13 +50,16 @@ export const TenantPage: React.FunctionComponent = props => {
         <Button onClick={createIdentifier}>Create Identifier</Button>
       </Box>
       <Box width={[1]} mb={10}>
-        <Button onClick={getIdentifiers}>Refresh Identifiers</Button>
+        <Button.Outline onClick={getIdentifiers}>Refresh Identifiers</Button.Outline>
       </Box>
-      <Box width={[1]} mb={10}>
-        <Button onClick={logOut}>Log Out</Button>
-      </Box>
-      <pre>{error ? `error: ${error}` : undefined}</pre>
       <pre>{identifiers ? `identifiers: ${JSON.stringify(identifiers)}` : undefined}</pre>
+      <pre>{error ? `error: ${error}` : undefined}</pre>
+
+      {identifiers[0] && <IssueVc defaultIssuer={identifiers[0]} />}
+
+      <Box width={[1]} my={10}>
+        <Button.Text onClick={logOut}>Log Out</Button.Text>
+      </Box>
     </div>
   );
 };
