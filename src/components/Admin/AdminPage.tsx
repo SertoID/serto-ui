@@ -24,7 +24,8 @@ export const AdminPage: React.FunctionComponent = props => {
 
   async function createTenant() {
     try {
-      await TrustAgent.createTenant(tenantName);
+      const response = await TrustAgent.createTenant(tenantName);
+      prompt("Tenant activation key:", response.activationJwt);
     } catch (err) {
       console.error("failed to create tenant:", err);
       setError(err.message);
