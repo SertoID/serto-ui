@@ -20,7 +20,20 @@ export const LoginPage = () => {
       history.push(username === "admin" ? "/admin" : "/tenant");
     } catch (err) {
       console.error("error logging in:", err);
-      setError(err.message);
+      setError("Login failed: " + err.message);
+    }
+  }
+
+  async function activateTenant() {
+    try {
+      const activationToken = prompt("Enter activation token:");
+      if (activationToken) {
+        const response = await TrustAgent.activateTenant(activationToken);
+        prompt("Success. Credentials:\n\n", JSON.stringify(response));
+      }
+    } catch (err) {
+      console.error("error activating tenant:", err);
+      setError("Activation failed: " + err.message);
     }
   }
 
@@ -52,9 +65,9 @@ export const LoginPage = () => {
       <Box width={[1]}>
         <Button onClick={doLogin}>Login</Button>
       </Box>
-      <h5><i>test creds:</i></h5>
-      <pre><h5>admin</h5>ID: admin<br />API key: 02a52238-900a-4206-bb11-2842082f3b66</pre>
-      <pre><h5>tenant "Noodle"</h5>ID: a83b4c2d-3faa-4e1c-b1ea-d68f30e9336d<br />API key: 59d7f74b-11c5-4709-812d-422355d757ab</pre>
+      <Box width={[1]} my={10}>
+        <Button.Outline onClick={activateTenant}>Activate new tenant</Button.Outline>
+      </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
     </Card>
   );
