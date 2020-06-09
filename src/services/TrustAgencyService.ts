@@ -63,6 +63,10 @@ export class TrustAgencyService {
     return this.request('/v1/admin/tenants', "POST", { name });
   }
 
+  public async activateTenant(token: string): Promise<any> {
+    return this.request('/v1/tenant/activate', "POST", { activateJwt: token }, true);
+  }
+
   public async getTenantIdentifiers(): Promise<any> {
     return this.request('/v1/tenant/identifiers');
   }
@@ -75,8 +79,10 @@ export class TrustAgencyService {
     return this.request('/v1/tenant/credentials/issue', "POST", body);
   }
 
-  private async request(path: string, method: "GET" | "POST" = "GET", body?: any): Promise<any> {
-    this.ensureAuthenticated();
+  private async request(path: string, method: "GET" | "POST" = "GET", body?: any, unauthenticated?: boolean): Promise<any> {
+    if (!unauthenticated) {
+      this.ensureAuthenticated();
+    }
 
     const headers: any = {}
     if (this.auth?.token) {
