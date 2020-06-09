@@ -75,6 +75,10 @@ export class TrustAgencyService {
     return this.request('/v1/tenant/identifiers', "POST");
   }
 
+  public async issueVc(body: any): Promise<any> {
+    return this.request('/v1/tenant/credentials/issue', "POST", body);
+  }
+
   private async request(path: string, method: "GET" | "POST" = "GET", body?: any, unauthenticated?: boolean): Promise<any> {
     if (!unauthenticated) {
       this.ensureAuthenticated();

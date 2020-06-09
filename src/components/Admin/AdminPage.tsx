@@ -58,10 +58,10 @@ export const AdminPage: React.FunctionComponent = props => {
         <Button onClick={createTenant}>Create Tenant</Button>
       </Box>
       <Box width={[1]} mb={10}>
-        <Button onClick={getTenants}>Refresh Tenants</Button>
+        <Button.Outline onClick={getTenants}>Refresh Tenants</Button.Outline>
       </Box>
       <Box width={[1]} mb={10}>
-        <Button onClick={logOut}>Log Out</Button>
+        <Button.Text onClick={logOut}>Log Out</Button.Text>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
       <pre style={{whiteSpace: "pre-wrap"}}>{tenants ? `tenants: ${JSON.stringify(tenants)}` : undefined}</pre>
