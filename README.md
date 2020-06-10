@@ -1,5 +1,7 @@
 ## VC Explorer Demo
 
+[![CircleCI](https://circleci.com/gh/uport-project/vc-explorer-demo.svg?style=svg&circle-token=4b2bdce52128492cddb63e54b1f208887054c201)](https://circleci.com/gh/uport-project/vc-explorer-demo)
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />
