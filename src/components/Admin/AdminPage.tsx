@@ -4,7 +4,7 @@ import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { LogOut } from "../auth/LogOut";
 
-export const AdminPage: React.FunctionComponent = props => {
+export const AdminPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
 
   const [error, setError] = React.useState<string | undefined>();
@@ -19,7 +19,7 @@ export const AdminPage: React.FunctionComponent = props => {
       console.error("failed to get tenants:", err);
       setError(err.message);
     }
-  }, [TrustAgent])
+  }, [TrustAgent]);
 
   async function createTenant() {
     try {
@@ -55,7 +55,7 @@ export const AdminPage: React.FunctionComponent = props => {
         <Button.Outline onClick={getTenants}>Refresh Tenants</Button.Outline>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
-      <pre style={{whiteSpace: "pre-wrap"}}>{tenants ? `tenants: ${JSON.stringify(tenants)}` : undefined}</pre>
+      <pre style={{ whiteSpace: "pre-wrap" }}>{tenants ? `tenants: ${JSON.stringify(tenants)}` : undefined}</pre>
     </div>
   );
 };

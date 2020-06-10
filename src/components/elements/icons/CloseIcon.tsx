@@ -1,13 +1,8 @@
 import * as React from "react";
 
-export const CloseIcon: React.FunctionComponent = props => {
+export const CloseIcon: React.FunctionComponent = (props) => {
   return (
-    <svg
-      width="42"
-      height="42"
-      viewBox="0 0 42 42"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
       <path
         fill="#000"
         fillRule="evenodd"

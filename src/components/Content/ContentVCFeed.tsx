@@ -14,7 +14,7 @@ const ContentVCFeedFilters = styled.div`
   justify-content: space-between;
 `;
 
-export const ContentVCFeed: React.FunctionComponent = props => {
+export const ContentVCFeed: React.FunctionComponent = (props) => {
   return (
     <ContentVCFeedContainer>
       <ContentVCFeedFilters>

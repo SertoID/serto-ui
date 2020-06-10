@@ -6,7 +6,7 @@ export interface ListItemProps {
   metadata: Metadata;
 }
 
-export const ListItem: React.FunctionComponent<ListItemProps> = props => {
+export const ListItem: React.FunctionComponent<ListItemProps> = (props) => {
   const { metadata } = props;
   return (
     <tr>

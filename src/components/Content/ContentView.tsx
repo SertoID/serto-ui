@@ -5,7 +5,7 @@ import { ContentDetails } from "./ContentDetails";
 import { ContentTimeline } from "./ContentTimeline";
 import { ContentVCFeed } from "./ContentVCFeed";
 
-export const ContentView: React.FunctionComponent = props => {
+export const ContentView: React.FunctionComponent = (props) => {
   return (
     <GlobalLayout>
       <ContentDetails metadata={dummyData[1]} />

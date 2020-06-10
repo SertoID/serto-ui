@@ -8,10 +8,6 @@ const ContentTimelineContainer = styled.div`
   text-align: center;
 `;
 
-export const ContentTimeline: React.FunctionComponent = props => {
-  return (
-    <ContentTimelineContainer>
-      Timeline Visulization TBD
-    </ContentTimelineContainer>
-  );
+export const ContentTimeline: React.FunctionComponent = (props) => {
+  return <ContentTimelineContainer>Timeline Visulization TBD</ContentTimelineContainer>;
 };

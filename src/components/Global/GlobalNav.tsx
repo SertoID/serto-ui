@@ -9,7 +9,7 @@ const NavItem = styled.div`
   margin-bottom: 15px;
 `;
 
-export const GlobalNav: React.FunctionComponent = props => {
+export const GlobalNav: React.FunctionComponent = (props) => {
   return (
     <>
       <NavItem>Explore</NavItem>

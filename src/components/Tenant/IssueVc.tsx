@@ -7,31 +7,26 @@ export interface IssueVcProps {
   defaultIssuer: string;
 }
 
-export const IssueVc: React.FunctionComponent<IssueVcProps> = props => {
+export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   const TrustAgent = useContext<TrustAgencyService>(TrustAgencyContext);
 
   const credential = {
-    "@context": [
-        "https://www.w3.org/2018/credentials/v1",
-        "https://www.w3.org/2018/credentials/examples/v1"
-    ],
+    "@context": ["https://www.w3.org/2018/credentials/v1", "https://www.w3.org/2018/credentials/examples/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
-    "type": [
-        "VerifiableCredential"
-    ],
-    "issuer": props.defaultIssuer,
-    "issuanceDate": Date.now() / 1000, // @TODO VC spec expects RFC3339 (ISO 8601) format as produced by `(new Date).toISOString()`, but API throws TypeError `not a unix timestamp in seconds` so sending unix timestamp in seconds for now - check if API transforms date or what.
-    "credentialSubject": {
-        "id": props.defaultIssuer,
-        "foo": {
-            "bar": 123,
-            "baz": true,
-        }
-    }
+    type: ["VerifiableCredential"],
+    issuer: props.defaultIssuer,
+    issuanceDate: Date.now() / 1000, // @TODO VC spec expects RFC3339 (ISO 8601) format as produced by `(new Date).toISOString()`, but API throws TypeError `not a unix timestamp in seconds` so sending unix timestamp in seconds for now - check if API transforms date or what.
+    credentialSubject: {
+      id: props.defaultIssuer,
+      foo: {
+        bar: 123,
+        baz: true,
+      },
+    },
   };
 
   const [status, setStatus] = React.useState<string | undefined>();
-  const [body, setBody] = useState(JSON.stringify(credential, null, 2))
+  const [body, setBody] = useState(JSON.stringify(credential, null, 2));
   const [revocable, setRevocable] = useState<boolean>(false);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
@@ -42,7 +37,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = props => {
         credential,
         revocable,
         keepCopy,
-        "proofFormat": "jwt",
+        proofFormat: "jwt",
       });
       setStatus(`Success. JWT:\n\n${response.jwt}`);
     } catch (err) {

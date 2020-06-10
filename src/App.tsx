@@ -6,10 +6,7 @@ import { AdminPage } from "./components/Admin/AdminPage";
 import { TenantPage } from "./components/Tenant/TenantPage";
 import { LoginPage } from "./components/auth/LoginPage";
 import { TrustAgencyContext } from "./context/TrustAgentProvider";
-import {
-  TrustAgencyService,
-  TrustAgencyServiceConfig,
-} from "./services/TrustAgencyService";
+import { TrustAgencyService, TrustAgencyServiceConfig } from "./services/TrustAgencyService";
 
 const serviceConfig: TrustAgencyServiceConfig = {
   url: "https://alpha.trustagent.civil.co",
@@ -17,10 +14,7 @@ const serviceConfig: TrustAgencyServiceConfig = {
 };
 
 export const App = () => {
-  const trustAgent = React.useMemo(
-    () => new TrustAgencyService(serviceConfig),
-    []
-  );
+  const trustAgent = React.useMemo(() => new TrustAgencyService(serviceConfig), []);
 
   return (
     <BrowserRouter>

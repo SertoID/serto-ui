@@ -5,7 +5,7 @@ import { Table } from "rimble-ui";
 import { GlobalLayout } from "../Global";
 import { Container } from "../elements";
 
-export const Explore: React.FunctionComponent = props => {
+export const Explore: React.FunctionComponent = (props) => {
   const metadata = dummyData;
   return (
     <GlobalLayout>
@@ -21,11 +21,7 @@ export const Explore: React.FunctionComponent = props => {
           </thead>
           <tbody>
             {metadata.map((article, idx) => (
-              <ListItem
-                key={idx}
-                metadata={article}
-                contentId={""}
-              />
+              <ListItem key={idx} metadata={article} contentId={""} />
             ))}
           </tbody>
         </Table>

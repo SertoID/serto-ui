@@ -56,39 +56,44 @@ export class TrustAgencyService {
   }
 
   public async getTenants(): Promise<any> {
-    return this.request('/v1/admin/tenants');
+    return this.request("/v1/admin/tenants");
   }
 
   public async createTenant(name: string): Promise<any> {
-    return this.request('/v1/admin/tenants', "POST", { name });
+    return this.request("/v1/admin/tenants", "POST", { name });
   }
 
   public async activateTenant(token: string): Promise<any> {
-    return this.request('/v1/tenant/activate', "POST", { activateJwt: token }, true);
+    return this.request("/v1/tenant/activate", "POST", { activateJwt: token }, true);
   }
 
   public async getTenantIdentifiers(): Promise<any> {
-    return this.request('/v1/tenant/identifiers');
+    return this.request("/v1/tenant/identifiers");
   }
 
   public async createTenantIdentifier(): Promise<any> {
-    return this.request('/v1/tenant/identifiers', "POST");
+    return this.request("/v1/tenant/identifiers", "POST");
   }
 
   public async getCredentials(): Promise<any> {
-    return this.request('/v1/tenant/credentials');
+    return this.request("/v1/tenant/credentials");
   }
 
   public async issueVc(body: any): Promise<any> {
-    return this.request('/v1/tenant/credentials/issue', "POST", body);
+    return this.request("/v1/tenant/credentials/issue", "POST", body);
   }
 
-  private async request(path: string, method: "GET" | "POST" = "GET", body?: any, unauthenticated?: boolean): Promise<any> {
+  private async request(
+    path: string,
+    method: "GET" | "POST" = "GET",
+    body?: any,
+    unauthenticated?: boolean,
+  ): Promise<any> {
     if (!unauthenticated) {
       this.ensureAuthenticated();
     }
 
-    const headers: any = {}
+    const headers: any = {};
     if (this.auth?.token) {
       headers.authorization = `Bearer ${this.auth?.token}`;
     }

@@ -38,14 +38,7 @@ export const LoginPage = () => {
   }
 
   return (
-    <Card
-      borderRadius={"0 32px 32px 0"}
-      bottom={"0"}
-      left={"0"}
-      position={"fixed"}
-      top={"0"}
-      width={"auto"}
-    >
+    <Card borderRadius={"0 32px 32px 0"} bottom={"0"} left={"0"} position={"fixed"} top={"0"} width={"auto"}>
       <Heading as={"h1"}>Login</Heading>
       <Box width={[1]} mb={10}>
         <Field label="Username or ID">
@@ -75,9 +68,7 @@ export const LoginPage = () => {
         <Button onClick={doLogin}>Login</Button>
       </Box>
       <Box width={[1]} my={10}>
-        <Button.Outline onClick={activateTenant}>
-          Activate new tenant
-        </Button.Outline>
+        <Button.Outline onClick={activateTenant}>Activate new tenant</Button.Outline>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
     </Card>

@@ -6,7 +6,7 @@ import {
   DashboardNavDefault,
   DashboardResponsiveTabsToggleButton,
   DashboardTabBtnContainer,
-  DashboardContent
+  DashboardContent,
 } from "./DashboardLayoutStyled";
 import { baseColors } from "../../themes";
 
@@ -25,20 +25,14 @@ export interface DashboardLayoutState {
   isResponsiveTabsetVisible: boolean;
 }
 
-export class DashboardLayout extends React.Component<
-  DashboardLayoutProps,
-  DashboardLayoutState
-> {
+export class DashboardLayout extends React.Component<DashboardLayoutProps, DashboardLayoutState> {
   public static getDerivedStateFromProps(
     nextProps: DashboardLayoutProps,
-    prevState: DashboardLayoutState
+    prevState: DashboardLayoutState,
   ): DashboardLayoutState {
     return {
       ...prevState,
-      activeIndex:
-        typeof nextProps.activeIndex === "number"
-          ? nextProps.activeIndex
-          : prevState.activeIndex
+      activeIndex: typeof nextProps.activeIndex === "number" ? nextProps.activeIndex : prevState.activeIndex,
     };
   }
 
@@ -46,7 +40,7 @@ export class DashboardLayout extends React.Component<
     super(props);
     this.state = {
       activeIndex: props.activeIndex || 0,
-      isResponsiveTabsetVisible: false
+      isResponsiveTabsetVisible: false,
     };
   }
 
@@ -57,7 +51,7 @@ export class DashboardLayout extends React.Component<
         isActive: this.state.activeIndex === index,
         isResponsiveAndVisible: this.state.isResponsiveTabsetVisible,
         onClick: this.handleClick,
-        DashboardTabBtnCustom: this.props.DashboardTabBtnCustom
+        DashboardTabBtnCustom: this.props.DashboardTabBtnCustom,
       });
     });
   }
@@ -72,16 +66,12 @@ export class DashboardLayout extends React.Component<
 
   public render(): JSX.Element {
     const DashboardNav = this.props.DashboardNavCustom || DashboardNavDefault;
-    const arrowColor = this.state.isResponsiveTabsetVisible
-      ? baseColors.blurple
-      : baseColors.black;
+    const arrowColor = this.state.isResponsiveTabsetVisible ? baseColors.blurple : baseColors.black;
 
     return (
       <DashboardLayoutContainer>
         <DashboardNav>
-          <DashboardTabBtnContainer>
-            {this.renderTabs()}
-          </DashboardTabBtnContainer>
+          <DashboardTabBtnContainer>{this.renderTabs()}</DashboardTabBtnContainer>
 
           <DashboardResponsiveTabsToggleButton
             isExpanded={this.state.isResponsiveTabsetVisible}
@@ -98,8 +88,7 @@ export class DashboardLayout extends React.Component<
   private handleClick = (index: number) => {
     if (
       this.props.preventTabChange &&
-      (this.props.preventTabChange === true ||
-        !window.confirm(this.props.preventTabChange))
+      (this.props.preventTabChange === true || !window.confirm(this.props.preventTabChange))
     ) {
       return;
     }
@@ -112,7 +101,7 @@ export class DashboardLayout extends React.Component<
 
   private toggleResponsiveVisible = () => {
     this.setState({
-      isResponsiveTabsetVisible: !this.state.isResponsiveTabsetVisible
+      isResponsiveTabsetVisible: !this.state.isResponsiveTabsetVisible,
     });
   };
 }

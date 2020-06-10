@@ -7,9 +7,7 @@ import { TrustAgencyService } from "../../services/TrustAgencyService";
 
 export const Credentials: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
-  const { data, error } = useSWR("/api/user", () =>
-    TrustAgent.getCredentials()
-  );
+  const { data, error } = useSWR("/api/user", () => TrustAgent.getCredentials());
 
   return (
     <>

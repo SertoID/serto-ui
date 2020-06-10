@@ -36,13 +36,13 @@ const Detail = styled.span`
 `;
 
 const DetailItem = styled.div`
-  border-bottom: 1px solid #F6F6FF;
+  border-bottom: 1px solid #f6f6ff;
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
 `;
 
-export const VerifiedCredential: React.FunctionComponent = props => {
+export const VerifiedCredential: React.FunctionComponent = (props) => {
   return (
     <Container>
       <Label>Issuer A</Label>

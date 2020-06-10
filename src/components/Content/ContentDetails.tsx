@@ -30,9 +30,7 @@ export interface ContentDetailProps {
   metadata: Metadata;
 }
 
-export const ContentDetails: React.FunctionComponent<
-  ContentDetailProps
-> = props => {
+export const ContentDetails: React.FunctionComponent<ContentDetailProps> = (props) => {
   const { metadata } = props;
   return (
     <ContentDetailHeader>

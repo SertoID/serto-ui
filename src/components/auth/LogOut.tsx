@@ -4,7 +4,7 @@ import { Box, Button } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 
-export const LogOut: React.FunctionComponent = props => {
+export const LogOut: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const history = useHistory();
 

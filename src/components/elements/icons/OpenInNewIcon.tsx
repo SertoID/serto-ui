@@ -5,7 +5,7 @@ export interface OpenInNewIconProps {
   size?: number;
 }
 
-export const OpenInNewIcon: React.FunctionComponent<OpenInNewIconProps> = props => {
+export const OpenInNewIcon: React.FunctionComponent<OpenInNewIconProps> = (props) => {
   const color = props.color || "#3E3E3E";
   const size = (props.size || 16).toString();
   return (

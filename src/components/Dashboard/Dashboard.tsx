@@ -13,7 +13,7 @@ export interface DashboardProps extends RouteComponentProps<DashboardParams> {
   user?: any;
 }
 
-export const Dashboard: React.FunctionComponent<DashboardProps> = props => {
+export const Dashboard: React.FunctionComponent<DashboardProps> = (props) => {
   const [activeTabIndex, setActiveTabIndex] = React.useState<number>(0);
   React.useEffect(() => {
     const activeTab = props.match.params.activeTab || "explore";
@@ -25,10 +25,11 @@ export const Dashboard: React.FunctionComponent<DashboardProps> = props => {
   return (
     <>
       <DashboardLayout
-          activeIndex={activeTabIndex}
-          onActiveTabChange={(tab: number) => {
-            props.history.push(formatRoute(props.match.path, { activeTab: TABS[tab] }));
-          }}>
+        activeIndex={activeTabIndex}
+        onActiveTabChange={(tab: number) => {
+          props.history.push(formatRoute(props.match.path, { activeTab: TABS[tab] }));
+        }}
+      >
         <DashboardTab title={"Explore"}>
           <Explore />
         </DashboardTab>

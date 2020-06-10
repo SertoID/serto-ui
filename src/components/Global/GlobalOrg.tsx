@@ -8,7 +8,7 @@ const OrganizationLabel = styled.label`
   line-height: 21px;
 `;
 
-export const GlobalOrg: React.FunctionComponent = props => {
+export const GlobalOrg: React.FunctionComponent = (props) => {
   return (
     <Container>
       <OrganizationLabel>Touchstone</OrganizationLabel>

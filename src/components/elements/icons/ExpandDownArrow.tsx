@@ -8,7 +8,7 @@ export interface ExpandDownArrowProps {
   width?: number;
 }
 
-export const ExpandDownArrow: React.FunctionComponent<ExpandDownArrowProps> = props => {
+export const ExpandDownArrow: React.FunctionComponent<ExpandDownArrowProps> = (props) => {
   const color = props.color || baseColors.white;
   const width = (props.width || 8).toString();
   const height = (props.height || 12).toString();

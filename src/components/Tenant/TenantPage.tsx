@@ -6,7 +6,7 @@ import { Credentials } from "./Credentials";
 import { IssueVc } from "./IssueVc";
 import { LogOut } from "../auth/LogOut";
 
-export const TenantPage: React.FunctionComponent = props => {
+export const TenantPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
 
   const [error, setError] = React.useState<string | undefined>();

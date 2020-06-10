@@ -1,15 +1,15 @@
-import { tint, shade, readableColor } from 'polished';
+import { tint, shade, readableColor } from "polished";
 
 // rimble base colors
 export const baseColors = {
-  black: '#000e1a',
-  white: '#FFF',
-  blue: '#36ADF1',
-  green: '#28C081',
-  yellow: '#F1A446',
-  red: '#E9403A',
-  blurple: '#4E3FCE',
-  consensysblue: '#3259D6',
+  black: "#000e1a",
+  white: "#FFF",
+  blue: "#36ADF1",
+  green: "#28C081",
+  yellow: "#F1A446",
+  red: "#E9403A",
+  blurple: "#4E3FCE",
+  consensysblue: "#3259D6",
 };
 
 // rimble palette
