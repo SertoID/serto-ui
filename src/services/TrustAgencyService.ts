@@ -75,6 +75,10 @@ export class TrustAgencyService {
     return this.request('/v1/tenant/identifiers', "POST");
   }
 
+  public async getCredentials(): Promise<any> {
+    return this.request('/v1/tenant/credentials');
+  }
+
   public async issueVc(body: any): Promise<any> {
     return this.request('/v1/tenant/credentials/issue', "POST", body);
   }

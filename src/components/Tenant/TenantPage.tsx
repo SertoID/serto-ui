@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, Button, Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { Credentials } from "./Credentials";
 import { IssueVc } from "./IssueVc";
 import { LogOut } from "../auth/LogOut";
 
@@ -50,6 +51,7 @@ export const TenantPage: React.FunctionComponent = props => {
       <pre>{error ? `error: ${error}` : undefined}</pre>
 
       {identifiers[0] && <IssueVc defaultIssuer={identifiers[0]} />}
+      <Credentials />
     </div>
   );
 };
