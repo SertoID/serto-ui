@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { AuthenticatedRoute } from "./components/auth/AuthenticatedRoute";
 import { Explore } from "./components/Dashboard/Explore";
-import { ContentView } from "./components/Content/ContentView";
 import { AdminPage } from "./components/Admin/AdminPage";
 import { TenantPage } from "./components/Tenant/TenantPage";
 import { LoginPage } from "./components/auth/LoginPage";
@@ -27,11 +27,10 @@ export const App = () => {
       <TrustAgencyContext.Provider value={trustAgent}>
         <React.Suspense fallback={<></>}>
           <Switch>
-            <Route path="/content/:contentId?" component={ContentView} />
             <Route path="/login" component={LoginPage} />
-            <Route path="/admin" component={AdminPage} />
-            <Route path="/tenant" component={TenantPage} />
-            <Route path="/" component={Explore} />
+            <AuthenticatedRoute path="/admin" component={AdminPage} />
+            <AuthenticatedRoute path="/tenant" component={TenantPage} />
+            <AuthenticatedRoute path="/" component={Explore} />
           </Switch>
         </React.Suspense>
       </TrustAgencyContext.Provider>

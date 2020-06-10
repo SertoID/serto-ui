@@ -1,16 +1,15 @@
 import * as React from "react";
-import { useHistory } from "react-router-dom";
 import { Box, Button, Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { IssueVc } from "./IssueVc";
+import { LogOut } from "../auth/LogOut";
 
 export const TenantPage: React.FunctionComponent = props => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
 
   const [error, setError] = React.useState<string | undefined>();
   const [identifiers, setIdentifiers] = React.useState<any[]>([]);
-  const history = useHistory();
 
   const getIdentifiers = React.useCallback(async () => {
     try {
@@ -33,18 +32,13 @@ export const TenantPage: React.FunctionComponent = props => {
     getIdentifiers();
   }
 
-  function logOut(event: React.MouseEvent) {
-    event.preventDefault();
-    TrustAgent.logout();
-    history.push("/login");
-  }
-
   React.useEffect(() => {
     getIdentifiers();
   }, [getIdentifiers]);
 
   return (
     <div>
+      <LogOut />
       <Heading as={"h1"}>Tenant</Heading>
       <Box width={[1]} mb={10}>
         <Button onClick={createIdentifier}>Create Identifier</Button>
@@ -56,10 +50,6 @@ export const TenantPage: React.FunctionComponent = props => {
       <pre>{error ? `error: ${error}` : undefined}</pre>
 
       {identifiers[0] && <IssueVc defaultIssuer={identifiers[0]} />}
-
-      <Box width={[1]} my={10}>
-        <Button.Text onClick={logOut}>Log Out</Button.Text>
-      </Box>
     </div>
   );
 };

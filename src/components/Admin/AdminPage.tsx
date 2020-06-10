@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Box, Button, Heading, Input } from "rimble-ui";
-import { useHistory } from "react-router-dom";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { LogOut } from "../auth/LogOut";
 
 export const AdminPage: React.FunctionComponent = props => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -10,7 +10,6 @@ export const AdminPage: React.FunctionComponent = props => {
   const [error, setError] = React.useState<string | undefined>();
   const [tenants, setTenants] = React.useState<any[]>([]);
   const [tenantName, setTenantName] = React.useState("");
-  const history = useHistory();
 
   const getTenants = React.useCallback(async () => {
     try {
@@ -34,18 +33,13 @@ export const AdminPage: React.FunctionComponent = props => {
     await getTenants();
   }
 
-  function logOut(event: React.MouseEvent) {
-    event.preventDefault();
-    TrustAgent.logout();
-    history.push("/login");
-  }
-
   React.useEffect(() => {
     getTenants();
   }, [getTenants]);
 
   return (
     <div>
+      <LogOut />
       <Heading as={"h1"}>Admin</Heading>
       <Box width={[1]} mb={10}>
         <Input
@@ -59,9 +53,6 @@ export const AdminPage: React.FunctionComponent = props => {
       </Box>
       <Box width={[1]} mb={10}>
         <Button.Outline onClick={getTenants}>Refresh Tenants</Button.Outline>
-      </Box>
-      <Box width={[1]} mb={10}>
-        <Button.Text onClick={logOut}>Log Out</Button.Text>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>
       <pre style={{whiteSpace: "pre-wrap"}}>{tenants ? `tenants: ${JSON.stringify(tenants)}` : undefined}</pre>
