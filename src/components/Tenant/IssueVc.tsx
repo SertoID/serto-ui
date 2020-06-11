@@ -57,6 +57,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
         <textarea
           required
           value={body}
+          spellCheck={false}
           style={{ width: "100%", minHeight: "250px" }}
           onChange={(e: any) => setBody(e.target.value)}
         />
