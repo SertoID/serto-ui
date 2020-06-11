@@ -14,18 +14,18 @@ export const Credentials: React.FunctionComponent = (props) => {
       <Heading as={"h3"}>Credentials</Heading>
       {error && <pre>{`error: ${error}`}</pre>}
 
-      {data && data.verifiableCredentials.length !== 0 ? (
-        data.verifiableCredentials.map((verifiableCredential: any, i: number) => {
-          const jwtDecoded = jwtDecode(verifiableCredential.proof.jwt);
-          return (
-            <Box key={i} border="1px solid #E0E0E0" width={[1]} my={10} p={10}>
-              <pre style={{ overflowX: "auto" }}>{JSON.stringify(jwtDecoded.vc, null, 2)}</pre>
-            </Box>
-          );
-        })
-      ) : (
-        isValidating ? "Loading..." : "You currently have no credentials"
-      )}
+      {data && data.verifiableCredentials.length !== 0
+        ? data.verifiableCredentials.map((verifiableCredential: any, i: number) => {
+            const jwtDecoded = jwtDecode(verifiableCredential.proof.jwt);
+            return (
+              <Box key={i} border="1px solid #E0E0E0" width={[1]} my={10} p={10}>
+                <pre style={{ overflowX: "auto" }}>{JSON.stringify(jwtDecoded.vc, null, 2)}</pre>
+              </Box>
+            );
+          })
+        : isValidating
+        ? "Loading..."
+        : "You currently have no credentials"}
     </>
   );
 };
