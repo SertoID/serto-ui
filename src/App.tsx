@@ -9,7 +9,7 @@ import { TrustAgencyContext } from "./context/TrustAgentProvider";
 import { TrustAgencyService, TrustAgencyServiceConfig } from "./services/TrustAgencyService";
 
 const serviceConfig: TrustAgencyServiceConfig = {
-  url: "https://alpha.trustagent.civil.co",
+  url: "https://alpha.consensysidentity.com",
   // url: "http://localhost:8000",
 };
 
