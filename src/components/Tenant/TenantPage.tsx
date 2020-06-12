@@ -50,7 +50,11 @@ export const TenantPage: React.FunctionComponent = (props) => {
       <pre>{identifiers ? `identifiers: ${JSON.stringify(identifiers)}` : undefined}</pre>
       <pre>{error ? `error: ${error}` : undefined}</pre>
 
-      {identifiers[0] && <IssueVc defaultIssuer={identifiers[0]} />}
+      {identifiers[0] ? (
+        <IssueVc defaultIssuer={identifiers[0]} />
+      ) : (
+        <>You must have at least one identifier in order to issue a VC.</>
+      )}
       <Credentials />
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { mutate } from "swr";
 import { Heading, Box, Field, Button, Checkbox } from "rimble-ui";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
@@ -40,6 +41,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
         proofFormat: "jwt",
       });
       setStatus(`Success. JWT:\n\n${response.jwt}`);
+      mutate("/v1/tenant/credentials");
     } catch (err) {
       console.error("failed to issue VC:", err);
       setStatus("Failed to issue VC: " + err.message);
@@ -55,6 +57,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
         <textarea
           required
           value={body}
+          spellCheck={false}
           style={{ width: "100%", minHeight: "250px" }}
           onChange={(e: any) => setBody(e.target.value)}
         />
