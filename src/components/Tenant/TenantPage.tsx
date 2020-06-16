@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { Box, Button, Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
@@ -26,7 +27,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
     try {
       await TrustAgent.createTenantIdentifier();
     } catch (err) {
-      console.error("failled to create identifier:", err);
+      console.error("failed to create identifier:", err);
       setError(err.message);
       return;
     }
@@ -40,6 +41,12 @@ export const TenantPage: React.FunctionComponent = (props) => {
   return (
     <div>
       <LogOut />
+      <Box width={"auto"} position={"absolute"} top={"0"} right={"100px"}>
+        <Link to="/tenant/feeds">
+          <Button.Text>Feeds</Button.Text>
+        </Link>
+      </Box>
+
       <Heading as={"h1"}>Tenant</Heading>
       <Box width={[1]} mb={10}>
         <Button onClick={createIdentifier}>Create Identifier</Button>

@@ -4,6 +4,7 @@ import { AuthenticatedRoute } from "./components/auth/AuthenticatedRoute";
 import { Explore } from "./components/Dashboard/Explore";
 import { AdminPage } from "./components/Admin/AdminPage";
 import { TenantPage } from "./components/Tenant/TenantPage";
+import { FeedsPage } from "./components/Tenant/FeedsPage";
 import { LoginPage } from "./components/auth/LoginPage";
 import { TrustAgencyContext } from "./context/TrustAgentProvider";
 import { TrustAgencyService, TrustAgencyServiceConfig } from "./services/TrustAgencyService";
@@ -23,6 +24,7 @@ export const App = () => {
           <Switch>
             <Route path="/login" component={LoginPage} />
             <AuthenticatedRoute path="/admin" component={AdminPage} />
+            <AuthenticatedRoute path="/tenant/feeds" component={FeedsPage} />
             <AuthenticatedRoute path="/tenant" component={TenantPage} />
             <AuthenticatedRoute path="/" component={Explore} />
           </Switch>
