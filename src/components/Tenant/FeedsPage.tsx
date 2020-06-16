@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 import slugify from "@sindresorhus/slugify";
-import { Box, Button, Heading, Input, Field, Flex, Modal, Card, Loader, Flash } from "rimble-ui";
+import { Box, Button, Heading, Input, Field, Flex, Modal, Card, Loader, Flash, Table } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { LogOut } from "../auth/LogOut";
@@ -57,20 +57,47 @@ export const FeedsPage: React.FunctionComponent = (props) => {
       </Box>
 
       <Heading as={"h1"}>Feeds</Heading>
-      <Box width={[1]} mb={10}>
+      <Box width={[1]} mb={3}>
         <Button onClick={() => setIsCreateModalOpen(true)}>Create Feed</Button>
       </Box>
-      {data && data.length !== 0
-        ? data.map((feed: any, i: number) => {
-            return (
-              <Box key={i} border="1px solid #E0E0E0" width={[1]} my={10} p={10}>
-                <pre style={{ overflowX: "auto" }}>{JSON.stringify(feed, null, 2)}</pre>
-              </Box>
-            );
-          })
-        : isValidating
-        ? "Loading..."
-        : "You currently have no feeds"}
+      {data && data.length !== 0 ? (
+        <Table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Description</th>
+              <th>Created</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((feed: any, i: number) => {
+              return (
+                <tr key={i}>
+                  <td>{feed.name}</td>
+                  <td>{feed.slug}</td>
+                  <td>{feed.description}</td>
+                  <td>
+                    <time title={feed.created} dateTime={feed.created}>
+                      {new Date(feed.created).toDateString()}
+                    </time>
+                  </td>
+                  <td>
+                    <time title={feed.updated} dateTime={feed.updated}>
+                      {new Date(feed.updated).toDateString()}
+                    </time>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      ) : isValidating ? (
+        "Loading..."
+      ) : (
+        "You currently have no feeds"
+      )}
 
       {getFeedsError && (
         <Box p={1} mb={1}>
