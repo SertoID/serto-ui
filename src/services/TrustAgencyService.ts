@@ -83,6 +83,14 @@ export class TrustAgencyService {
     return this.request("/v1/tenant/credentials/issue", "POST", body);
   }
 
+  public async getFeeds(): Promise<any> {
+    return this.request("/v1/feeds");
+  }
+
+  public async createFeed(data: { name: string; slug: string; description: string }): Promise<any> {
+    return this.request("/v1/feeds", "POST", data);
+  }
+
   private async request(
     path: string,
     method: "GET" | "POST" = "GET",
