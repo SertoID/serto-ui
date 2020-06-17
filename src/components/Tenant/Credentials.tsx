@@ -1,9 +1,11 @@
 import * as React from "react";
 import useSWR from "swr";
 import jwtDecode from "jwt-decode";
-import { Box, Heading } from "rimble-ui";
+import { Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { Credential, CredentialViewTypes } from "./Credential";
+import { dateTimeFormat, ellipsis } from "../elements";
 
 export const Credentials: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -16,11 +18,24 @@ export const Credentials: React.FunctionComponent = (props) => {
 
       {data && data.verifiableCredentials.length !== 0
         ? data.verifiableCredentials.map((verifiableCredential: any, i: number) => {
-            const jwtDecoded = jwtDecode(verifiableCredential.proof.jwt);
+            const jwt = verifiableCredential.proof.jwt;
+            const jwtDecoded = jwtDecode(jwt);
+            const issuanceDate = dateTimeFormat(new Date(jwtDecoded.iat * 1000));
+            const issuer = ellipsis("0x" + jwtDecoded.sub.split("0x").pop(), 5, 3);
+
+            console.log(jwtDecoded);
+
             return (
-              <Box key={i} border="1px solid #E0E0E0" width={[1]} my={10} p={10}>
-                <pre style={{ overflowX: "auto" }}>{JSON.stringify(jwtDecoded.vc, null, 2)}</pre>
-              </Box>
+              <Credential
+                key={i}
+                attributes={jwtDecoded.vc.credentialSubject.foo}
+                credentialType={jwtDecoded.vc.type[0]}
+                issuanceDate={issuanceDate}
+                issuer={issuer}
+                jwt={jwt}
+                title={jwtDecoded.vc.credentialSubject.title || "Know Your Customer Check"} // hardcoding for demo purposes, add title in credentialSubject for demo
+                viewType={CredentialViewTypes.COLLAPSIBLE}
+              />
             );
           })
         : isValidating

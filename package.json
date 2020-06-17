@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rimble/icons": "^1.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -25,7 +26,7 @@
     "react-router-named-routes": "^0.0.23",
     "react-scripts": "3.4.1",
     "rimble-ui": "^0.14.0",
-    "styled-components": "^5.0.1",
+    "styled-components": "^5.1.1",
     "swr": "^0.2.2",
     "typescript": "^3.8.3"
   },

@@ -48,6 +48,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
       </Box>
 
       <Heading as={"h1"}>Tenant</Heading>
+
       <Box width={[1]} mb={10}>
         <Button onClick={createIdentifier}>Create Identifier</Button>
       </Box>
