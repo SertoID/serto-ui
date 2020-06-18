@@ -5,7 +5,6 @@ import { Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { Credential, CredentialViewTypes } from "./Credential";
-import { dateTimeFormat, ellipsis } from "../elements";
 
 export const Credentials: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -20,8 +19,6 @@ export const Credentials: React.FunctionComponent = (props) => {
         ? data.verifiableCredentials.map((verifiableCredential: any, i: number) => {
             const jwt = verifiableCredential.proof.jwt;
             const jwtDecoded = jwtDecode(jwt);
-            const issuanceDate = dateTimeFormat(new Date(jwtDecoded.iat * 1000));
-            const issuer = ellipsis("0x" + jwtDecoded.sub.split("0x").pop(), 5, 3);
 
             // @TODO Temporarily hard-coding some of this stuff, we need a cleverer way to get and show credential info obviously, probably linked to schema detection
             const attributes =
@@ -39,8 +36,8 @@ export const Credentials: React.FunctionComponent = (props) => {
                 key={i}
                 attributes={attributes}
                 credentialType={jwtDecoded.vc.type[0]}
-                issuanceDate={issuanceDate}
-                issuer={issuer}
+                issuanceDate={jwtDecoded.iat}
+                issuer={jwtDecoded.iss}
                 jwt={jwt}
                 title={title}
                 viewType={CredentialViewTypes.COLLAPSIBLE}

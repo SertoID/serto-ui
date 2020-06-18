@@ -143,7 +143,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
         <Credential
           attributes={response.credential.credentialSubject}
           credentialType={response.credential.type[response.credential.type.length - 1]}
-          issuanceDate={new Date(response.credential.issuanceDate * 1000).toLocaleString()}
+          issuanceDate={response.credential.issuanceDate}
           issuer={response.credential.issuer}
           jwt={response.jwt}
           title={response.credential.credentialSubject.title || "Generic Credential"}

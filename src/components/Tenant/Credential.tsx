@@ -3,6 +3,7 @@ import { Box, Flex, Pill, Table, Text } from "rimble-ui";
 import { Info, Person, VerifiedUser } from "@rimble/icons";
 import { CopyToClipboard, Expand } from "../elements";
 import { CredentialBorder, CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
+import { dateTimeFormat, ellipsis } from "../elements";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
@@ -13,7 +14,7 @@ export enum CredentialViewTypes {
 export interface CredentialProps {
   attributes?: any;
   credentialType: string;
-  issuanceDate: string;
+  issuanceDate: number;
   issuer: string;
   jwt: string;
   title: string;
@@ -21,8 +22,10 @@ export interface CredentialProps {
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
-  const { attributes, credentialType, issuer, issuanceDate, jwt, title } = props;
+  const { attributes, credentialType, jwt, title } = props;
   const viewType = props.viewType || "default";
+  const issuanceDate = dateTimeFormat(new Date(props.issuanceDate * 1000));
+  const issuer = ellipsis("0x" + props.issuer.split("0x").pop(), 5, 3);
 
   const VerifiedCredentialHeader = () => (
     <>
