@@ -59,7 +59,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
 
   const VerifiedCredentialBody = () => (
     <>
-      <Table border={"none"} boxShadow={"0"}>
+      <Table border={"none"} boxShadow={"0"} width={1} style={{ tableLayout: "fixed" }}>
         <tbody>
           {/* This is just for demo purposes need to rework this */}
           {attributes ? (
@@ -67,14 +67,16 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               return (
                 <CredentialTR key={key}>
                   <CredentialTDLeft>{value[0].toString()}</CredentialTDLeft>
-                  <CredentialTDRight>{value[1].toString()}</CredentialTDRight>
+                  <CredentialTDRight>
+                    {typeof value[1] === "object" ? JSON.stringify(value[1]) : value[1].toString()}
+                  </CredentialTDRight>
                 </CredentialTR>
               );
             })
           ) : (
             <CredentialTR>
               <CredentialTDLeft>KYC Check</CredentialTDLeft>
-              <CredentialTDRight>Aproved</CredentialTDRight>
+              <CredentialTDRight>Approved</CredentialTDRight>
             </CredentialTR>
           )}
         </tbody>
