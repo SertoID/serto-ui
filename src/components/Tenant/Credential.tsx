@@ -30,7 +30,14 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         <Box>
           <Flex alignItems={"center"}>
             <Person size="16" color={"#AAA7FF"} mr={"5px"} />
-            <Text.span color={"#000E1A"} fontSize={"12px"} mr={"8px"}>
+            <Text.span
+              color={"#000E1A"}
+              fontSize={"12px"}
+              mr={"8px"}
+              maxWidth={150}
+              style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
+              title={issuer}
+            >
               {issuer}
             </Text.span>
             {viewType === CredentialViewTypes.LIST && (
@@ -100,7 +107,14 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
 
   const VerifiedCredentialFooter = () => (
     <Flex justifyContent={"space-between"}>
-      <Text.span color={"#9797A5"} fontSize={"12px"}>
+      <Text.span
+        color={"#9797A5"}
+        fontSize={"12px"}
+        pr={16}
+        maxWidth="100%"
+        style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
+        title={issuer}
+      >
         Issuer: {issuer}
       </Text.span>
       <Text.span color={"#9797A5"} fontSize={"12px"}>
