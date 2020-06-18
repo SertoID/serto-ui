@@ -36,6 +36,7 @@ export const CredentialTDRight: React.FunctionComponent = (props) => {
         border: "none",
         padding: "5px 0",
         textAlign: "right",
+        wordBreak: "break-word",
       }}
     >
       <Text.span color={"#000E1A"} fontSize={"14px"} fontWeight={"600"} lineHeight={"18px"}>
