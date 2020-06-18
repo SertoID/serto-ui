@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Heading } from "rimble-ui";
+import { Box, Button, Heading, Modal, Card, Tooltip } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { Credentials } from "./Credentials";
@@ -12,6 +12,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
 
   const [error, setError] = React.useState<string | undefined>();
   const [identifiers, setIdentifiers] = React.useState<any[]>([]);
+  const [isIssueModalOpen, setIsIssueModalOpen] = React.useState(false);
 
   const getIdentifiers = React.useCallback(async () => {
     try {
@@ -58,12 +59,35 @@ export const TenantPage: React.FunctionComponent = (props) => {
       <pre>{identifiers ? `identifiers: ${JSON.stringify(identifiers)}` : undefined}</pre>
       <pre>{error ? `error: ${error}` : undefined}</pre>
 
-      {identifiers[0] ? (
-        <IssueVc defaultIssuer={identifiers[0]} />
-      ) : (
-        <>You must have at least one identifier in order to issue a VC.</>
-      )}
+      <Box my={10}>
+        {identifiers[0] ? (
+          <Button onClick={() => setIsIssueModalOpen(true)}>Issue Credential</Button>
+        ) : (
+          <Tooltip message="You must have at least one identifier in order to issue a VC" placement="top">
+            <Button.Base>Issue Credential</Button.Base>
+          </Tooltip>
+        )}
+      </Box>
+
       <Credentials />
+
+      <Modal isOpen={isIssueModalOpen}>
+        <Card p={0}>
+          <Button.Text
+            icononly
+            icon={"Close"}
+            position={"absolute"}
+            top={0}
+            right={0}
+            mt={3}
+            mr={3}
+            onClick={() => setIsIssueModalOpen(false)}
+          />
+          <Box p={4} width={480} maxWidth="95%" maxHeight="95vh" style={{ overflowY: "auto" }}>
+            <IssueVc defaultIssuer={identifiers[0]} onComplete={() => setIsIssueModalOpen(false)} />
+          </Box>
+        </Card>
+      </Modal>
     </div>
   );
 };
