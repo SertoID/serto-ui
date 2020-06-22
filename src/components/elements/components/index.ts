@@ -1,3 +1,4 @@
 export * from "./CopyToClipboard";
+export * from "./Credential";
 export * from "./Expand";
-export * from "./VerifiedCredential";
+export * from "./Nav";

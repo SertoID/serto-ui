@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Box, Text } from "rimble-ui";
+import { fonts } from "../../themes";
 
 export const CredentialBorder: React.FunctionComponent = (props) => {
   return (
@@ -39,7 +40,13 @@ export const CredentialTDRight: React.FunctionComponent = (props) => {
         wordBreak: "break-word",
       }}
     >
-      <Text.span color={"#000E1A"} fontSize={"14px"} fontWeight={"600"} lineHeight={"18px"}>
+      <Text.span
+        color={"#000E1A"}
+        fontFamily={fonts.sansSerif}
+        fontSize={"14px"}
+        fontWeight={"600"}
+        lineHeight={"18px"}
+      >
         {props.children}
       </Text.span>
     </td>
@@ -54,7 +61,13 @@ export const CredentialTDLeft: React.FunctionComponent = (props) => {
         padding: "5px 0",
       }}
     >
-      <Text.span color={"#53535F"} fontSize={"14px"} fontWeight={"600"} lineHeight={"18px"}>
+      <Text.span
+        color={"#53535F"}
+        fontFamily={fonts.sansSerif}
+        fontSize={"14px"}
+        fontWeight={"600"}
+        lineHeight={"18px"}
+      >
         {props.children}
       </Text.span>
     </td>

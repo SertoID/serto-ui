@@ -1,9 +1,8 @@
 import * as React from "react";
 import { Box, Flex, Pill, Table, Text } from "rimble-ui";
 import { Info, Person, VerifiedUser } from "@rimble/icons";
-import { CopyToClipboard, Expand } from "../elements";
 import { CredentialBorder, CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
-import { dateTimeFormat, ellipsis } from "../elements";
+import { CopyToClipboard, Expand, dateTimeFormat, ellipsis, fonts } from "../../";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
@@ -22,10 +21,10 @@ export interface CredentialProps {
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
-  const { attributes, credentialType, jwt, title } = props;
+  const { attributes, credentialType, jwt, title, issuer } = props;
   const viewType = props.viewType || "default";
   const issuanceDate = dateTimeFormat(new Date(props.issuanceDate * 1000));
-  const issuer = ellipsis("0x" + props.issuer.split("0x").pop(), 5, 3);
+  const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 5, 3);
 
   const VerifiedCredentialHeader = () => (
     <>
@@ -35,16 +34,17 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
             <Person size="16" color={"#AAA7FF"} mr={"5px"} />
             <Text.span
               color={"#000E1A"}
+              fontFamily={fonts.sansSerif}
               fontSize={"12px"}
               mr={"8px"}
               maxWidth={150}
               style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
               title={issuer}
             >
-              {issuer}
+              {issuerFormatted}
             </Text.span>
             {viewType === CredentialViewTypes.LIST && (
-              <Text.span color={"#9797A5"} fontSize={"12px"}>
+              <Text.span color={"#9797A5"} fontFamily={fonts.sansSerif} fontSize={"12px"}>
                 {issuanceDate}
               </Text.span>
             )}
@@ -52,7 +52,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         </Box>
         <Box flexGrow={"1"}>
           <Flex alignItems={"center"} justifyContent={"flex-end"}>
-            <Pill color="primary" fontSize={"12px"} height={"1.5rem"} mr={"10px"}>
+            <Pill color="primary" fontFamily={fonts.sansSerif} fontSize={"12px"} height={"1.5rem"} mr={"10px"}>
               {credentialType}
             </Pill>
             <VerifiedUser size="25" color={"#AAA7FF"} />
@@ -60,7 +60,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         </Box>
       </Flex>
       <Box>
-        <Text color={"#000E1A"} fontSize={"16px"} fontWeight={"600"} mr={"8px"}>
+        <Text color={"#000E1A"} fontFamily={fonts.sansSerif} fontSize={"16px"} fontWeight={"600"} mr={"8px"}>
           {title}
         </Text>
       </Box>
@@ -95,14 +95,20 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         <Box backgroundColor={"#F2F2F8"} borderRadius={"4px"} p={"8px"}>
           <Flex justifyContent={"space-between"} mb={"5px"}>
             <Flex alignItems={"center"}>
-              <Text.span color={"#53535F"} fontSize={"12px"} lineHeight={"16px"}>
+              <Text.span color={"#53535F"} fontFamily={fonts.sansSerif} fontSize={"12px"} lineHeight={"16px"}>
                 Token
               </Text.span>
               <Info size="14" ml={"5px"} />
             </Flex>
             <CopyToClipboard text={jwt} size={"15px"} />
           </Flex>
-          <Text.span color={"#53535F"} fontSize={"12px"} lineHeight={"16px"} style={{ wordWrap: "break-word" }}>
+          <Text.span
+            color={"#53535F"}
+            fontFamily={fonts.sansSerif}
+            fontSize={"12px"}
+            lineHeight={"16px"}
+            style={{ wordWrap: "break-word" }}
+          >
             {jwt}
           </Text.span>
         </Box>
@@ -114,15 +120,16 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     <Flex justifyContent={"space-between"}>
       <Text.span
         color={"#9797A5"}
+        fontFamily={fonts.sansSerif}
         fontSize={"12px"}
         pr={16}
         maxWidth="100%"
         style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
         title={issuer}
       >
-        Issuer: {issuer}
+        Issuer: {issuerFormatted}
       </Text.span>
-      <Text.span color={"#9797A5"} fontSize={"12px"}>
+      <Text.span color={"#9797A5"} fontFamily={fonts.sansSerif} fontSize={"12px"}>
         {issuanceDate}
       </Text.span>
     </Flex>

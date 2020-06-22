@@ -4,7 +4,7 @@ import jwtDecode from "jwt-decode";
 import { Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { Credential, CredentialViewTypes } from "./Credential";
+import { Credential, CredentialViewTypes } from "../elements";
 
 export const Credentials: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);

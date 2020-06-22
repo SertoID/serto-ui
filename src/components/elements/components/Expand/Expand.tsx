@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Box, Pill, Text } from "rimble-ui";
+import { baseColors } from "../../themes";
 
 export const Expand: React.FunctionComponent = (props) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -10,7 +11,7 @@ export const Expand: React.FunctionComponent = (props) => {
       <button
         onClick={() => setOpen(!isOpen)}
         style={{
-          backgroundColor: "#FFFFFF",
+          backgroundColor: baseColors.white,
           border: "none",
           cursor: "pointer",
           padding: "0",

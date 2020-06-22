@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AuthenticatedRoute } from "./components/auth/AuthenticatedRoute";
-import { Explore } from "./components/Dashboard/Explore";
+import { HomePage } from "./components/HomePage";
 import { AdminPage } from "./components/Admin/AdminPage";
 import { TenantPage } from "./components/Tenant/TenantPage";
 import { FeedsPage } from "./components/Tenant/FeedsPage";
@@ -26,7 +26,7 @@ export const App = () => {
             <AuthenticatedRoute path="/admin" component={AdminPage} />
             <AuthenticatedRoute path="/tenant/feeds" component={FeedsPage} />
             <AuthenticatedRoute path="/tenant" component={TenantPage} />
-            <AuthenticatedRoute path="/" component={Explore} />
+            <AuthenticatedRoute path="/" component={HomePage} />
           </Switch>
         </React.Suspense>
       </TrustAgencyContext.Provider>
