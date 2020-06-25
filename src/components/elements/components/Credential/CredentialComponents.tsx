@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Box, Text } from "rimble-ui";
-import { fonts } from "../../themes";
+import { baseColors, fonts } from "../../themes";
 
 export const CredentialBorder: React.FunctionComponent = (props) => {
   return (
     <Box
-      backgroundColor={"#FFFFFF"}
+      backgroundColor={baseColors.white}
       border={"1px solid #CCC3F3"}
       borderRadius={"8px"}
       boxShadow={"0 2px 4px rgba(50, 50, 63, 0.1)"}
@@ -41,7 +41,7 @@ export const CredentialTDRight: React.FunctionComponent = (props) => {
       }}
     >
       <Text.span
-        color={"#000E1A"}
+        color={baseColors.black}
         fontFamily={fonts.sansSerif}
         fontSize={"14px"}
         fontWeight={"600"}

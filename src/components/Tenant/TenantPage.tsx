@@ -1,11 +1,10 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
-import { Box, Button, Heading, Modal, Card, Tooltip } from "rimble-ui";
+import { routes } from "../../constants";
+import { Box, Button, Modal, Card, Tooltip } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { Credentials } from "./Credentials";
 import { IssueVc } from "./IssueVc";
-import { LogOut } from "../auth/LogOut";
+import { GlobalLayout, HeaderBox, Header, baseColors } from "../elements";
 
 export const TenantPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -40,36 +39,35 @@ export const TenantPage: React.FunctionComponent = (props) => {
   }, [getIdentifiers]);
 
   return (
-    <div>
-      <LogOut />
-      <Box width={"auto"} position={"absolute"} top={"0"} right={"100px"}>
-        <Link to="/tenant/feeds">
-          <Button.Text>Feeds</Button.Text>
-        </Link>
-      </Box>
+    <GlobalLayout url={routes.TENANT}>
+      <HeaderBox>
+        <Header heading={"Tenant"} />
+      </HeaderBox>
 
-      <Heading as={"h1"}>Tenant</Heading>
+      <Box bg={baseColors.white} borderRadius={4} p={"16px"}>
+        <Box width={[1]} mb={10}>
+          <Button onClick={createIdentifier}>Create Identifier</Button>
+        </Box>
+        <Box width={[1]} mb={10}>
+          <Button.Outline onClick={getIdentifiers}>Refresh Identifiers</Button.Outline>
+        </Box>
+        <pre>identifiers:</pre>
+        {identifiers &&
+          identifiers.map((id: any, i: number) => {
+            return <pre key={i}>{id}</pre>;
+          })}
+        <pre>{error ? `error: ${error}` : undefined}</pre>
 
-      <Box width={[1]} mb={10}>
-        <Button onClick={createIdentifier}>Create Identifier</Button>
+        <Box my={10}>
+          {identifiers[0] ? (
+            <Button onClick={() => setIsIssueModalOpen(true)}>Issue Credential</Button>
+          ) : (
+            <Tooltip message="You must have at least one identifier in order to issue a VC" placement="top">
+              <Button.Base>Issue Credential</Button.Base>
+            </Tooltip>
+          )}
+        </Box>
       </Box>
-      <Box width={[1]} mb={10}>
-        <Button.Outline onClick={getIdentifiers}>Refresh Identifiers</Button.Outline>
-      </Box>
-      <pre>{identifiers ? `identifiers: ${JSON.stringify(identifiers)}` : undefined}</pre>
-      <pre>{error ? `error: ${error}` : undefined}</pre>
-
-      <Box my={10}>
-        {identifiers[0] ? (
-          <Button onClick={() => setIsIssueModalOpen(true)}>Issue Credential</Button>
-        ) : (
-          <Tooltip message="You must have at least one identifier in order to issue a VC" placement="top">
-            <Button.Base>Issue Credential</Button.Base>
-          </Tooltip>
-        )}
-      </Box>
-
-      <Credentials />
 
       <Modal isOpen={isIssueModalOpen}>
         <Card p={0}>
@@ -88,6 +86,6 @@ export const TenantPage: React.FunctionComponent = (props) => {
           </Box>
         </Card>
       </Modal>
-    </div>
+    </GlobalLayout>
   );
 };

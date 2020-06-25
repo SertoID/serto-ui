@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Button } from "rimble-ui";
+import { Button } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 
@@ -15,10 +15,8 @@ export const LogOut: React.FunctionComponent = (props) => {
   }
 
   return (
-    <>
-      <Box width={"auto"} position={"absolute"} top={"0"} right={"10px"}>
-        <Button.Text onClick={logOut}>Log Out</Button.Text>
-      </Box>
-    </>
+    <Button.Outline onClick={logOut} height={"2.5rem"} mt={"12px"} width={1}>
+      Log Out
+    </Button.Outline>
   );
 };

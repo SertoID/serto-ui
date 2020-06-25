@@ -2,7 +2,7 @@ import * as React from "react";
 import { Box, Flex, Pill, Table, Text } from "rimble-ui";
 import { Info, Person, VerifiedUser } from "@rimble/icons";
 import { CredentialBorder, CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
-import { CopyToClipboard, Expand, dateTimeFormat, ellipsis, fonts } from "../../";
+import { CopyToClipboard, Expand, dateTimeFormat, ellipsis, baseColors, colors, fonts } from "../../";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
@@ -31,9 +31,11 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
       <Flex alignItems={"center"}>
         <Box>
           <Flex alignItems={"center"}>
-            <Person size="16" color={"#AAA7FF"} mr={"5px"} />
+            <Box bg={"#CCC3F3"} borderRadius={"50%"} height={"16px"} mr={"5px"} p={"1px"} width={"16px"}>
+              <Person size="14" color={baseColors.white} />
+            </Box>
             <Text.span
-              color={"#000E1A"}
+              color={baseColors.black}
               fontFamily={fonts.sansSerif}
               fontSize={"12px"}
               mr={"8px"}
@@ -52,7 +54,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         </Box>
         <Box flexGrow={"1"}>
           <Flex alignItems={"center"} justifyContent={"flex-end"}>
-            <Pill color="primary" fontFamily={fonts.sansSerif} fontSize={"12px"} height={"1.5rem"} mr={"10px"}>
+            <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={"12px"} height={"1.5rem"} mr={"10px"}>
               {credentialType}
             </Pill>
             <VerifiedUser size="25" color={"#AAA7FF"} />
@@ -60,7 +62,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         </Box>
       </Flex>
       <Box>
-        <Text color={"#000E1A"} fontFamily={fonts.sansSerif} fontSize={"16px"} fontWeight={"600"} mr={"8px"}>
+        <Text color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={"16px"} fontWeight={"600"} mr={"8px"}>
           {title}
         </Text>
       </Box>

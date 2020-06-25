@@ -1,7 +1,6 @@
 import * as React from "react";
 import useSWR from "swr";
 import jwtDecode from "jwt-decode";
-import { Heading } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { Credential, CredentialViewTypes } from "../elements";
@@ -12,7 +11,6 @@ export const Credentials: React.FunctionComponent = (props) => {
 
   return (
     <>
-      <Heading as={"h3"}>Credentials</Heading>
       {error && <pre>{`error: ${error}`}</pre>}
 
       {data && data.verifiableCredentials.length !== 0

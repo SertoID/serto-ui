@@ -1,18 +1,27 @@
 import * as React from "react";
-import { IdentityThemeProvider, Nav } from "../../";
-import { Flex, Box } from "rimble-ui";
+import { Box, Flex, Text } from "rimble-ui";
+import { LogOut } from "../../../auth/LogOut";
+import { Nav, baseColors, fonts } from "../../";
 
-export const GlobalLayout: React.FunctionComponent = (props) => {
+export interface GlobalLayoutProps {
+  url: string;
+}
+
+export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
   return (
-    <IdentityThemeProvider>
-      <Flex>
-        <Box width={[1 / 6]} p={10}>
-          <Nav />
-        </Box>
-        <Box width={[5 / 6]} p={10}>
-          {props.children}
-        </Box>
-      </Flex>
-    </IdentityThemeProvider>
+    <Flex p={10}>
+      <Box width={"220px"} p={10}>
+        <Flex alignItems={"center"} bg={baseColors.white} borderRadius={4} mb={"17px"} p={"16px"} height={"4.5rem"}>
+          <Text.span fontFamily={fonts.sansSerif} fontSize={"16px"} fontWeight={"600"}>
+            Product Name
+          </Text.span>
+        </Flex>
+        <Nav url={props.url} />
+        <LogOut />
+      </Box>
+      <Box flexGrow={"1"} p={10}>
+        {props.children}
+      </Box>
+    </Flex>
   );
 };

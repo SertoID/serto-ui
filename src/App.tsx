@@ -1,13 +1,34 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { createGlobalStyle } from "styled-components";
+import { routes } from "./constants";
+import { TrustAgencyContext } from "./context/TrustAgentProvider";
+import { TrustAgencyService, TrustAgencyServiceConfig } from "./services/TrustAgencyService";
+import { IdentityThemeProvider, fonts } from "./components/elements";
 import { AuthenticatedRoute } from "./components/auth/AuthenticatedRoute";
 import { HomePage } from "./components/HomePage";
 import { AdminPage } from "./components/Admin/AdminPage";
 import { TenantPage } from "./components/Tenant/TenantPage";
 import { FeedsPage } from "./components/Tenant/FeedsPage";
+import { IssuedCredentialsPage } from "./components/Tenant/IssuedCredentialsPage";
+import { ReceivedCredentialsPage } from "./components/Tenant/ReceivedCredentialsPage";
 import { LoginPage } from "./components/auth/LoginPage";
-import { TrustAgencyContext } from "./context/TrustAgentProvider";
-import { TrustAgencyService, TrustAgencyServiceConfig } from "./services/TrustAgencyService";
+
+const GlobalStyle = createGlobalStyle`
+  html {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #F6F6FE;
+    font-family: ${fonts.sansSerif};
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+  }
+  *, :after, :before {
+    box-sizing: inherit;
+  }
+`;
 
 const serviceConfig: TrustAgencyServiceConfig = {
   url: "https://alpha.consensysidentity.com",
@@ -21,13 +42,18 @@ export const App = () => {
     <BrowserRouter>
       <TrustAgencyContext.Provider value={trustAgent}>
         <React.Suspense fallback={<></>}>
-          <Switch>
-            <Route path="/login" component={LoginPage} />
-            <AuthenticatedRoute path="/admin" component={AdminPage} />
-            <AuthenticatedRoute path="/tenant/feeds" component={FeedsPage} />
-            <AuthenticatedRoute path="/tenant" component={TenantPage} />
-            <AuthenticatedRoute path="/" component={HomePage} />
-          </Switch>
+          <IdentityThemeProvider>
+            <GlobalStyle />
+            <Switch>
+              <Route path={routes.LOGIN} component={LoginPage} />
+              <AuthenticatedRoute exact path={routes.HOMEPAGE} component={HomePage} />
+              <AuthenticatedRoute path={routes.ADMIN} component={AdminPage} />
+              <AuthenticatedRoute exact path={routes.TENANT} component={TenantPage} />
+              <AuthenticatedRoute path={routes.FEEDS} component={FeedsPage} />
+              <AuthenticatedRoute path={routes.ISSUED_CREDENTIAL} component={IssuedCredentialsPage} />
+              <AuthenticatedRoute path={routes.RECEIVED_CREDENTIAL} component={ReceivedCredentialsPage} />
+            </Switch>
+          </IdentityThemeProvider>
         </React.Suspense>
       </TrustAgencyContext.Provider>
     </BrowserRouter>

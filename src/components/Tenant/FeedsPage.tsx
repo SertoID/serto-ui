@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 import slugify from "@sindresorhus/slugify";
-import { Box, Button, Heading, Input, Field, Flex, Modal, Card, Loader, Flash, Table } from "rimble-ui";
+import { routes } from "../../constants";
+import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { LogOut } from "../auth/LogOut";
+import { GlobalLayout, HeaderBox, Header, TH, TR, TBody, baseColors } from "../elements";
 
 export const FeedsPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -47,63 +47,79 @@ export const FeedsPage: React.FunctionComponent = (props) => {
   };
 
   return (
-    <>
-      <LogOut />
-      {/*@TODO Terrible, but leaving this for now until we know enough to make an actual reusable nav component.*/}
-      <Box width={"auto"} position={"absolute"} top={"0"} right={"100px"}>
-        <Link to="/tenant">
-          <Button.Text>Tenant Home</Button.Text>
-        </Link>
-      </Box>
-
-      <Heading as={"h1"}>Feeds</Heading>
-      <Box width={[1]} mb={3}>
-        <Button onClick={() => setIsCreateModalOpen(true)}>Create Feed</Button>
-      </Box>
+    <GlobalLayout url={routes.FEEDS}>
       {data && data.length !== 0 ? (
-        <Table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Slug</th>
-              <th>Description</th>
-              <th>Created</th>
-              <th>Updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((feed: any, i: number) => {
-              return (
-                <tr key={i}>
-                  <td>{feed.name}</td>
-                  <td>{feed.slug}</td>
-                  <td>{feed.description}</td>
-                  <td>
-                    <time title={feed.created} dateTime={feed.created}>
-                      {new Date(feed.created).toDateString()}
-                    </time>
-                  </td>
-                  <td>
-                    <time title={feed.updated} dateTime={feed.updated}>
-                      {new Date(feed.updated).toDateString()}
-                    </time>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      ) : isValidating ? (
-        "Loading..."
-      ) : (
-        "You currently have no feeds"
-      )}
+        <>
+          <HeaderBox>
+            <Header heading={"Credential Feeds"}>
+              <Button.Outline onClick={() => setIsCreateModalOpen(true)} height={"2.5rem"}>
+                Create Feed
+              </Button.Outline>
+            </Header>
+          </HeaderBox>
 
-      {getFeedsError && (
-        <Box p={1} mb={1}>
+          <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
+            <Table border={0} boxShadow={0}>
+              <thead>
+                <TR>
+                  <TH>Name</TH>
+                  <TH>Slug</TH>
+                  <TH>Description</TH>
+                  <TH>Created</TH>
+                  <TH>Updated</TH>
+                </TR>
+              </thead>
+              <TBody>
+                {data.map((feed: any, i: number) => {
+                  return (
+                    <TR key={i}>
+                      <td>{feed.name}</td>
+                      <td>{feed.slug}</td>
+                      <td>{feed.description}</td>
+                      <td>
+                        <time title={feed.created} dateTime={feed.created}>
+                          {new Date(feed.created).toDateString()}
+                        </time>
+                      </td>
+                      <td>
+                        <time title={feed.updated} dateTime={feed.updated}>
+                          {new Date(feed.updated).toDateString()}
+                        </time>
+                      </td>
+                    </TR>
+                  );
+                })}
+              </TBody>
+            </Table>
+          </Box>
+        </>
+      ) : isValidating ? (
+        <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
+          <Flex minHeight={"10rem"} alignItems={"center"} justifyContent={"center"}>
+            <Loader color="#5952FF" size={20} />
+          </Flex>
+        </Box>
+      ) : getFeedsError ? (
+        <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
           <Flash my={3} variant="danger">
             Error loading feeds: {JSON.stringify(getFeedsError)}
           </Flash>
+        </Box>
+      ) : (
+        <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
+          <Flex alignItems={"center"} justifyContent={"center"} minHeight={"20rem"}>
+            <Box bg={baseColors.white} borderRadius={4} py={"16px"} maxWidth={"400px"}>
+              <Text.span display={"block"} fontSize={"14px"} lineHeight={"22px"} textAlign={"center"}>
+                <b style={{ display: "block", fontWeight: 600 }}>You are not following any data feeds.</b>
+                Create a Verified Data Feed to expose real-time data streams to your customers or partners.
+              </Text.span>
+              <Flex alignItems={"center"} justifyContent={"center"}>
+                <Button onClick={() => setIsCreateModalOpen(true)} height={"2.5rem"} mt={"40px"} mx={"auto"}>
+                  Create Feed
+                </Button>
+              </Flex>
+            </Box>
+          </Flex>
         </Box>
       )}
 
@@ -158,6 +174,6 @@ export const FeedsPage: React.FunctionComponent = (props) => {
           </Flex>
         </Card>
       </Modal>
-    </>
+    </GlobalLayout>
   );
 };

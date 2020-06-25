@@ -8,7 +8,7 @@ export const baseColors = {
   success: "#28C081",
   warning: "#F1A446",
   danger: "#E9403A",
-  blurple: "#4E3FCE",
+  blurple: "#5952FF",
   consensysblue: "#3259D6",
 };
 
@@ -75,12 +75,3 @@ export const colors = {
     dark: [null, shade(0.4, baseColors.danger)],
   },
 };
-
-export const blacks = colors.blacks;
-export const whites = colors.whites;
-export const greys = colors.greys;
-export const blurple = colors.blurple;
-export const info = colors.info;
-export const success = colors.success;
-export const warning = colors.warning;
-export const danger = colors.danger;

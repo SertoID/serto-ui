@@ -2,7 +2,15 @@ import * as React from "react";
 import { ThemeProvider } from "styled-components";
 import { tint, shade } from "polished";
 import { fonts } from "./fonts";
-import { baseColors, blurple, blacks, whites, success, warning, danger, info } from "./colors";
+import { baseColors, colors } from "./colors";
+
+const blacks = colors.blacks;
+const whites = colors.whites;
+const blurple = colors.blurple;
+const info = colors.info;
+const success = colors.success;
+const warning = colors.warning;
+const danger = colors.danger;
 
 // Rimble-Identity Theme File
 const identityTheme = {
