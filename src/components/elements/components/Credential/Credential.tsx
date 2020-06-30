@@ -28,41 +28,41 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
 
   const VerifiedCredentialHeader = () => (
     <>
-      <Flex alignItems={"center"}>
+      <Flex alignItems="center">
         <Box>
-          <Flex alignItems={"center"}>
-            <Box bg={"#CCC3F3"} borderRadius={"50%"} height={"16px"} mr={"5px"} p={"1px"} width={"16px"}>
+          <Flex alignItems="center">
+            <Box bg={colors.primary.disabled[1]} borderRadius="50%" height={3} mr={1} p="1px" width={3}>
               <Person size="14" color={baseColors.white} />
             </Box>
             <Text.span
               color={baseColors.black}
               fontFamily={fonts.sansSerif}
-              fontSize={"12px"}
-              mr={"8px"}
-              maxWidth={150}
+              fontSize={0}
+              mr={2}
+              maxWidth={6}
               style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
               title={issuer}
             >
               {issuerFormatted}
             </Text.span>
             {viewType === CredentialViewTypes.LIST && (
-              <Text.span color={"#9797A5"} fontFamily={fonts.sansSerif} fontSize={"12px"}>
+              <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
                 {issuanceDate}
               </Text.span>
             )}
           </Flex>
         </Box>
-        <Box flexGrow={"1"}>
-          <Flex alignItems={"center"} justifyContent={"flex-end"}>
-            <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={"12px"} height={"1.5rem"} mr={"10px"}>
+        <Box flexGrow="1">
+          <Flex alignItems="center" justifyContent="flex-end">
+            <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={0} height={4} mr={2}>
               {credentialType}
             </Pill>
-            <VerifiedUser size="25" color={"#AAA7FF"} />
+            <VerifiedUser size="24px" color={colors.primary.disabled[1]} />
           </Flex>
         </Box>
       </Flex>
       <Box>
-        <Text color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={"16px"} fontWeight={"600"} mr={"8px"}>
+        <Text color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3} mr={2}>
           {title}
         </Text>
       </Box>
@@ -71,7 +71,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
 
   const VerifiedCredentialBody = () => (
     <>
-      <Table border={"none"} boxShadow={"0"} width={1} style={{ tableLayout: "fixed" }}>
+      <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
         <tbody>
           {/* This is just for demo purposes need to rework this */}
           {attributes ? (
@@ -93,22 +93,22 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
           )}
         </tbody>
       </Table>
-      <Box my={"10px"}>
-        <Box backgroundColor={"#F2F2F8"} borderRadius={"4px"} p={"8px"}>
-          <Flex justifyContent={"space-between"} mb={"5px"}>
-            <Flex alignItems={"center"}>
-              <Text.span color={"#53535F"} fontFamily={fonts.sansSerif} fontSize={"12px"} lineHeight={"16px"}>
+      <Box my={2}>
+        <Box bg={colors.nearWhite} borderRadius={1} p={2}>
+          <Flex justifyContent="space-between" mb={1}>
+            <Flex alignItems="center">
+              <Text.span color={colors.midGray} fontFamily={fonts.sansSerif} fontSize={0}>
                 Token
               </Text.span>
-              <Info size="14" ml={"5px"} />
+              <Info size="14px" ml={1} />
             </Flex>
-            <CopyToClipboard text={jwt} size={"15px"} />
+            <CopyToClipboard text={jwt} size="16px" />
           </Flex>
           <Text.span
-            color={"#53535F"}
-            fontFamily={fonts.sansSerif}
-            fontSize={"12px"}
-            lineHeight={"16px"}
+            color={colors.midGray}
+            fontFamily={fonts.monospace}
+            fontSize={0}
+            lineHeight="copy"
             style={{ wordWrap: "break-word" }}
           >
             {jwt}
@@ -119,19 +119,19 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   );
 
   const VerifiedCredentialFooter = () => (
-    <Flex justifyContent={"space-between"}>
+    <Flex justifyContent="space-between">
       <Text.span
-        color={"#9797A5"}
+        color={colors.silver}
         fontFamily={fonts.sansSerif}
-        fontSize={"12px"}
-        pr={16}
+        fontSize={0}
+        pr={3}
         maxWidth="100%"
         style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
         title={issuer}
       >
         Issuer: {issuerFormatted}
       </Text.span>
-      <Text.span color={"#9797A5"} fontFamily={fonts.sansSerif} fontSize={"12px"}>
+      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
         {issuanceDate}
       </Text.span>
     </Flex>

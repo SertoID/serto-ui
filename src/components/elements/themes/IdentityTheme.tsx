@@ -6,7 +6,7 @@ import { baseColors, colors } from "./colors";
 
 const blacks = colors.blacks;
 const whites = colors.whites;
-const blurple = colors.blurple;
+const primary = colors.primary;
 const info = colors.info;
 const success = colors.success;
 const warning = colors.warning;
@@ -16,7 +16,7 @@ const danger = colors.danger;
 const identityTheme = {
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64],
   fontWeights: [0, 300, 400, 600, 700],
-  letterSpacings: [0, 1, 2, 4, 8],
+  letterSpacings: [0, 1],
   breakpoints: ["40em", "52em", "64em"],
   lineHeights: {
     solid: 1,
@@ -26,38 +26,39 @@ const identityTheme = {
   fonts: {
     serif: fonts.serif,
     sansSerif: fonts.sansSerif,
+    mono: fonts.monospace,
   },
-  space: [0, 4, 8, 16, 32, 64, 128, 256],
-  radii: ["0", "4px", "8px", "16px"],
-  width: [0, 16, 32, 64, 128, 256],
-  minWidths: [0, 16, 32, 64, 128, 256],
-  maxWidths: [0, 16, 32, 64, 128, 256, 512, 768, 1024, 1536],
-  heights: [0, 16, 32, 64, 128, 256],
-  minHeights: [0, 16, 32, 64, 128, 256],
-  maxHeights: [0, 16, 32, 64, 128, 256],
-  borders: [0, "1px solid transparent"],
-  borderWidths: ["0", "1px", "2px", "4px"],
-  shadows: ["0", "0 2px 4px rgba(50, 50, 63, 0.1)", "0 8px 16px rgba(50, 50, 63, 0.1)", "0 7px 14px rgba(50,50,63,.1)"],
+  space: [0, 4, 8, 16, 24, 32, 64, 128, 256],
+  radii: [0, 4, 8, 16, 24, 32],
+  sizes: [0, 4, 8, 16, 24, 32, 64, 128, 256, 512, 768, 1024, 1536],
+  borders: [0, "1px solid " + colors.moonGray, "1px solid " + colors.primary.border[1]],
+  borderWidths: [0, 1, 2, 4],
+  shadows: [
+    "0",
+    "0 2px 4px rgba(50, 50, 63, 0.1)",
+    "0 8px 16px rgba(50, 50, 63, 0.1)",
+    "0 7px 14px rgba(50, 50, 63, 0.1)",
+  ],
   opacity: {
     disabled: 0.4,
   },
   colors: {
-    text: "#111",
+    text: colors.nearBlack,
     background: baseColors.white,
-    primary: blurple.base,
-    "primary-light": blurple.light[1],
-    "primary-dark": blurple.dark[1],
+    primary: primary.base,
+    "primary-light": primary.light[3],
+    "primary-dark": primary.dark[1],
     blue: baseColors.consensysblue,
     black: baseColors.black,
-    "near-black": "#111",
-    "dark-gray": "#32323F",
-    "mid-gray": "#53535F",
-    grey: "#BDBDC6",
-    silver: "#9797A5",
-    "light-silver": "#AAAAB5",
-    "moon-gray": "#BDBDC6",
-    "light-gray": "#D8D8E1",
-    "near-white": "#F2F2F8",
+    "near-black": colors.nearBlack,
+    "dark-gray": colors.darkGray,
+    "mid-gray": colors.midGray,
+    grey: colors.grey,
+    silver: colors.silver,
+    "light-silver": colors.lightSilver,
+    "moon-gray": colors.moonGray,
+    "light-gray": colors.lightGray,
+    "near-white": colors.nearWhite,
     white: baseColors.white,
     transparent: "transparent",
     blacks: [
@@ -96,38 +97,38 @@ const identityTheme = {
   zIndices: [0, 9, 99, 999, 9999],
   messageStyle: {
     base: {
-      color: shade(0.4, "#AAA"),
-      backgroundColor: tint(0.9, "#AAA"),
-      borderColor: "#AAA",
+      color: shade(0.4, colors.lightSilver),
+      backgroundColor: tint(0.9, colors.lightSilver),
+      borderColor: colors.lightSilver,
     },
     success: {
-      color: shade(0.4, success.base),
-      backgroundColor: tint(0.9, success.base),
+      color: success.dark,
+      backgroundColor: success.light,
       borderColor: success.base,
     },
     warning: {
-      color: shade(0.4, warning.base),
-      backgroundColor: tint(0.9, warning.base),
+      color: warning.dark,
+      backgroundColor: warning.light,
       borderColor: warning.base,
     },
     danger: {
-      color: shade(0.4, danger.base),
-      backgroundColor: tint(0.9, danger.base),
+      color: danger.dark,
+      backgroundColor: danger.light,
       borderColor: danger.base,
     },
     info: {
-      color: shade(0.4, info.base),
-      backgroundColor: tint(0.9, info.base),
+      color: info.dark,
+      backgroundColor: info.light,
       borderColor: info.base,
     },
   },
   buttons: {
     primary: {
-      color: blurple.text,
-      backgroundColor: blurple.base,
+      color: primary.text,
+      backgroundColor: primary.base,
       // use css custom props
-      "--main-color": blurple.base,
-      "--contrast-color": blurple.text,
+      "--main-color": primary.base,
+      "--contrast-color": primary.text,
     },
     success: {
       "--main-color": success.base,
@@ -140,7 +141,7 @@ const identityTheme = {
   },
   buttonSizes: {
     small: {
-      fontSize: "0.75rem",
+      fontSize: "0.875rem",
       height: "2rem",
       minWidth: "2rem",
       padding: "0 1rem",

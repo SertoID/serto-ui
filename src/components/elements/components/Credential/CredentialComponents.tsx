@@ -1,18 +1,10 @@
 import * as React from "react";
 import { Box, Text } from "rimble-ui";
-import { baseColors, fonts } from "../../themes";
+import { baseColors, fonts, colors } from "../../themes";
 
 export const CredentialBorder: React.FunctionComponent = (props) => {
   return (
-    <Box
-      backgroundColor={baseColors.white}
-      border={"1px solid #CCC3F3"}
-      borderRadius={"8px"}
-      boxShadow={"0 2px 4px rgba(50, 50, 63, 0.1)"}
-      maxWidth={"480px"}
-      mb={"20px"}
-      padding={"10px"}
-    >
+    <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px" mb={4} padding={2}>
       {props.children}
     </Box>
   );
@@ -40,13 +32,7 @@ export const CredentialTDRight: React.FunctionComponent = (props) => {
         wordBreak: "break-word",
       }}
     >
-      <Text.span
-        color={baseColors.black}
-        fontFamily={fonts.sansSerif}
-        fontSize={"14px"}
-        fontWeight={"600"}
-        lineHeight={"18px"}
-      >
+      <Text.span color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={1} fontWeight={3} lineHeight="copy">
         {props.children}
       </Text.span>
     </td>
@@ -61,13 +47,7 @@ export const CredentialTDLeft: React.FunctionComponent = (props) => {
         padding: "5px 0",
       }}
     >
-      <Text.span
-        color={"#53535F"}
-        fontFamily={fonts.sansSerif}
-        fontSize={"14px"}
-        fontWeight={"600"}
-        lineHeight={"18px"}
-      >
+      <Text.span color={colors.midGray} fontFamily={fonts.sansSerif} fontSize={1} fontWeight={3} lineHeight="copy">
         {props.children}
       </Text.span>
     </td>

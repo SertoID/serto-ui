@@ -40,8 +40,8 @@ export const AdminPage: React.FunctionComponent = (props) => {
   return (
     <div>
       <LogOut />
-      <Heading as={"h1"}>Admin</Heading>
-      <Box width={[1]} mb={10}>
+      <Heading as="h1">Admin</Heading>
+      <Box width="100%" mb={2}>
         <Input
           type="text"
           required={true}
@@ -51,7 +51,7 @@ export const AdminPage: React.FunctionComponent = (props) => {
         />
         <Button onClick={createTenant}>Create Tenant</Button>
       </Box>
-      <Box width={[1]} mb={10}>
+      <Box width="100%" mb={2}>
         <Button.Outline onClick={getTenants}>Refresh Tenants</Button.Outline>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ContentCopy, Check } from "@rimble/icons";
-import { copyToClipboard } from "../../";
+import { copyToClipboard, colors } from "../../";
 
 export interface CopyToClipboardProps {
   text: string;
@@ -19,7 +19,7 @@ export const CopyToClipboard: React.FunctionComponent<CopyToClipboardProps> = (p
   }, [copied]);
 
   if (copied) {
-    return <Check color={"#28C081"} size={props.size} />;
+    return <Check color={colors.success.base} size={props.size} />;
   }
 
   return (

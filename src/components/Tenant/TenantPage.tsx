@@ -41,14 +41,14 @@ export const TenantPage: React.FunctionComponent = (props) => {
   return (
     <GlobalLayout url={routes.TENANT}>
       <HeaderBox>
-        <Header heading={"Tenant"} />
+        <Header heading="Tenant" />
       </HeaderBox>
 
-      <Box bg={baseColors.white} borderRadius={4} p={"16px"}>
-        <Box width={[1]} mb={10}>
+      <Box bg={baseColors.white} borderRadius={1} p={3}>
+        <Box width="100%" mb={2}>
           <Button onClick={createIdentifier}>Create Identifier</Button>
         </Box>
-        <Box width={[1]} mb={10}>
+        <Box width="100%" mb={2}>
           <Button.Outline onClick={getIdentifiers}>Refresh Identifiers</Button.Outline>
         </Box>
         <pre>identifiers:</pre>
@@ -73,15 +73,15 @@ export const TenantPage: React.FunctionComponent = (props) => {
         <Card p={0}>
           <Button.Text
             icononly
-            icon={"Close"}
-            position={"absolute"}
+            icon="Close"
+            position="absolute"
             top={0}
             right={0}
             mt={3}
             mr={3}
             onClick={() => setIsIssueModalOpen(false)}
           />
-          <Box p={4} width={480} maxWidth="95%" maxHeight="95vh" style={{ overflowY: "auto" }}>
+          <Box p={4} width="480px" maxWidth="95%" maxHeight="95vh" style={{ overflowY: "auto" }}>
             <IssueVc defaultIssuer={identifiers[0]} onComplete={() => setIsIssueModalOpen(false)} />
           </Box>
         </Card>

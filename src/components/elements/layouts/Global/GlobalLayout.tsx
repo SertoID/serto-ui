@@ -9,17 +9,17 @@ export interface GlobalLayoutProps {
 
 export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
   return (
-    <Flex p={10}>
-      <Box width={"220px"} p={10}>
-        <Flex alignItems={"center"} bg={baseColors.white} borderRadius={4} mb={"17px"} p={"16px"} height={"4.5rem"}>
-          <Text.span fontFamily={fonts.sansSerif} fontSize={"16px"} fontWeight={"600"}>
+    <Flex p={2}>
+      <Box width={8} p={2}>
+        <Flex alignItems="center" bg={baseColors.white} borderRadius={1} mb={3} p={3} height="4rem">
+          <Text.span fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3}>
             Product Name
           </Text.span>
         </Flex>
         <Nav url={props.url} />
         <LogOut />
       </Box>
-      <Box flexGrow={"1"} p={10}>
+      <Box flexGrow="1" p={2}>
         {props.children}
       </Box>
     </Flex>

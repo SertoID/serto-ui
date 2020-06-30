@@ -1,6 +1,5 @@
 import { tint, shade, readableColor } from "polished";
 
-// rimble base colors
 export const baseColors = {
   black: "#000E1A",
   white: "#FFF",
@@ -12,9 +11,16 @@ export const baseColors = {
   consensysblue: "#3259D6",
 };
 
-// rimble palette
-// TODO:sruddy WIP don't use yet
 export const colors = {
+  nearBlack: "#111",
+  darkGray: "#32323F",
+  midGray: "#53535F",
+  grey: "#BDBDC6",
+  silver: "#9797A5",
+  lightSilver: "#AAAAB5",
+  moonGray: "#BDBDC6",
+  lightGray: "#D8D8E1",
+  nearWhite: "#F2F2F8",
   blacks: [
     "rgba(0,0,0,.0125)",
     "rgba(0,0,0,.025)",
@@ -43,12 +49,13 @@ export const colors = {
     "rgba(255,255,255,.8)",
     "rgba(255,255,255,.9)",
   ],
-  greys: ["#F2F2F8", "#D8D8E1", "#BDBDC6", "#AAAAB5", "#9797A5", "#53535F", "#32323F", "#111", "", ""],
-  blurple: {
-    base: baseColors.blurple,
-    text: readableColor(baseColors.blurple),
-    light: [null, tint(0.2, baseColors.blurple)],
-    dark: [null, shade(0.2, baseColors.blurple)],
+  primary: {
+    base: baseColors.blurple, // #5952FF
+    text: readableColor(baseColors.blurple), // #FFF
+    light: [null, tint(0.2, baseColors.blurple)], // #7A74FF
+    dark: [null, shade(0.2, baseColors.blurple)], // #4741CC
+    disabled: [null, tint(0.5, baseColors.blurple)], // #ACA8FF
+    border: [null, tint(0.7, baseColors.blurple)], // #CDCBFF
   },
   info: {
     base: baseColors.info,

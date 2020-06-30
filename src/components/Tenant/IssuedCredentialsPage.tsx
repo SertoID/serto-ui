@@ -8,10 +8,10 @@ export const IssuedCredentialsPage: React.FunctionComponent = (props) => {
   return (
     <GlobalLayout url={routes.ISSUED_CREDENTIAL}>
       <HeaderBox>
-        <Header heading={"Issued Credentials"} />
+        <Header heading="Issued Credentials" />
       </HeaderBox>
 
-      <Box bg={baseColors.white} borderRadius={4} p={"16px"}>
+      <Box bg={baseColors.white} borderRadius={1} p={3}>
         <Credentials />
       </Box>
     </GlobalLayout>

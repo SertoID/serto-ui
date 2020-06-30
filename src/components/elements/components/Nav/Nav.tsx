@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { routes } from "../../../../constants";
 import { Box, Flex, Text } from "rimble-ui";
 import { Home, Inbox, Send } from "@rimble/icons";
-import { baseColors } from "../../";
+import { baseColors, colors } from "../../";
 
 const NavItemStyled = styled.div`
   padding: 10px 0;
@@ -29,10 +29,10 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
 
   if (props.currentUrl === props.url) {
     return (
-      <Box py={"10px"}>
-        <Flex alignItems={"center"}>
-          <Icon color={"#5952FF"} size={"15px"} mr={"15px"} />
-          <Text.span color={baseColors.black} fontSize={"14px"} fontWeight={"600"}>
+      <Box py={2}>
+        <Flex alignItems="center">
+          <Icon color={colors.primary.base} size="16px" mr={3} />
+          <Text.span color={baseColors.black} fontSize={1} fontWeight={3}>
             {props.text}
           </Text.span>
         </Flex>
@@ -43,9 +43,9 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
   return (
     <NavItemStyled>
       <Link to={props.url}>
-        <Flex alignItems={"center"}>
-          <Icon color={"#53535F"} size={"15px"} mr={"15px"} />
-          <Text.span color={"#53535F"} fontSize={"14px"}>
+        <Flex alignItems="center">
+          <Icon color={colors.midGray} size="16px" mr={3} />
+          <Text.span color={colors.midGray} fontSize={1}>
             {props.text}
           </Text.span>
         </Flex>
@@ -62,10 +62,10 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
   const { url } = props;
   return (
     <>
-      <NavItem url={routes.TENANT} text={"Tenant Home"} icon={Home} currentUrl={url} />
-      <NavItem url={routes.FEEDS} text={"Credential Feeds"} icon={Home} currentUrl={url} />
-      <NavItem url={routes.ISSUED_CREDENTIAL} text={"Issued Credentials"} icon={Send} currentUrl={url} />
-      <NavItem url={routes.RECEIVED_CREDENTIAL} text={"Received Credentials"} icon={Inbox} currentUrl={url} />
+      <NavItem url={routes.TENANT} text="Tenant Home" icon={Home} currentUrl={url} />
+      <NavItem url={routes.FEEDS} text="Credential Feeds" icon={Home} currentUrl={url} />
+      <NavItem url={routes.ISSUED_CREDENTIAL} text="Issued Credentials" icon={Send} currentUrl={url} />
+      <NavItem url={routes.RECEIVED_CREDENTIAL} text="Received Credentials" icon={Inbox} currentUrl={url} />
     </>
   );
 };

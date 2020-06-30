@@ -38,9 +38,17 @@ export const LoginPage = () => {
   }
 
   return (
-    <Card borderRadius={"0 32px 32px 0"} bottom={"0"} left={"0"} position={"fixed"} top={"0"} width={"auto"}>
-      <Heading as={"h1"}>Login</Heading>
-      <Box width={[1]} mb={10}>
+    <Card
+      borderTopRightRadius={5}
+      borderBottomRightRadius={5}
+      bottom={0}
+      left={0}
+      position="fixed"
+      top={0}
+      width="auto"
+    >
+      <Heading as="h1">Login</Heading>
+      <Box width="100%" mb={2}>
         <Field label="Username or ID">
           <Input
             value={username}
@@ -48,11 +56,11 @@ export const LoginPage = () => {
             name="username"
             type="text"
             required={true}
-            minWidth={"300px"}
+            minWidth="300px"
           />
         </Field>
       </Box>
-      <Box width={[1]} mb={10}>
+      <Box width="100%" mb={2}>
         <Field label="API Key">
           <Input
             value={password}
@@ -60,14 +68,14 @@ export const LoginPage = () => {
             name="password"
             type="password"
             required={true}
-            minWidth={"300px"}
+            minWidth="300px"
           />
         </Field>
       </Box>
-      <Box width={[1]}>
+      <Box width="100%">
         <Button onClick={doLogin}>Login</Button>
       </Box>
-      <Box width={[1]} my={10}>
+      <Box width="100%" my={2}>
         <Button.Outline onClick={activateTenant}>Activate new tenant</Button.Outline>
       </Box>
       <pre>{error ? `error: ${error}` : undefined}</pre>

@@ -6,7 +6,7 @@ export const Expand: React.FunctionComponent = (props) => {
   const [isOpen, setOpen] = React.useState(false);
 
   return (
-    <Box my={"10px"}>
+    <Box my={2}>
       {isOpen && <>{props.children}</>}
       <button
         onClick={() => setOpen(!isOpen)}
@@ -20,11 +20,12 @@ export const Expand: React.FunctionComponent = (props) => {
           width: "100%",
         }}
       >
-        <Box borderTop={"1px solid #EDECFA"} position={"absolute"} top={"50%"} width={1} />
-        <Pill color="primary" cursor={"pointer"} fontSize={"12px"} height={"1.5rem"} px={"12px"} m={"0 auto"}>
+        <Box borderTop={1} position="absolute" top="50%" width="100%" />
+        <Pill color="primary" cursor="pointer" height={3} px={2}>
           <Text.span
-            fontSize={"12px"}
-            fontWeight={"bold"}
+            fontSize={0}
+            fontWeight={3}
+            letterSpacing={1}
             style={{
               textTransform: "uppercase",
             }}

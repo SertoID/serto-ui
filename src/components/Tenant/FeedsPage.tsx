@@ -5,7 +5,7 @@ import { routes } from "../../constants";
 import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { GlobalLayout, HeaderBox, Header, TH, TR, TBody, baseColors } from "../elements";
+import { GlobalLayout, HeaderBox, Header, TH, TR, TBody, baseColors, colors } from "../elements";
 
 export const FeedsPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -48,18 +48,18 @@ export const FeedsPage: React.FunctionComponent = (props) => {
 
   return (
     <GlobalLayout url={routes.FEEDS}>
-      {data && data.length !== 0 ? (
+      {data && data.length > 0 ? (
         <>
           <HeaderBox>
-            <Header heading={"Credential Feeds"}>
-              <Button.Outline onClick={() => setIsCreateModalOpen(true)} height={"2.5rem"}>
+            <Header heading="Credential Feeds">
+              <Button.Outline onClick={() => setIsCreateModalOpen(true)} size="small">
                 Create Feed
               </Button.Outline>
             </Header>
           </HeaderBox>
 
-          <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
-            <Table border={0} boxShadow={0}>
+          <Box bg={baseColors.white} borderRadius={1} py={3}>
+            <Table border={0} boxShadow={0} width="100%">
               <thead>
                 <TR>
                   <TH>Name</TH>
@@ -94,27 +94,27 @@ export const FeedsPage: React.FunctionComponent = (props) => {
           </Box>
         </>
       ) : isValidating ? (
-        <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
-          <Flex minHeight={"10rem"} alignItems={"center"} justifyContent={"center"}>
-            <Loader color="#5952FF" size={20} />
+        <Box bg={baseColors.white} borderRadius={1} py={3}>
+          <Flex minHeight={8} alignItems="center" justifyContent="center">
+            <Loader color={colors.primary.base} size={4} />
           </Flex>
         </Box>
       ) : getFeedsError ? (
-        <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
+        <Box bg={baseColors.white} borderRadius={1} py={3}>
           <Flash my={3} variant="danger">
             Error loading feeds: {JSON.stringify(getFeedsError)}
           </Flash>
         </Box>
       ) : (
-        <Box bg={baseColors.white} borderRadius={4} py={"16px"}>
-          <Flex alignItems={"center"} justifyContent={"center"} minHeight={"20rem"}>
-            <Box bg={baseColors.white} borderRadius={4} py={"16px"} maxWidth={"400px"}>
-              <Text.span display={"block"} fontSize={"14px"} lineHeight={"22px"} textAlign={"center"}>
+        <Box bg={baseColors.white} borderRadius={1} py={3}>
+          <Flex alignItems="center" justifyContent="center" minHeight={8}>
+            <Box bg={baseColors.white} borderRadius={1} py={3} maxWidth={9}>
+              <Text.span display="block" fontSize={1} lineHeight="copy" textAlign="center">
                 <b style={{ display: "block", fontWeight: 600 }}>You are not following any data feeds.</b>
                 Create a Verified Data Feed to expose real-time data streams to your customers or partners.
               </Text.span>
-              <Flex alignItems={"center"} justifyContent={"center"}>
-                <Button onClick={() => setIsCreateModalOpen(true)} height={"2.5rem"} mt={"40px"} mx={"auto"}>
+              <Flex alignItems="center" justifyContent="center">
+                <Button onClick={() => setIsCreateModalOpen(true)} size="small" mt={5} mx="auto">
                   Create Feed
                 </Button>
               </Flex>
@@ -127,8 +127,8 @@ export const FeedsPage: React.FunctionComponent = (props) => {
         <Card p={0}>
           <Button.Text
             icononly
-            icon={"Close"}
-            position={"absolute"}
+            icon="Close"
+            position="absolute"
             top={0}
             right={0}
             mt={3}
@@ -138,7 +138,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
 
           <Box p={4}>
             <Heading.h4>Create Feed</Heading.h4>
-            <Field width={1} label="Name">
+            <Field width="100%" label="Name">
               <Input
                 type="text"
                 required={true}
@@ -146,10 +146,10 @@ export const FeedsPage: React.FunctionComponent = (props) => {
                 onChange={(event: any) => setFeedName(event.target.value)}
               />
             </Field>
-            <Field width={1} label="Slug">
+            <Field width="100%" label="Slug">
               <Input type="text" disabled required={true} value={feedSlug} />
             </Field>
-            <Field width={1} label="Description">
+            <Field width="100%" label="Description">
               <textarea
                 required
                 value={feedDescription}
@@ -166,7 +166,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
               </Box>
             )}
           </Box>
-          <Flex px={4} py={3} justifyContent={"flex-end"}>
+          <Flex px={4} py={3} justifyContent="flex-end">
             <Button.Outline onClick={() => setIsCreateModalOpen(false)}>Cancel</Button.Outline>
             <Button ml={3} onClick={createFeed} disabled={createLoading}>
               {createLoading || isValidating ? <Loader color="white" /> : "Create Feed"}

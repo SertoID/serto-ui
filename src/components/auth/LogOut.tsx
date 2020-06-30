@@ -15,7 +15,7 @@ export const LogOut: React.FunctionComponent = (props) => {
   }
 
   return (
-    <Button.Outline onClick={logOut} height={"2.5rem"} mt={"12px"} width={1}>
+    <Button.Outline onClick={logOut} size="small" mt={3} width="100%">
       Log Out
     </Button.Outline>
   );
