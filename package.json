@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^1.0.0",
     "@rimble/icons": "^1.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@testing-library/jest-dom": "^4.2.4",

@@ -5,8 +5,8 @@ export interface TrustAgencyServiceConfig {
 }
 
 export interface Auth {
-  tenantID: string;
-  token: string;
+  jwt: string;
+  tenant?: string;
 }
 export class TrustAgencyService {
   private auth?: Auth;
@@ -21,30 +21,17 @@ export class TrustAgencyService {
     return this.auth;
   }
 
-  public async login(tenantID: string, token: string): Promise<Auth> {
-    const auth = { tenantID, token };
-    this.setAuth(auth);
+  public async signup(jwt: string): Promise<any> {
+    const user = await this.request("/v1/tenant/users/signup", "POST", { userToken: jwt });
+    console.log({ user });
+  }
 
-    if (tenantID === "admin") {
-      try {
-        await this.getTenants();
-        console.log("logged in successfully as admin");
-      } catch (err) {
-        this.logout();
-        throw new Error("invalid admin token");
-      }
-    } else {
-      try {
-        await this.getTenantIdentifiers();
-        console.log("logged in successfully as tenant");
-      } catch (err) {
-        console.error("error on tenant ping:", err);
-        this.logout();
-        throw new Error("invalid tenant credentials");
-      }
-    }
-
-    return auth;
+  public async login(jwt: string): Promise<any> {
+    this.setAuth({ jwt });
+    const user = await this.request("/v1/tenant/users/currentUser");
+    console.log({ user });
+    const tenant = user.tenants[0].id;
+    this.setAuth({ jwt, tenant });
   }
 
   public async logout() {
@@ -102,11 +89,11 @@ export class TrustAgencyService {
     }
 
     const headers: any = {};
-    if (this.auth?.token) {
-      headers.authorization = `Bearer ${this.auth?.token}`;
+    if (this.auth?.jwt) {
+      headers.authorization = `Bearer ${this.auth.jwt}`;
     }
-    if (this.auth?.tenantID !== "admin") {
-      headers.tenant = this.auth?.tenantID;
+    if (this.auth?.tenant) {
+      headers.tenant = this.auth.tenant;
     }
     if (body) {
       headers["Content-Type"] = "application/json";
