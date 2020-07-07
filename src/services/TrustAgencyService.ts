@@ -22,8 +22,9 @@ export class TrustAgencyService {
   }
 
   public async signup(jwt: string): Promise<any> {
-    const user = await this.request("/v1/tenant/users/signup", "POST", { userToken: jwt });
+    const user = await this.request("/v1/tenant/users/signup", "POST", { userToken: jwt }, true);
     console.log({ user });
+    this.login(jwt);
   }
 
   public async login(jwt: string): Promise<any> {
