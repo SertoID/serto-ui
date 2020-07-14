@@ -56,19 +56,19 @@ export class TrustAgencyService {
   }
 
   public async getTenantIdentifiers(): Promise<any> {
-    return this.request("/v1/tenant/identifiers");
+    return this.request("/v1/tenant/agent/identityManagerGetIdentities", "POST");
   }
 
   public async createTenantIdentifier(): Promise<any> {
-    return this.request("/v1/tenant/identifiers", "POST");
+    return this.request("/v1/tenant/agent/identityManagerCreateIdentity", "POST");
   }
 
   public async getCredentials(): Promise<any> {
-    return this.request("/v1/tenant/credentials");
+    return this.request("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials", "POST");
   }
 
   public async issueVc(body: any): Promise<any> {
-    return this.request("/v1/tenant/credentials/issue", "POST", body);
+    return this.request("/v1/tenant/agent/createVerifiableCredential", "POST", body);
   }
 
   public async getFeeds(): Promise<any> {

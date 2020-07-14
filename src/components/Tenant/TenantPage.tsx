@@ -17,7 +17,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
     data: identifiers,
     error: getIdentifiersError,
     isValidating: identifiersLoading,
-  } = useSWR("/v1/tenant/identifiers", () => TrustAgent.getTenantIdentifiers());
+  } = useSWR("/v1/tenant/agent/identityManagerGetIdentities", () => TrustAgent.getTenantIdentifiers());
   if (getIdentifiersError) {
     console.error("failed to get identifiers:", getIdentifiersError);
   }

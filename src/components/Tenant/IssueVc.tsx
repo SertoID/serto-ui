@@ -62,7 +62,7 @@ const SchemaChoice: React.FunctionComponent<{ schema: Schema; onClick?(): void }
 );
 
 export interface IssueVcProps {
-  defaultIssuer: string;
+  defaultIssuer: any;
   onComplete(): void;
 }
 
@@ -73,10 +73,10 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
     "@context": ["https://www.w3.org/2018/credentials/v1", "https://www.w3.org/2018/credentials/examples/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
-    issuer: props.defaultIssuer,
+    issuer: { id: props.defaultIssuer.did },
     issuanceDate: Date.now() / 1000, // @TODO VC spec expects RFC3339 (ISO 8601) format as produced by `(new Date).toISOString()`, but API throws TypeError `not a unix timestamp in seconds` so sending unix timestamp in seconds for now - check if API transforms date or what.
     credentialSubject: {
-      id: props.defaultIssuer,
+      id: props.defaultIssuer.did,
       foo: {
         bar: 123,
         baz: true,
@@ -105,10 +105,11 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
         credential,
         revocable,
         keepCopy,
+        save: "true",
         proofFormat: "jwt",
       });
       console.log("issued VC, response:", response);
-      mutate("/v1/tenant/credentials");
+      mutate("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials");
       setResponse(response);
       setSuccess(true);
     } catch (err) {
@@ -141,12 +142,12 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           <Heading as="h3">Credential Issued</Heading>
         </Text>
         <Credential
-          attributes={response.credential.credentialSubject}
-          credentialType={response.credential.type[response.credential.type.length - 1]}
-          issuanceDate={response.credential.issuanceDate}
-          issuer={response.credential.issuer}
+          attributes={response.credentialSubject}
+          credentialType={response.type[response.type.length - 1]}
+          issuanceDate={response.issuanceDate}
+          issuer={response.issuer.id}
           jwt={response.jwt}
-          title={response.credential.credentialSubject.title || "Generic Credential"}
+          title={response.credentialSubject.title || "Generic Credential"}
           viewType={CredentialViewTypes.COLLAPSIBLE}
         />
         <Box my={2}>
