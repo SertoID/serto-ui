@@ -87,6 +87,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   const [status, setStatus] = React.useState<string | undefined>();
   const [response, setResponse] = React.useState<any>();
   const [body, setBody] = useState(JSON.stringify(credential, null, 2));
+  const [publishToFeedSlug, setPublishToFeedSlug] = React.useState<string | undefined>();
   const [revocable, setRevocable] = useState<boolean>(false);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
   const [success, setSuccess] = useState<boolean>(false);
@@ -101,16 +102,29 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
     setStatus(undefined);
     try {
       const credential = JSON.parse(body);
-      const response = await TrustAgent.issueVc({
+      const vcResponse = await TrustAgent.issueVc({
         credential,
         revocable,
         keepCopy,
         save: "true",
         proofFormat: "jwt",
       });
-      console.log("issued VC, response:", response);
+      console.log("issued VC, response:", vcResponse);
       mutate("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials");
-      setResponse(response);
+
+      if (publishToFeedSlug) {
+        try {
+          const feedResponse = await TrustAgent.getFeedBySlug(publishToFeedSlug);
+          const publishResponse = await TrustAgent.publishToFeed(vcResponse, feedResponse.id);
+          console.log("posted VC to global tweets feed, response:", publishResponse);
+        } catch (publishErr) {
+          console.error("failed to publish VC to feed:", publishErr);
+          setStatus("VC issued successfully but failed to publish VC to feed: " + publishErr.message);
+          return;
+        }
+      }
+
+      setResponse(vcResponse);
       setSuccess(true);
     } catch (err) {
       console.error("failed to issue VC:", err);
@@ -139,7 +153,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           >
             <Check />
           </Text>
-          <Heading as="h3">Credential Issued</Heading>
+          <Heading as="h3">Credential Issued{publishToFeedSlug && " & Published"}</Heading>
         </Text>
         <Credential
           attributes={response.credentialSubject}
@@ -210,6 +224,16 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
         </>
       )}
 
+      <Field label={"Publish to Feed"} width="100%">
+        <Input
+          type="text"
+          width="100%"
+          required={false}
+          placeholder="Feed slug"
+          value={publishToFeedSlug}
+          onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
+        />
+      </Field>
       <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
       <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
 
