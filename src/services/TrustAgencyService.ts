@@ -59,6 +59,11 @@ export class TrustAgencyService {
     return this.request("/v1/tenant/agent/identityManagerGetIdentities", "POST");
   }
 
+  public async getTenantFirstIdentifier(): Promise<any> {
+    const identifiers = await this.request("/v1/tenant/agent/identityManagerGetIdentities", "POST");
+    return identifiers?.[0]?.did;
+  }
+
   public async createTenantIdentifier(): Promise<any> {
     return this.request("/v1/tenant/agent/identityManagerCreateIdentity", "POST");
   }

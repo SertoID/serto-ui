@@ -21,7 +21,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
   if (getIdentifiersError) {
     console.error("failed to get identifiers:", getIdentifiersError);
   }
-  const hasIdentifier = !!(identifiers && identifiers[0]);
+  const hasIdentifier = !!identifiers?.[0]?.did;
 
   async function createIdentifier() {
     try {
@@ -31,7 +31,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
       setError(err.message);
       return;
     }
-    mutate("/v1/tenant/identifiers");
+    mutate("/v1/tenant/agent/identityManagerGetIdentities");
   }
 
   return (
@@ -49,7 +49,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
         <pre>identifiers:</pre>
         {identifiers &&
           identifiers.map((id: any, i: number) => {
-            return <pre key={i}>{id}</pre>;
+            return <pre key={i}>{id.did}</pre>;
           })}
         <pre>{error || getIdentifiersError ? `error: ${error || getIdentifiersError}` : undefined}</pre>
 
@@ -77,7 +77,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
             onClick={() => setIsIssueModalOpen(false)}
           />
           <Box p={4} width="480px" maxWidth="95%" maxHeight="95vh" style={{ overflowY: "auto" }}>
-            <IssueVc defaultIssuer={identifiers?.[0]} onComplete={() => setIsIssueModalOpen(false)} />
+            <IssueVc defaultIssuer={identifiers?.[0]?.did} onComplete={() => setIsIssueModalOpen(false)} />
           </Box>
         </Card>
       </Modal>

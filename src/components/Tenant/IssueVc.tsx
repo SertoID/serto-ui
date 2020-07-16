@@ -62,7 +62,7 @@ const SchemaChoice: React.FunctionComponent<{ schema: Schema; onClick?(): void }
 );
 
 export interface IssueVcProps {
-  defaultIssuer: any;
+  defaultIssuer: string;
   onComplete(): void;
 }
 
@@ -73,10 +73,10 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
     "@context": ["https://www.w3.org/2018/credentials/v1", "https://www.w3.org/2018/credentials/examples/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
-    issuer: { id: props.defaultIssuer.did },
+    issuer: { id: props.defaultIssuer },
     issuanceDate: Date.now() / 1000, // @TODO VC spec expects RFC3339 (ISO 8601) format as produced by `(new Date).toISOString()`, but API throws TypeError `not a unix timestamp in seconds` so sending unix timestamp in seconds for now - check if API transforms date or what.
     credentialSubject: {
-      id: props.defaultIssuer.did,
+      id: props.defaultIssuer,
       foo: {
         bar: 123,
         baz: true,
