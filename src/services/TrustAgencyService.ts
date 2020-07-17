@@ -86,6 +86,14 @@ export class TrustAgencyService {
     return this.request(`/v1/feeds/${slug}`);
   }
 
+  /** Get NATS JWT bearer token. */
+  public async getFeedToken(feedId?: string, expirationInSeconds = 60): Promise<any> {
+    return this.request("/v1/feeds/token", "POST", {
+      feedId: feedId || (await this.getDefaultFeedId()),
+      expirationInSeconds,
+    });
+  }
+
   public async createFeed(data: { name: string; slug: string; description?: string; public?: boolean }): Promise<any> {
     return this.request("/v1/feeds", "POST", data);
   }
