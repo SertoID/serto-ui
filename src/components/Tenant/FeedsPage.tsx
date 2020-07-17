@@ -13,6 +13,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
   const [createLoading, setCreateLoading] = React.useState(false);
   const [feedName, setFeedName] = React.useState("");
   const [feedDescription, setFeedDescription] = React.useState("");
+  const [isPublic, setIsPublic] = React.useState<boolean>(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
   const { data, error: getFeedsError, isValidating } = useSWR("/v1/feeds", () => TrustAgent.getFeeds());
@@ -33,6 +34,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
         name: feedName,
         slug: feedSlug,
         description: feedDescription,
+        public: isPublic,
       });
       setFeedName("");
       setFeedDescription("");
@@ -157,6 +159,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
                 onChange={(e: any) => setFeedDescription(e.target.value)}
               />
             </Field>
+            <Checkbox label="Public" checked={isPublic} onChange={() => setIsPublic(!isPublic)} />
 
             {createError && (
               <Box p={1} mb={1}>
