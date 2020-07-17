@@ -95,7 +95,10 @@ export class TrustAgencyService {
   }
 
   public async createFeed(data: { name: string; slug: string; description?: string; public?: boolean }): Promise<any> {
-    return this.request("/v1/feeds", "POST", data);
+    return this.request("/v1/feeds", "POST", {
+      tenant: this.getAuth()?.tenant,
+      ...data,
+    });
   }
 
   public async publishToFeed(data: any, _feedId?: string): Promise<any> {

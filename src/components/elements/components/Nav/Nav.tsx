@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { routes } from "../../../../constants";
 import { Box, Flex, Text } from "rimble-ui";
-import { Home, Inbox, Send } from "@rimble/icons";
+import { Home, List, Inbox, Send } from "@rimble/icons";
 import { baseColors, colors } from "../../";
 
 const NavItemStyled = styled.div`
@@ -63,7 +63,7 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
   return (
     <>
       <NavItem url={routes.TENANT} text="Tenant Home" icon={Home} currentUrl={url} />
-      <NavItem url={routes.FEEDS} text="Credential Feeds" icon={Home} currentUrl={url} />
+      <NavItem url={routes.FEEDS} text="Credential Feeds" icon={List} currentUrl={url} />
       <NavItem url={routes.ISSUED_CREDENTIAL} text="Issued Credentials" icon={Send} currentUrl={url} />
       <NavItem url={routes.RECEIVED_CREDENTIAL} text="Received Credentials" icon={Inbox} currentUrl={url} />
     </>

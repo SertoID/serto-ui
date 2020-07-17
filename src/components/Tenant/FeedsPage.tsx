@@ -2,7 +2,7 @@ import * as React from "react";
 import useSWR, { mutate } from "swr";
 import slugify from "@sindresorhus/slugify";
 import { routes } from "../../constants";
-import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text } from "rimble-ui";
+import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text, Checkbox } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { GlobalLayout, HeaderBox, Header, TH, TR, TBody, baseColors, colors } from "../elements";
@@ -38,6 +38,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
       });
       setFeedName("");
       setFeedDescription("");
+      setIsPublic(false);
       await mutate("/v1/feeds");
       setIsCreateModalOpen(false);
     } catch (err) {
