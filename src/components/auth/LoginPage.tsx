@@ -7,7 +7,7 @@ import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { colors } from "../elements";
 
 export const LoginPage = () => {
-  const { loginWithPopup, logout, getIdTokenClaims } = useAuth0();
+  const { loginWithPopup, getIdTokenClaims } = useAuth0();
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
 
   const [error, setError] = React.useState<string | undefined>();
@@ -78,9 +78,6 @@ export const LoginPage = () => {
           <Button.Outline onClick={doSignup} mb={3} width="100%">
             Signup
           </Button.Outline>
-          <Button.Text onClick={logout} width="100%">
-            Logout
-          </Button.Text>
         </Box>
 
         {error && (
