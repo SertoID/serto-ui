@@ -27,7 +27,7 @@ export const Credentials: React.FunctionComponent = (props) => {
           jwtDecoded.vc.credentialSubject;
         const title = jwtDecoded.vc.credentialSubject.publishedContent
           ? "News Article"
-          : jwtDecoded.vc.credentialSubject.title || "Know Your Customer Check"; // hardcoding for demo purposes, add title in credentialSubject for demo
+          : jwtDecoded.vc.credentialSubject.title || jwtDecoded.vc.type[jwtDecoded.vc.type.length - 1];
 
         console.log(jwtDecoded);
 
@@ -35,7 +35,7 @@ export const Credentials: React.FunctionComponent = (props) => {
           <Credential
             key={i}
             attributes={attributes}
-            credentialType={jwtDecoded.vc.type[0]}
+            credentialType={jwtDecoded.vc.type[jwtDecoded.vc.type.length - 1]}
             issuanceDate={jwtDecoded.issuanceDate}
             issuer={jwtDecoded.iss}
             jwt={jwt}
