@@ -2,7 +2,7 @@ import * as React from "react";
 import useSWR, { mutate } from "swr";
 import slugify from "@sindresorhus/slugify";
 import { routes } from "../../constants";
-import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text } from "rimble-ui";
+import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text, Checkbox } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { GlobalLayout, HeaderBox, Header, TH, TR, TBody, baseColors, colors } from "../elements";
@@ -13,6 +13,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
   const [createLoading, setCreateLoading] = React.useState(false);
   const [feedName, setFeedName] = React.useState("");
   const [feedDescription, setFeedDescription] = React.useState("");
+  const [isPublic, setIsPublic] = React.useState<boolean>(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
   const { data, error: getFeedsError, isValidating } = useSWR("/v1/feeds", () => TrustAgent.getFeeds());
@@ -33,9 +34,11 @@ export const FeedsPage: React.FunctionComponent = (props) => {
         name: feedName,
         slug: feedSlug,
         description: feedDescription,
+        public: isPublic,
       });
       setFeedName("");
       setFeedDescription("");
+      setIsPublic(false);
       await mutate("/v1/feeds");
       setIsCreateModalOpen(false);
     } catch (err) {
@@ -157,6 +160,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
                 onChange={(e: any) => setFeedDescription(e.target.value)}
               />
             </Field>
+            <Checkbox label="Public" checked={isPublic} onChange={() => setIsPublic(!isPublic)} />
 
             {createError && (
               <Box p={1} mb={1}>

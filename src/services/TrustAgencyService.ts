@@ -1,4 +1,5 @@
 const AUTH_LOCALSTORAGE_KEY = "trust-agent-auth";
+const DEFAULT_FEED_SLUG = "global";
 
 export interface TrustAgencyServiceConfig {
   url: string;
@@ -10,6 +11,7 @@ export interface Auth {
 }
 export class TrustAgencyService {
   private auth?: Auth;
+  private defaultFeedId?: string;
   public url: string;
 
   constructor(config: TrustAgencyServiceConfig) {
@@ -56,27 +58,68 @@ export class TrustAgencyService {
   }
 
   public async getTenantIdentifiers(): Promise<any> {
-    return this.request("/v1/tenant/identifiers");
+    return this.request("/v1/tenant/agent/identityManagerGetIdentities", "POST");
+  }
+
+  public async getTenantFirstIdentifier(): Promise<any> {
+    const identifiers = await this.request("/v1/tenant/agent/identityManagerGetIdentities", "POST");
+    return identifiers?.[0]?.did;
   }
 
   public async createTenantIdentifier(): Promise<any> {
-    return this.request("/v1/tenant/identifiers", "POST");
+    return this.request("/v1/tenant/agent/identityManagerCreateIdentity", "POST");
   }
 
   public async getCredentials(): Promise<any> {
-    return this.request("/v1/tenant/credentials");
+    return this.request("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials", "POST");
   }
 
   public async issueVc(body: any): Promise<any> {
-    return this.request("/v1/tenant/credentials/issue", "POST", body);
+    return this.request("/v1/tenant/agent/createVerifiableCredential", "POST", body);
   }
 
   public async getFeeds(): Promise<any> {
     return this.request("/v1/feeds");
   }
 
-  public async createFeed(data: { name: string; slug: string; description: string }): Promise<any> {
-    return this.request("/v1/feeds", "POST", data);
+  public async getFeedBySlug(slug: string): Promise<any> {
+    return this.request(`/v1/feeds/${slug}`);
+  }
+
+  /** Get NATS JWT bearer token. */
+  public async getFeedToken(feedId?: string, expirationInSeconds = 60): Promise<any> {
+    return this.request("/v1/feeds/token", "POST", {
+      feedId: feedId || (await this.getDefaultFeedId()),
+      expirationInSeconds,
+    });
+  }
+
+  public async createFeed(data: { name: string; slug: string; description?: string; public?: boolean }): Promise<any> {
+    return this.request("/v1/feeds", "POST", {
+      tenant: this.getAuth()?.tenant,
+      ...data,
+    });
+  }
+
+  public async publishToFeed(data: any, _feedId?: string): Promise<any> {
+    let feedId = _feedId;
+    if (!feedId) {
+      try {
+        feedId = await this.getDefaultFeedId();
+      } catch (err) {
+        console.error(`Failed to get feed info for default feed slug "${DEFAULT_FEED_SLUG}", throwing error`);
+        throw err;
+      }
+    }
+    return this.request(`/v1/feeds/${feedId}/publish`, "POST", data);
+  }
+
+  private async getDefaultFeedId(): Promise<string> {
+    if (!this.defaultFeedId) {
+      const feedInfo = await this.getFeedBySlug(DEFAULT_FEED_SLUG);
+      this.defaultFeedId = feedInfo.id;
+    }
+    return this.defaultFeedId!;
   }
 
   private async request(
@@ -110,9 +153,13 @@ export class TrustAgencyService {
       console.error("api error", response.status, errorMessage);
       throw new Error("api error: " + errorMessage);
     }
-    const data = await response.json();
 
-    return data;
+    const responseContentType = response.headers.get("content-type");
+    if (responseContentType?.indexOf("application/json") !== -1) {
+      return await response.json();
+    } else {
+      return await response.text();
+    }
   }
 
   private setAuth(auth: Auth) {
