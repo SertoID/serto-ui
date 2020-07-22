@@ -3,9 +3,10 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import { Auth0Provider } from "@auth0/auth0-react";
 
+import { config } from "./config";
 import { routes } from "./constants";
 import { TrustAgencyContext } from "./context/TrustAgentProvider";
-import { TrustAgencyService, TrustAgencyServiceConfig } from "./services/TrustAgencyService";
+import { TrustAgencyService } from "./services/TrustAgencyService";
 import { IdentityThemeProvider, fonts } from "./components/elements";
 import { AuthenticatedRoute } from "./components/auth/AuthenticatedRoute";
 import { HomePage } from "./components/HomePage";
@@ -32,20 +33,11 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const serviceConfig: TrustAgencyServiceConfig = {
-  url: "https://alpha.consensysidentity.com",
-  // url: "http://localhost:8000",
-};
-
-// TODO load from config
-const auth0ClientID = "sAnzetlNs0HbyokOncaTUZmLRijPazBc";
-const auth0Domain = "dev-mdazdke4.us.auth0.com";
-
 export const App = () => {
-  const trustAgent = React.useMemo(() => new TrustAgencyService(serviceConfig), []);
+  const trustAgent = React.useMemo(() => new TrustAgencyService(), []);
 
   return (
-    <Auth0Provider domain={auth0Domain} clientId={auth0ClientID} redirectUri={window.location.origin}>
+    <Auth0Provider domain={config.AUTH0_DOMAIN} clientId={config.AUTH0_CLIENT_ID} redirectUri={window.location.origin}>
       <BrowserRouter>
         <TrustAgencyContext.Provider value={trustAgent}>
           <React.Suspense fallback={<></>}>

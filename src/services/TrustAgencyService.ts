@@ -1,9 +1,7 @@
+import { config } from "../config";
+
 const AUTH_LOCALSTORAGE_KEY = "trust-agent-auth";
 const DEFAULT_FEED_SLUG = "global";
-
-export interface TrustAgencyServiceConfig {
-  url: string;
-}
 
 export interface Auth {
   jwt: string;
@@ -12,10 +10,9 @@ export interface Auth {
 export class TrustAgencyService {
   private auth?: Auth;
   private defaultFeedId?: string;
-  public url: string;
+  public url = config.API_URL;
 
-  constructor(config: TrustAgencyServiceConfig) {
-    this.url = config.url;
+  constructor() {
     this.loadAuthFromStorage();
   }
 
