@@ -1,9 +1,10 @@
 import * as React from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { Box, Button, Card, Flash, Heading, Text } from "rimble-ui";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { routes } from "../../constants";
 import { colors } from "../elements";
 
 export const LoginPage = () => {
@@ -50,6 +51,10 @@ export const LoginPage = () => {
       console.error("error logging in:", err);
       setError("Login failed: " + err.message);
     }
+  }
+
+  if (TrustAgent.isAuthenticated()) {
+    return <Redirect to={routes.HOMEPAGE} />;
   }
 
   return (
