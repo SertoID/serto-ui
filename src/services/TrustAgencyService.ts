@@ -9,6 +9,7 @@ export interface Auth {
 export class TrustAgencyService {
   private auth?: Auth;
   private defaultFeedId?: string;
+  private loggingIn?: boolean;
   public url = config.API_URL;
 
   constructor() {
@@ -26,11 +27,13 @@ export class TrustAgencyService {
   }
 
   public async login(jwt: string): Promise<any> {
+    this.loggingIn = true;
     this.setAuth({ jwt });
     const user = await this.request("/v1/tenant/users/currentUser");
     console.log({ user });
     const tenant = user.tenants[0].id;
-    this.setAuth({ jwt, tenant });
+    this.setAuth({ jwt, tenant }, true);
+    this.loggingIn = false;
   }
 
   public async logout() {
@@ -38,7 +41,7 @@ export class TrustAgencyService {
   }
 
   public isAuthenticated(): boolean {
-    return !!this.auth;
+    return !!this.auth && !this.loggingIn;
   }
 
   public async getTenants(): Promise<any> {
@@ -158,9 +161,11 @@ export class TrustAgencyService {
     }
   }
 
-  private setAuth(auth: Auth) {
+  private setAuth(auth: Auth, persist?: boolean) {
     this.auth = auth;
-    localStorage.setItem(AUTH_LOCALSTORAGE_KEY, JSON.stringify(auth));
+    if (persist) {
+      localStorage.setItem(AUTH_LOCALSTORAGE_KEY, JSON.stringify(auth));
+    }
   }
 
   private clearAuth() {
