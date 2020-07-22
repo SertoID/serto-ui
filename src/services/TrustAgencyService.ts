@@ -1,7 +1,6 @@
 import { config } from "../config";
 
 const AUTH_LOCALSTORAGE_KEY = `trust-agent-auth-${config.API_URL}`;
-const DEFAULT_FEED_SLUG = "global";
 
 export interface Auth {
   jwt: string;
@@ -104,7 +103,7 @@ export class TrustAgencyService {
       try {
         feedId = await this.getDefaultFeedId();
       } catch (err) {
-        console.error(`Failed to get feed info for default feed slug "${DEFAULT_FEED_SLUG}", throwing error`);
+        console.error(`Failed to get feed info for default feed slug "${config.GLOBAL_FEED_SLUG}", throwing error`);
         throw err;
       }
     }
@@ -113,7 +112,7 @@ export class TrustAgencyService {
 
   private async getDefaultFeedId(): Promise<string> {
     if (!this.defaultFeedId) {
-      const feedInfo = await this.getFeedBySlug(DEFAULT_FEED_SLUG);
+      const feedInfo = await this.getFeedBySlug(config.GLOBAL_FEED_SLUG);
       this.defaultFeedId = feedInfo.id;
     }
     return this.defaultFeedId!;
