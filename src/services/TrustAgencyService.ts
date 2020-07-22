@@ -1,6 +1,6 @@
 import { config } from "../config";
 
-const AUTH_LOCALSTORAGE_KEY = "trust-agent-auth";
+const AUTH_LOCALSTORAGE_KEY = `trust-agent-auth-${config.API_URL}`;
 const DEFAULT_FEED_SLUG = "global";
 
 export interface Auth {
