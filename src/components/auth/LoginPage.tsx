@@ -33,7 +33,7 @@ export const LoginPage = () => {
       const token = await getIdTokenClaims();
       console.log({ token });
       await TrustAgent.login(token.__raw);
-      history.push("/tenant");
+      history.push(routes.TENANT);
     } catch (err) {
       console.error("error logging in:", err);
       setError("Login failed: " + err.message);
@@ -46,7 +46,7 @@ export const LoginPage = () => {
       const token = await getIdTokenClaims();
       console.log({ token });
       await TrustAgent.signup(token.__raw);
-      history.push("/tenant");
+      history.push(routes.TENANT);
     } catch (err) {
       console.error("error logging in:", err);
       setError("Login failed: " + err.message);
@@ -54,7 +54,7 @@ export const LoginPage = () => {
   }
 
   if (TrustAgent.isAuthenticated()) {
-    return <Redirect to={routes.HOMEPAGE} />;
+    return <Redirect to={routes.TENANT} />;
   }
 
   return (
