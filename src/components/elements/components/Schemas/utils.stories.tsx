@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Box, Flex, Card, Heading, Flash } from "rimble-ui";
+import { Box, Flex, Card, Heading, Flash, Button, Tooltip } from "rimble-ui";
 import styled from "styled-components";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
@@ -149,8 +149,8 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
 
   React.useEffect(() => {
     if (vcSchema) {
-      setOutputContextHtml(Prism.highlight(vcSchema.getJsonLdContext(true), Prism.languages.json, "json"));
-      setOutputJsonSchemaHtml(Prism.highlight(vcSchema.getJsonSchema(true), Prism.languages.json, "json"));
+      setOutputContextHtml(Prism.highlight(vcSchema.getJsonLdContextString(true), Prism.languages.json, "json"));
+      setOutputJsonSchemaHtml(Prism.highlight(vcSchema.getJsonSchemaString(true), Prism.languages.json, "json"));
     }
   }, [vcSchema]);
 
@@ -193,6 +193,19 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
           {typeof inputVcValid !== "undefined" && (
             <Flash variant={inputVcValid ? "success" : "warning"}>
               {inputVcValid ? "VC is valid according to schema" : "VC is invalid: " + inputVcValidityMessage}
+              <Box style={{ float: "right", display: "inline-block" }}>
+                <Tooltip
+                  placement="top"
+                  message="This will replace the @context of this VC with the @context output below left, and open in Google's JSON-LD testing tool."
+                >
+                  <Button.Outline size="small" onClick={() => vcSchema?.openGoogleJsonLdValidatorPage(inputVc)}>
+                    Validate with Google
+                  </Button.Outline>
+                </Tooltip>
+                <Button.Outline size="small" as="a" href="https://json-ld.org/playground/" target="_blank" ml={2}>
+                  Open JSON-LD Playground
+                </Button.Outline>
+              </Box>
             </Flash>
           )}
         </Section>
