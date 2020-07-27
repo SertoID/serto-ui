@@ -265,6 +265,95 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "versionId": {
             "@id": "schema-id:versionId",
+            "@type": "https://schema.org/Text",
+            "@dataType": "string",
+            "@description": "Globally unique identifier URI that refers to this version of this piece of content"
+          },
+          "headline": {
+            "@id": "schema-id:headline",
+            "@type": "http://schema.org/headline",
+            "@dataType": "string",
+            "@required": true
+          },
+          "url": {
+            "@id": "schema-id:url",
+            "@type": "http://schema.org/url",
+            "@dataType": "string",
+            "@required": true
+          },
+          "datePublished": {
+            "@id": "schema-id:datePublished",
+            "@type": "http://schema.org/datePublished",
+            "@dataType": "string",
+            "@format": "date-time",
+            "@required": true
+          },
+          "publisher": {
+            "@id": "schema-id:publisher",
+            "@type": "http://schema.org/publisher",
+            "@required": true,
+            "@context": {
+              "name": {
+                "@id": "schema-id:name",
+                "@type": "http://schema.org/name",
+                "@dataType": "string",
+                "@required": true
+              },
+              "url": {
+                "@id": "schema-id:url",
+                "@type": "http://schema.org/url",
+                "@dataType": "string",
+                "@format": "uri",
+                "@required": true
+              }
+            }
+          },
+          "author": {
+            "@id": "schema-id:author",
+            "@type": "http://schema.org/author",
+            "@context": {
+              "name": {
+                "@id": "schema-id:name",
+                "@type": "http://schema.org/name",
+                "@dataType": "string",
+                "@required": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}`,
+  ContentPublishCredentialProgrammatic: `{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    {
+      "@version": 1.1,
+      "@rootType": "ContentPublishCredential",
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "w3ccred": "https://www.w3.org/2018/credentials#",
+      "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+      "ContentPublishCredential": {
+        "@id": "schema-id",
+        "@type": "@id",
+        "@title": "Content Publish Credential",
+        "@contains": "credentialSubject"
+      },
+      "credentialSubject": {
+        "@id": "cred:credentialSubject",
+        "@type": "@id",
+        "@required": true,
+        "@contains": "publishedContent"
+      },
+      "publishedContent": {
+        "@id": "schema-id:publishedContent",
+        "@type": "@id",
+        "@description": "Data about piece of content this publisher has published",
+        "@required": true,
+        "@context": {
+          "versionId": {
+            "@id": "schema-id:versionId",
             "@type": "xsd:string",
             "@dataType": "string",
             "@description": "Globally unique identifier URI that refers to this version of this piece of content"

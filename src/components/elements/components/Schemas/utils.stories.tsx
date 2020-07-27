@@ -100,18 +100,19 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
           <Flex justifyContent="space-between" pr={2}>
             <Heading.h5 my={2}>@context+ input</Heading.h5>
             <Text fontSize={1}>
-              Examples:
-              {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
-                <Button.Outline
-                  key={key}
-                  size="small"
-                  p={1}
-                  mx={1}
-                  onClick={() => setInputSchema(EXAMPLE_SCHEMAS[key])}
-                >
-                  {key}
-                </Button.Outline>
-              ))}
+              Examples:{" "}
+              <select
+                onChange={(event: any) => {
+                  event.target.value && setInputSchema(EXAMPLE_SCHEMAS[event.target.value]);
+                }}
+              >
+                <option value=""></option>
+                {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
+                  <option key={key} value={key}>
+                    {key}
+                  </option>
+                ))}
+              </select>
             </Text>
           </Flex>
           <CodeWrap>
