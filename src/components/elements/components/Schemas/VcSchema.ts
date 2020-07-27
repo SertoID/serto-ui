@@ -204,14 +204,19 @@ export class VcSchema {
     if (innerContext) {
       this.debug(`Parsing "${key}": innerContext`, node);
       const required: string[] = [];
+
       Object.keys(innerContext)
         .filter((key) => key[0] !== "@")
         .forEach((key) => {
-          if (innerContext[key]["@required"]) {
-            required.push(key);
+          const property = this.parseContextPlus(context, innerContext[key], key);
+          if (property) {
+            if (innerContext[key]["@required"]) {
+              required.push(key);
+            }
+            innerContextProperties[key] = property;
           }
-          innerContextProperties[key] = this.parseContextPlus(context, innerContext[key], key);
         });
+
       return {
         type: "object",
         title: node["@title"],

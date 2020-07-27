@@ -305,6 +305,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
                 "@dataType": "string",
                 "@format": "uri",
                 "@required": true
+              },
+              "id": {
+                "@id": "schema-id:publisher-id",
+                "@type": "http://schema.org/identifier",
+                "@dataType": "string"
               }
             }
           },
@@ -317,6 +322,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
                 "@type": "http://schema.org/name",
                 "@dataType": "string",
                 "@required": true
+              },
+              "id": {
+                "@id": "schema-id:author-id",
+                "@type": "http://schema.org/identifier",
+                "@dataType": "string"
               }
             }
           }
@@ -436,13 +446,11 @@ export const EXAMPLE_VC = `{
       "url": "https://example-publisher.com/articles/a-very-important-article",
       "datePublished": "2020-06-29T00:04:12.418Z",
       "publisher": {
-        "type": "Organization",
         "id": "did:example:publisher-did",
         "name": "Example Publisher",
         "url": "https://example-publisher.com/"
       },
       "author": {
-        "type":"Person",
         "id": "did:example:publisher-did#author-id",
         "name": "Joe Reporter"
       }

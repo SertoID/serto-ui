@@ -51,7 +51,7 @@ const CodeWrap = styled(Card)`
 `;
 
 storiesOf("Schemas", module).add("Definition Demo", () => {
-  const [inputSchema, setInputSchema] = React.useState<string>(EXAMPLE_SCHEMAS.ContentPublishCredential);
+  const [inputSchema, setInputSchema] = React.useState<string>("");
   const [debouncedSchema] = useDebounce(inputSchema, 500);
   const [inputSchemaError, setInputSchemaError] = React.useState<any>();
   const [vcSchema, setVcSchema] = React.useState<VcSchema | undefined>();
@@ -65,9 +65,13 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
   const [outputJsonSchemaHtml, setOutputJsonSchemaHtml] = React.useState<string>("");
 
   React.useEffect(() => {
+    setInputSchemaError(undefined);
+    if (!debouncedSchema) {
+      setVcSchema(undefined);
+      return;
+    }
     try {
       setVcSchema(new VcSchema(debouncedSchema, true));
-      setInputSchemaError(undefined);
     } catch (err) {
       setInputSchemaError(err.message);
     }
@@ -77,6 +81,9 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
     if (vcSchema) {
       setOutputContextHtml(Prism.highlight(vcSchema.getJsonLdContextString(true), Prism.languages.json, "json"));
       setOutputJsonSchemaHtml(Prism.highlight(vcSchema.getJsonSchemaString(true), Prism.languages.json, "json"));
+    } else {
+      setOutputContextHtml("");
+      setOutputJsonSchemaHtml("");
     }
   }, [vcSchema]);
 
