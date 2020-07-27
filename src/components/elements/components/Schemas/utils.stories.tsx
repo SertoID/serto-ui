@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Box, Flex, Card, Heading, Flash, Button, Tooltip } from "rimble-ui";
+import { Box, Flex, Card, Text, Heading, Flash, Button, Tooltip } from "rimble-ui";
 import styled from "styled-components";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
@@ -9,6 +9,7 @@ import { useDebounce } from "use-debounce";
 
 import { fonts } from "../../themes/fonts";
 import { VcSchema } from "./VcSchema";
+import { EXAMPLE_SCHEMAS, EXAMPLE_VC } from "./examples";
 
 const Section = styled(Flex)`
   flex-direction: column;
@@ -49,88 +50,13 @@ const CodeWrap = styled(Card)`
   }
 `;
 
-const initialSchema = `{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    {
-      "@version": 1.1,
-      "ContentPublishCredential": "https://consensysidentity.com/schema/ContentPublishCredential",
-      "publishedContent": {
-        "@id": "https://consensysidentity.com/schema/ContentPublishCredential#publishedContent",
-        "@type": "https://schema.org/Article"
-      },
-      "Article": {
-        "@id": "https://schema.org/Article",
-        "@context": {
-          "versionId": {
-            "@id": "https://consensysidentity.com/schema/ContentPublishCredential#versionId",
-            "@type": "https://schema.org/Text"
-          },
-          "headline": "http://schema.org/headline",
-          "url": "http://schema.org/url",
-          "datePublished": "http://schema.org/datePublished",
-          "publisher": "http://schema.org/publisher",
-          "author": "http://schema.org/author"
-        }
-      },
-      "Person": {
-        "@id": "http://schema.org/Person",
-        "@context": {
-          "name": "http://schema.org/name"
-        }
-      },
-      "Organization": {
-        "@id": "http://schema.org/Organization",
-        "@context": {
-          "name": "http://schema.org/name",
-          "url": "http://schema.org/url"
-        }
-      }
-    }
-  ]
-}`;
-
-// @TODO/tobek Include @context or add note that @context is assumed by default if not present.
-const initialVc = `{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://consensysidentity.com/schema/ContentPublishCredential"
-  ],
-  "id": "did:example:publisher-did#credential-id",
-  "type": ["VerifiableCredential", "ContentPublishCredential"],
-  "issuer": "did:example:publisher-did",
-  "issuanceDate": "2017-12-05T14:27:42Z",
-  "credentialSubject": {
-    "id": "did:example:publisher-did",
-    "publishedContent": {
-      "type": "Article",
-      "id": "did:example:publisher-did#article-id",
-      "versionId": "did:example:publisher-did#article-version-id",
-      "headline": "A Very Important Article",
-      "url": "https://example-publisher.com/articles/a-very-important-article",
-      "datePublished": "2020-06-29T00:04:12.418Z",
-      "publisher": {
-        "type": "Organization",
-        "id": "did:example:publisher-did",
-        "name": "Example Publisher",
-        "url": "https://example-publisher.com/"
-      },
-      "author": {
-        "type":"Person",
-        "id": "did:example:publisher-did#author-id",
-        "name": "Joe Reporter"
-      }
-    }
-  }
-}`;
-
 storiesOf("Schemas", module).add("Definition Demo", () => {
-  const [inputSchema, setInputSchema] = React.useState<string>(initialSchema);
+  const [inputSchema, setInputSchema] = React.useState<string>(EXAMPLE_SCHEMAS.ContentPublishCredential);
   const [debouncedSchema] = useDebounce(inputSchema, 500);
   const [inputSchemaError, setInputSchemaError] = React.useState<any>();
   const [vcSchema, setVcSchema] = React.useState<VcSchema | undefined>();
 
-  const [inputVc, setInputVc] = React.useState<string>(initialVc);
+  const [inputVc, setInputVc] = React.useState<string>(EXAMPLE_VC);
   const [debouncedVc] = useDebounce(inputVc, 500);
   const [inputVcValid, setInputVcValid] = React.useState<boolean | undefined>();
   const [inputVcValidityMessage, setInputVcValidityMessage] = React.useState<string | undefined>();
@@ -140,7 +66,7 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
 
   React.useEffect(() => {
     try {
-      setVcSchema(new VcSchema(inputSchema));
+      setVcSchema(new VcSchema(debouncedSchema, true));
       setInputSchemaError(undefined);
     } catch (err) {
       setInputSchemaError(err.message);
@@ -156,10 +82,12 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
 
   React.useEffect(() => {
     if (vcSchema && debouncedVc) {
-      vcSchema.validateVc(debouncedVc, (isValid, invalidity) => {
-        setInputVcValid(isValid);
-        setInputVcValidityMessage(invalidity);
-      });
+      (async function () {
+        vcSchema.validateVc(debouncedVc, (isValid, message) => {
+          setInputVcValid(isValid);
+          setInputVcValidityMessage(message);
+        });
+      })();
     } else {
       setInputVcValid(undefined);
     }
@@ -169,7 +97,23 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
     <Box>
       <Flex>
         <Section>
-          <Heading.h5 my={2}>@context+ input</Heading.h5>
+          <Flex justifyContent="space-between" pr={2}>
+            <Heading.h5 my={2}>@context+ input</Heading.h5>
+            <Text fontSize={1}>
+              Examples:
+              {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
+                <Button.Outline
+                  key={key}
+                  size="small"
+                  p={1}
+                  mx={1}
+                  onClick={() => setInputSchema(EXAMPLE_SCHEMAS[key])}
+                >
+                  {key}
+                </Button.Outline>
+              ))}
+            </Text>
+          </Flex>
           <CodeWrap>
             <Editor
               value={inputSchema}
@@ -181,7 +125,12 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
           {inputSchemaError && <Flash variant="danger">Error: {inputSchemaError}</Flash>}
         </Section>
         <Section>
-          <Heading.h5 my={2}>VC input for validation</Heading.h5>
+          <Flex justifyContent="space-between" pr={2}>
+            <Heading.h5 my={2}>VC input for validation</Heading.h5>
+            <Text my={2} fontSize={1}>
+              @context will automatically be added
+            </Text>
+          </Flex>
           <CodeWrap>
             <Editor
               value={inputVc}
@@ -191,21 +140,21 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
             />
           </CodeWrap>
           {typeof inputVcValid !== "undefined" && (
-            <Flash variant={inputVcValid ? "success" : "warning"}>
-              {inputVcValid ? "VC is valid according to schema" : "VC is invalid: " + inputVcValidityMessage}
-              <Box style={{ float: "right", display: "inline-block" }}>
-                <Tooltip
-                  placement="top"
-                  message="This will replace the @context of this VC with the @context output below left, and open in Google's JSON-LD testing tool."
-                >
+            <Flash variant={inputVcValid ? "success" : "danger"}>
+              <Text fontSize={1} style={{ wordBreak: "break-word", float: "left", display: "inline-block" }}>
+                {inputVcValidityMessage}
+              </Text>
+              <Tooltip placement="top" message="@context output below left will be added to the VC sent to the tool">
+                <Text fontSize={1} style={{ float: "right", display: "inline-block" }}>
+                  Open in{" "}
                   <Button.Outline size="small" onClick={() => vcSchema?.openGoogleJsonLdValidatorPage(inputVc)}>
-                    Validate with Google
+                    Google JSON-LD Tool
                   </Button.Outline>
-                </Tooltip>
-                <Button.Outline size="small" as="a" href="https://json-ld.org/playground/" target="_blank" ml={2}>
-                  Open JSON-LD Playground
-                </Button.Outline>
-              </Box>
+                  <Button.Outline size="small" ml={2} onClick={() => vcSchema?.openJsonLdPlaygroundPage(inputVc)}>
+                    JSON-LD Playground
+                  </Button.Outline>
+                </Text>
+              </Tooltip>
             </Flash>
           )}
         </Section>
@@ -213,7 +162,7 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
       <Flex>
         <Section>
           <Heading.h5 my={2}>JSON-LD @context output</Heading.h5>
-          <CodeWrap>
+          <CodeWrap style={{ background: "#f8f8f8" }}>
             <pre>
               <code dangerouslySetInnerHTML={{ __html: outputContextHtml }}></code>
             </pre>
@@ -221,11 +170,12 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
         </Section>
         <Section>
           <Heading.h5 my={2}>JSON Schema output</Heading.h5>
-          <CodeWrap>
+          <CodeWrap style={{ background: "#f8f8f8" }}>
             <pre>
               <code dangerouslySetInnerHTML={{ __html: outputJsonSchemaHtml }}></code>
             </pre>
           </CodeWrap>
+          {vcSchema?.jsonSchemaMessage && <Flash variant="warning">{vcSchema.jsonSchemaMessage}</Flash>}
         </Section>
       </Flex>
     </Box>
