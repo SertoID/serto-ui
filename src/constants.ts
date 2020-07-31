@@ -6,4 +6,5 @@ export enum routes {
   FEEDS = "/tenant/feeds",
   ISSUED_CREDENTIAL = "/tenant/issued-credentials",
   RECEIVED_CREDENTIAL = "/tenant/received-credentials",
+  DEVELOPER = "/tenant/developer",
 }
