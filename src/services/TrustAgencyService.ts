@@ -105,14 +105,14 @@ export class TrustAgencyService {
   }
 
   public async createApiKey(data: { keyName: string }): Promise<any> {
-    return this.request("/v1/tenant/apiKey/create", "POST", {
+    return this.request("/v1/tenant/apiKeys", "POST", {
       tenantId: this.getAuth()?.tenant,
       ...data,
     });
   }
 
   public async deleteApiKey(data: { keyName: string }): Promise<any> {
-    return this.request("/v1/tenant/apiKey/delete", "DELETE", {
+    return this.request("/v1/tenant/apiKeys", "DELETE", {
       tenantId: this.getAuth()?.tenant,
       ...data,
     });
