@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { routes } from "../../../../constants";
 import { Box, Flex, Text } from "rimble-ui";
-import { Home, List, Inbox, Send } from "@rimble/icons";
+import { Home, List, Inbox, Send, Eth } from "@rimble/icons";
 import { baseColors, colors } from "../../";
 
 const NavItemStyled = styled.div`
@@ -66,6 +66,8 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
       <NavItem url={routes.FEEDS} text="Credential Feeds" icon={List} currentUrl={url} />
       <NavItem url={routes.ISSUED_CREDENTIAL} text="Issued Credentials" icon={Send} currentUrl={url} />
       <NavItem url={routes.RECEIVED_CREDENTIAL} text="Received Credentials" icon={Inbox} currentUrl={url} />
+      <NavItem url={routes.DEVELOPER} text="Developer" icon={Eth} currentUrl={url} />
     </>
   );
 };
+// TODO (nickreynolds): Update DEVELOPER page icon

@@ -77,6 +77,10 @@ export class TrustAgencyService {
     return this.request("/v1/tenant/agent/createVerifiableCredential", "POST", body);
   }
 
+  public async getApiKeys(): Promise<any> {
+    return this.request("/v1/tenant/apiKeys");
+  }
+
   public async getFeeds(): Promise<any> {
     return this.request("/v1/feeds");
   }
@@ -96,6 +100,20 @@ export class TrustAgencyService {
   public async createFeed(data: { name: string; slug: string; description?: string; public?: boolean }): Promise<any> {
     return this.request("/v1/feeds", "POST", {
       tenant: this.getAuth()?.tenant,
+      ...data,
+    });
+  }
+
+  public async createApiKey(data: { keyName: string }): Promise<any> {
+    return this.request("/v1/tenant/apiKey/create", "POST", {
+      tenantId: this.getAuth()?.tenant,
+      ...data,
+    });
+  }
+
+  public async deleteApiKey(data: { keyName: string }): Promise<any> {
+    return this.request("/v1/tenant/apiKey/delete", "DELETE", {
+      tenantId: this.getAuth()?.tenant,
       ...data,
     });
   }
@@ -123,7 +141,7 @@ export class TrustAgencyService {
 
   private async request(
     path: string,
-    method: "GET" | "POST" = "GET",
+    method: "GET" | "DELETE" | "POST" = "GET",
     body?: any,
     unauthenticated?: boolean,
   ): Promise<any> {
@@ -141,7 +159,7 @@ export class TrustAgencyService {
     if (body) {
       headers["Content-Type"] = "application/json";
     }
-
+    console.log();
     const response = await fetch(`${this.url}${path}`, {
       method,
       headers,

@@ -16,6 +16,7 @@ import { FeedsPage } from "./components/Tenant/FeedsPage";
 import { IssuedCredentialsPage } from "./components/Tenant/IssuedCredentialsPage";
 import { ReceivedCredentialsPage } from "./components/Tenant/ReceivedCredentialsPage";
 import { LoginPage } from "./components/auth/LoginPage";
+import { DeveloperPage } from "./components/Tenant/DeveloperPage";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -51,6 +52,7 @@ export const App = () => {
                 <AuthenticatedRoute path={routes.FEEDS} component={FeedsPage} />
                 <AuthenticatedRoute path={routes.ISSUED_CREDENTIAL} component={IssuedCredentialsPage} />
                 <AuthenticatedRoute path={routes.RECEIVED_CREDENTIAL} component={ReceivedCredentialsPage} />
+                <AuthenticatedRoute path={routes.DEVELOPER} component={DeveloperPage} />
               </Switch>
             </IdentityThemeProvider>
           </React.Suspense>
