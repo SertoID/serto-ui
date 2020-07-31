@@ -159,7 +159,6 @@ export class TrustAgencyService {
     if (body) {
       headers["Content-Type"] = "application/json";
     }
-    console.log();
     const response = await fetch(`${this.url}${path}`, {
       method,
       headers,
