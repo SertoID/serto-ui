@@ -3,16 +3,38 @@ import { omitDeep } from "deepdash-es/standalone";
 
 const ajv = new Ajv();
 
-export class VcSchema {
-  static contextPlusFields = ["@rootType", "@contains", "@dataType", "@format", "@required", "@title", "@description"];
-  static contextPlusFieldsRegexes = VcSchema.contextPlusFields.map((field) => new RegExp(field));
+interface JsonSchemaNode {
+  type: string;
+  properties?: { [key: string]: JsonSchemaNode };
+  title?: string;
+  description?: string;
+  format?: string;
+  required?: string[];
+}
+interface JsonSchema extends JsonSchemaNode {
+  $schema: string;
+  $id: string;
+}
 
+const contextPlusFields = [
+  "@rootType",
+  "@is",
+  "@contains",
+  "@dataType",
+  "@format",
+  "@required",
+  "@title",
+  "@description",
+];
+const contextPlusFieldsRegexes = contextPlusFields.map((field) => new RegExp(field));
+
+export class VcSchema {
   public jsonSchemaMessage?: string; // @TODO/tobek This should probably be an array and some of the compilation warnings should get added to it.
 
   private schema: any;
   private debugMode?: boolean;
   private jsonLdContext?: any;
-  private jsonSchema?: any;
+  private jsonSchema?: JsonSchema;
   private jsonSchemaValidate?: Ajv.ValidateFunction;
 
   constructor(schemaString: string, debugMode?: boolean) {
@@ -23,7 +45,7 @@ export class VcSchema {
       throw Error("Failed to parse JSON: " + err.message);
     }
 
-    this.jsonLdContext = omitDeep(this.schema, VcSchema.contextPlusFieldsRegexes);
+    this.jsonLdContext = omitDeep(this.schema, contextPlusFieldsRegexes);
 
     try {
       this.jsonSchema = this.generateJsonSchema();
@@ -113,7 +135,7 @@ export class VcSchema {
     this.debugMode && console.log(...args);
   }
 
-  private generateJsonSchema(): any {
+  private generateJsonSchema(): JsonSchema | undefined {
     let context = this.schema["@context"] || this.schema;
     if (Array.isArray(context)) {
       context = context[context.length - 1];
@@ -139,11 +161,12 @@ export class VcSchema {
     return {
       $schema: "http://json-schema.org/schema#",
       $id: "http://consensysidentity.com/schemas/schema-id.json", // @TODO
+      type: "object",
       ...this.parseContextPlus(context, context[rootType], "root"),
     };
   }
 
-  private parseContextPlus(context: any, node: any, key: string): any {
+  private parseContextPlus(context: any, node: any, key: string): JsonSchemaNode | undefined {
     if (typeof node !== "object") {
       console.warn(
         `Unsupported @context+ node type at ${key}: node is not an object. Excluding from JSON Schema. Node:`,
@@ -154,7 +177,7 @@ export class VcSchema {
     // @TODO/tobek handle arrays
 
     if (node["@dataType"]) {
-      this.debug(`Parsed "${key}": leaf node`, node);
+      this.debug(`Parsing "${key}": leaf node`, node);
       return {
         type: node["@dataType"],
         format: node["@format"],
@@ -163,40 +186,42 @@ export class VcSchema {
       };
     }
 
-    const containedType = node["@contains"];
-    if (containedType) {
-      this.debug(`Parsing "${key}": containedType`, node);
-      const containedNode = context[containedType];
-      if (containedNode) {
-        const containedTypeProperties = this.parseContextPlus(context, containedNode, containedType);
-        if (containedTypeProperties) {
-          return {
-            type: "object",
-            required: containedNode["@required"] ? [containedType] : undefined,
-            title: node["@title"],
-            description: node["@description"],
-            properties: {
-              [containedType]: containedTypeProperties,
-            },
-          };
+    const referencedType = node["@contains"] || node["@is"];
+    if (referencedType) {
+      const contains = !!node["@contains"];
+      this.debug(`Parsing "${key}": ${contains ? "contains" : "is"} referenced type "${referencedType}"`, node);
+      const referencedNode = context[referencedType];
+      if (referencedNode) {
+        const referencedTypeProperties = this.parseContextPlus(context, referencedNode, referencedType);
+        if (referencedTypeProperties) {
+          if (contains) {
+            return {
+              type: "object",
+              required: referencedNode["@required"] ? [referencedType] : undefined,
+              title: node["@title"],
+              description: node["@description"],
+              properties: {
+                [referencedType]: referencedTypeProperties,
+              },
+            };
+          } else {
+            return referencedTypeProperties;
+          }
         } else {
           console.warn(
-            `Referenced type "${containedType}" could not be parsed for JSON Schema; including "${key}" as freeform object. Node:`,
+            `Referenced type "${referencedType}" could not be parsed; excluding from JSON Schema. Node:`,
             node,
             "Referenced type resolved to:",
-            containedNode,
+            referencedNode,
           );
         }
       } else {
         console.warn(
-          `Referenced type "${containedType}" could not be found in schema; including "${key}" as freeform object. Referenced from node:`,
+          `Referenced type "${referencedType}" could not be found in schema; excluding from JSON Schema. Referenced from node:`,
           node,
         );
       }
-      return {
-        type: "object",
-        properties: {},
-      };
+      return;
     }
 
     const innerContext = node["@context"];
@@ -226,7 +251,7 @@ export class VcSchema {
       };
     }
 
-    console.warn(`Unsupported @context+ node type at ${key}. excluding from JSON Schema. Node:`, node);
+    console.warn(`Unsupported @context+ node type at ${key}; excluding from JSON Schema. Node:`, node);
     return;
   }
 }
