@@ -198,34 +198,34 @@ export class VcSchema {
       };
     }
 
-    const referencedType = node["@replaceWith"] || node["@contains"];
-    const replaceWith = !!node["@replaceWith"];
-    let referencedNode;
-    if (referencedType) {
-      this.debug(
-        `Parsing "${key}": ${replaceWith ? "replace with" : "contains"} referenced type "${referencedType}"`,
-        node,
-      );
-      referencedNode = context[referencedType];
-      if (!referencedNode) {
+    const replaceWithType = node["@replaceWith"];
+    let replaceWithNode;
+    if (replaceWithType) {
+      this.debug(`Parsing "${key}": replace with type "${replaceWithType}"`, node);
+      if (!context[replaceWithType]) {
         console.warn(
-          `Referenced type "${referencedType}" could not be found; excluding from JSON Schema. Referenced from node:`,
+          `Referenced type "${replaceWithType}" could not be found; excluding from JSON Schema. replaceWith from node:`,
           node,
         );
-        if (replaceWith) {
-          return;
-        }
+        return;
       }
-      if (replaceWith) {
-        return this.parseContextPlus(context, referencedNode, referencedType);
-      }
+      return this.parseContextPlus(context, context[replaceWithType], replaceWithType);
     }
 
     const nestedProperties = {
       ...node["@context"],
     };
-    if (referencedNode) {
-      nestedProperties[referencedType] = referencedNode;
+    if (node["@contains"]) {
+      (Array.isArray(node["@contains"]) ? node["@contains"] : [node["@contains"]]).forEach((containedType) => {
+        if (context[containedType]) {
+          nestedProperties[containedType] = context[containedType];
+        } else {
+          console.warn(
+            `Referenced type "${containedType}" could not be found; excluding from JSON Schema. Referenced from node:`,
+            node,
+          );
+        }
+      });
     }
 
     if (!Object.keys(nestedProperties).length) {
@@ -233,7 +233,7 @@ export class VcSchema {
       return;
     }
 
-    this.debug(`Parsing "${key}": nestedProperties`, node);
+    this.debug(`Parsing "${key}": inner @context and/or @contains`, node);
     const nestedRequired: string[] = [];
     const parsedNestedProperties: { [key: string]: JsonSchemaNode } = {};
 

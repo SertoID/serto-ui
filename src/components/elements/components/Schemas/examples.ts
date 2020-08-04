@@ -247,7 +247,17 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "ContentPublishCredential": {
         "@id": "schema-id",
         "@title": "Content Publish Credential",
-        "@contains": "credentialSubject"
+        "@contains": ["issuer", "issuanceDate", "credentialSubject"]
+      },
+      "issuer": {
+        "@id": "w3ccred:issuer",
+        "@type": "@id",
+        "@required": true
+      },
+      "issuanceDate": {
+        "@id": "w3ccred:issuanceDate",
+        "@type": "xsd:dateTime",
+        "@required": true
       },
       "credentialSubject": {
         "@id": "w3ccred:credentialSubject",
@@ -367,7 +377,17 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "ContentPublishCredential": {
         "@id": "schema-id",
         "@title": "Content Publish Credential",
-        "@contains": "credentialSubject"
+        "@contains": ["credentialSubject", "issuer", "issuanceDate"]
+      },
+      "issuer": {
+        "@id": "w3ccred:issuer",
+        "@type": "@id",
+        "@required": true
+      },
+      "issuanceDate": {
+        "@id": "w3ccred:issuanceDate",
+        "@type": "xsd:dateTime",
+        "@required": true
       },
       "credentialSubject": {
         "@id": "w3ccred:credentialSubject",
