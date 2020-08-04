@@ -9,7 +9,7 @@ import { useDebounce } from "use-debounce";
 
 import { fonts } from "../../themes/fonts";
 import { VcSchema } from "./VcSchema";
-import { EXAMPLE_SCHEMAS, EXAMPLE_VC } from "./examples";
+import { EXAMPLE_SCHEMAS, EXAMPLE_VCS } from "./examples";
 
 const Section = styled(Flex)`
   flex-direction: column;
@@ -56,7 +56,7 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
   const [inputSchemaError, setInputSchemaError] = React.useState<any>();
   const [vcSchema, setVcSchema] = React.useState<VcSchema | undefined>();
 
-  const [inputVc, setInputVc] = React.useState<string>(EXAMPLE_VC);
+  const [inputVc, setInputVc] = React.useState<string>("");
   const [debouncedVc] = useDebounce(inputVc, 500);
   const [inputVcValid, setInputVcValid] = React.useState<boolean | undefined>();
   const [inputVcValidityMessage, setInputVcValidityMessage] = React.useState<string | undefined>();
@@ -102,25 +102,31 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
 
   return (
     <Box>
+      <Text fontSize={1} style={{ textAlign: "center" }}>
+        Examples:{" "}
+        <select
+          onChange={(event: any) => {
+            const name = event.target.value;
+            if (name) {
+              setInputSchema(EXAMPLE_SCHEMAS[name]);
+            }
+            if (EXAMPLE_VCS[name]) {
+              setInputVc(EXAMPLE_VCS[name]);
+            }
+          }}
+        >
+          <option value=""></option>
+          {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
+            <option key={key} value={key}>
+              {key}
+            </option>
+          ))}
+        </select>
+      </Text>
       <Flex>
         <Section>
           <Flex justifyContent="space-between" pr={2}>
             <Heading.h5 my={2}>@context+ input</Heading.h5>
-            <Text fontSize={1}>
-              Examples:{" "}
-              <select
-                onChange={(event: any) => {
-                  event.target.value && setInputSchema(EXAMPLE_SCHEMAS[event.target.value]);
-                }}
-              >
-                <option value=""></option>
-                {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
-                  <option key={key} value={key}>
-                    {key}
-                  </option>
-                ))}
-              </select>
-            </Text>
           </Flex>
           <CodeWrap>
             <Editor

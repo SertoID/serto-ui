@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { omitDeep } from "deepdash-es/standalone";
+import { omitDeep, mapValuesDeep } from "deepdash-es/standalone";
 
 const ajv = new Ajv();
 
@@ -46,6 +46,18 @@ export class VcSchema {
     }
 
     this.jsonLdContext = omitDeep(this.schema, contextPlusFieldsRegexes);
+
+    // This is a bit of a hack. We want to be able to add JSON Schema info to "@id" properties. To do this we can have @context+ nodes such as `{ "id" : { "@id": "@id", "@required": true } }` which compiles to JSON-LD @context `{ "id" : { "@id": "@id" } }`. This works and simply aliases "id" to "@id". However, the W3C Credentials JSON-LD @context thatn we import defines `{ @protected: true, "id": "@id" }`. Because of the "@protected" we can't redefine "id" even to an expanded type definition that is functionally identical. So, this mapValuesDeep call replaces `{ "id" : { "@id": "@id" } }` with `{ "id" : "@id" }` which is allowed by "@protected" since it is functionally *and* syntactically the same.
+    this.jsonLdContext = mapValuesDeep(
+      this.jsonLdContext,
+      (value) => {
+        if (value?.["@id"] === "@id") {
+          return "@id";
+        }
+        return value;
+      },
+      { callbackAfterIterate: true },
+    );
 
     try {
       this.jsonSchema = this.generateJsonSchema();
