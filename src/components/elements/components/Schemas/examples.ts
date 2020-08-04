@@ -266,8 +266,8 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "id": {
             "@id": "@id",
+            "@type": "@id",
             "@description": "Publisher DID",
-            "@dataType": "string",
             "@required": true
           }
         }
@@ -277,19 +277,16 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "id": {
             "@id": "@id",
-            "@dataType": "string"
+            "@type": "@id"
           },
           "name": {
             "@id": "http://schema.org/name",
             "@type": "http://schema.org/Text",
-            "@dataType": "string",
             "@required": true
           },
           "url": {
             "@id": "http://schema.org/url",
             "@type": "@id",
-            "@dataType": "string",
-            "@format": "uri",
             "@required": true
           }
         }
@@ -299,12 +296,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "id": {
             "@id": "@id",
-            "@dataType": "string"
+            "@type": "@id"
           },
           "name": {
             "@id": "http://schema.org/name",
             "@type": "http://schema.org/Text",
-            "@dataType": "string",
             "@required": true
           }
         }
@@ -314,33 +310,27 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "id": {
             "@id": "@id",
-            "@dataType": "string",
+            "@type": "@id",
             "@required": true
           },
           "versionId": {
-            "@id": "schema-id:versionId",
-            "@type": "https://schema.org/Text",
-            "@dataType": "string",
+            "@id": "http://schema.org/version",
+            "@type": "http://schema.org/Text",
             "@description": "Globally unique identifier URI that refers to this version of this piece of content"
           },
           "headline": {
             "@id": "http://schema.org/headline",
             "@type": "http://schema.org/Text",
-            "@dataType": "string",
             "@required": true
           },
           "url": {
             "@id": "http://schema.org/url",
             "@type": "@id",
-            "@dataType": "string",
-            "@format": "uri",
             "@required": true
           },
           "datePublished": {
-            "@id": "schema-id:datePublished",
-            "@type": "http://schema.org/datePublished",
-            "@dataType": "string",
-            "@format": "date-time",
+            "@id": "http://schema.org/datePublished",
+            "@type": "http://schema.org/DateTime",
             "@required": true
           },
           "publisher": {
@@ -364,7 +354,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       }
     }
   ]
-}`, // publisher/author @id's should be schema.org. need @type?
+}`,
   ContentPublishCredentialProgrammatic: `{
   "@context": [
     "https://www.w3.org/2018/credentials/v1",
@@ -396,7 +386,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "id": {
             "@id": "@id",
-            "@dataType": "string",
+            "@type": "@id",
             "@description": "Publisher DID",
             "@required": true
           }
@@ -409,32 +399,27 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "id": {
             "@id": "schema-id:content-id",
-            "@type": "xsd:string",
-            "@dataType": "string"
+            "@type": "xsd:string"
           },
           "versionId": {
-            "@id": "schema-id:versionId",
+            "@id": "http://schema.org/version",
             "@type": "xsd:string",
-            "@dataType": "string",
             "@description": "Globally unique identifier URI that refers to this version of this piece of content"
           },
           "headline": {
             "@id": "schema-id:headline",
             "@type": "xsd:string",
-            "@dataType": "string",
             "@required": true
           },
           "url": {
             "@id": "schema-id:url",
             "@type": "xsd:string",
-            "@dataType": "string",
+            "@format": "uri",
             "@required": true
           },
           "datePublished": {
             "@id": "schema-id:datePublished",
             "@type": "xsd:dateTime",
-            "@dataType": "string",
-            "@format": "date-time",
             "@required": true
           },
           "publisher": {
@@ -443,19 +428,16 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
             "@context": {
               "id": {
                 "@id": "schema-id:publisher-id",
-                "@type": "xsd:string",
-                "@dataType": "string"
+                "@type": "xsd:string"
               },
               "name": {
                 "@id": "schema-id:publisher-name",
                 "@type": "xsd:string",
-                "@dataType": "string",
                 "@required": true
               },
               "url": {
                 "@id": "schema-id:publisher-url",
                 "@type": "xsd:string",
-                "@dataType": "string",
                 "@format": "uri",
                 "@required": true
               }
@@ -466,13 +448,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
             "@context": {
               "id": {
                 "@id": "schema-id:publisher-id",
-                "@type": "xsd:string",
-                "@dataType": "string"
+                "@type": "xsd:string"
               },
               "name": {
                 "@id": "schema-id:author-name",
                 "@type": "xsd:string",
-                "@dataType": "string",
                 "@required": true
               }
             }
@@ -501,7 +481,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "id": {
             "@id": "@id",
-            "@dataType": "string",
+            "@type": "@id",
             "@required": true
           }
         }
@@ -513,8 +493,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@context": {
           "url": {
             "@id": "http://schema.org/url",
-            "@type": "http://schema.org/URL",
-            "@dataType": "string",
+            "@type": "@id",
             "@required": true
           }
         }

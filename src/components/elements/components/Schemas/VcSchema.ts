@@ -28,6 +28,17 @@ const contextPlusFields = [
 ];
 const contextPlusFieldsRegexes = contextPlusFields.map((field) => new RegExp(field));
 
+const jsonLdContextTypeMap: { [key: string]: { type: string; format?: string } } = {
+  "@id": { type: "string", format: "uri" }, // JSON-LD @context convention for an IRI
+  "http://schema.org/URL": { type: "string", format: "uri" },
+  "http://schema.org/Text": { type: "string" },
+  "http://schema.org/Number": { type: "number" },
+  "http://schema.org/DateTime": { type: "string", format: "date-time" },
+  "xsd:string": { type: "string" },
+  "xsd:integer": { type: "integer" },
+  "xsd:dateTime": { type: "string", format: "date-time" },
+};
+
 export class VcSchema {
   public jsonSchemaMessage?: string; // @TODO/tobek This should probably be an array and some of the compilation warnings should get added to it.
 
@@ -188,13 +199,14 @@ export class VcSchema {
     }
     // @TODO/tobek handle arrays
 
-    if (node["@dataType"]) {
+    const dataTypeInfo = this.parseContextPlusDataType(node);
+    if (dataTypeInfo) {
       this.debug(`Parsing "${key}": leaf node`, node);
       return {
-        type: node["@dataType"],
-        format: node["@format"],
         title: node["@title"],
         description: node["@description"],
+        format: node["@format"],
+        ...dataTypeInfo,
       };
     }
 
@@ -260,5 +272,17 @@ export class VcSchema {
       required: nestedRequired.length ? nestedRequired : undefined,
       properties: parsedNestedProperties,
     };
+  }
+
+  private parseContextPlusDataType(node: any): { type: string; format?: string } | undefined {
+    if (node["@dataType"]) {
+      return {
+        type: node["@dataType"],
+        format: node["@format"],
+      };
+    } else if (jsonLdContextTypeMap[node["@type"]]) {
+      return jsonLdContextTypeMap[node["@type"]];
+    }
+    return undefined;
   }
 }
