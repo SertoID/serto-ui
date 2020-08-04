@@ -252,7 +252,15 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "credentialSubject": {
         "@id": "w3ccred:credentialSubject",
         "@required": true,
-        "@contains": "publishedContent"
+        "@contains": "publishedContent",
+        "@context": {
+          "id": {
+            "@id": "@id",
+            "@description": "Publisher DID",
+            "@dataType": "string",
+            "@required": true
+          }
+        }
       },
       "Organization": {
         "@id": "http://schema.org/Organization",
@@ -329,12 +337,12 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
             "@id": "http://schema.org/publisher",
             "@type": "Organization",
             "@required": true,
-            "@is": "Organization"
+            "@replaceWith": "Organization"
           },
           "author": {
             "@id": "http://schema.org/author",
             "@type": "Person",
-            "@is": "Person"
+            "@replaceWith": "Person"
           }
         }
       },
@@ -342,7 +350,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         "@id": "schema-id:publishedContent",
         "@description": "Data about piece of content this publisher has published",
         "@required": true,
-        "@is": "Article"
+        "@replaceWith": "Article"
       }
     }
   ]
@@ -364,7 +372,15 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "credentialSubject": {
         "@id": "w3ccred:credentialSubject",
         "@required": true,
-        "@contains": "publishedContent"
+        "@contains": "publishedContent",
+        "@context": {
+          "id": {
+            "@id": "@id",
+            "@dataType": "string",
+            "@description": "Publisher DID",
+            "@required": true
+          }
+        }
       },
       "publishedContent": {
         "@id": "schema-id:publishedContent",
@@ -461,7 +477,14 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "credentialSubject": {
         "@id": "w3ccred:credentialSubject",
         "@required": true,
-        "@contains": "publishedContent"
+        "@contains": "publishedContent",
+        "@context": {
+          "id": {
+            "@id": "@id",
+            "@dataType": "string",
+            "@required": true
+          }
+        }
       },
       "publishedContent": {
         "@id": "schema-id:publishedContent",
@@ -493,7 +516,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
   "issuer": "did:example:publisher-did",
   "issuanceDate": "2017-12-05T14:27:42Z",
   "credentialSubject": {
-    "@id": "did:example:publisher-did",
+    "id": "did:example:publisher-did",
     "publishedContent": {
       "@type": "Article",
       "id": "did:example:publisher-did#article-id",
@@ -525,7 +548,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
   "issuer": "did:example:publisher-did",
   "issuanceDate": "2017-12-05T14:27:42Z",
   "credentialSubject": {
-    "@id": "did:example:publisher-did",
+    "id": "did:example:publisher-did",
     "publishedContent": {
       "id": "did:example:publisher-did#article-id",
       "versionId": "did:example:publisher-did#article-version-id",
@@ -554,7 +577,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
   "issuer": "did:example:publisher-did",
   "issuanceDate": "2017-12-05T14:27:42Z",
   "credentialSubject": {
-    "@id": "did:example:publisher-did",
+    "id": "did:example:publisher-did",
     "publishedContent": {
       "url": "https://example-publisher.com/articles/a-very-important-article"
     }

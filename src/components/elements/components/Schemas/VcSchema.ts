@@ -18,7 +18,7 @@ interface JsonSchema extends JsonSchemaNode {
 
 const contextPlusFields = [
   "@rootType",
-  "@is",
+  "@replaceWith",
   "@contains",
   "@dataType",
   "@format",
@@ -198,73 +198,67 @@ export class VcSchema {
       };
     }
 
-    const referencedType = node["@contains"] || node["@is"];
+    const referencedType = node["@replaceWith"] || node["@contains"];
+    const replaceWith = !!node["@replaceWith"];
+    let referencedNode;
     if (referencedType) {
-      const contains = !!node["@contains"];
-      this.debug(`Parsing "${key}": ${contains ? "contains" : "is"} referenced type "${referencedType}"`, node);
-      const referencedNode = context[referencedType];
-      if (referencedNode) {
-        const referencedTypeProperties = this.parseContextPlus(context, referencedNode, referencedType);
-        if (referencedTypeProperties) {
-          if (contains) {
-            return {
-              type: "object",
-              required: referencedNode["@required"] ? [referencedType] : undefined,
-              title: node["@title"],
-              description: node["@description"],
-              properties: {
-                [referencedType]: referencedTypeProperties,
-              },
-            };
-          } else {
-            return referencedTypeProperties;
-          }
-        } else {
-          console.warn(
-            `Referenced type "${referencedType}" could not be parsed; excluding from JSON Schema. Node:`,
-            node,
-            "Referenced type resolved to:",
-            referencedNode,
-          );
-        }
-      } else {
+      this.debug(
+        `Parsing "${key}": ${replaceWith ? "replace with" : "contains"} referenced type "${referencedType}"`,
+        node,
+      );
+      referencedNode = context[referencedType];
+      if (!referencedNode) {
         console.warn(
-          `Referenced type "${referencedType}" could not be found in schema; excluding from JSON Schema. Referenced from node:`,
+          `Referenced type "${referencedType}" could not be found; excluding from JSON Schema. Referenced from node:`,
           node,
         );
+        if (replaceWith) {
+          return;
+        }
       }
+      if (replaceWith) {
+        return this.parseContextPlus(context, referencedNode, referencedType);
+      }
+    }
+
+    const nestedProperties = {
+      ...node["@context"],
+    };
+    if (referencedNode) {
+      nestedProperties[referencedType] = referencedNode;
+    }
+
+    if (!Object.keys(nestedProperties).length) {
+      console.warn(`Unsupported @context+ node type at ${key}; excluding from JSON Schema. Node:`, node);
       return;
     }
 
-    const innerContext = node["@context"];
-    const innerContextProperties: { [key: string]: any } = {};
-    if (innerContext) {
-      this.debug(`Parsing "${key}": innerContext`, node);
-      const required: string[] = [];
+    this.debug(`Parsing "${key}": nestedProperties`, node);
+    const nestedRequired: string[] = [];
+    const parsedNestedProperties: { [key: string]: JsonSchemaNode } = {};
 
-      Object.keys(innerContext)
-        .filter((key) => key[0] !== "@")
-        .forEach((key) => {
-          const innerNode = innerContext[key];
-          const property = this.parseContextPlus(context, innerNode, key);
-          if (property) {
-            if (innerNode["@required"] || (innerNode["@is"] && context[innerNode["@is"]]?.["@required"])) {
-              required.push(key);
-            }
-            innerContextProperties[key] = property;
+    Object.keys(nestedProperties)
+      .filter((nestedKey) => nestedKey[0] !== "@")
+      .forEach((nestedKey) => {
+        const nestedNode = nestedProperties[nestedKey];
+        const property = this.parseContextPlus(context, nestedNode, nestedKey);
+        if (property) {
+          if (
+            nestedNode["@required"] ||
+            (nestedNode["@replaceWith"] && context[nestedNode["@replaceWith"]]?.["@required"])
+          ) {
+            nestedRequired.push(nestedKey);
           }
-        });
+          parsedNestedProperties[nestedKey] = property;
+        }
+      });
 
-      return {
-        type: "object",
-        title: node["@title"],
-        description: node["@description"],
-        required: required.length ? required : undefined,
-        properties: innerContextProperties,
-      };
-    }
-
-    console.warn(`Unsupported @context+ node type at ${key}; excluding from JSON Schema. Node:`, node);
-    return;
+    return {
+      type: "object",
+      title: node["@title"],
+      description: node["@description"],
+      required: nestedRequired.length ? nestedRequired : undefined,
+      properties: parsedNestedProperties,
+    };
   }
 }
