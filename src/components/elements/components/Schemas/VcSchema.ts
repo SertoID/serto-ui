@@ -4,11 +4,12 @@ import { omitDeep, mapValuesDeep } from "deepdash-es/standalone";
 const ajv = new Ajv();
 
 interface JsonSchemaNode {
-  type: string;
+  type: string | string[];
   properties?: { [key: string]: JsonSchemaNode };
   title?: string;
   description?: string;
   format?: string;
+  items?: JsonSchemaNode;
   required?: string[];
 }
 interface JsonSchema extends JsonSchemaNode {
@@ -21,6 +22,7 @@ const contextPlusFields = [
   "@replaceWith",
   "@contains",
   "@dataType",
+  "@items",
   "@format",
   "@required",
   "@title",
@@ -37,6 +39,36 @@ const jsonLdContextTypeMap: { [key: string]: { type: string; format?: string } }
   "xsd:string": { type: "string" },
   "xsd:integer": { type: "integer" },
   "xsd:dateTime": { type: "string", format: "date-time" },
+};
+
+const baseVcJsonSchema = {
+  type: "object",
+  required: ["@context", "id", "type", "issuer", "issuanceDate", "credentialSubject"],
+  properties: {
+    "@context": {
+      type: ["string", "array", "object"],
+    },
+    id: {
+      type: "string",
+    },
+    type: {
+      type: ["string", "array"],
+      items: {
+        type: "string",
+      },
+    },
+    issuer: {
+      format: "uri",
+      type: "string",
+    },
+    issuanceDate: {
+      format: "date-time",
+      type: "string",
+    },
+    credentialSubject: {
+      type: "object",
+    },
+  },
 };
 
 export class VcSchema {
@@ -105,12 +137,17 @@ export class VcSchema {
     }
 
     const isValid = await this.jsonSchemaValidate(vcObj);
-    cb(
-      isValid,
-      this.jsonSchemaValidate.errors
-        ? "VC is invalid: " + JSON.stringify(this.jsonSchemaValidate.errors)
-        : "VC is valid according to schema",
-    );
+
+    let message: string;
+    if (this.jsonSchemaValidate.errors) {
+      message = "VC is invalid: " + JSON.stringify(this.jsonSchemaValidate.errors);
+    } else if (this.jsonSchemaMessage) {
+      message = "VC is valid according to schema, with warnings: " + this.jsonSchemaMessage;
+    } else {
+      message = "VC is valid according to schema";
+    }
+
+    cb(isValid, message);
   }
 
   public openGoogleJsonLdValidatorPage(_vc: any): void {
@@ -164,28 +201,31 @@ export class VcSchema {
       context = context[context.length - 1];
     }
 
+    let parsedSchema: JsonSchemaNode | undefined;
+    const rootType = context["@rootType"];
     if (typeof context !== "object") {
       // @TODO/tobek If it's a URL we should fetch that URL
       this.jsonSchemaMessage = "Invalid @context+ schema: could not find @context object";
-      return;
-    }
-
-    const rootType = context["@rootType"];
-    if (!rootType) {
-      this.jsonSchemaMessage = 'Invalid @context+ schema: no "@rootType" property';
-      return;
-    }
-    if (!context[rootType]) {
+    } else if (!rootType) {
+      this.jsonSchemaMessage = 'Invalid @context+ schema: no "@rootType" property. Falling back to base VC schema.';
+    } else if (!context[rootType]) {
       // @TODO/tobek If it was defined in another context referenced by this one we need to get it - though we probably won't be able to generate JSON Schema from it
-      this.jsonSchemaMessage = `Invalid @context+ schema: "@rootType" property "${rootType}" is not defined`;
-      return;
+      this.jsonSchemaMessage = `Invalid @context+ schema: "@rootType" property "${rootType}" is not defined. Falling back to base VC schema.`;
+    } else {
+      parsedSchema = this.parseContextPlus(context, context[rootType], "root");
     }
 
     return {
       $schema: "http://json-schema.org/schema#",
       $id: "http://consensysidentity.com/schemas/schema-id.json", // @TODO
-      type: "object",
-      ...this.parseContextPlus(context, context[rootType], "root"),
+      ...baseVcJsonSchema,
+      ...parsedSchema,
+      required: Array.from(new Set([...baseVcJsonSchema.required, ...(parsedSchema?.required || [])])),
+      properties: {
+        ...baseVcJsonSchema.properties,
+        ...(parsedSchema?.properties || {}),
+      },
+      title: context["@title"],
     };
   }
 
@@ -206,12 +246,12 @@ export class VcSchema {
         title: node["@title"],
         description: node["@description"],
         format: node["@format"],
+        items: node["@items"],
         ...dataTypeInfo,
       };
     }
 
     const replaceWithType = node["@replaceWith"];
-    let replaceWithNode;
     if (replaceWithType) {
       this.debug(`Parsing "${key}": replace with type "${replaceWithType}"`, node);
       if (!context[replaceWithType]) {
@@ -274,11 +314,14 @@ export class VcSchema {
     };
   }
 
-  private parseContextPlusDataType(node: any): { type: string; format?: string } | undefined {
+  private parseContextPlusDataType(
+    node: any,
+  ): { type: string | string[]; format?: string; items?: JsonSchemaNode } | undefined {
     if (node["@dataType"]) {
       return {
         type: node["@dataType"],
         format: node["@format"],
+        items: node["@items"],
       };
     } else if (jsonLdContextTypeMap[node["@type"]]) {
       return jsonLdContextTypeMap[node["@type"]];

@@ -242,22 +242,12 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     {
       "@version": 1.1,
       "@rootType": "ContentPublishCredential",
+      "@title": "Content Publish Credential",
       "w3ccred": "https://www.w3.org/2018/credentials#",
       "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
       "ContentPublishCredential": {
         "@id": "schema-id",
-        "@title": "Content Publish Credential",
         "@contains": ["issuer", "issuanceDate", "credentialSubject"]
-      },
-      "issuer": {
-        "@id": "w3ccred:issuer",
-        "@type": "@id",
-        "@required": true
-      },
-      "issuanceDate": {
-        "@id": "w3ccred:issuanceDate",
-        "@type": "xsd:dateTime",
-        "@required": true
       },
       "credentialSubject": {
         "@id": "w3ccred:credentialSubject",
@@ -361,23 +351,13 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     {
       "@version": 1.1,
       "@rootType": "ContentPublishCredential",
+      "@title": "Content Publish Credential",
       "xsd": "http://www.w3.org/2001/XMLSchema#",
       "w3ccred": "https://www.w3.org/2018/credentials#",
       "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
       "ContentPublishCredential": {
         "@id": "schema-id",
-        "@title": "Content Publish Credential",
         "@contains": ["credentialSubject", "issuer", "issuanceDate"]
-      },
-      "issuer": {
-        "@id": "w3ccred:issuer",
-        "@type": "@id",
-        "@required": true
-      },
-      "issuanceDate": {
-        "@id": "w3ccred:issuanceDate",
-        "@type": "xsd:dateTime",
-        "@required": true
       },
       "credentialSubject": {
         "@id": "w3ccred:credentialSubject",
@@ -510,8 +490,8 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
     "https://www.w3.org/2018/credentials/v1",
     "https://consensysidentity.com/schema/ContentPublishCredential"
   ],
-  "@id": "did:example:publisher-did#credential-id",
-  "@type": ["VerifiableCredential", "ContentPublishCredential"],
+  "id": "did:example:publisher-did#credential-id",
+  "type": ["VerifiableCredential", "ContentPublishCredential"],
   "issuer": "did:example:publisher-did",
   "issuanceDate": "2017-12-05T14:27:42Z",
   "credentialSubject": {
@@ -524,14 +504,14 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
       "url": "https://example-publisher.com/articles/a-very-important-article",
       "datePublished": "2020-06-29T00:04:12.418Z",
       "publisher": {
-        "@type": "Organization",
         "id": "did:example:publisher-did",
+        "type": "Organization",
         "name": "Example Publisher",
         "url": "https://example-publisher.com/"
       },
       "author": {
-        "@type": "Person",
         "id": "did:example:publisher-did#author-id",
+        "type": "Person",
         "name": "Joe Reporter"
       }
     }
@@ -542,8 +522,8 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
     "https://www.w3.org/2018/credentials/v1",
     "https://consensysidentity.com/schema/ContentPublishCredential"
   ],
-  "@id": "did:example:publisher-did#credential-id",
-  "@type": ["VerifiableCredential", "ContentPublishCredential"],
+  "id": "did:example:publisher-did#credential-id",
+  "type": ["VerifiableCredential", "ContentPublishCredential"],
   "issuer": "did:example:publisher-did",
   "issuanceDate": "2017-12-05T14:27:42Z",
   "credentialSubject": {
@@ -571,8 +551,8 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
     "https://www.w3.org/2018/credentials/v1",
     "https://consensysidentity.com/schema/ContentPublishCredential"
   ],
-  "@id": "did:example:publisher-did#credential-id",
-  "@type": ["VerifiableCredential", "ContentPublishCredential"],
+  "id": "did:example:publisher-did#credential-id",
+  "type": ["VerifiableCredential", "ContentPublishCredential"],
   "issuer": "did:example:publisher-did",
   "issuanceDate": "2017-12-05T14:27:42Z",
   "credentialSubject": {
