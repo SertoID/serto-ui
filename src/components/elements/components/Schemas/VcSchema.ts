@@ -186,6 +186,7 @@ export class VcSchema {
     if (Array.isArray(context)) {
       context = context[context.length - 1];
     }
+    // @TODO/tobek Handle more complex @context's - merge array of multiple contexts, dereference URLs, etc.
 
     let parsedSchema: JsonSchemaNode | undefined;
     const rootType = context["@rootType"];
@@ -195,15 +196,16 @@ export class VcSchema {
     } else if (!rootType) {
       this.jsonSchemaMessage = 'Invalid @context+ schema: no "@rootType" property. Falling back to base VC schema.';
     } else if (!context[rootType]) {
-      // @TODO/tobek If it was defined in another context referenced by this one we need to get it - though we probably won't be able to generate JSON Schema from it
       this.jsonSchemaMessage = `Invalid @context+ schema: "@rootType" property "${rootType}" is not defined. Falling back to base VC schema.`;
     } else {
-      parsedSchema = this.parseContextPlus(context, context[rootType], "root");
+      parsedSchema = this.parseContextPlusNode(context, context[rootType], "root");
     }
 
     return {
       $schema: "http://json-schema.org/draft-07/schema#",
       $id: `http://consensysidentity.com/schemas/${this.id}.json`, // @TODO/tobek Update URL and ensure this shema is available at this URL
+      title: context["@title"],
+      description: context["@description"],
       ...baseVcJsonSchema,
       ...parsedSchema,
       required: Array.from(new Set([...baseVcJsonSchema.required, ...(parsedSchema?.required || [])])),
@@ -211,11 +213,10 @@ export class VcSchema {
         ...baseVcJsonSchema.properties,
         ...(parsedSchema?.properties || {}),
       },
-      title: context["@title"],
     };
   }
 
-  private parseContextPlus(context: any, node: any, key: string): JsonSchemaNode | undefined {
+  private parseContextPlusNode(context: any, node: any, key: string): JsonSchemaNode | undefined {
     if (typeof node !== "object") {
       console.warn(
         `Unsupported @context+ node type at ${key}: node is not an object. Excluding from JSON Schema. Node:`,
@@ -223,7 +224,6 @@ export class VcSchema {
       );
       return;
     }
-    // @TODO/tobek handle arrays
 
     const dataTypeInfo = this.parseContextPlusDataType(node);
     if (dataTypeInfo) {
@@ -231,9 +231,9 @@ export class VcSchema {
       return {
         title: node["@title"],
         description: node["@description"],
-        format: node["@format"],
-        items: node["@items"],
         ...dataTypeInfo,
+        ...(node["@format"] && { format: node["@format"] }),
+        ...(node["@items"] && { items: node["@items"] }),
       };
     }
 
@@ -247,7 +247,7 @@ export class VcSchema {
         );
         return;
       }
-      return this.parseContextPlus(context, context[replaceWithType], replaceWithType);
+      return this.parseContextPlusNode(context, context[replaceWithType], replaceWithType);
     }
 
     const nestedProperties = {
@@ -279,7 +279,7 @@ export class VcSchema {
       .filter((nestedKey) => nestedKey[0] !== "@")
       .forEach((nestedKey) => {
         const nestedNode = nestedProperties[nestedKey];
-        const property = this.parseContextPlus(context, nestedNode, nestedKey);
+        const property = this.parseContextPlusNode(context, nestedNode, nestedKey);
         if (property) {
           if (
             nestedNode["@required"] ||
@@ -292,9 +292,11 @@ export class VcSchema {
       });
 
     return {
+      // Avoid setting these keys to `undefined` which would then override any previously defined values if this node is used with spread operator:
+      ...(node["@title"] && { title: node["@title"] }),
+      ...(node["@description"] && { description: node["@description"] }),
+
       type: "object",
-      title: node["@title"],
-      description: node["@description"],
       required: nestedRequired.length ? nestedRequired : undefined,
       properties: parsedNestedProperties,
     };
