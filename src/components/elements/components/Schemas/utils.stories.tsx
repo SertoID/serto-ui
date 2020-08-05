@@ -142,7 +142,7 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
           <Flex justifyContent="space-between" pr={2}>
             <Heading.h5 my={2}>VC input for validation</Heading.h5>
             <Text my={2} fontSize={1}>
-              @context will automatically be added
+              playground @context will automatically be appended
             </Text>
           </Flex>
           <CodeWrap>

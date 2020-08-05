@@ -237,258 +237,300 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
   }
 }`,
   ContentPublishCredential: `{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    {
-      "@version": 1.1,
-      "@rootType": "ContentPublishCredential",
-      "@title": "Content Publish Credential",
-      "w3ccred": "https://www.w3.org/2018/credentials#",
-      "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
-      "ContentPublishCredential": {
-        "@id": "schema-id",
-        "@contains": ["issuer", "issuanceDate", "credentialSubject"]
-      },
-      "credentialSubject": {
-        "@id": "w3ccred:credentialSubject",
-        "@required": true,
-        "@contains": "publishedContent",
-        "@context": {
-          "id": {
-            "@id": "@id",
-            "@type": "@id",
-            "@description": "Publisher DID",
-            "@required": true
-          }
+  "@context": {
+    "@version": 1.1,
+    "@rootType": "ContentPublishCredential",
+    "@title": "Content Publish Credential",
+    "w3ccred": "https://www.w3.org/2018/credentials#",
+    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "ContentPublishCredential": {
+      "@id": "schema-id",
+      "@contains": ["issuer", "issuanceDate", "credentialSubject"]
+    },
+    "credentialSubject": {
+      "@id": "w3ccred:credentialSubject",
+      "@required": true,
+      "@contains": "publishedContent",
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "@id",
+          "@description": "Publisher DID",
+          "@required": true
         }
-      },
-      "Organization": {
-        "@id": "http://schema.org/Organization",
-        "@context": {
-          "id": {
-            "@id": "@id",
-            "@type": "@id"
-          },
-          "name": {
-            "@id": "http://schema.org/name",
-            "@type": "http://schema.org/Text",
-            "@required": true
-          },
-          "url": {
-            "@id": "http://schema.org/url",
-            "@type": "@id",
-            "@required": true
-          }
-        }
-      },
-      "Person": {
-        "@id": "http://schema.org/Person",
-        "@context": {
-          "id": {
-            "@id": "@id",
-            "@type": "@id"
-          },
-          "name": {
-            "@id": "http://schema.org/name",
-            "@type": "http://schema.org/Text",
-            "@required": true
-          }
-        }
-      },
-      "Article": {
-        "@id": "http://schema.org/Article",
-        "@context": {
-          "id": {
-            "@id": "@id",
-            "@type": "@id",
-            "@required": true
-          },
-          "versionId": {
-            "@id": "http://schema.org/version",
-            "@type": "http://schema.org/Text",
-            "@description": "Globally unique identifier URI that refers to this version of this piece of content"
-          },
-          "headline": {
-            "@id": "http://schema.org/headline",
-            "@type": "http://schema.org/Text",
-            "@required": true
-          },
-          "url": {
-            "@id": "http://schema.org/url",
-            "@type": "@id",
-            "@required": true
-          },
-          "datePublished": {
-            "@id": "http://schema.org/datePublished",
-            "@type": "http://schema.org/DateTime",
-            "@required": true
-          },
-          "publisher": {
-            "@id": "http://schema.org/publisher",
-            "@type": "Organization",
-            "@required": true,
-            "@replaceWith": "Organization"
-          },
-          "author": {
-            "@id": "http://schema.org/author",
-            "@type": "Person",
-            "@replaceWith": "Person"
-          }
-        }
-      },
-      "publishedContent": {
-        "@id": "schema-id:publishedContent",
-        "@description": "Data about piece of content this publisher has published",
-        "@required": true,
-        "@replaceWith": "Article"
       }
+    },
+    "Organization": {
+      "@id": "http://schema.org/Organization",
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "@id",
+          "@description": "Publisher DID or other unique identifier URI"
+        },
+        "name": {
+          "@id": "http://schema.org/name",
+          "@type": "http://schema.org/Text",
+          "@required": true
+        },
+        "url": {
+          "@id": "http://schema.org/url",
+          "@type": "@id",
+          "@required": true,
+          "@description": "Publisher homepage"
+        }
+      }
+    },
+    "Person": {
+      "@id": "http://schema.org/Person",
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "@id",
+          "@description": "Author DID or other unique identifier URI"
+        },
+        "name": {
+          "@id": "http://schema.org/name",
+          "@type": "http://schema.org/Text",
+          "@required": true
+        }
+      }
+    },
+    "Article": {
+      "@id": "http://schema.org/Article",
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "http://schema.org/Text",
+          "@description": "Globally unique identifier for this piece of content across all versions",
+          "@required": true
+        },
+        "versionId": {
+          "@id": "http://schema.org/version",
+          "@type": "http://schema.org/Text",
+          "@description": "Globally unique identifier that refers to this version of this piece of content"
+        },
+        "headline": {
+          "@id": "http://schema.org/headline",
+          "@type": "http://schema.org/Text",
+          "@required": true
+        },
+        "url": {
+          "@id": "http://schema.org/url",
+          "@type": "@id",
+          "@required": true
+        },
+        "datePublished": {
+          "@id": "http://schema.org/datePublished",
+          "@type": "http://schema.org/DateTime",
+          "@required": true
+        },
+        "dateModified": {
+          "@id": "http://schema.org/dateModified",
+          "@type": "http://schema.org/DateTime"
+        },
+        "publisher": {
+          "@id": "http://schema.org/publisher",
+          "@type": "Organization",
+          "@required": true,
+          "@replaceWith": "Organization"
+        },
+        "author": {
+          "@id": "http://schema.org/author",
+          "@type": "Person",
+          "@replaceWith": "Person"
+        },
+        "keywords": {
+          "@id": "http://schema.org/keywords",
+          "@type": "http://schema.org/Text",
+          "@description": "Comma-separated list of tags/keywords"
+        },
+        "image": {
+          "@id": "http://schema.org/image",
+          "@type": "@id"
+        },
+        "rawContentUrl": {
+          "@id": "schema-id:raw-content-url",
+          "@type": "@id",
+          "@description": "URL where raw, machine-readable, full text of content can be found (may require authentication)"
+        },
+        "rawContentHash": {
+          "@id": "schema-id:raw-content-hash",
+          "@type": "http://schema.org/Text",
+          "@description": "Keccak-256 hash of content at \`rawContentUrl\`"
+        }
+      }
+    },
+    "publishedContent": {
+      "@id": "schema-id:publishedContent",
+      "@description": "Data about piece of content this publisher has published",
+      "@required": true,
+      "@replaceWith": "Article"
     }
-  ]
+  }
 }`,
   ContentPublishCredentialProgrammatic: `{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    {
-      "@version": 1.1,
-      "@rootType": "ContentPublishCredential",
-      "@title": "Content Publish Credential",
-      "xsd": "http://www.w3.org/2001/XMLSchema#",
-      "w3ccred": "https://www.w3.org/2018/credentials#",
-      "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
-      "ContentPublishCredential": {
-        "@id": "schema-id",
-        "@contains": ["credentialSubject", "issuer", "issuanceDate"]
-      },
-      "credentialSubject": {
-        "@id": "w3ccred:credentialSubject",
-        "@required": true,
-        "@contains": "publishedContent",
-        "@context": {
-          "id": {
-            "@id": "@id",
-            "@type": "@id",
-            "@description": "Publisher DID",
-            "@required": true
-          }
+  "@context": {
+    "@version": 1.1,
+    "@rootType": "ContentPublishCredential",
+    "@title": "Content Publish Credential",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "w3ccred": "https://www.w3.org/2018/credentials#",
+    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "ContentPublishCredential": {
+      "@id": "schema-id",
+      "@contains": ["credentialSubject", "issuer", "issuanceDate"]
+    },
+    "credentialSubject": {
+      "@id": "w3ccred:credentialSubject",
+      "@required": true,
+      "@contains": "publishedContent",
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "@id",
+          "@description": "Publisher DID",
+          "@required": true
         }
-      },
-      "publishedContent": {
-        "@id": "schema-id:publishedContent",
-        "@description": "Data about piece of content this publisher has published",
-        "@required": true,
-        "@context": {
-          "id": {
-            "@id": "schema-id:content-id",
-            "@type": "xsd:string"
-          },
-          "versionId": {
-            "@id": "http://schema.org/version",
-            "@type": "xsd:string",
-            "@description": "Globally unique identifier URI that refers to this version of this piece of content"
-          },
-          "headline": {
-            "@id": "schema-id:headline",
-            "@type": "xsd:string",
-            "@required": true
-          },
-          "url": {
-            "@id": "schema-id:url",
-            "@type": "xsd:string",
-            "@format": "uri",
-            "@required": true
-          },
-          "datePublished": {
-            "@id": "schema-id:datePublished",
-            "@type": "xsd:dateTime",
-            "@required": true
-          },
-          "publisher": {
-            "@id": "schema-id:publisher",
-            "@required": true,
-            "@context": {
-              "id": {
-                "@id": "schema-id:publisher-id",
-                "@type": "xsd:string"
-              },
-              "name": {
-                "@id": "schema-id:publisher-name",
-                "@type": "xsd:string",
-                "@required": true
-              },
-              "url": {
-                "@id": "schema-id:publisher-url",
-                "@type": "xsd:string",
-                "@format": "uri",
-                "@required": true
-              }
-            }
-          },
-          "author": {
-            "@id": "schema-id:author",
-            "@context": {
-              "id": {
-                "@id": "schema-id:publisher-id",
-                "@type": "xsd:string"
-              },
-              "name": {
-                "@id": "schema-id:author-name",
-                "@type": "xsd:string",
-                "@required": true
-              }
+      }
+    },
+    "publishedContent": {
+      "@id": "schema-id:publishedContent",
+      "@description": "Data about piece of content this publisher has published",
+      "@required": true,
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "xsd:string",
+          "@description": "Globally unique identifier for this piece of content across all versions",
+          "@required": true
+        },
+        "versionId": {
+          "@id": "http://schema.org/version",
+          "@type": "xsd:string",
+          "@description": "Globally unique identifier that refers to this version of this piece of content"
+        },
+        "headline": {
+          "@id": "schema-id:headline",
+          "@type": "xsd:string",
+          "@required": true
+        },
+        "url": {
+          "@id": "schema-id:url",
+          "@type": "@id",
+          "@required": true
+        },
+        "datePublished": {
+          "@id": "schema-id:date-published",
+          "@type": "xsd:dateTime",
+          "@required": true
+        },
+        "dateModified": {
+          "@id": "schema-id:date-modified",
+          "@type": "xsd:dateTime"
+        },
+        "publisher": {
+          "@id": "schema-id:publisher",
+          "@required": true,
+          "@context": {
+            "id": {
+              "@id": "schema-id:publisher-id",
+              "@type": "xsd:string",
+              "@description": "Publisher DID or other unique identifier URI"
+            },
+            "name": {
+              "@id": "schema-id:publisher-name",
+              "@type": "xsd:string",
+              "@required": true
+            },
+            "url": {
+              "@id": "schema-id:publisher-url",
+              "@type": "@id",
+              "@required": true,
+              "@description": "Publisher homepage"
             }
           }
+        },
+        "author": {
+          "@id": "schema-id:author",
+          "@context": {
+            "id": {
+              "@id": "schema-id:publisher-id",
+              "@type": "xsd:string",
+              "@description": "Author DID or other unique identifier URI"
+            },
+            "name": {
+              "@id": "schema-id:author-name",
+              "@type": "xsd:string",
+              "@required": true
+            }
+          }
+        },
+        "keywords": {
+          "@id": "schema-id:keywords",
+          "@type": "xsd:string",
+          "@description": "Comma-separated list of tags/keywords"
+        },
+        "image": {
+          "@id": "schema-id:image",
+          "@type": "@id"
+        },
+        "rawContentUrl": {
+          "@id": "schema-id:raw-content-url",
+          "@type": "@id",
+          "@description": "URL where raw, machine-readable, full text of content can be found (may require authentication)"
+        },
+        "rawContentHash": {
+          "@id": "schema-id:raw-content-hash",
+          "@type": "xsd:string",
+          "@description": "Keccak-256 hash of content at \`rawContentUrl\`"
         }
       }
     }
-  ]
+  }
 }`,
   ContentPublishCredentialMinimal: `{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    {
-      "@version": 1.1,
-      "@rootType": "ContentPublishCredential",
-      "w3ccred": "https://www.w3.org/2018/credentials#",
-      "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
-      "ContentPublishCredential": {
-        "@id": "schema-id",
-        "@contains": "credentialSubject"
-      },
-      "credentialSubject": {
-        "@id": "w3ccred:credentialSubject",
-        "@required": true,
-        "@contains": "publishedContent",
-        "@context": {
-          "id": {
-            "@id": "@id",
-            "@type": "@id",
-            "@required": true
-          }
+  "@context": {
+    "@version": 1.1,
+    "@rootType": "ContentPublishCredential",
+    "w3ccred": "https://www.w3.org/2018/credentials#",
+    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "ContentPublishCredential": {
+      "@id": "schema-id",
+      "@contains": "credentialSubject"
+    },
+    "credentialSubject": {
+      "@id": "w3ccred:credentialSubject",
+      "@required": true,
+      "@contains": "publishedContent",
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "@id",
+          "@required": true
         }
-      },
-      "publishedContent": {
-        "@id": "schema-id:publishedContent",
-        "@description": "Data about piece of content this publisher has published",
-        "@required": true,
-        "@context": {
-          "url": {
-            "@id": "http://schema.org/url",
-            "@type": "@id",
-            "@required": true
-          }
+      }
+    },
+    "publishedContent": {
+      "@id": "schema-id:publishedContent",
+      "@description": "Data about piece of content this publisher has published",
+      "@required": true,
+      "@context": {
+        "url": {
+          "@id": "http://schema.org/url",
+          "@type": "@id",
+          "@required": true
         }
       }
     }
-  ]
+  }
 }`,
 };
 
-// @TODO/tobek Handle merging of new and existing @context's.
 export const EXAMPLE_VCS: { [key: string]: string } = {
   ContentPublishCredential: `{
   "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://consensysidentity.com/schema/ContentPublishCredential"
+    "https://www.w3.org/2018/credentials/v1"
   ],
   "id": "did:example:publisher-did#credential-id",
   "type": ["VerifiableCredential", "ContentPublishCredential"],
@@ -503,6 +545,11 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
       "headline": "A Very Important Article",
       "url": "https://example-publisher.com/articles/a-very-important-article",
       "datePublished": "2020-06-29T00:04:12.418Z",
+      "dateModified": "2020-06-30T00:10:45.000Z",
+      "image": "https://example-publisher.com/images/important-article-primary-image.jpg",
+      "rawContentUrl": "https://example-publisher.com/raw-content?id=did:example:publisher-did#article-id",
+      "rawContentHash": "0x123abc",
+      "keywords": "news, breaking news, politics",
       "publisher": {
         "id": "did:example:publisher-did",
         "type": "Organization",
@@ -519,8 +566,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
 }`,
   ContentPublishCredentialProgrammatic: `{
   "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://consensysidentity.com/schema/ContentPublishCredential"
+    "https://www.w3.org/2018/credentials/v1"
   ],
   "id": "did:example:publisher-did#credential-id",
   "type": ["VerifiableCredential", "ContentPublishCredential"],
@@ -534,6 +580,11 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
       "headline": "A Very Important Article",
       "url": "https://example-publisher.com/articles/a-very-important-article",
       "datePublished": "2020-06-29T00:04:12.418Z",
+      "dateModified": "2020-06-30T00:10:45.000Z",
+      "image": "https://example-publisher.com/images/important-article-primary-image.jpg",
+      "rawContentUrl": "https://example-publisher.com/raw-content?id=did:example:publisher-did#article-id",
+      "rawContentHash": "0x123abc",
+      "keywords": "news, breaking news, politics",
       "publisher": {
         "id": "did:example:publisher-did",
         "name": "Example Publisher",
@@ -548,8 +599,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
 }`,
   ContentPublishCredentialMinimal: `{
   "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://consensysidentity.com/schema/ContentPublishCredential"
+    "https://www.w3.org/2018/credentials/v1"
   ],
   "id": "did:example:publisher-did#credential-id",
   "type": ["VerifiableCredential", "ContentPublishCredential"],

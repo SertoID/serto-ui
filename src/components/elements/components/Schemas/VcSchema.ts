@@ -153,9 +153,7 @@ export class VcSchema {
     cb(isValid, message);
   }
 
-  public openGoogleJsonLdValidatorPage(_vc: any): void {
-    const vc = typeof _vc === "string" ? JSON.parse(_vc) : _vc;
-
+  public openGoogleJsonLdValidatorPage(vc: any): void {
     const form = document.createElement("form");
     form.method = "post";
     form.target = "_blank";
@@ -164,30 +162,15 @@ export class VcSchema {
     const field = document.createElement("input");
     field.type = "hidden";
     field.name = "code";
-    field.value = JSON.stringify(
-      {
-        ...vc,
-        ...this.jsonLdContext, // this will overwrite VC's @context with given context, which may not be what we want?
-      },
-      null,
-      2,
-    );
+    field.value = JSON.stringify(this.getVcWithSchemaContext(vc), null, 2);
     form.appendChild(field);
 
     document.body.appendChild(form);
     form.submit();
   }
 
-  public openJsonLdPlaygroundPage(_vc: any): void {
-    const vc = typeof _vc === "string" ? JSON.parse(_vc) : _vc;
-    const jsonLd = JSON.stringify(
-      {
-        ...vc,
-        ...this.jsonLdContext, // this will overwrite VC's @context with given context, which may not be what we want?
-      },
-      null,
-      2,
-    );
+  public openJsonLdPlaygroundPage(vc: any): void {
+    const jsonLd = JSON.stringify(this.getVcWithSchemaContext(vc), null, 2);
     window.open(
       "https://json-ld.org/playground/#startTab=tab-compacted&json-ld=" + encodeURIComponent(jsonLd),
       "_blank",
@@ -330,5 +313,18 @@ export class VcSchema {
       return jsonLdContextTypeMap[node["@type"]];
     }
     return undefined;
+  }
+
+  /** Appends our JSON-LD @context to a to the @context of a given VC. */
+  private getVcWithSchemaContext(_vc: any): { [key: string]: any } {
+    const vc = typeof _vc === "string" ? JSON.parse(_vc) : { ..._vc };
+    if (!vc["@context"]) {
+      vc["@context"] = this.jsonLdContext["@context"];
+    } else if (Array.isArray(vc["@context"])) {
+      vc["@context"] = vc["@context"].concat(this.jsonLdContext["@context"]);
+    } else {
+      vc["@context"] = [vc["@context"]].concat(this.jsonLdContext["@context"]);
+    }
+    return vc;
   }
 }
