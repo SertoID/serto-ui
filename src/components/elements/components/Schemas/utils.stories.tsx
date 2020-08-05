@@ -58,7 +58,7 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
 
   const [inputVc, setInputVc] = React.useState<string>("");
   const [debouncedVc] = useDebounce(inputVc, 500);
-  const [inputVcValid, setInputVcValid] = React.useState<boolean | undefined>();
+  const [inputVcValid, setInputVcValid] = React.useState<boolean | null | undefined>();
   const [inputVcValidityMessage, setInputVcValidityMessage] = React.useState<string | undefined>();
 
   const [outputContextHtml, setOutputContextHtml] = React.useState<string>("");
@@ -154,7 +154,7 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
             />
           </CodeWrap>
           {typeof inputVcValid !== "undefined" && (
-            <Flash variant={inputVcValid ? "success" : "danger"}>
+            <Flash variant={inputVcValid ? "success" : inputVcValid === null ? "warning" : "danger"}>
               <Text fontSize={1} style={{ wordBreak: "break-word", float: "left", display: "inline-block" }}>
                 {inputVcValidityMessage}
               </Text>

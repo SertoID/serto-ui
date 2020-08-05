@@ -128,18 +128,28 @@ export class VcSchema {
     return JSON.stringify(this.jsonSchema, null, prettyPrint ? 2 : undefined);
   }
 
-  public async validateVc(vc: any, cb: (isValid: boolean, message?: string) => any): Promise<void> {
+  public async validateVc(vc: any, cb: (isValid: boolean | null, message?: string) => any): Promise<void> {
     let vcObj: any;
     try {
       vcObj = JSON.parse(vc);
     } catch (err) {
       return cb(false, "VC is invalid: Invalid JSON: " + err.message);
     }
+
     if (!this.jsonSchema || !this.jsonSchemaValidate) {
-      return cb(true, "VC assumed valid since JSON Schema could not be generated: " + this.jsonSchemaMessage);
+      return cb(null, "VC could not be validated since JSON Schema could not be generated: " + this.jsonSchemaMessage);
+    } else if (
+      this.schema["@context"]["@rootType"] &&
+      vcObj.type !== this.schema["@context"]["@rootType"] &&
+      (!Array.isArray(vcObj.type) || vcObj.type.indexOf(this.schema["@context"]["@rootType"]) === -1)
+    ) {
+      // @TODO/tobek A single JSON-LD @context could define multiple VC types but this is set up to recognize exactly one. This could theoretically be expanded - we would probably need to support an array of @rootType's and create a separate JSON Schema for each.
+      return cb(
+        null,
+        `VC could not be validated since it is not of the type "${this.schema["@context"]["@rootType"]}" that we have a schema for.`,
+      );
     }
 
-    // @TODO/tobek Should we check that the VC actually references this schema with its `type` property?
     const isValid = await this.jsonSchemaValidate(vcObj);
 
     let message: string;
