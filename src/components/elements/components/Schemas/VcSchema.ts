@@ -44,7 +44,7 @@ const jsonLdContextTypeMap: { [key: string]: { type: string; format?: string } }
 
 const baseVcJsonSchema = {
   type: "object",
-  required: ["@context", "id", "type", "issuer", "issuanceDate", "credentialSubject"],
+  required: ["@context", "type", "issuer", "issuanceDate", "credentialSubject"],
   properties: {
     "@context": {
       type: ["string", "array", "object"],
@@ -139,6 +139,7 @@ export class VcSchema {
       return cb(true, "VC assumed valid since JSON Schema could not be generated: " + this.jsonSchemaMessage);
     }
 
+    // @TODO/tobek Should we check that the VC actually references this schema with its `type` property?
     const isValid = await this.jsonSchemaValidate(vcObj);
 
     let message: string;

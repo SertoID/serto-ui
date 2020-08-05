@@ -315,6 +315,10 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
           "@type": "http://schema.org/Text",
           "@required": true
         },
+        "description": {
+          "@id": "http://schema.org/description",
+          "@type": "http://schema.org/Text"
+        },
         "url": {
           "@id": "http://schema.org/url",
           "@type": "@id",
@@ -369,7 +373,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     }
   }
 }`,
-  ContentPublishCredentialProgrammatic: `{
+  "ContentPublishCredential (programmatic)": `{
   "@context": {
     "@version": 1.1,
     "@rootType": "ContentPublishCredential",
@@ -414,6 +418,10 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
           "@id": "schema-id:headline",
           "@type": "xsd:string",
           "@required": true
+        },
+        "description": {
+          "@id": "schema-id:description",
+          "@type": "xsd:string"
         },
         "url": {
           "@id": "schema-id:url",
@@ -489,7 +497,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     }
   }
 }`,
-  ContentPublishCredentialMinimal: `{
+  "ContentPublishCredential (minimal)": `{
   "@context": {
     "@version": 1.1,
     "@rootType": "ContentPublishCredential",
@@ -525,6 +533,47 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     }
   }
 }`,
+  DiplomaCredential: `{
+  "@context": {
+    "@version": 1.1,
+    "@rootType": "DiplomaCredential",
+    "w3ccred": "https://www.w3.org/2018/credentials#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "schema-id": "https://consensysidentity.com/schema/DiplomaCredential#",
+    "DiplomaCredential": {
+      "@id": "schema-id",
+      "@contains": "credentialSubject"
+    },
+    "credentialSubject": {
+      "@id": "w3ccred:credentialSubject",
+      "@required": true,
+      "@contains": ["alumniOf", "universityId", "title"],
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "@id",
+          "@required": true
+        }
+      }
+    },
+    "alumniOf": {
+      "@id": "schema-id:alumniOf",
+      "@type": "rdf:HTML",
+      "@required": true,
+      "@dataType": "string"
+    },
+    "universityId": {
+      "@id": "schema-id:universityId",
+      "@type": "rdf:langString",
+      "@dataType": "string"
+    },
+    "title": {
+      "@id": "schema-id:title",
+      "@type": "rdf:HTML",
+      "@dataType": "string"
+    }
+  }
+}`,
 };
 
 export const EXAMPLE_VCS: { [key: string]: string } = {
@@ -543,6 +592,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
       "id": "did:example:publisher-did#article-id",
       "versionId": "did:example:publisher-did#article-version-id",
       "headline": "A Very Important Article",
+      "description": "This important article covers important things you should know about.",
       "url": "https://example-publisher.com/articles/a-very-important-article",
       "datePublished": "2020-06-29T00:04:12.418Z",
       "dateModified": "2020-06-30T00:10:45.000Z",
@@ -564,7 +614,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
     }
   }
 }`,
-  ContentPublishCredentialProgrammatic: `{
+  "ContentPublishCredential (programmatic)": `{
   "@context": [
     "https://www.w3.org/2018/credentials/v1"
   ],
@@ -578,6 +628,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
       "id": "did:example:publisher-did#article-id",
       "versionId": "did:example:publisher-did#article-version-id",
       "headline": "A Very Important Article",
+      "description": "This important article covers important things you should know about.",
       "url": "https://example-publisher.com/articles/a-very-important-article",
       "datePublished": "2020-06-29T00:04:12.418Z",
       "dateModified": "2020-06-30T00:10:45.000Z",
@@ -597,7 +648,7 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
     }
   }
 }`,
-  ContentPublishCredentialMinimal: `{
+  "ContentPublishCredential (minimal)": `{
   "@context": [
     "https://www.w3.org/2018/credentials/v1"
   ],
@@ -610,6 +661,21 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
     "publishedContent": {
       "url": "https://example-publisher.com/articles/a-very-important-article"
     }
+  }
+}`,
+  DiplomaCredential: `{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": ["VerifiableCredential", "DiplomaCredential"],
+  "issuer": "did:ethr:rinkeby:0x9fb04797cc0b1711c86b960105e0c3ed3f9cb749",
+  "issuanceDate": "2017-12-05T14:27:42Z",
+  "credentialSubject": {
+    "id": "did:ethr:rinkeby:0x9fb04797cc0b1711c86b960105e0c3ed3f9cb749",
+    "title": "Diploma Credential",
+    "alumniOf": "Example University",
+    "universityId": "did:example:c276e12ec21"
   }
 }`,
 };
