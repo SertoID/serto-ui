@@ -71,7 +71,7 @@ storiesOf("Schemas", module).add("Definition Demo", () => {
       return;
     }
     try {
-      setVcSchema(new VcSchema(debouncedSchema, true));
+      setVcSchema(new VcSchema(debouncedSchema, "example-schema", true));
     } catch (err) {
       setInputSchemaError(err.message);
     }

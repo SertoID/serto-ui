@@ -1,5 +1,6 @@
 import Ajv from "ajv";
 import { omitDeep, mapValuesDeep } from "deepdash-es/standalone";
+import slugify from "@sindresorhus/slugify";
 
 const ajv = new Ajv();
 
@@ -72,6 +73,7 @@ const baseVcJsonSchema = {
 };
 
 export class VcSchema {
+  public id: string;
   public jsonSchemaMessage?: string; // @TODO/tobek This should probably be an array and some of the compilation warnings should get added to it.
 
   private schema: any;
@@ -80,7 +82,8 @@ export class VcSchema {
   private jsonSchema?: JsonSchema;
   private jsonSchemaValidate?: Ajv.ValidateFunction;
 
-  constructor(schemaString: string, debugMode?: boolean) {
+  constructor(schemaString: string, id: string, debugMode?: boolean) {
+    this.id = slugify(id);
     this.debugMode = debugMode;
     try {
       this.schema = JSON.parse(schemaString);
@@ -216,8 +219,8 @@ export class VcSchema {
     }
 
     return {
-      $schema: "http://json-schema.org/schema#",
-      $id: "http://consensysidentity.com/schemas/schema-id.json", // @TODO
+      $schema: "http://json-schema.org/draft-07/schema#",
+      $id: `http://consensysidentity.com/schemas/${this.id}.json`, // @TODO/tobek Update URL and ensure this shema is available at this URL
       ...baseVcJsonSchema,
       ...parsedSchema,
       required: Array.from(new Set([...baseVcJsonSchema.required, ...(parsedSchema?.required || [])])),
