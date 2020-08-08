@@ -4,7 +4,7 @@ import slugify from "@sindresorhus/slugify";
 
 const ajv = new Ajv();
 
-interface JsonSchemaNode {
+export interface JsonSchemaNode {
   type: string | string[];
   properties?: { [key: string]: JsonSchemaNode };
   title?: string;
@@ -13,7 +13,7 @@ interface JsonSchemaNode {
   items?: JsonSchemaNode;
   required?: string[];
 }
-interface JsonSchema extends JsonSchemaNode {
+export interface JsonSchema extends JsonSchemaNode {
   $schema: string;
   $id: string;
 }
@@ -31,12 +31,13 @@ const contextPlusFields = [
 ];
 const contextPlusFieldsRegexes = contextPlusFields.map((field) => new RegExp(field));
 
-const jsonLdContextTypeMap: { [key: string]: { type: string; format?: string } } = {
+export const jsonLdContextTypeMap: { [key: string]: { type: string; format?: string } } = {
   "@id": { type: "string", format: "uri" }, // JSON-LD @context convention for an IRI
-  "http://schema.org/URL": { type: "string", format: "uri" },
   "http://schema.org/Text": { type: "string" },
-  "http://schema.org/Number": { type: "number" },
+  "http://schema.org/URL": { type: "string", format: "uri" },
   "http://schema.org/DateTime": { type: "string", format: "date-time" },
+  "http://schema.org/Number": { type: "number" },
+  "http://schema.org/Boolean": { type: "boolean" },
   "xsd:string": { type: "string" },
   "xsd:integer": { type: "integer" },
   "xsd:dateTime": { type: "string", format: "date-time" },

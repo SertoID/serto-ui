@@ -1,9 +1,9 @@
 import { Info } from "@rimble/icons";
 import slugify from "@sindresorhus/slugify";
 import * as React from "react";
-import { Button, Checkbox, Field, Form, Input, Text, Tooltip } from "rimble-ui";
+import { Button, Checkbox, Field, Form, Input, Heading, Text, Tooltip } from "rimble-ui";
 import styled from "styled-components";
-import { baseColors,colors, fonts } from "../../../";
+import { baseColors, colors, fonts } from "../../../";
 import { SchemaSchema } from "./";
 
 const SchemaField = styled(Field)`
@@ -42,9 +42,9 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   return (
     <>
-      <Text mt={4} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={4} fontWeight={3}>
+      <Heading mt={4} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={4} fontWeight={3}>
         Create Credential Type
-      </Text>
+      </Heading>
       <Form validated={doValidation} onSubmit={goNext}>
         <SchemaField label="Name">
           <Input
