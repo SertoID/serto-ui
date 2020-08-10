@@ -6,20 +6,7 @@ import { JsonSchemaNode } from "../VcSchema";
 import { AttributesStep } from "./AttributesStep";
 import { InfoStep } from "./InfoStep";
 import { ConfirmStep } from "./ConfirmStep";
-
 import { jsonLdContextTypeMap } from "../VcSchema";
-
-export const typeOptions: { [key: string]: any } = {};
-Object.keys(jsonLdContextTypeMap).forEach((type) => {
-  if (type.indexOf("http://schema.org/") !== 0) {
-    return;
-  }
-  typeOptions[type] = {
-    ...jsonLdContextTypeMap[type],
-    niceName: type.replace("http://schema.org/", ""),
-    semanticType: type,
-  };
-});
 
 interface ContextPlusNode extends JsonSchemaNode {
   id: string;
@@ -36,12 +23,30 @@ export interface SchemaSchema {
   properties: ContextPlusNode[];
 }
 
+export const typeOptions: { [key: string]: any } = {};
+Object.keys(jsonLdContextTypeMap).forEach((type) => {
+  if (type.indexOf("http://schema.org/") !== 0) {
+    return;
+  }
+  typeOptions[type] = {
+    ...jsonLdContextTypeMap[type],
+    niceName: type.replace("http://schema.org/", ""),
+    semanticType: type,
+  };
+});
+
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
+const Wrapper: React.FunctionComponent<any> = (props) => (
+  <Card width={9} style={{ maxHeight: "95vh", overflowY: "auto" }} {...props}>
+    {props.children}
+  </Card>
+);
+
 export interface CreateSchemaProps {
-  onComplete(schema: SchemaSchema): void;
   onClose?(): void;
   onSchemaUpdate?(schema: SchemaSchema): void;
+  onSchemaCreated?(schema: SchemaSchema): void;
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
@@ -87,15 +92,15 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   function goForward() {
     const nextStep = STEPS[STEPS.indexOf(currentStep) + 1];
     if (nextStep === "DONE") {
-      // @TODO/tobek Loading state before moving to "done" step.
-      props.onComplete(schema);
+      // @TODO/tobek Integrate with API to create schema, then loading state before moving to "done" step.
+      props.onSchemaCreated?.(schema);
     }
     setCurrentStep(nextStep);
   }
 
   if (currentStep === "DONE") {
     return (
-      <Card width={9}>
+      <Wrapper>
         <Text my={4} textAlign="center" color={colors.success.base}>
           <Text
             bg={colors.success.light}
@@ -111,16 +116,16 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           <Heading as="h3">Credential Type Published</Heading>
         </Text>
         <Box mt={5} mb={3}>
-          <Button width="100%" onClick={props.onComplete}>
+          <Button width="100%" onClick={() => props.onClose?.()}>
             Done
           </Button>
         </Box>
-      </Card>
+      </Wrapper>
     );
   }
 
   return (
-    <Card p={0} width={9}>
+    <Wrapper p={0}>
       {currentStep !== STEPS[0] && (
         <Button.Text icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={goBack} />
       )}
@@ -135,6 +140,6 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           <ConfirmStep schema={schema} onComplete={goForward} />
         )}
       </Box>
-    </Card>
+    </Wrapper>
   );
 };

@@ -123,6 +123,15 @@ export class TrustAgencyService {
     });
   }
 
+  public async getSchemas(): Promise<any> {
+    // @TODO/tobek Integrate with API when available.
+    return [];
+  }
+
+  public async createSchema(): Promise<any> {
+    // @TODO/tobek Integrate with API when available.
+  }
+
   public async createApiKey(data: { keyName: string }): Promise<any> {
     return this.request("/v1/tenant/apiKeys", "POST", {
       tenantId: this.getAuth()?.tenantid,

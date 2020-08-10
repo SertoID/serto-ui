@@ -7,7 +7,7 @@ storiesOf("Schemas", module).add("Create Schema", () => {
   const [schema, setSchema] = React.useState({});
   return (
     <IdentityThemeProvider>
-      <CreateSchema onComplete={() => {}} onSchemaUpdate={setSchema} />
+      <CreateSchema onSchemaUpdate={setSchema} />
       <pre>{JSON.stringify(schema, null, 2)}</pre>
     </IdentityThemeProvider>
   );

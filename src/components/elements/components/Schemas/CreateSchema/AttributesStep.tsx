@@ -108,7 +108,9 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
                 value={schema.properties[i].semanticType}
               >
                 {Object.keys(typeOptions).map((type) => (
-                  <option value={type}>{typeOptions[type].niceName}</option>
+                  <option key={type} value={type}>
+                    {typeOptions[type].niceName}
+                  </option>
                 ))}
                 {/* @TODO/tobek Add "custom" option that opens fields to manually enter type details. */}
               </select>
