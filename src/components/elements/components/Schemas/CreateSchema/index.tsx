@@ -5,6 +5,21 @@ import { colors } from "../../../";
 import { JsonSchemaNode } from "../VcSchema";
 import { AttributesStep } from "./AttributesStep";
 import { InfoStep } from "./InfoStep";
+import { ConfirmStep } from "./ConfirmStep";
+
+import { jsonLdContextTypeMap } from "../VcSchema";
+
+export const typeOptions: { [key: string]: any } = {};
+Object.keys(jsonLdContextTypeMap).forEach((type) => {
+  if (type.indexOf("http://schema.org/") !== 0) {
+    return;
+  }
+  typeOptions[type] = {
+    ...jsonLdContextTypeMap[type],
+    niceName: type.replace("http://schema.org/", ""),
+    semanticType: type,
+  };
+});
 
 interface ContextPlusNode extends JsonSchemaNode {
   id: string;
@@ -24,7 +39,7 @@ export interface SchemaSchema {
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
 export interface CreateSchemaProps {
-  onComplete(): void;
+  onComplete(schema: SchemaSchema): void;
   onClose?(): void;
   onSchemaUpdate?(schema: SchemaSchema): void;
 }
@@ -70,7 +85,12 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     setCurrentStep(STEPS[STEPS.indexOf(currentStep) - 1]);
   }
   function goForward() {
-    setCurrentStep(STEPS[STEPS.indexOf(currentStep) + 1]);
+    const nextStep = STEPS[STEPS.indexOf(currentStep) + 1];
+    if (nextStep === "DONE") {
+      // @TODO/tobek Loading state before moving to "done" step.
+      props.onComplete(schema);
+    }
+    setCurrentStep(nextStep);
   }
 
   if (currentStep === "DONE") {
@@ -112,7 +132,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
         ) : currentStep === "ATTRIBUTES" ? (
           <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
         ) : (
-          <>Confirm</>
+          <ConfirmStep schema={schema} onComplete={goForward} />
         )}
       </Box>
     </Card>

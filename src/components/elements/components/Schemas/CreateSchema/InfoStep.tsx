@@ -29,7 +29,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   function goNext(e: Event) {
     e.preventDefault();
-    if (schema.name && (defaultSchemaSlug || schema.slug) && schema.version && schema.icon?.length === 1) {
+    if (schema.name && (defaultSchemaSlug || schema.slug) && schema.version && schema.icon) {
       setDoValidation(false);
       if (!schema.slug) {
         updateSchema("slug", defaultSchemaSlug);
@@ -78,7 +78,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
           <Text fontSize={1} fontWeight={3} mb={2}>
             Icon{" "}
             <Tooltip
-              message="This must be a single character, for example an emoji, that will be used to label this schema"
+              message="This should be a single character, for example an emoji, that will be used to label this schema"
               placement="top"
             >
               <Info size={16} color={colors.silver} style={{ verticalAlign: "text-top" }} />
@@ -90,7 +90,6 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             required={true}
             value={schema.icon}
             onChange={(event: any) => updateSchema("icon", event.target.value)}
-            onBlur={() => updateSchema("icon", schema.icon[0] || "")}
           />
         </SchemaLabel>
         <Checkbox

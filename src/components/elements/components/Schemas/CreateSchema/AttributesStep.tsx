@@ -2,20 +2,7 @@ import slugify from "@sindresorhus/slugify";
 import * as React from "react";
 import { Box, Button, Checkbox, Flash, Flex, Form, Heading, Input } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../../";
-import { jsonLdContextTypeMap } from "../VcSchema";
-import { SchemaSchema } from "./";
-
-const typeOptions: { [key: string]: any } = {};
-Object.keys(jsonLdContextTypeMap).forEach((type) => {
-  if (type.indexOf("http://schema.org/") !== 0) {
-    return;
-  }
-  typeOptions[type] = {
-    ...jsonLdContextTypeMap[type],
-    niceName: type.replace("http://schema.org/", ""),
-    semanticType: type,
-  };
-});
+import { SchemaSchema, typeOptions } from "./";
 
 export interface AttributesStepProps {
   schema: SchemaSchema;
@@ -27,8 +14,6 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
   const { schema, updateSchema } = props;
   const [doValidation, setDoValidation] = React.useState(false);
   const [error, setError] = React.useState("");
-
-  // const defaultSchemaSlug = React.useMemo(() => slugify(schema.name), [schema.name]);
 
   function addProperty(e: Event) {
     e.preventDefault();
