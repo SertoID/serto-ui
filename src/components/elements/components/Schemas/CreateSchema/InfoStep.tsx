@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button, Checkbox, Field, Form, Input, Heading, Text, Tooltip } from "rimble-ui";
 import styled from "styled-components";
 import { baseColors, colors, fonts } from "../../../";
-import { SchemaSchema } from "./";
+import { WorkingSchema } from "./utils";
 
 const SchemaField = styled(Field)`
   width: 100%;
@@ -16,8 +16,8 @@ const SchemaLabel = styled.label`
 `;
 
 export interface InfoStepProps {
-  schema: SchemaSchema;
-  updateSchema(field: string, value: any): void;
+  schema: WorkingSchema;
+  updateSchema(field: keyof WorkingSchema, value: any): void;
   onComplete(): void;
 }
 

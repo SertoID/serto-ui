@@ -2,38 +2,11 @@ import { Check } from "@rimble/icons";
 import * as React from "react";
 import { Box, Button, Card, Heading, Text } from "rimble-ui";
 import { colors } from "../../../";
-import { JsonSchemaNode } from "../VcSchema";
+import { LdContextPlus, SchemaMetadata } from "../VcSchema";
 import { AttributesStep } from "./AttributesStep";
-import { InfoStep } from "./InfoStep";
 import { ConfirmStep } from "./ConfirmStep";
-import { jsonLdContextTypeMap } from "../VcSchema";
-
-interface ContextPlusNode extends JsonSchemaNode {
-  id: string;
-  semanticType: string;
-  isRequired?: boolean;
-}
-
-export interface SchemaSchema {
-  name: string;
-  slug: string;
-  version: string;
-  icon: string;
-  discoverable: boolean;
-  properties: ContextPlusNode[];
-}
-
-export const typeOptions: { [key: string]: any } = {};
-Object.keys(jsonLdContextTypeMap).forEach((type) => {
-  if (type.indexOf("http://schema.org/") !== 0) {
-    return;
-  }
-  typeOptions[type] = {
-    ...jsonLdContextTypeMap[type],
-    niceName: type.replace("http://schema.org/", ""),
-    semanticType: type,
-  };
-});
+import { InfoStep } from "./InfoStep";
+import { createLdContextPlusSchema, WorkingSchema, initialWorkingSchema } from "./utils";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -45,41 +18,19 @@ const Wrapper: React.FunctionComponent<any> = (props) => (
 
 export interface CreateSchemaProps {
   onClose?(): void;
-  onSchemaUpdate?(schema: SchemaSchema): void;
-  onSchemaCreated?(schema: SchemaSchema): void;
+  onSchemaUpdate?(schema: WorkingSchema): void;
+  onSchemaCreated?(schema: LdContextPlus<SchemaMetadata>): void;
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
-  const [schema, setSchema] = React.useState<SchemaSchema>({
-    name: "",
-    slug: "",
-    version: "",
-    icon: "",
-    discoverable: false,
-    properties: [
-      {
-        id: "title",
-        semanticType: "http://schema.org/Text",
-        type: "string",
-        title: "Title",
-        description: "A human-friendly name for this verified credential.",
-      },
-      {
-        id: "",
-        semanticType: "http://schema.org/Text",
-        type: "string",
-        title: "",
-        description: "",
-      },
-    ],
-  });
+  const [schema, setSchema] = React.useState<WorkingSchema>(initialWorkingSchema);
 
   React.useEffect(() => {
     props.onSchemaUpdate?.(schema);
   }, [schema, props.onSchemaUpdate]);
 
-  function updateSchema(field: string, value: any) {
+  function updateSchema(field: keyof WorkingSchema, value: any) {
     setSchema({
       ...schema,
       [field]: value,
@@ -93,7 +44,8 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     const nextStep = STEPS[STEPS.indexOf(currentStep) + 1];
     if (nextStep === "DONE") {
       // @TODO/tobek Integrate with API to create schema, then loading state before moving to "done" step.
-      props.onSchemaCreated?.(schema);
+      const ldContextPlusSchema = createLdContextPlusSchema(schema);
+      props.onSchemaCreated?.(ldContextPlusSchema);
     }
     setCurrentStep(nextStep);
   }

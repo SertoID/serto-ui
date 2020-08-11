@@ -1,12 +1,13 @@
-import slugify from "@sindresorhus/slugify";
 import * as React from "react";
 import { Box, Button, Checkbox, Flash, Flex, Form, Heading, Input } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../../";
-import { SchemaSchema, typeOptions } from "./";
+import { WorkingSchema, typeOptions } from "./utils";
+import { LdContextPlusLeafNode } from "../VcSchema";
+import { convertToCamelCase } from "../../../utils";
 
 export interface AttributesStepProps {
-  schema: SchemaSchema;
-  updateSchema(field: string, value: any): void;
+  schema: WorkingSchema;
+  updateSchema(field: keyof WorkingSchema, value: any): void;
   onComplete(): void;
 }
 
@@ -17,32 +18,29 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
 
   function addProperty(e: Event) {
     e.preventDefault();
-    updateSchema("properties", [
-      ...schema.properties,
-      {
-        title: "",
-        ...typeOptions[Object.keys(typeOptions)[0]],
-      },
-    ]);
+    const newProp = {
+      "@title": "",
+      ...typeOptions[Object.keys(typeOptions)[0]],
+    };
+    delete newProp.niceName;
+    updateSchema("properties", [...schema.properties, newProp]);
   }
 
-  function updateProperty(i: number, propertyProperty: string, value: any) {
+  function updateProperty(i: number, propertyProperty: keyof LdContextPlusLeafNode, value: any) {
     const updatedProperty = { ...schema.properties[i], [propertyProperty]: value };
-    if (propertyProperty === "title") {
-      updatedProperty.id = slugify(value);
+    if (propertyProperty === "@title") {
+      updatedProperty["@id"] = convertToCamelCase(value);
     }
     updateSchema("properties", [...schema.properties.slice(0, i), updatedProperty, ...schema.properties.slice(i + 1)]);
   }
 
   function updateType(i: number, type: string) {
-    updateSchema("properties", [
-      ...schema.properties.slice(0, i),
-      {
-        ...schema.properties[i],
-        ...typeOptions[type],
-      },
-      ...schema.properties.slice(i + 1),
-    ]);
+    const updatedProp = {
+      ...schema.properties[i],
+      ...typeOptions[type],
+    };
+    delete updatedProp.niceName;
+    updateSchema("properties", [...schema.properties.slice(0, i), updatedProp, ...schema.properties.slice(i + 1)]);
   }
 
   function removeProperty(i: number) {
@@ -57,14 +55,14 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     let missingField = false;
     let duplicateId = false;
     schema.properties.forEach((prop) => {
-      if (!prop.title) {
+      if (!prop["@title"]) {
         missingField = true;
       }
-      if (propertyIds.has(prop.id)) {
-        setError(`Two attribute names result in ID "${prop.id}" - all attributes must have unique IDs.`);
+      if (propertyIds.has(prop["@id"])) {
+        setError(`Two attribute names result in ID "${prop["@id"]}" - all attributes must have unique IDs.`);
         duplicateId = true;
       } else {
-        propertyIds.add(prop.id);
+        propertyIds.add(prop["@id"]);
       }
     });
 
@@ -99,13 +97,13 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
                 required={true}
                 placeholder="Attribute name"
                 mr={2}
-                value={schema.properties[i].title}
-                onChange={(event: any) => updateProperty(i, "title", event.target.value)}
+                value={schema.properties[i]["@title"]}
+                onChange={(event: any) => updateProperty(i, "@title", event.target.value)}
               />
               <select
                 onChange={(event: any) => updateType(i, event.target.value)}
                 style={{ fontSize: 16, padding: "0 16px" }}
-                value={schema.properties[i].semanticType}
+                value={schema.properties[i]["@type"]}
               >
                 {Object.keys(typeOptions).map((type) => (
                   <option key={type} value={type}>
@@ -117,7 +115,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
             </Flex>
             <textarea
               placeholder="Description"
-              value={schema.properties[i].description || ""}
+              value={schema.properties[i]["@description"] || ""}
               style={{
                 width: "100%",
                 boxSizing: "border-box",
@@ -127,14 +125,14 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
                 padding: 16,
                 margin: "16px 0",
               }}
-              onChange={(event: any) => updateProperty(i, "description", event.target.value)}
+              onChange={(event: any) => updateProperty(i, "@description", event.target.value)}
             />
             <Flex justifyContent="space-between">
               <Checkbox
                 fontFamily={fonts.sansSerif}
                 label="Required"
-                checked={!!schema.properties[i].isRequired}
-                onChange={() => updateProperty(i, "isRequired", !prop.isRequired)}
+                checked={!!schema.properties[i]["@required"]}
+                onChange={() => updateProperty(i, "@required", !prop["@required"])}
               />
               <Button.Text
                 icononly

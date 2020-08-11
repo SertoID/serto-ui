@@ -11,7 +11,6 @@ export interface LdContextPlus<MetadataType = any> {
 export interface LdContextPlusRootNode<MetadataType = any> {
   "@rootType": string;
   "@id"?: string;
-  "@version"?: number;
   "@title"?: string;
   "@description"?: string;
   "@metadata"?: MetadataType;
@@ -26,7 +25,7 @@ export interface LdContextPlusInnerNode<MetadataType = any> {
   "@description"?: string;
   "@required"?: boolean;
   "@metadata"?: MetadataType;
-  "@context": { [key: string]: LdContextPlusNode<MetadataType> };
+  "@context"?: { [key: string]: LdContextPlusNode<MetadataType> };
 }
 
 export interface LdContextPlusLeafNode<MetadataType = any> {
@@ -47,6 +46,7 @@ export type LdContextPlusNode<MetadataType = any> =
 
 /** These metadata fields are specific to our use-case rather than part of the LdContextPlus spec, and can be passed in to the above generic types. */
 export interface SchemaMetadata {
+  version: string;
   slug: string;
   icon: string;
   discoverable?: boolean;
@@ -142,6 +142,10 @@ export class VcSchema {
     }
 
     this.jsonLdContext = omitDeep(this.schema, contextPlusFieldsRegexes);
+    if (!this.jsonLdContext["@context"]["@version"]) {
+      // Default to JSON-LD proceessing mode version 1.1
+      this.jsonLdContext["@context"]["@version"] = 1.1;
+    }
 
     // This is a bit of a hack. We want to be able to add JSON Schema info to "@id" properties. To do this we can have LD Context Plus nodes such as `{ "id" : { "@id": "@id", "@required": true } }` which compiles to JSON-LD @context `{ "id" : { "@id": "@id" } }`. This works and simply aliases "id" to "@id". However, the W3C Credentials JSON-LD @context thatn we import defines `{ @protected: true, "id": "@id" }`. Because of the "@protected" we can't redefine "id" even to an expanded type definition that is functionally identical. So, this mapValuesDeep call replaces `{ "id" : { "@id": "@id" } }` with `{ "id" : "@id" }` which is allowed by "@protected" since it is functionally *and* syntactically the same.
     this.jsonLdContext = mapValuesDeep(
@@ -293,14 +297,14 @@ export class VcSchema {
 
     const dataTypeInfo = this.parseContextPlusDataType(node);
     if (dataTypeInfo) {
-      node = node as LdContextPlusLeafNode;
-      this.debug(`Parsing "${key}": leaf node`, node);
+      const leafNode = node as LdContextPlusLeafNode;
+      this.debug(`Parsing "${key}": leaf node`, leafNode);
       return {
-        title: node["@title"],
-        description: node["@description"],
+        title: leafNode["@title"],
+        description: leafNode["@description"],
         ...dataTypeInfo,
-        ...(node["@format"] && { format: node["@format"] }),
-        ...(node["@items"] && { items: node["@items"] }),
+        ...(leafNode["@format"] && { format: leafNode["@format"] }),
+        ...(leafNode["@items"] && { items: leafNode["@items"] }),
       };
     } else {
       node = node as LdContextPlusInnerNode;

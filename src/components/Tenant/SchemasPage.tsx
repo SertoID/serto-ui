@@ -6,11 +6,12 @@ import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { baseColors, colors, GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../elements";
 import { CreateSchema } from "../elements/components/Schemas/CreateSchema";
+import { LdContextPlus } from "../elements/components/Schemas/VcSchema";
 
 export const SchemasPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-  const [fakeData, setFakeData] = React.useState<any[]>([]); // @TODO/tobek Temporary until API integration.
+  const [fakeData, setFakeData] = React.useState<LdContextPlus[]>([]); // @TODO/tobek Temporary until API integration.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, error: getSchemasError, isValidating } = useSWR("/v1/schemas", () => TrustAgent.getSchemas());
 
@@ -38,17 +39,20 @@ export const SchemasPage: React.FunctionComponent = (props) => {
                 </TR>
               </thead>
               <TBody>
-                {fakeData.map((schema: any, i: number) => {
+                {fakeData.map((schema: LdContextPlus, i: number) => {
+                  const schemaData = schema["@context"];
                   return (
                     <TR key={i}>
-                      <td>{schema.name}</td>
-                      <td>{schema.slug}</td>
-                      <td>{schema.version}</td>
-                      <td>{schema.description}</td>
+                      <td>{schemaData["@title"]}</td>
+                      <td>{schemaData["@metadata"]?.slug}</td>
+                      <td>{schemaData["@metadata"]?.version}</td>
+                      <td>{schemaData["@metadata"]?.description}</td>
                       <td>
-                        <time title={schema.created} dateTime={schema.created}>
-                          {schema.created && new Date(schema.created).toDateString()}
-                        </time>
+                        {schemaData["@metadata"]?.created && (
+                          <time title={schemaData["@metadata"]?.created} dateTime={schemaData["@metadata"]?.created}>
+                            {new Date(schemaData["@metadata"]?.created).toDateString()}
+                          </time>
+                        )}
                       </td>
                     </TR>
                   );
