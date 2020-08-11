@@ -31,6 +31,7 @@ export const SchemasPage: React.FunctionComponent = (props) => {
             <Table border={0} boxShadow={0} width="100%">
               <thead>
                 <TR>
+                  <TH></TH>
                   <TH>Name</TH>
                   <TH>Slug</TH>
                   <TH>Version</TH>
@@ -43,6 +44,7 @@ export const SchemasPage: React.FunctionComponent = (props) => {
                   const schemaData = schema["@context"];
                   return (
                     <TR key={i}>
+                      <td style={{ maxWidth: 32 }}>{schemaData["@metadata"]?.icon}</td>
                       <td>{schemaData["@title"]}</td>
                       <td>{schemaData["@metadata"]?.slug}</td>
                       <td>{schemaData["@metadata"]?.version}</td>
