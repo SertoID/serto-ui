@@ -1,21 +1,24 @@
 import * as React from "react";
-import { Box, Flex, Text } from "rimble-ui";
+import useSWR from "swr";
+import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../../services/TrustAgencyService";
+import { Box, Flex } from "rimble-ui";
 import { LogOut } from "../../../auth/LogOut";
-import { Nav, baseColors, fonts } from "../../";
+import { Nav, SwitchTenant } from "../../";
 
 export interface GlobalLayoutProps {
+  activeTenantID?: string;
   url: string;
 }
 
 export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
+  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
+  const { data: user } = useSWR("/v1/tenant/users/currentUser", () => TrustAgent.getUser());
+
   return (
     <Flex p={2}>
       <Box width={8} p={2}>
-        <Flex alignItems="center" bg={baseColors.white} borderRadius={1} mb={3} p={3} height="4rem">
-          <Text.span fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3}>
-            Product Name
-          </Text.span>
-        </Flex>
+        <SwitchTenant user={user} />
         <Nav url={props.url} />
         <LogOut />
       </Box>

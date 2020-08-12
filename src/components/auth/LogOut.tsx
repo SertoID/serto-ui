@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
+import { routes } from "../../constants";
 import { Button } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
@@ -14,7 +15,7 @@ export const LogOut: React.FunctionComponent = (props) => {
     event.preventDefault();
     TrustAgent.logout();
     logout();
-    history.push("/login");
+    history.push(routes.LOGIN);
   }
 
   return (

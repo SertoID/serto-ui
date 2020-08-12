@@ -14,19 +14,6 @@ export const LoginPage = () => {
   const [error, setError] = React.useState<string | undefined>();
   const history = useHistory();
 
-  /* async function activateTenant() {
-    try {
-      const activationToken = prompt("Enter activation token:");
-      if (activationToken) {
-        const response = await TrustAgent.activateTenant(activationToken);
-        prompt("Success. Credentials:\n\n", JSON.stringify(response));
-      }
-    } catch (err) {
-      console.error("error activating tenant:", err);
-      setError("Activation failed: " + err.message);
-    }
-  } */
-
   async function doLogin() {
     try {
       await loginWithPopup();
@@ -46,7 +33,7 @@ export const LoginPage = () => {
       const token = await getIdTokenClaims();
       console.log({ token });
       await TrustAgent.signup(token.__raw);
-      history.push(routes.TENANT);
+      history.push(routes.ONBOARDING);
     } catch (err) {
       console.error("error logging in:", err);
       setError("Login failed: " + err.message);

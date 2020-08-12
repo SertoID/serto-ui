@@ -4,7 +4,7 @@ const AUTH_LOCALSTORAGE_KEY = `trust-agent-auth-${config.API_URL}`;
 
 export interface Auth {
   jwt: string;
-  tenant?: string;
+  tenantid?: string;
 }
 export class TrustAgencyService {
   private auth?: Auth;
@@ -21,9 +21,12 @@ export class TrustAgencyService {
   }
 
   public async signup(jwt: string): Promise<any> {
+    this.loggingIn = true;
     const user = await this.request("/v1/tenant/users/signup", "POST", { userToken: jwt }, true);
     console.log({ user });
-    this.login(jwt);
+    const tenantid = user.tenants[0].tenantId;
+    this.setAuth({ jwt, tenantid }, true);
+    this.loggingIn = false;
   }
 
   public async login(jwt: string): Promise<any> {
@@ -31,9 +34,13 @@ export class TrustAgencyService {
     this.setAuth({ jwt });
     const user = await this.request("/v1/tenant/users/currentUser");
     console.log({ user });
-    const tenant = user.tenants[0].tenantId;
-    this.setAuth({ jwt, tenant }, true);
+    const tenantid = user.tenants[0].tenantId;
+    this.setAuth({ jwt, tenantid }, true);
     this.loggingIn = false;
+  }
+
+  public async getUser(): Promise<any> {
+    return this.request("/v1/tenant/users/currentUser");
   }
 
   public async logout() {
@@ -44,12 +51,20 @@ export class TrustAgencyService {
     return !!this.auth && !this.loggingIn;
   }
 
+  public switchTenant(tenantid: string) {
+    const jwt = this.getAuth()?.jwt;
+    if (jwt) {
+      this.setAuth({ jwt, tenantid }, true);
+      window.location.reload();
+    }
+  }
+
   public async getTenants(): Promise<any> {
     return this.request("/v1/admin/tenants");
   }
 
-  public async createTenant(name: string): Promise<any> {
-    return this.request("/v1/admin/tenants", "POST", { name });
+  public async createTenant(name: string, type: string): Promise<any> {
+    return this.request("/v1/tenant", "POST", { name, type });
   }
 
   public async activateTenant(token: string): Promise<any> {
@@ -99,21 +114,21 @@ export class TrustAgencyService {
 
   public async createFeed(data: { name: string; slug: string; description?: string; public?: boolean }): Promise<any> {
     return this.request("/v1/feeds", "POST", {
-      tenant: this.getAuth()?.tenant,
+      tenantId: this.getAuth()?.tenantid,
       ...data,
     });
   }
 
   public async createApiKey(data: { keyName: string }): Promise<any> {
     return this.request("/v1/tenant/apiKeys", "POST", {
-      tenantId: this.getAuth()?.tenant,
+      tenantId: this.getAuth()?.tenantid,
       ...data,
     });
   }
 
   public async deleteApiKey(data: { keyName: string }): Promise<any> {
     return this.request("/v1/tenant/apiKeys", "DELETE", {
-      tenantId: this.getAuth()?.tenant,
+      tenantId: this.getAuth()?.tenantid,
       ...data,
     });
   }
@@ -153,8 +168,8 @@ export class TrustAgencyService {
     if (this.auth?.jwt) {
       headers.authorization = `Bearer ${this.auth.jwt}`;
     }
-    if (this.auth?.tenant) {
-      headers.tenant = this.auth.tenant;
+    if (this.auth?.tenantid) {
+      headers.tenantid = this.auth.tenantid;
     }
     if (body) {
       headers["Content-Type"] = "application/json";
