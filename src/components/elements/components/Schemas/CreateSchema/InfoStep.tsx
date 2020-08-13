@@ -1,7 +1,7 @@
 import { Info } from "@rimble/icons";
 import slugify from "@sindresorhus/slugify";
 import * as React from "react";
-import { Button, Checkbox, Field, Form, Input, Heading, Text, Tooltip } from "rimble-ui";
+import { Flex, Box, Button, Checkbox, Field, Form, Input, Heading, Text, Tooltip } from "rimble-ui";
 import styled from "styled-components";
 import { baseColors, colors, fonts } from "../../../";
 import { WorkingSchema } from "./utils";
@@ -29,12 +29,28 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   const defaultSchemaSlug = React.useMemo(() => slugify(schema.name), [schema.name]);
 
+  /** Convert first latin character in name to bubble unicode char (🅐-🅩) as default icon. */
+  const defaultIcon = React.useMemo(() => {
+    if (!schema.name) {
+      return "";
+    }
+    const firstCharMatch = schema.name.match(/[a-zA-Z]/);
+    if (!firstCharMatch?.[0]) {
+      return "⓿";
+    }
+    const char = firstCharMatch[0].toLowerCase();
+    return String.fromCodePoint(127302 + parseInt(char, 36));
+  }, [schema.name]);
+
   function goNext(e: Event) {
     e.preventDefault();
-    if (schema.name && (defaultSchemaSlug || schema.slug) && schema.version && schema.icon) {
+    if (schema.name && (defaultSchemaSlug || schema.slug) && schema.version) {
       setDoValidation(false);
       if (!schema.slug) {
         updateSchema("slug", defaultSchemaSlug);
+      }
+      if (!schema.icon) {
+        updateSchema("icon", defaultIcon);
       }
       props.onComplete();
     } else {
@@ -57,7 +73,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             onChange={(event: any) => updateSchema("name", event.target.value)}
           />
         </SchemaField>
-        <SchemaField label="Slug">
+        <SchemaField label="URL slug">
           <Input
             width="100%"
             type="text"
@@ -85,11 +101,14 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             >
               <Info size={16} color={colors.silver} style={{ verticalAlign: "text-top" }} />
             </Tooltip>
+            <Text.span ml={1} fontWeight={1} fontStyle="italic" fontSize={1}>
+              (optional)
+            </Text.span>
           </Text>
           <Input
             width={6}
             type="text"
-            required={true}
+            placeholder={defaultIcon}
             value={schema.icon}
             onChange={(event: any) => updateSchema("icon", event.target.value)}
           />
