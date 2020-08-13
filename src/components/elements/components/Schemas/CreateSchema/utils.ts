@@ -6,10 +6,12 @@ export interface WorkingSchema extends SchemaMetadata {
   name: string;
   version: string;
   properties: LdContextPlusLeafNode<SchemaMetadata>[]; // @TODO/tobek When we support nesting this will have to be LdContextPlusNode and we'll need some extra type jiggery throughout.
+  description?: string;
 }
 
 export const initialWorkingSchema: WorkingSchema = {
   name: "",
+  description: "",
   slug: "",
   version: "",
   icon: "",
@@ -68,6 +70,7 @@ export function createLdContextPlusSchema(schema: WorkingSchema): LdContextPlus<
         discoverable: schema.discoverable,
       },
       "@title": schema.name,
+      "@description": schema.description,
       w3ccred: "https://www.w3.org/2018/credentials#",
       "schema-id": `https://uport.me/schema/${schema.slug}#`, // @TODO/tobek ensure this matches up with API
       "@rootType": schemaTypeName,

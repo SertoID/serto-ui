@@ -11,7 +11,9 @@ const SchemaField = styled(Field)`
   font-family: ${fonts.sansSerif};
 `;
 const SchemaLabel = styled.label`
+  display: block;
   width: 100%;
+  margin-bottom: 16px;
   font-family: ${fonts.sansSerif};
 `;
 
@@ -99,6 +101,13 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
           checked={schema.discoverable}
           onChange={() => updateSchema("discoverable", !schema.discoverable)}
         />
+        <SchemaField label="Description">
+          <textarea
+            value={schema.description}
+            style={{ width: "100%", minHeight: "150px" }}
+            onChange={(event: any) => updateSchema("description", event.target.value)}
+          />
+        </SchemaField>
 
         <Button type="submit" width="100%">
           Next
