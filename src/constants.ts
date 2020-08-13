@@ -10,6 +10,7 @@ export enum routes {
   ACCOUNT = "/tenant/account",
   ONBOARDING = "/onboarding",
   CREATE_ORGANIZATION = "/create-organization",
+  ORGANIZATION_MANAGEMENT = "/tenant/management",
 }
 
 export enum freeAccount {
