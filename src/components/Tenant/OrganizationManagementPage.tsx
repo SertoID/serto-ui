@@ -154,7 +154,7 @@ export const OrganizationManagementPage: React.FunctionComponent = (props) => {
           />
 
           <Box p={4}>
-            <Heading.h4>Get Invite Code</Heading.h4>
+            <Heading.h4>Get Member Invite URL</Heading.h4>
             {createError && (
               <Box p={1} mb={1}>
                 <Flash my={3} variant="danger">
@@ -175,9 +175,9 @@ export const OrganizationManagementPage: React.FunctionComponent = (props) => {
       <Modal isOpen={isReceiveApiKeyModalOpen}>
         <Card p={0}>
           <Box p={4}>
-            <Heading.h4>Copy this URL Down:</Heading.h4>
+            <Heading.h4>Get Member Invite URL</Heading.h4>
             <Heading.h6>Send this URL to whoever you'd like to invite</Heading.h6>
-            <CopyableTruncatableText text={`${config.UI_URL}acceptInvite/${inviteCode}`} size="16px" />
+            <CopyableTruncatableText text={`${config.UI_URL}acceptInvite/${inviteCode}`} textButton />
           </Box>
           <Flex px={4} py={3} justifyContent="flex-end">
             <Button ml={3} onClick={confirmReceiptOfInviteCode}>
