@@ -11,7 +11,7 @@ import { createLdContextPlusSchema, WorkingSchema, initialWorkingSchema } from "
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
 const Wrapper: React.FunctionComponent<any> = (props) => (
-  <Card width={9} style={{ maxHeight: "95vh", overflowY: "auto" }} {...props}>
+  <Card width={9} style={{ maxHeight: "95vh", overflowY: "auto", overflowX: "hidden" }} {...props}>
     {props.children}
   </Card>
 );

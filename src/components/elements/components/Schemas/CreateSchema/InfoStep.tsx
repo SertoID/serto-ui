@@ -94,13 +94,6 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             onChange={(event: any) => updateSchema("icon", event.target.value)}
           />
         </SchemaLabel>
-        <Checkbox
-          my={4}
-          fontFamily={fonts.sansSerif}
-          label="Discoverable"
-          checked={schema.discoverable}
-          onChange={() => updateSchema("discoverable", !schema.discoverable)}
-        />
         <SchemaField label="Description">
           <textarea
             value={schema.description}
@@ -108,6 +101,23 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             onChange={(event: any) => updateSchema("description", event.target.value)}
           />
         </SchemaField>
+        <Flex>
+          <Box display="inline-block">
+            <Checkbox
+              mb={4}
+              fontFamily={fonts.sansSerif}
+              label="Discoverable"
+              checked={schema.discoverable}
+              onChange={() => updateSchema("discoverable", !schema.discoverable)}
+            />
+          </Box>{" "}
+          <Tooltip
+            message="If checked, this schema will be listed in the public schema registry. If unchecked, your schema will still be accessible at a public URL via the above slug, but will not be listed in the registry."
+            placement="top"
+          >
+            <Info mt={1} size={16} color={colors.silver} style={{ verticalAlign: "text-top" }} />
+          </Tooltip>
+        </Flex>
 
         <Button type="submit" width="100%">
           Next
