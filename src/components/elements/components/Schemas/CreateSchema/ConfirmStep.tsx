@@ -32,8 +32,9 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
           {schema.icon} {schema.name}
         </Heading>
         <MetadataText>{schema.slug}</MetadataText>
-        <MetadataText>Version {schema.version}</MetadataText>
+        <MetadataText>Version: {schema.version}</MetadataText>
         <MetadataText>Discoverable: {(!!schema.discoverable).toString()}</MetadataText>
+        {schema.description && <MetadataText>{schema.description}</MetadataText>}
 
         {schema.properties.map((prop, i) => (
           <Box key={i} my={5}>

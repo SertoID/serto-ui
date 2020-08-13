@@ -15,6 +15,10 @@ export const SchemasPage: React.FunctionComponent = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, error: getSchemasError, isValidating } = useSWR("/v1/schemas", () => TrustAgent.getSchemas());
 
+  function viewSchema(schema: LdContextPlus) {
+    alert("Coming soon!");
+  }
+
   return (
     <GlobalLayout url={routes.SCHEMAS}>
       {fakeData?.length > 0 ? (
@@ -35,8 +39,8 @@ export const SchemasPage: React.FunctionComponent = (props) => {
                   <TH>Name</TH>
                   <TH>Slug</TH>
                   <TH>Version</TH>
-                  <TH>Description</TH>
                   <TH>Created</TH>
+                  <TH></TH>
                 </TR>
               </thead>
               <TBody>
@@ -48,13 +52,17 @@ export const SchemasPage: React.FunctionComponent = (props) => {
                       <td>{schemaData["@title"]}</td>
                       <td>{schemaData["@metadata"]?.slug}</td>
                       <td>{schemaData["@metadata"]?.version}</td>
-                      <td>{schemaData["@metadata"]?.description}</td>
                       <td>
                         {schemaData["@metadata"]?.created && (
                           <time title={schemaData["@metadata"]?.created} dateTime={schemaData["@metadata"]?.created}>
                             {new Date(schemaData["@metadata"]?.created).toDateString()}
                           </time>
                         )}
+                      </td>
+                      <td>
+                        <Button.Outline size="small" onClick={() => viewSchema(schema)}>
+                          View
+                        </Button.Outline>
                       </td>
                     </TR>
                   );
