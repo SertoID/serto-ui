@@ -92,6 +92,7 @@ export const OrganizationManagementPage: React.FunctionComponent = (props) => {
               <thead>
                 <TR>
                   <TH>Email</TH>
+                  <TH>Organization Member ID</TH>
                   <TH>Permissions</TH>
                   <TH />
                 </TR>
@@ -101,6 +102,7 @@ export const OrganizationManagementPage: React.FunctionComponent = (props) => {
                   return (
                     <TR key={i}>
                       <td>{member.user.email}</td>
+                      <td>{member.id}</td>
                       <td>Full access</td>
                       <td>
                         <Button.Outline
@@ -203,8 +205,8 @@ export const OrganizationManagementPage: React.FunctionComponent = (props) => {
             )}
           </Box>
           <Flex px={4} py={3} justifyContent="flex-end">
-            <Button.Outline onClick={() => setIsGetInviteCodeModalOpen(false)}>Cancel</Button.Outline>
-            <Button ml={3} onClick={removeMember} disabled={removeLoading}>
+            <Button.Outline onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button.Outline>
+            <Button ml={3} onClick={removeMember} disabled={removeLoading} variant="danger">
               {"TODO: REMOVE"}
             </Button>
           </Flex>

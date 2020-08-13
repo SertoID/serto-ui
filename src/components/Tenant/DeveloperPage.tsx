@@ -232,8 +232,8 @@ export const DeveloperPage: React.FunctionComponent = (props) => {
             )}
           </Box>
           <Flex px={4} py={3} justifyContent="flex-end">
-            <Button.Outline onClick={() => setIsCreateModalOpen(false)}>Cancel</Button.Outline>
-            <Button ml={3} onClick={deleteApiKey} disabled={deleteLoading}>
+            <Button.Outline onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button.Outline>
+            <Button ml={3} onClick={deleteApiKey} disabled={deleteLoading} variant="danger">
               {"DELETE"}
             </Button>
           </Flex>
