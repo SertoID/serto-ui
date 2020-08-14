@@ -20,6 +20,7 @@ import { AccountPage } from "./components/Tenant/Account/AccountPage";
 import { DeveloperPage } from "./components/Tenant/DeveloperPage";
 import { OnboardingPage } from "./components/Tenant/OnboardingPage";
 import { CreateOrganizationPage } from "./components/Tenant/CreateOrganizationPage";
+import { OrganizationManagementPage } from "./components/Tenant/OrganizationManagementPage";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -56,6 +57,7 @@ export const App = () => {
                 <AuthenticatedRoute path={routes.ISSUED_CREDENTIAL} component={IssuedCredentialsPage} />
                 <AuthenticatedRoute path={routes.RECEIVED_CREDENTIAL} component={ReceivedCredentialsPage} />
                 <AuthenticatedRoute path={routes.DEVELOPER} component={DeveloperPage} />
+                <AuthenticatedRoute path={routes.ORGANIZATION_MANAGEMENT} component={OrganizationManagementPage} />
                 <AuthenticatedRoute path={routes.ACCOUNT} component={AccountPage} />
                 <AuthenticatedRoute path={routes.ONBOARDING} component={OnboardingPage} />
                 <AuthenticatedRoute path={routes.CREATE_ORGANIZATION} component={CreateOrganizationPage} />

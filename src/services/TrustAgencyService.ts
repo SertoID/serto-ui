@@ -96,6 +96,10 @@ export class TrustAgencyService {
     return this.request("/v1/tenant/apiKeys");
   }
 
+  public async getTenantMembers(): Promise<any> {
+    return this.request("/v1/tenant/members");
+  }
+
   public async getFeeds(): Promise<any> {
     return this.request("/v1/feeds");
   }
@@ -123,6 +127,12 @@ export class TrustAgencyService {
     return this.request("/v1/tenant/apiKeys", "POST", {
       tenantId: this.getAuth()?.tenantid,
       ...data,
+    });
+  }
+
+  public async getInviteCode(): Promise<any> {
+    return this.request("/v1/tenant/createInvite", "POST", {
+      tenantId: this.getAuth()?.tenantid,
     });
   }
 

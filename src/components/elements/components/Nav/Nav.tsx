@@ -66,6 +66,7 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
       <NavItem url={routes.FEEDS} text="Credential Feeds" icon={List} currentUrl={url} />
       <NavItem url={routes.ISSUED_CREDENTIAL} text="Issued Credentials" icon={Send} currentUrl={url} />
       <NavItem url={routes.RECEIVED_CREDENTIAL} text="Received Credentials" icon={Inbox} currentUrl={url} />
+      <NavItem url={routes.ORGANIZATION_MANAGEMENT} text="Organization" icon={Eth} currentUrl={url} />
       <NavItem url={routes.DEVELOPER} text="Developer" icon={Eth} currentUrl={url} />
       <NavItem url={routes.ACCOUNT} text="Account" icon={Person} currentUrl={url} />
     </>

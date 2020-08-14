@@ -4,7 +4,17 @@ import { routes } from "../../constants";
 import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { GlobalLayout, HeaderBox, Header, TH, TR, TBody, baseColors, colors } from "../elements";
+import {
+  GlobalLayout,
+  HeaderBox,
+  Header,
+  TH,
+  TR,
+  TBody,
+  baseColors,
+  colors,
+  CopyableTruncatableText,
+} from "../elements";
 
 export const DeveloperPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -194,9 +204,9 @@ export const DeveloperPage: React.FunctionComponent = (props) => {
       <Modal isOpen={isReceiveApiKeyModalOpen}>
         <Card p={0}>
           <Box p={4}>
-            <Heading.h4>Write this Down:</Heading.h4>
+            <Heading.h4>Create API Key</Heading.h4>
             <Heading.h6>API Key:</Heading.h6>
-            <Text.span>{apiKey}</Text.span>
+            <CopyableTruncatableText text={apiKey} textButton />
           </Box>
           <Flex px={4} py={3} justifyContent="flex-end">
             <Button ml={3} onClick={confirmReceiptOfApiKey}>
@@ -222,8 +232,8 @@ export const DeveloperPage: React.FunctionComponent = (props) => {
             )}
           </Box>
           <Flex px={4} py={3} justifyContent="flex-end">
-            <Button.Outline onClick={() => setIsCreateModalOpen(false)}>Cancel</Button.Outline>
-            <Button ml={3} onClick={deleteApiKey} disabled={deleteLoading}>
+            <Button.Outline onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button.Outline>
+            <Button ml={3} onClick={deleteApiKey} disabled={deleteLoading} variant="danger">
               {"DELETE"}
             </Button>
           </Flex>
