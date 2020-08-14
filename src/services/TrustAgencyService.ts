@@ -22,7 +22,7 @@ export class TrustAgencyService {
 
   public async signup(jwt: string): Promise<any> {
     this.loggingIn = true;
-    const user = await this.request("/v1/tenant/users/signup", "POST", { userToken: jwt }, true);
+    const user = await this.request("/v1/users/signup", "POST", { userToken: jwt }, true);
     console.log({ user });
     const tenantid = user.tenants[0].tenantId;
     this.setAuth({ jwt, tenantid }, true);
@@ -32,7 +32,7 @@ export class TrustAgencyService {
   public async login(jwt: string): Promise<any> {
     this.loggingIn = true;
     this.setAuth({ jwt });
-    const user = await this.request("/v1/tenant/users/currentUser");
+    const user = await this.request("/v1/users/currentUser");
     console.log({ user });
     const tenantid = user.tenants[0].tenantId;
     this.setAuth({ jwt, tenantid }, true);
@@ -40,7 +40,7 @@ export class TrustAgencyService {
   }
 
   public async getUser(): Promise<any> {
-    return this.request("/v1/tenant/users/currentUser");
+    return this.request("/v1/users/currentUser");
   }
 
   public async logout() {
