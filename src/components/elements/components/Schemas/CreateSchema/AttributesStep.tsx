@@ -7,7 +7,7 @@ import { convertToCamelCase } from "../../../utils";
 
 export interface AttributesStepProps {
   schema: WorkingSchema;
-  updateSchema(field: keyof WorkingSchema, value: any): void;
+  updateSchema(updates: Partial<WorkingSchema>): void;
   onComplete(): void;
 }
 
@@ -23,7 +23,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
       ...typeOptions[Object.keys(typeOptions)[0]],
     };
     delete newProp.niceName;
-    updateSchema("properties", [...schema.properties, newProp]);
+    updateSchema({ properties: [...schema.properties, newProp] });
   }
 
   function updateProperty(i: number, propertyProperty: keyof LdContextPlusLeafNode, value: any) {
@@ -31,7 +31,9 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     if (propertyProperty === "@title") {
       updatedProperty["@id"] = convertToCamelCase(value);
     }
-    updateSchema("properties", [...schema.properties.slice(0, i), updatedProperty, ...schema.properties.slice(i + 1)]);
+    updateSchema({
+      properties: [...schema.properties.slice(0, i), updatedProperty, ...schema.properties.slice(i + 1)],
+    });
   }
 
   function updateType(i: number, type: string) {
@@ -40,11 +42,11 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
       ...typeOptions[type],
     };
     delete updatedProp.niceName;
-    updateSchema("properties", [...schema.properties.slice(0, i), updatedProp, ...schema.properties.slice(i + 1)]);
+    updateSchema({ properties: [...schema.properties.slice(0, i), updatedProp, ...schema.properties.slice(i + 1)] });
   }
 
   function removeProperty(i: number) {
-    updateSchema("properties", [...schema.properties.slice(0, i), ...schema.properties.slice(i + 1)]);
+    updateSchema({ properties: [...schema.properties.slice(0, i), ...schema.properties.slice(i + 1)] });
   }
 
   function goNext(e: Event) {

@@ -30,10 +30,10 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     props.onSchemaUpdate?.(schema);
   }, [schema, props.onSchemaUpdate]);
 
-  function updateSchema(field: keyof WorkingSchema, value: any) {
+  function updateSchema(updates: Partial<WorkingSchema>) {
     setSchema({
       ...schema,
-      [field]: value,
+      ...updates,
     });
   }
 

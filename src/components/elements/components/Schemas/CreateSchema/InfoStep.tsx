@@ -19,7 +19,7 @@ const SchemaLabel = styled.label`
 
 export interface InfoStepProps {
   schema: WorkingSchema;
-  updateSchema(field: keyof WorkingSchema, value: any): void;
+  updateSchema(updates: Partial<WorkingSchema>): void;
   onComplete(): void;
 }
 
@@ -46,12 +46,10 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
     e.preventDefault();
     if (schema.name && (defaultSchemaSlug || schema.slug) && schema.version) {
       setDoValidation(false);
-      if (!schema.slug) {
-        updateSchema("slug", defaultSchemaSlug);
-      }
-      if (!schema.icon) {
-        updateSchema("icon", defaultIcon);
-      }
+      updateSchema({
+        slug: schema.slug || defaultSchemaSlug,
+        icon: schema.icon || defaultIcon,
+      });
       props.onComplete();
     } else {
       setDoValidation(true);
@@ -70,7 +68,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             type="text"
             required={true}
             value={schema.name || ""}
-            onChange={(event: any) => updateSchema("name", event.target.value)}
+            onChange={(event: any) => updateSchema({ name: event.target.value })}
           />
         </SchemaField>
         <SchemaField label="URL slug">
@@ -79,8 +77,8 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             type="text"
             value={schema.slug}
             placeholder={defaultSchemaSlug}
-            onChange={(event: any) => updateSchema("slug", event.target.value)}
-            onBlur={() => updateSchema("slug", slugify(schema.slug))}
+            onChange={(event: any) => updateSchema({ slug: event.target.value })}
+            onBlur={() => updateSchema({ slug: slugify(schema.slug) })}
           />
         </SchemaField>
         <SchemaField label="Version">
@@ -89,7 +87,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             type="text"
             required={true}
             value={schema.version}
-            onChange={(event: any) => updateSchema("version", event.target.value)}
+            onChange={(event: any) => updateSchema({ version: event.target.value })}
           />
         </SchemaField>
         <SchemaLabel>
@@ -110,14 +108,14 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             type="text"
             placeholder={defaultIcon}
             value={schema.icon}
-            onChange={(event: any) => updateSchema("icon", event.target.value)}
+            onChange={(event: any) => updateSchema({ icon: event.target.value })}
           />
         </SchemaLabel>
         <SchemaField label="Description">
           <textarea
             value={schema.description}
             style={{ width: "100%", minHeight: "150px" }}
-            onChange={(event: any) => updateSchema("description", event.target.value)}
+            onChange={(event: any) => updateSchema({ description: event.target.value })}
           />
         </SchemaField>
         <Flex>
@@ -127,7 +125,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
               fontFamily={fonts.sansSerif}
               label="Discoverable"
               checked={schema.discoverable}
-              onChange={() => updateSchema("discoverable", !schema.discoverable)}
+              onChange={() => updateSchema({ discoverable: !schema.discoverable })}
             />
           </Box>{" "}
           <Tooltip
