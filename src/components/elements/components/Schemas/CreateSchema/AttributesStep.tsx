@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Box, Button, Checkbox, Flash, Flex, Form, Heading, Input } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../../";
-import { WorkingSchema, typeOptions } from "./utils";
+import { WorkingSchema } from "../types";
+import { typeOptions } from "../utils";
 import { LdContextPlusLeafNode } from "../VcSchema";
 import { convertToCamelCase } from "../../../utils";
 

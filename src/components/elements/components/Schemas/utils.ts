@@ -1,38 +1,6 @@
-import { convertToPascalCase } from "../../../utils";
-import { jsonLdContextTypeMap, LdContextPlus, LdContextPlusLeafNode, SchemaMetadata } from "../VcSchema";
-
-/** In-progress schema interface that will be transformed into final LdContextPlus output. */
-export interface WorkingSchema extends SchemaMetadata {
-  name: string;
-  version: string;
-  properties: LdContextPlusLeafNode<SchemaMetadata>[]; // @TODO/tobek When we support nesting this will have to be LdContextPlusNode and we'll need some extra type jiggery throughout.
-  description?: string;
-}
-
-export const initialWorkingSchema: WorkingSchema = {
-  name: "",
-  description: "",
-  slug: "",
-  version: "",
-  icon: "",
-  discoverable: false,
-  properties: [
-    {
-      "@id": "title",
-      "@type": "http://schema.org/Text",
-      "@dataType": "string",
-      "@title": "Title",
-      "@description": "A human-friendly name for this verified credential.",
-    },
-    {
-      "@id": "",
-      "@type": "http://schema.org/Text",
-      "@dataType": "string",
-      "@title": "",
-      "@description": "",
-    },
-  ],
-};
+import { convertToPascalCase } from "../../utils";
+import { jsonLdContextTypeMap, LdContextPlus, LdContextPlusLeafNode, SchemaMetadata } from "./VcSchema";
+import { CompletedSchema } from "./types";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
 type NamedLdContextPlusNode = Partial<LdContextPlusLeafNode> & { niceName?: string };
@@ -50,7 +18,7 @@ Object.keys(jsonLdContextTypeMap).forEach((type) => {
   };
 });
 
-export function createLdContextPlusSchema(schema: WorkingSchema): LdContextPlus<SchemaMetadata> {
+export function createLdContextPlusSchema(schema: CompletedSchema): LdContextPlus<SchemaMetadata> {
   const schemaTypeName = convertToPascalCase(schema.name);
   const schemaProperties: { [key: string]: LdContextPlusLeafNode } = {};
 

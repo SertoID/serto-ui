@@ -6,7 +6,8 @@ import { LdContextPlus, SchemaMetadata } from "../VcSchema";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
-import { createLdContextPlusSchema, WorkingSchema, initialWorkingSchema } from "./utils";
+import { CompletedSchema, WorkingSchema, initialWorkingSchema } from "../types";
+import { createLdContextPlusSchema } from "../utils";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -44,7 +45,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     const nextStep = STEPS[STEPS.indexOf(currentStep) + 1];
     if (nextStep === "DONE") {
       // @TODO/tobek Integrate with API to create schema, then loading state before moving to "done" step.
-      const ldContextPlusSchema = createLdContextPlusSchema(schema);
+      const ldContextPlusSchema = createLdContextPlusSchema(schema as CompletedSchema);
       props.onSchemaCreated?.(ldContextPlusSchema);
     }
     setCurrentStep(nextStep);
