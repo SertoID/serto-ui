@@ -1,3 +1,5 @@
+import slugify from "@sindresorhus/slugify";
+
 /** Copy given string to clipboard. Returns true if successful, false if failed. */
 export function copyToClipboard(text: string): boolean {
   const textArea = document.createElement("textarea");
@@ -29,4 +31,11 @@ export function dateTimeFormat(date: Date): string {
   const minute = new Intl.DateTimeFormat("en", { minute: "numeric" }).format(date);
   const dateTimeFormated = `${hour}:${minute} - ${month} ${day}, ${year}`;
   return dateTimeFormated;
+}
+
+export function convertToCamelCase(s: string): string {
+  return slugify(s).replace(/-./g, (x) => x.replace("-", "").toUpperCase());
+}
+export function convertToPascalCase(s: string): string {
+  return slugify(s).replace(/(^|-)./g, (x) => x.replace("-", "").toUpperCase());
 }

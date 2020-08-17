@@ -50,7 +50,7 @@ const CodeWrap = styled(Card)`
   }
 `;
 
-storiesOf("Schemas", module).add("@context+ Playground", () => {
+storiesOf("Schemas", module).add("LD Context Plus playground", () => {
   const [inputSchema, setInputSchema] = React.useState<string>("");
   const [debouncedSchema] = useDebounce(inputSchema, 500);
   const [inputSchemaError, setInputSchemaError] = React.useState<any>();

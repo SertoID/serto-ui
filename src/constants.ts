@@ -4,6 +4,7 @@ export enum routes {
   LOGIN = "/login",
   TENANT = "/tenant",
   FEEDS = "/tenant/feeds",
+  SCHEMAS = "/tenant/schemas",
   ISSUED_CREDENTIAL = "/tenant/issued-credentials",
   RECEIVED_CREDENTIAL = "/tenant/received-credentials",
   DEVELOPER = "/tenant/developer",

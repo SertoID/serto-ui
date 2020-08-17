@@ -13,6 +13,7 @@ import { HomePage } from "./components/HomePage";
 import { AdminPage } from "./components/Admin/AdminPage";
 import { TenantPage } from "./components/Tenant/TenantPage";
 import { FeedsPage } from "./components/Tenant/FeedsPage";
+import { SchemasPage } from "./components/Tenant/SchemasPage";
 import { IssuedCredentialsPage } from "./components/Tenant/IssuedCredentialsPage";
 import { ReceivedCredentialsPage } from "./components/Tenant/ReceivedCredentialsPage";
 import { LoginPage } from "./components/auth/LoginPage";
@@ -54,6 +55,7 @@ export const App = () => {
                 <AuthenticatedRoute path={routes.ADMIN} component={AdminPage} />
                 <AuthenticatedRoute exact path={routes.TENANT} component={TenantPage} />
                 <AuthenticatedRoute path={routes.FEEDS} component={FeedsPage} />
+                <AuthenticatedRoute path={routes.SCHEMAS} component={SchemasPage} />
                 <AuthenticatedRoute path={routes.ISSUED_CREDENTIAL} component={IssuedCredentialsPage} />
                 <AuthenticatedRoute path={routes.RECEIVED_CREDENTIAL} component={ReceivedCredentialsPage} />
                 <AuthenticatedRoute path={routes.DEVELOPER} component={DeveloperPage} />

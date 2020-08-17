@@ -4,7 +4,55 @@ import slugify from "@sindresorhus/slugify";
 
 const ajv = new Ajv();
 
-interface JsonSchemaNode {
+export interface LdContextPlus<MetadataType = any> {
+  "@context": LdContextPlusRootNode<MetadataType>;
+}
+
+export interface LdContextPlusRootNode<MetadataType = any> {
+  "@rootType": string;
+  "@id"?: string;
+  "@title"?: string;
+  "@description"?: string;
+  "@metadata"?: MetadataType;
+  [key: string]: LdContextPlusNode<MetadataType> | MetadataType | number | string | undefined;
+}
+
+export interface LdContextPlusInnerNode<MetadataType = any> {
+  "@id": string;
+  "@contains"?: string;
+  "@replaceWith"?: string;
+  "@title"?: string;
+  "@description"?: string;
+  "@required"?: boolean;
+  "@metadata"?: MetadataType;
+  "@context"?: { [key: string]: LdContextPlusNode<MetadataType> };
+}
+
+export interface LdContextPlusLeafNode<MetadataType = any> {
+  "@id": string;
+  "@type": string;
+  "@dataType"?: string;
+  "@format"?: string;
+  "@title"?: string;
+  "@description"?: string;
+  "@required"?: boolean;
+  "@metadata"?: MetadataType;
+  "@items"?: JsonSchemaNode;
+}
+
+export type LdContextPlusNode<MetadataType = any> =
+  | LdContextPlusInnerNode<MetadataType>
+  | LdContextPlusLeafNode<MetadataType>;
+
+/** These metadata fields are specific to our use-case rather than part of the LdContextPlus spec, and can be passed in to the above generic types. */
+export interface SchemaMetadata {
+  version: string;
+  slug: string;
+  icon: string;
+  discoverable?: boolean;
+}
+
+export interface JsonSchemaNode {
   type: string | string[];
   properties?: { [key: string]: JsonSchemaNode };
   title?: string;
@@ -13,7 +61,7 @@ interface JsonSchemaNode {
   items?: JsonSchemaNode;
   required?: string[];
 }
-interface JsonSchema extends JsonSchemaNode {
+export interface JsonSchema extends JsonSchemaNode {
   $schema: string;
   $id: string;
 }
@@ -28,15 +76,17 @@ const contextPlusFields = [
   "@required",
   "@title",
   "@description",
+  "@metadata",
 ];
 const contextPlusFieldsRegexes = contextPlusFields.map((field) => new RegExp(field));
 
-const jsonLdContextTypeMap: { [key: string]: { type: string; format?: string } } = {
+export const jsonLdContextTypeMap: { [key: string]: { type: string; format?: string } } = {
   "@id": { type: "string", format: "uri" }, // JSON-LD @context convention for an IRI
-  "http://schema.org/URL": { type: "string", format: "uri" },
   "http://schema.org/Text": { type: "string" },
-  "http://schema.org/Number": { type: "number" },
+  "http://schema.org/URL": { type: "string", format: "uri" },
   "http://schema.org/DateTime": { type: "string", format: "date-time" },
+  "http://schema.org/Number": { type: "number" },
+  "http://schema.org/Boolean": { type: "boolean" },
   "xsd:string": { type: "string" },
   "xsd:integer": { type: "integer" },
   "xsd:dateTime": { type: "string", format: "date-time" },
@@ -76,7 +126,7 @@ export class VcSchema {
   public id: string;
   public jsonSchemaMessage?: string; // @TODO/tobek This should probably be an array and some of the compilation warnings should get added to it.
 
-  private schema: any;
+  private schema: LdContextPlus;
   private debugMode?: boolean;
   private jsonLdContext?: any;
   private jsonSchema?: JsonSchema;
@@ -92,8 +142,12 @@ export class VcSchema {
     }
 
     this.jsonLdContext = omitDeep(this.schema, contextPlusFieldsRegexes);
+    if (!this.jsonLdContext["@context"]["@version"]) {
+      // Default to JSON-LD proceessing mode version 1.1
+      this.jsonLdContext["@context"]["@version"] = 1.1;
+    }
 
-    // This is a bit of a hack. We want to be able to add JSON Schema info to "@id" properties. To do this we can have @context+ nodes such as `{ "id" : { "@id": "@id", "@required": true } }` which compiles to JSON-LD @context `{ "id" : { "@id": "@id" } }`. This works and simply aliases "id" to "@id". However, the W3C Credentials JSON-LD @context thatn we import defines `{ @protected: true, "id": "@id" }`. Because of the "@protected" we can't redefine "id" even to an expanded type definition that is functionally identical. So, this mapValuesDeep call replaces `{ "id" : { "@id": "@id" } }` with `{ "id" : "@id" }` which is allowed by "@protected" since it is functionally *and* syntactically the same.
+    // This is a bit of a hack. We want to be able to add JSON Schema info to "@id" properties. To do this we can have LD Context Plus nodes such as `{ "id" : { "@id": "@id", "@required": true } }` which compiles to JSON-LD @context `{ "id" : { "@id": "@id" } }`. This works and simply aliases "id" to "@id". However, the W3C Credentials JSON-LD @context thatn we import defines `{ @protected: true, "id": "@id" }`. Because of the "@protected" we can't redefine "id" even to an expanded type definition that is functionally identical. So, this mapValuesDeep call replaces `{ "id" : { "@id": "@id" } }` with `{ "id" : "@id" }` which is allowed by "@protected" since it is functionally *and* syntactically the same.
     this.jsonLdContext = mapValuesDeep(
       this.jsonLdContext,
       (value) => {
@@ -203,13 +257,14 @@ export class VcSchema {
     const rootType = context["@rootType"];
     if (typeof context !== "object") {
       // @TODO/tobek If it's a URL we should fetch that URL
-      this.jsonSchemaMessage = "Invalid @context+ schema: could not find @context object";
+      this.jsonSchemaMessage = "Invalid LD Context Plus schema: could not find @context object";
     } else if (!rootType) {
-      this.jsonSchemaMessage = 'Invalid @context+ schema: no "@rootType" property. Falling back to base VC schema.';
+      this.jsonSchemaMessage =
+        'Invalid LD Context Plus schema: no "@rootType" property. Falling back to base VC schema.';
     } else if (!context[rootType]) {
-      this.jsonSchemaMessage = `Invalid @context+ schema: "@rootType" property "${rootType}" is not defined. Falling back to base VC schema.`;
+      this.jsonSchemaMessage = `Invalid LD Context Plus schema: "@rootType" property "${rootType}" is not defined. Falling back to base VC schema.`;
     } else {
-      parsedSchema = this.parseContextPlusNode(context, context[rootType], "root");
+      parsedSchema = this.parseContextPlusNode(context, context[rootType] as LdContextPlusNode, "root");
     }
 
     return {
@@ -227,10 +282,14 @@ export class VcSchema {
     };
   }
 
-  private parseContextPlusNode(context: any, node: any, key: string): JsonSchemaNode | undefined {
+  private parseContextPlusNode(
+    context: LdContextPlusRootNode,
+    node: LdContextPlusNode,
+    key: string,
+  ): JsonSchemaNode | undefined {
     if (typeof node !== "object") {
       console.warn(
-        `Unsupported @context+ node type at ${key}: node is not an object. Excluding from JSON Schema. Node:`,
+        `Unsupported LD Context Plus node type at ${key}: node is not an object. Excluding from JSON Schema. Node:`,
         node,
       );
       return;
@@ -238,14 +297,17 @@ export class VcSchema {
 
     const dataTypeInfo = this.parseContextPlusDataType(node);
     if (dataTypeInfo) {
-      this.debug(`Parsing "${key}": leaf node`, node);
+      const leafNode = node as LdContextPlusLeafNode;
+      this.debug(`Parsing "${key}": leaf node`, leafNode);
       return {
-        title: node["@title"],
-        description: node["@description"],
+        title: leafNode["@title"],
+        description: leafNode["@description"],
         ...dataTypeInfo,
-        ...(node["@format"] && { format: node["@format"] }),
-        ...(node["@items"] && { items: node["@items"] }),
+        ...(leafNode["@format"] && { format: leafNode["@format"] }),
+        ...(leafNode["@items"] && { items: leafNode["@items"] }),
       };
+    } else {
+      node = node as LdContextPlusInnerNode;
     }
 
     const replaceWithType = node["@replaceWith"];
@@ -258,7 +320,7 @@ export class VcSchema {
         );
         return;
       }
-      return this.parseContextPlusNode(context, context[replaceWithType], replaceWithType);
+      return this.parseContextPlusNode(context, context[replaceWithType] as LdContextPlusNode, replaceWithType);
     }
 
     const nestedProperties = {
@@ -267,7 +329,7 @@ export class VcSchema {
     if (node["@contains"]) {
       (Array.isArray(node["@contains"]) ? node["@contains"] : [node["@contains"]]).forEach((containedType) => {
         if (context[containedType]) {
-          nestedProperties[containedType] = context[containedType];
+          nestedProperties[containedType] = context[containedType] as LdContextPlusNode;
         } else {
           console.warn(
             `Referenced type "${containedType}" could not be found; excluding from JSON Schema. Referenced from node:`,
@@ -278,7 +340,7 @@ export class VcSchema {
     }
 
     if (!Object.keys(nestedProperties).length) {
-      console.warn(`Unsupported @context+ node type at ${key}; excluding from JSON Schema. Node:`, node);
+      console.warn(`Unsupported LD Context Plus node type at ${key}; excluding from JSON Schema. Node:`, node);
       return;
     }
 
@@ -294,7 +356,9 @@ export class VcSchema {
         if (property) {
           if (
             nestedNode["@required"] ||
-            (nestedNode["@replaceWith"] && context[nestedNode["@replaceWith"]]?.["@required"])
+            ("@replaceWith" in nestedNode &&
+              nestedNode["@replaceWith"] &&
+              (context[nestedNode["@replaceWith"]] as LdContextPlusNode)?.["@required"])
           ) {
             nestedRequired.push(nestedKey);
           }
@@ -314,15 +378,15 @@ export class VcSchema {
   }
 
   private parseContextPlusDataType(
-    node: any,
+    node: LdContextPlusNode,
   ): { type: string | string[]; format?: string; items?: JsonSchemaNode } | undefined {
-    if (node["@dataType"]) {
+    if ("@dataType" in node && node["@dataType"]) {
       return {
         type: node["@dataType"],
         format: node["@format"],
         items: node["@items"],
       };
-    } else if (jsonLdContextTypeMap[node["@type"]]) {
+    } else if ("@type" in node && jsonLdContextTypeMap[node["@type"]]) {
       return jsonLdContextTypeMap[node["@type"]];
     }
     return undefined;
