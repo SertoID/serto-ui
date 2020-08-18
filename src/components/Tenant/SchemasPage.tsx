@@ -1,27 +1,25 @@
 import * as React from "react";
 import { Box, Button, Flash, Flex, Loader, Modal, Table, Text } from "rimble-ui";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { routes } from "../../constants";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { baseColors, colors, GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../elements";
 import { CreateSchema } from "../elements/components/Schemas/CreateSchema";
-import { LdContextPlus } from "../elements/components/Schemas/VcSchema";
+import { SchemaDataResponse } from "../elements/components/Schemas/types";
 
 export const SchemasPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-  const [fakeData, setFakeData] = React.useState<LdContextPlus[]>([]); // @TODO/tobek Temporary until API integration.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, error: getSchemasError, isValidating } = useSWR("/v1/schemas", () => TrustAgent.getSchemas());
 
-  function viewSchema(schema: LdContextPlus) {
+  function viewSchema(schema: SchemaDataResponse) {
     alert("Coming soon!");
   }
 
   return (
     <GlobalLayout url={routes.SCHEMAS}>
-      {fakeData?.length > 0 ? (
+      {data?.length ? (
         <>
           <HeaderBox>
             <Header heading="Credential Schemas">
@@ -39,23 +37,24 @@ export const SchemasPage: React.FunctionComponent = (props) => {
                   <TH>Name</TH>
                   <TH>Slug</TH>
                   <TH>Version</TH>
+                  <TH>Discoverable</TH>
                   <TH>Created</TH>
                   <TH></TH>
                 </TR>
               </thead>
               <TBody>
-                {fakeData.map((schema: LdContextPlus, i: number) => {
-                  const schemaData = schema["@context"];
+                {data?.map((schema, i) => {
                   return (
                     <TR key={i}>
-                      <td style={{ maxWidth: 32 }}>{schemaData["@metadata"]?.icon}</td>
-                      <td>{schemaData["@title"]}</td>
-                      <td>{schemaData["@metadata"]?.slug}</td>
-                      <td>{schemaData["@metadata"]?.version}</td>
+                      <td style={{ maxWidth: 32 }}>{schema.icon}</td>
+                      <td>{schema.name}</td>
+                      <td>{schema.slug}</td>
+                      <td>{schema.version}</td>
+                      <td>{(!!schema.discoverable).toString()}</td>
                       <td>
-                        {schemaData["@metadata"]?.created && (
-                          <time title={schemaData["@metadata"]?.created} dateTime={schemaData["@metadata"]?.created}>
-                            {new Date(schemaData["@metadata"]?.created).toDateString()}
+                        {schema.created && (
+                          <time title={schema.created} dateTime={schema.created}>
+                            {new Date(schema.created).toDateString()}
                           </time>
                         )}
                       </td>
@@ -102,13 +101,7 @@ export const SchemasPage: React.FunctionComponent = (props) => {
       )}
 
       <Modal isOpen={isCreateModalOpen}>
-        <CreateSchema
-          onClose={() => setIsCreateModalOpen(false)}
-          onSchemaCreated={(schema) => {
-            mutate("/v1/schemas");
-            setFakeData([...fakeData, schema]);
-          }}
-        ></CreateSchema>
+        <CreateSchema onClose={() => setIsCreateModalOpen(false)}></CreateSchema>
       </Modal>
     </GlobalLayout>
   );
