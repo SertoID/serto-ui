@@ -8,7 +8,7 @@ storiesOf("Schemas", module).add("Create Schema", () => {
   return (
     <IdentityThemeProvider>
       <CreateSchema onSchemaUpdate={setSchema} onSchemaCreated={setSchema} />
-      <pre>{JSON.stringify(schema, null, 2)}</pre>
+      <pre>{JSON.stringify(typeof schema === "string" ? JSON.parse(schema) : schema, null, 2)}</pre>
     </IdentityThemeProvider>
   );
 });

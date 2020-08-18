@@ -10,6 +10,21 @@ export interface WorkingSchema extends SchemaMetadata {
 export interface CompletedSchema extends WorkingSchema {
   properties: LdContextPlusLeafNode<SchemaMetadata>[];
 }
+
+export interface SchemaDataInput extends CompletedSchema {
+  ldContextPlus: string;
+  ldContext: string;
+  jsonSchema: string;
+}
+
+export interface SchemaDataResponse extends SchemaDataInput {
+  id: string;
+  created: string;
+  updated: string;
+  tenant: any;
+  deleted?: string;
+}
+
 export const initialWorkingSchema: WorkingSchema = {
   name: "",
   description: "",
