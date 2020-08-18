@@ -17,6 +17,7 @@ const UnselectedToggle: React.FunctionComponent<any> = (props) => (
 export interface ToggleProps {
   options: [string, string];
   onChange(selected: string): void;
+  style?: any;
   width?: string;
 }
 export const Toggle: React.FunctionComponent<ToggleProps> = (props) => {
@@ -29,7 +30,7 @@ export const Toggle: React.FunctionComponent<ToggleProps> = (props) => {
   const LeftToggle = selected === props.options[0] ? SelectedToggle : UnselectedToggle;
   const RightToggle = selected === props.options[1] ? SelectedToggle : UnselectedToggle;
   return (
-    <Flex mb={3} width={props.width}>
+    <Flex width={props.width} style={props.style}>
       <LeftToggle
         borderRadius="4px 0 0 4px"
         style={{ borderRight: 0, width: props.width && "50%" }}

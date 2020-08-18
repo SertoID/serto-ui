@@ -59,7 +59,10 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       const schemaInput = createSchemaInput(schema as CompletedSchema);
       props.onSchemaCreated?.(schemaInput.ldContextPlus);
       await TrustAgent.createSchema(schemaInput);
-      await mutate("/v1/schemas");
+      mutate(["/v1/schemas", false]);
+      if (schema.discoverable) {
+        mutate(["/v1/schemas", true]);
+      }
     } catch (err) {
       console.error("Failed to create schema:", err);
     }
