@@ -1,53 +1,20 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Box, Flex, Card, Text, Heading, Flash, Button, Tooltip } from "rimble-ui";
+import { Box, Flex, Text, Heading, Flash, Button, Tooltip } from "rimble-ui";
 import styled from "styled-components";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
 import { useDebounce } from "use-debounce";
 
-import { fonts } from "../../themes/fonts";
 import { VcSchema } from "./VcSchema";
 import { EXAMPLE_SCHEMAS, EXAMPLE_VCS } from "./examples";
+import { HighlightedJson, PrismHighlightedCodeWrap } from "../HighlightedJson";
 
 const Section = styled(Flex)`
   flex-direction: column;
   width: 50%;
   height: 48vh;
-`;
-const CodeWrap = styled(Card)`
-  background: #fdfdfd;
-  flex-grow: 1;
-  overflow: auto;
-  padding: 16px;
-  margin: 0 8px 8px 0;
-  font-size: 12px;
-  font-family: ${fonts.monospace};
-
-  pre {
-    margin: 0;
-  }
-
-  .token.property {
-    color: #905;
-  }
-  .token.string {
-    color: #07a;
-  }
-  .token.punctuation {
-    color: #999;
-  }
-  .token.boolean,
-  .token.number {
-    color: #690;
-  }
-  .token.operator {
-    color: #9a6e3a;
-  }
-  .token.comment {
-    color: slategray;
-  }
 `;
 
 storiesOf("Schemas", module).add("LD Context Plus playground", () => {
@@ -61,8 +28,8 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
   const [inputVcValid, setInputVcValid] = React.useState<boolean | null | undefined>();
   const [inputVcValidityMessage, setInputVcValidityMessage] = React.useState<string | undefined>();
 
-  const [outputContextHtml, setOutputContextHtml] = React.useState<string>("");
-  const [outputJsonSchemaHtml, setOutputJsonSchemaHtml] = React.useState<string>("");
+  const [outputContext, setOutputContext] = React.useState<string>("");
+  const [outputJsonSchema, setOutputJsonSchema] = React.useState<string>("");
 
   React.useEffect(() => {
     setInputSchemaError(undefined);
@@ -79,11 +46,11 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
 
   React.useEffect(() => {
     if (vcSchema) {
-      setOutputContextHtml(Prism.highlight(vcSchema.getJsonLdContextString(true), Prism.languages.json, "json"));
-      setOutputJsonSchemaHtml(Prism.highlight(vcSchema.getJsonSchemaString(true), Prism.languages.json, "json"));
+      setOutputContext(vcSchema.getJsonLdContextString(true));
+      setOutputJsonSchema(vcSchema.getJsonSchemaString(true));
     } else {
-      setOutputContextHtml("");
-      setOutputJsonSchemaHtml("");
+      setOutputContext("");
+      setOutputJsonSchema("");
     }
   }, [vcSchema]);
 
@@ -128,14 +95,14 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
           <Flex justifyContent="space-between" pr={2}>
             <Heading.h5 my={2}>@context+ input</Heading.h5>
           </Flex>
-          <CodeWrap>
+          <PrismHighlightedCodeWrap>
             <Editor
               value={inputSchema}
               onValueChange={setInputSchema}
               highlight={(code) => Prism.highlight(inputSchema, Prism.languages.json, "json")}
               style={{ minHeight: "100%" }}
             />
-          </CodeWrap>
+          </PrismHighlightedCodeWrap>
           {inputSchemaError && <Flash variant="danger">Error: {inputSchemaError}</Flash>}
         </Section>
         <Section>
@@ -145,14 +112,14 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
               playground @context will automatically be appended
             </Text>
           </Flex>
-          <CodeWrap>
+          <PrismHighlightedCodeWrap>
             <Editor
               value={inputVc}
               onValueChange={setInputVc}
               highlight={(code) => Prism.highlight(inputVc, Prism.languages.json, "json")}
               style={{ minHeight: "100%" }}
             />
-          </CodeWrap>
+          </PrismHighlightedCodeWrap>
           {typeof inputVcValid !== "undefined" && (
             <Flash variant={inputVcValid ? "success" : inputVcValid === null ? "warning" : "danger"}>
               <Text fontSize={1} style={{ wordBreak: "break-word", float: "left", display: "inline-block" }}>
@@ -176,19 +143,11 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
       <Flex>
         <Section>
           <Heading.h5 my={2}>JSON-LD @context output</Heading.h5>
-          <CodeWrap style={{ background: "#f8f8f8" }}>
-            <pre>
-              <code dangerouslySetInnerHTML={{ __html: outputContextHtml }}></code>
-            </pre>
-          </CodeWrap>
+          <HighlightedJson json={outputContext} style={{ background: "#f8f8f8" }} />
         </Section>
         <Section>
           <Heading.h5 my={2}>JSON Schema output</Heading.h5>
-          <CodeWrap style={{ background: "#f8f8f8" }}>
-            <pre>
-              <code dangerouslySetInnerHTML={{ __html: outputJsonSchemaHtml }}></code>
-            </pre>
-          </CodeWrap>
+          <HighlightedJson json={outputJsonSchema} style={{ background: "#f8f8f8" }} />
           {vcSchema?.jsonSchemaMessage && <Flash variant="warning">{vcSchema.jsonSchemaMessage}</Flash>}
         </Section>
       </Flex>
