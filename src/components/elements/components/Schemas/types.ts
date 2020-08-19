@@ -1,4 +1,4 @@
-import { LdContextPlusLeafNode, SchemaMetadata } from "./VcSchema";
+import { LdContextPlusLeafNode } from "./VcSchema";
 
 /** In-progress schema interface during CreateSchema flow that will be transformed into final output. */
 export interface WorkingSchema extends SchemaMetadata {
@@ -7,16 +7,29 @@ export interface WorkingSchema extends SchemaMetadata {
   description?: string;
 }
 
+/** Completed schema data from CreateSchema flow. */
 export interface CompletedSchema extends WorkingSchema {
   properties: LdContextPlusLeafNode<SchemaMetadata>[];
 }
 
-export interface SchemaDataInput extends CompletedSchema {
+/** Metadata fields specific to our use-case (i.e. not part of the LdContextPlus spec) intended to be passed in to the LdContextPlus generic types where it will be stored in the "@metadata" object. */
+export interface SchemaMetadata {
+  version: string;
+  slug: string;
+  icon?: string;
+  discoverable?: boolean;
+}
+
+/** Data format expected by API. */
+export interface SchemaDataInput extends SchemaMetadata {
+  name: string;
+  description?: string;
   ldContextPlus: string;
   ldContext: string;
   jsonSchema: string;
 }
 
+/** Data format returned by API. */
 export interface SchemaDataResponse extends SchemaDataInput {
   id: string;
   created: string;

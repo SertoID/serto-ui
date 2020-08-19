@@ -320,6 +320,129 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     }
   }
 }`,
+  "ContentPublishCredential (flat)": `{
+  "@context": {
+    "@version": 1.1,
+    "@rootType": "ContentPublishCredential",
+    "@title": "Content Publish Credential",
+    "@metadata": {
+      "version": "1.0",
+      "slug": "content-publish-credential",
+      "icon": "📰",
+      "discoverable": true
+    },
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "w3ccred": "https://www.w3.org/2018/credentials#",
+    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "ContentPublishCredential": {
+      "@id": "schema-id",
+      "@contains": ["credentialSubject", "issuer", "issuanceDate"]
+    },
+    "credentialSubject": {
+      "@id": "w3ccred:credentialSubject",
+      "@required": true,
+      "@contains": "publishedContent",
+      "@context": {
+        "publisherId": {
+          "@id": "@id",
+          "@type": "@id",
+          "@description": "Publisher DID",
+          "@required": true
+        },
+        "id": {
+          "@id": "@id",
+          "@type": "xsd:string",
+          "@description": "Globally unique identifier for this piece of content across all versions",
+          "@required": true
+        },
+        "versionId": {
+          "@id": "http://schema.org/version",
+          "@type": "xsd:string",
+          "@description": "Globally unique identifier that refers to this version of this piece of content"
+        },
+        "headline": {
+          "@id": "schema-id:headline",
+          "@type": "xsd:string",
+          "@required": true
+        },
+        "description": {
+          "@id": "schema-id:description",
+          "@type": "xsd:string"
+        },
+        "url": {
+          "@id": "schema-id:url",
+          "@type": "@id",
+          "@required": true
+        },
+        "datePublished": {
+          "@id": "schema-id:date-published",
+          "@type": "xsd:dateTime",
+          "@required": true
+        },
+        "dateModified": {
+          "@id": "schema-id:date-modified",
+          "@type": "xsd:dateTime"
+        },
+        "publisher": {
+          "@id": "schema-id:publisher",
+          "@required": true,
+          "@context": {
+            "id": {
+              "@id": "schema-id:publisher-id",
+              "@type": "xsd:string",
+              "@description": "Publisher DID or other unique identifier URI"
+            },
+            "name": {
+              "@id": "schema-id:publisher-name",
+              "@type": "xsd:string",
+              "@required": true
+            },
+            "url": {
+              "@id": "schema-id:publisher-url",
+              "@type": "@id",
+              "@required": true,
+              "@description": "Publisher homepage"
+            }
+          }
+        },
+        "author": {
+          "@id": "schema-id:author",
+          "@context": {
+            "id": {
+              "@id": "schema-id:publisher-id",
+              "@type": "xsd:string",
+              "@description": "Author DID or other unique identifier URI"
+            },
+            "name": {
+              "@id": "schema-id:author-name",
+              "@type": "xsd:string",
+              "@required": true
+            }
+          }
+        },
+        "keywords": {
+          "@id": "schema-id:keywords",
+          "@type": "xsd:string",
+          "@description": "Comma-separated list of tags/keywords"
+        },
+        "image": {
+          "@id": "schema-id:image",
+          "@type": "@id"
+        },
+        "rawContentUrl": {
+          "@id": "schema-id:raw-content-url",
+          "@type": "@id",
+          "@description": "URL where raw, machine-readable, full text of content can be found (may require authentication)"
+        },
+        "rawContentHash": {
+          "@id": "schema-id:raw-content-hash",
+          "@type": "xsd:string",
+          "@description": "Keccak-256 hash of content at \`rawContentUrl\`"
+        }
+      }
+    }
+  }
+}`,
   "ContentPublishCredential (minimal)": `{
   "@context": {
     "@version": 1.1,

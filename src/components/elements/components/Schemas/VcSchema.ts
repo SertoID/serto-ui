@@ -44,14 +44,6 @@ export type LdContextPlusNode<MetadataType = any> =
   | LdContextPlusInnerNode<MetadataType>
   | LdContextPlusLeafNode<MetadataType>;
 
-/** These metadata fields are specific to our use-case rather than part of the LdContextPlus spec, and can be passed in to the above generic types. */
-export interface SchemaMetadata {
-  version: string;
-  slug: string;
-  icon?: string;
-  discoverable?: boolean;
-}
-
 export interface JsonSchemaNode {
   type: string | string[];
   properties?: { [key: string]: JsonSchemaNode };
@@ -125,8 +117,8 @@ const baseVcJsonSchema = {
 export class VcSchema {
   public id: string;
   public jsonSchemaMessage?: string; // @TODO/tobek This should probably be an array and some of the compilation warnings should get added to it.
+  public schema: LdContextPlus;
 
-  private schema: LdContextPlus;
   private debugMode?: boolean;
   private jsonLdContext?: any;
   private jsonSchema?: JsonSchema;
@@ -144,6 +136,8 @@ export class VcSchema {
     } else {
       this.schema = schema;
     }
+
+    // @TODO/tobek Should make a JSON Schema for LdContextPlus and validate `this.schema` here and throw an error if invalid.
 
     this.jsonLdContext = omitDeep(this.schema, contextPlusFieldsRegexes);
     if (!this.jsonLdContext["@context"]["@version"]) {
