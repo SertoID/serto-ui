@@ -3,6 +3,13 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
   "@context": {
     "@version": 1.1,
     "@rootType": "DiplomaCredential",
+    "@title": "Diploma Credential",
+    "@metadata": {
+      "version": "1.0",
+      "slug": "diploma-credential",
+      "icon": "🎓",
+      "discoverable": true
+    },
     "w3ccred": "https://www.w3.org/2018/credentials#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "schema-id": "https://consensysidentity.com/schema/DiplomaCredential#",
@@ -45,6 +52,12 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "@version": 1.1,
     "@rootType": "ContentPublishCredential",
     "@title": "Content Publish Credential",
+    "@metadata": {
+      "version": "1.0",
+      "slug": "content-publish-credential",
+      "icon": "📰",
+      "discoverable": true
+    },
     "w3ccred": "https://www.w3.org/2018/credentials#",
     "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
     "ContentPublishCredential": {
@@ -182,6 +195,12 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "@version": 1.1,
     "@rootType": "ContentPublishCredential",
     "@title": "Content Publish Credential",
+    "@metadata": {
+      "version": "1.0",
+      "slug": "content-publish-credential",
+      "icon": "📰",
+      "discoverable": true
+    },
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "w3ccred": "https://www.w3.org/2018/credentials#",
     "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
@@ -305,6 +324,12 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
   "@context": {
     "@version": 1.1,
     "@rootType": "ContentPublishCredential",
+    "@metadata": {
+      "version": "1.0",
+      "slug": "content-publish-credential",
+      "icon": "📰",
+      "discoverable": true
+    },
     "w3ccred": "https://www.w3.org/2018/credentials#",
     "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
     "ContentPublishCredential": {
