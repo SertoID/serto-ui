@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, Flex, Heading, Text, Flash } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../";
-import { SchemaMetadata, SchemaDataInput, SchemaDataResponse } from "./types";
+import { SchemaDataInput, SchemaDataResponse } from "./types";
 import { typeOptions } from "./utils";
 import { Toggle } from "../Toggle";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "./VcSchema";
@@ -28,6 +28,7 @@ const renderProperty = ([key, prop]: [string, LdContextPlusNode]): React.ReactNo
   if ("@type" in prop && prop["@type"]) {
     propType = typeOptions[prop["@type"]]?.niceName || prop["@type"];
   } else if ("@context" in prop && prop["@context"]) {
+    // @TODO/tobek We should support these fully eventually.
     propType = "[nested object]";
   } else {
     propType = "";
@@ -81,9 +82,9 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
       setError("Invalid schema format: could not find `credentialSubject`");
     }
     credContains =
-      typeof credentialSubject["@contains"] === "string"
+      typeof credentialSubject?.["@contains"] === "string"
         ? [credentialSubject["@contains"]]
-        : credentialSubject["@contains"];
+        : credentialSubject?.["@contains"];
   }
 
   return (

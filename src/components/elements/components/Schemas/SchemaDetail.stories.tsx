@@ -12,12 +12,12 @@ storiesOf("Schemas", module).add("SchemaDetail", () => {
   const [schemaKey, setSchemaKey] = React.useState<string>(DEFAULT_SCHEMA);
 
   let ldContextPlus: SchemaDataInput | undefined;
-  let foo: string | undefined;
+  let error: string | undefined;
   try {
     ldContextPlus = ldContextPlusToSchemaInput(JSON.parse(EXAMPLE_SCHEMAS[schemaKey]));
   } catch (err) {
     console.error("Failed to generate schema input from schema:", err);
-    foo = err.message || JSON.stringify(err);
+    error = err.message || JSON.stringify(err);
   }
 
   return (
@@ -34,7 +34,7 @@ storiesOf("Schemas", module).add("SchemaDetail", () => {
 
       <Box width={480}>
         {ldContextPlus && <SchemaDetail schema={ldContextPlus} />}
-        {foo && <Flash variant="danger">Error: {foo}</Flash>}
+        {error && <Flash variant="danger">Error: {error}</Flash>}
       </Box>
     </>
   );
