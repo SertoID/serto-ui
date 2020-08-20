@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Text } from "rimble-ui";
 import styled from "styled-components";
+import { baseColors } from "../../";
 
 const TabsContainer = styled.div`
   display: flex;
@@ -23,7 +24,7 @@ interface TabTitleProps {
   active: boolean;
 }
 const TabTitle = styled.li<TabTitleProps>`
-  color: ${(props) => (props.active ? "blue" : "black")};
+  color: ${(props) => (props.active ? baseColors.blurple : "black")};
   border-bottom: ${(props) => (props.active ? "1px solid blue" : "none")};
   margin-bottom: 0;
   margin-right: 10px;
