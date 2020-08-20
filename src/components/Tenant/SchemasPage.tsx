@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Button, Flash, Flex, Loader, Modal, Table, Text } from "rimble-ui";
+import { Box, Button, Flash, Flex, Loader, Card, Modal, Table, Text } from "rimble-ui";
 import useSWR from "swr";
 import { routes } from "../../constants";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
@@ -8,19 +8,17 @@ import { baseColors, colors, GlobalLayout, Header, HeaderBox, TBody, TH, TR } fr
 import { CreateSchema } from "../elements/components/Schemas/CreateSchema";
 import { SchemaDataResponse } from "../elements/components/Schemas/types";
 import { Toggle } from "../elements/components/Toggle";
+import { SchemaDetail } from "../elements/components/Schemas/SchemaDetail";
 
 export const SchemasPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [selectedSchema, setSelectedSchema] = React.useState<SchemaDataResponse | undefined>();
   const modes: [string, string] = ["Your Schemas", "Global Schemas"];
   const [getGlobal, setGetGlobal] = React.useState(false);
   const { data, error: getSchemasError, isValidating } = useSWR(["/v1/schemas", getGlobal], () =>
     TrustAgent.getSchemas(getGlobal),
   );
-
-  function viewSchema(schema: SchemaDataResponse) {
-    alert("Coming soon!");
-  }
 
   return (
     <GlobalLayout url={routes.SCHEMAS}>
@@ -72,7 +70,7 @@ export const SchemasPage: React.FunctionComponent = (props) => {
                       )}
                     </td>
                     <td>
-                      <Button.Outline size="small" onClick={() => viewSchema(schema)}>
+                      <Button.Outline size="small" onClick={() => setSelectedSchema(schema)}>
                         View
                       </Button.Outline>
                     </td>
@@ -109,6 +107,15 @@ export const SchemasPage: React.FunctionComponent = (props) => {
           </Flex>
         )}
       </Box>
+
+      <Modal isOpen={!!selectedSchema}>
+        <Card p={4}>
+          {selectedSchema && <SchemaDetail schema={selectedSchema} />}
+          <Button width="100%" onClick={() => setSelectedSchema(undefined)}>
+            Close
+          </Button>
+        </Card>
+      </Modal>
 
       <Modal isOpen={isCreateModalOpen}>
         <CreateSchema onClose={() => setIsCreateModalOpen(false)}></CreateSchema>
