@@ -1,4 +1,5 @@
 import { config } from "../config";
+import { SchemaDataInput, SchemaDataResponse } from "../components/elements/components/Schemas/types";
 
 const AUTH_LOCALSTORAGE_KEY = `trust-agent-auth-${config.API_URL}`;
 
@@ -123,13 +124,15 @@ export class TrustAgencyService {
     });
   }
 
-  public async getSchemas(): Promise<any> {
-    // @TODO/tobek Integrate with API when available.
-    return [];
+  public async getSchemas(global?: boolean): Promise<SchemaDataResponse[]> {
+    return this.request(`/v1/schemas${global ? "?global=true" : ""}`);
   }
 
-  public async createSchema(): Promise<any> {
-    // @TODO/tobek Integrate with API when available.
+  public async createSchema(schema: SchemaDataInput): Promise<any> {
+    return this.request("/v1/schemas", "POST", {
+      tenantId: this.getAuth()?.tenantid,
+      ...schema,
+    });
   }
 
   public async createApiKey(data: { keyName: string }): Promise<any> {

@@ -1,6 +1,6 @@
 import { convertToPascalCase } from "../../utils";
-import { jsonLdContextTypeMap, LdContextPlus, LdContextPlusLeafNode, SchemaMetadata } from "./VcSchema";
-import { CompletedSchema } from "./types";
+import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusLeafNode, SchemaMetadata } from "./VcSchema";
+import { CompletedSchema, SchemaDataInput } from "./types";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
 type NamedLdContextPlusNode = Partial<LdContextPlusLeafNode> & { niceName?: string };
@@ -17,6 +17,16 @@ Object.keys(jsonLdContextTypeMap).forEach((type) => {
     niceName: type.replace("http://schema.org/", ""),
   };
 });
+
+export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
+  const schemaInstance = new VcSchema(createLdContextPlusSchema(schema), schema.slug);
+  return {
+    ...schema,
+    ldContextPlus: schemaInstance.getLdContextPlusString(),
+    ldContext: schemaInstance.getJsonLdContextString(),
+    jsonSchema: schemaInstance.getJsonSchemaString(),
+  };
+}
 
 export function createLdContextPlusSchema(schema: CompletedSchema): LdContextPlus<SchemaMetadata> {
   const schemaTypeName = convertToPascalCase(schema.name);

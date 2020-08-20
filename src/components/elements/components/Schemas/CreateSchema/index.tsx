@@ -1,5 +1,6 @@
 import { Check } from "@rimble/icons";
 import * as React from "react";
+import { mutate } from "swr";
 import { Box, Button, Card, Heading, Text } from "rimble-ui";
 import { colors } from "../../../";
 import { LdContextPlus, SchemaMetadata } from "../VcSchema";
@@ -7,7 +8,9 @@ import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
 import { CompletedSchema, WorkingSchema, initialWorkingSchema } from "../types";
-import { createLdContextPlusSchema } from "../utils";
+import { createSchemaInput } from "../utils";
+import { TrustAgencyService } from "../../../../../services/TrustAgencyService";
+import { TrustAgencyContext } from "../../../../../context/TrustAgentProvider";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -20,10 +23,11 @@ const Wrapper: React.FunctionComponent<any> = (props) => (
 export interface CreateSchemaProps {
   onClose?(): void;
   onSchemaUpdate?(schema: WorkingSchema): void;
-  onSchemaCreated?(schema: LdContextPlus<SchemaMetadata>): void;
+  onSchemaCreated?(schema: LdContextPlus<SchemaMetadata> | string): void;
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
+  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
   const [schema, setSchema] = React.useState<WorkingSchema>(initialWorkingSchema);
 
@@ -41,14 +45,27 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   function goBack() {
     setCurrentStep(STEPS[STEPS.indexOf(currentStep) - 1]);
   }
-  function goForward() {
+  async function goForward() {
     const nextStep = STEPS[STEPS.indexOf(currentStep) + 1];
     if (nextStep === "DONE") {
-      // @TODO/tobek Integrate with API to create schema, then loading state before moving to "done" step.
-      const ldContextPlusSchema = createLdContextPlusSchema(schema as CompletedSchema);
-      props.onSchemaCreated?.(ldContextPlusSchema);
+      await createSchema();
+      // @TODO/tobek Loading state before moving to "done" step + handle errors
     }
     setCurrentStep(nextStep);
+  }
+
+  async function createSchema() {
+    try {
+      const schemaInput = createSchemaInput(schema as CompletedSchema);
+      props.onSchemaCreated?.(schemaInput.ldContextPlus);
+      await TrustAgent.createSchema(schemaInput);
+      mutate(["/v1/schemas", false]);
+      if (schema.discoverable) {
+        mutate(["/v1/schemas", true]);
+      }
+    } catch (err) {
+      console.error("Failed to create schema:", err);
+    }
   }
 
   if (currentStep === "DONE") {

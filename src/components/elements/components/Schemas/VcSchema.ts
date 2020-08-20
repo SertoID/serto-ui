@@ -48,7 +48,7 @@ export type LdContextPlusNode<MetadataType = any> =
 export interface SchemaMetadata {
   version: string;
   slug: string;
-  icon: string;
+  icon?: string;
   discoverable?: boolean;
 }
 
@@ -132,13 +132,17 @@ export class VcSchema {
   private jsonSchema?: JsonSchema;
   private jsonSchemaValidate?: Ajv.ValidateFunction;
 
-  constructor(schemaString: string, id: string, debugMode?: boolean) {
+  constructor(schema: string | LdContextPlus, id: string, debugMode?: boolean) {
     this.id = slugify(id);
     this.debugMode = debugMode;
-    try {
-      this.schema = JSON.parse(schemaString);
-    } catch (err) {
-      throw Error("Failed to parse JSON: " + err.message);
+    if (typeof schema === "string") {
+      try {
+        this.schema = JSON.parse(schema);
+      } catch (err) {
+        throw Error("Failed to parse JSON: " + err.message);
+      }
+    } else {
+      this.schema = schema;
     }
 
     this.jsonLdContext = omitDeep(this.schema, contextPlusFieldsRegexes);
@@ -168,6 +172,10 @@ export class VcSchema {
     } catch (err) {
       throw Error("Failed to generate JSON Schema from input: " + err.message);
     }
+  }
+
+  public getLdContextPlusString(prettyPrint?: boolean): string {
+    return JSON.stringify(this.schema, null, prettyPrint ? 2 : undefined);
   }
 
   public getJsonLdContextString(prettyPrint?: boolean): string {
