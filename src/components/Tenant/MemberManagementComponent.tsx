@@ -1,20 +1,9 @@
 import * as React from "react";
 import useSWR, { mutate } from "swr";
-import { routes } from "../../constants";
 import { Box, Button, Card, Flash, Flex, Heading, Loader, Modal, Table, Text } from "rimble-ui";
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
-import {
-  GlobalLayout,
-  HeaderBox,
-  Header,
-  TH,
-  TR,
-  TBody,
-  baseColors,
-  colors,
-  CopyableTruncatableText,
-} from "../elements";
+import { TH, TR, TBody, baseColors, colors, CopyableTruncatableText } from "../elements";
 import { config } from "../../config";
 
 export const MemberManagementComponent: React.FunctionComponent = (props) => {

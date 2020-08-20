@@ -4,19 +4,6 @@ import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, T
 import { TrustAgencyContext } from "../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../services/TrustAgencyService";
 import { TH, TR, TBody, baseColors, colors, CopyableTruncatableText } from "../elements";
-import styled from "styled-components";
-
-const APIKeysInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-`;
-
-const APIKeysCTAContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-`;
 
 export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
