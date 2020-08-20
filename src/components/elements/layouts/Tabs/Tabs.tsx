@@ -6,13 +6,13 @@ import { baseColors } from "../../";
 const TabsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: ${baseColors.white};
 `;
 
 const TabsHeader = styled.ul`
   list-style: none;
   display: flex;
-  background-color: white;
+  background-color: ${baseColors.white};
   border-bottom: 1px solid;
   border-color: #cccccc;
   justify-content: flex-start;
@@ -25,7 +25,7 @@ interface TabTitleProps {
 }
 const TabTitle = styled.li<TabTitleProps>`
   color: ${(props) => (props.active ? baseColors.blurple : "black")};
-  border-bottom: ${(props) => (props.active ? "1px solid blue" : "none")};
+  border-bottom: ${(props) => (props.active ? `1px solid ${baseColors.blurple}` : "none")};
   margin-bottom: 0;
   margin-right: 10px;
 `;
