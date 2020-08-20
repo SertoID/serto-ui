@@ -27,6 +27,9 @@ interface NavItemProps {
 const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
   const Icon = props.icon;
 
+  console.log("currentUrl: ", props.currentUrl);
+  console.log("url: ", props.url);
+
   if (props.currentUrl === props.url) {
     return (
       <Box py={2}>

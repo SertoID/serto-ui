@@ -3,8 +3,6 @@ import * as React from "react";
 import { CopyToClipboard } from "../CopyToClipboard";
 import styled from "styled-components";
 
-const ContainerContainer = styled.div``;
-
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -15,9 +13,8 @@ const Container = styled.div`
   border: 1px solid;
   border-color: #cccccc;
   border-radius: 4px;
-  max-width: 400px;
-  min-width: 400px;
   justify-content: space-between;
+  width: 100%;
 `;
 
 const TruncatableText = styled.input`
@@ -44,13 +41,11 @@ export interface CopyableTruncatableTextProps {
 
 export const CopyableTruncatableText: React.FunctionComponent<CopyableTruncatableTextProps> = (props) => {
   return (
-    <ContainerContainer>
-      <Container>
-        <TruncatableText type="text" value={props.text} />
-        <CopyButtonContainer>
-          <CopyToClipboard {...props} />
-        </CopyButtonContainer>
-      </Container>
-    </ContainerContainer>
+    <Container>
+      <TruncatableText type="text" value={props.text} readOnly />
+      <CopyButtonContainer>
+        <CopyToClipboard {...props} />
+      </CopyButtonContainer>
+    </Container>
   );
 };
