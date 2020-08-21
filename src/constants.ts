@@ -7,11 +7,11 @@ export enum routes {
   SCHEMAS = "/tenant/schemas",
   ISSUED_CREDENTIAL = "/tenant/issued-credentials",
   RECEIVED_CREDENTIAL = "/tenant/received-credentials",
-  DEVELOPER = "/tenant/developer",
+  DEVELOPER = "/tenant/developer/:tabName?",
   ACCOUNT = "/tenant/account",
   ONBOARDING = "/onboarding",
   CREATE_ORGANIZATION = "/create-organization",
-  ORGANIZATION_MANAGEMENT = "/tenant/management",
+  ORGANIZATION_MANAGEMENT = "/tenant/management/:tabName?",
 }
 
 export enum freeAccount {
