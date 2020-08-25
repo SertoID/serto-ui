@@ -1,33 +1,27 @@
 import * as React from "react";
-import { Text } from "rimble-ui";
 import styled from "styled-components";
-import { baseColors } from "../../";
-
-const TabsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${baseColors.white};
-`;
+import { Flex, Text } from "rimble-ui";
+import { baseColors, colors } from "../../themes";
 
 const TabsHeader = styled.ul`
-  list-style: none;
-  display: flex;
-  background-color: ${baseColors.white};
-  border-bottom: 1px solid;
-  border-color: #cccccc;
-  justify-content: flex-start;
-  width: 100%;
   align-items: center;
+  background-color: ${baseColors.white};
+  border-bottom: 2px solid ${colors.lightGray};
+  display: flex;
+  list-style: none;
+  justify-content: flex-start;
+  padding: 0 16px;
+  width: 100%;
 `;
 
 interface TabTitleProps {
   active: boolean;
 }
 const TabTitle = styled.li<TabTitleProps>`
-  color: ${(props) => (props.active ? baseColors.blurple : "black")};
-  border-bottom: ${(props) => (props.active ? `1px solid ${baseColors.blurple}` : "none")};
-  margin-bottom: 0;
-  margin-right: 10px;
+  border-bottom: ${(props) => (props.active ? `2px solid ${colors.primary.base}` : "2px solid transparent")};
+  color: ${(props) => (props.active ? colors.primary.base : colors.silver)};
+  cursor: ${(props) => (props.active ? "auto" : "pointer")};
+  margin: 0 16px -2px;
 `;
 
 export interface TabsProps {
@@ -44,25 +38,25 @@ export interface Tab {
 
 export const Tabs: React.FunctionComponent<React.PropsWithChildren<TabsProps>> = (props) => {
   return (
-    <TabsContainer>
+    <Flex bg={baseColors.white} borderRadius={1} flexDirection="column">
       <TabsHeader>
-        {props.tabs.map((tab, i) => {
+        {props.tabs.map((tab: any, i: number) => {
           const active = (!props.activeTabName && i === 0) || props.activeTabName === tab.tabName;
           return (
-            <TabTitle onClick={() => props.onTabClicked(tab.tabName)} active={active}>
-              <Text mb={1} fontSize={2} fontWeight={2}>
+            <TabTitle key={i} onClick={() => props.onTabClicked(tab.tabName)} active={active}>
+              <Text mb={2} fontSize={2} fontWeight={3}>
                 {tab.title}
               </Text>
             </TabTitle>
           );
         })}
       </TabsHeader>
-      {props.tabs.map((tab) => {
+      {props.tabs.map((tab: any, i: number) => {
         if (tab.tabName !== props.activeTabName) {
           return undefined;
         }
-        return tab.content;
+        return <React.Fragment key={i}>{tab.content}</React.Fragment>;
       })}
-    </TabsContainer>
+    </Flex>
   );
 };

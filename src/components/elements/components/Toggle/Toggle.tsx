@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Flex, Button } from "rimble-ui";
-import { colors } from "../..";
+import { colors } from "../../themes";
 
 const SelectedToggle: React.FunctionComponent<any> = (props) => (
   <Button {...props} style={{ ...props.style, pointerEvents: "none" }} fontWeight="normal" size="small" />

@@ -2,7 +2,10 @@ import * as React from "react";
 import { Box, Flex, Pill, Table, Text } from "rimble-ui";
 import { Info, Person, VerifiedUser } from "@rimble/icons";
 import { CredentialBorder, CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
-import { CopyToClipboard, Expand, dateTimeFormat, ellipsis, baseColors, colors, fonts } from "../../";
+import { CopyToClipboard } from "../CopyToClipboard";
+import { Expand } from "../Expand";
+import { baseColors, colors, fonts } from "../../themes";
+import { dateTimeFormat, ellipsis } from "../../utils";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",

@@ -1,36 +1,17 @@
 import * as React from "react";
-// import { Text } from "rimble-ui";
-import { CopyToClipboard } from "../CopyToClipboard";
 import styled from "styled-components";
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  height: 48px;
-  padding: 2px 2px 2px 2px;
-  line-height: 26px;
-  background-color: white;
-  border: 1px solid;
-  border-color: #cccccc;
-  border-radius: 4px;
-  justify-content: space-between;
-  width: 100%;
-`;
+import { Box, Flex } from "rimble-ui";
+import { CopyToClipboard } from "../CopyToClipboard";
+import { baseColors } from "../../themes";
 
 const TruncatableText = styled.input`
-  text-overflow: ellipsis;
-  overflow: hidden;
   border: none;
-  outline: none;
-  width: 100%;
   font-size: 16px;
   line-height: 26px;
-  readonly: true;
-`;
-
-const CopyButtonContainer = styled.div`
-  position: relative;
-  right: 2px;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 `;
 
 export interface CopyableTruncatableTextProps {
@@ -41,11 +22,20 @@ export interface CopyableTruncatableTextProps {
 
 export const CopyableTruncatableText: React.FunctionComponent<CopyableTruncatableTextProps> = (props) => {
   return (
-    <Container>
+    <Flex
+      alignItems="center"
+      bg={baseColors.white}
+      border={1}
+      borderRadius={1}
+      height="48px"
+      p={1}
+      justifyContent="space-between"
+      width="100%"
+    >
       <TruncatableText type="text" value={props.text} readOnly />
-      <CopyButtonContainer>
+      <Box style={{ position: "relative", right: "2px" }}>
         <CopyToClipboard {...props} />
-      </CopyButtonContainer>
-    </Container>
+      </Box>
+    </Flex>
   );
 };
