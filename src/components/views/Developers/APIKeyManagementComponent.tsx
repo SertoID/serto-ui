@@ -1,9 +1,11 @@
 import * as React from "react";
 import useSWR, { mutate } from "swr";
 import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text } from "rimble-ui";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { TH, TR, TBody, baseColors, colors, CopyableTruncatableText } from "../elements";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { CopyableTruncatableText } from "../../elements/components";
+import { TBody, TH, TR } from "../../elements/layouts";
+import { baseColors, colors } from "../../elements/themes";
 
 export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);

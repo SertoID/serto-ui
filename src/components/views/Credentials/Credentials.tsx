@@ -1,10 +1,11 @@
 import * as React from "react";
 import useSWR from "swr";
 import jwtDecode from "jwt-decode";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { Box, Flash, Flex, Loader, Text } from "rimble-ui";
-import { Credential, CredentialViewTypes, baseColors, colors } from "../elements";
+import { Credential, CredentialViewTypes } from "../../elements/components";
+import { baseColors, colors } from "../../elements/themes";
 
 export const Credentials: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);

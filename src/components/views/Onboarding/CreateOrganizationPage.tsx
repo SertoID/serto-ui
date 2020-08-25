@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
-import { routes } from "../../constants";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { routes } from "../../../constants";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { Box, Button, Card, Field, Flex, Heading, Input, Text } from "rimble-ui";
-import { colors } from "../elements";
+import { colors } from "../../elements/themes";
 
 export const CreateOrganizationPage: React.FunctionComponent = (props) => {
   const history = useHistory();
@@ -14,7 +14,7 @@ export const CreateOrganizationPage: React.FunctionComponent = (props) => {
   async function createTenant() {
     try {
       await TrustAgent.createTenant(tenantName, "organization");
-      history.push(routes.TENANT);
+      history.push(routes.HOMEPAGE);
     } catch (err) {
       console.error("failed to create tenant:", err);
       return;

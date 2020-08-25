@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Box, Button, Heading, Input } from "rimble-ui";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { LogOut } from "../auth/LogOut";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { LogOut } from "../Auth/LogOut";
 
 export const AdminPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);

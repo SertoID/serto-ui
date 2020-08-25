@@ -1,7 +1,7 @@
 import * as React from "react";
-import { routes } from "../../constants";
+import { routes } from "../../../constants";
 import { Box, Button, Flex, Heading, Text } from "rimble-ui";
-import { baseColors } from "../elements";
+import { baseColors } from "../../elements/themes";
 
 export const OnboardingPage: React.FunctionComponent = (props) => {
   return (

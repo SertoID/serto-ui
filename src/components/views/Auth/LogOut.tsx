@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
-import { routes } from "../../constants";
+import { routes } from "../../../constants";
 import { Button } from "rimble-ui";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const LogOut: React.FunctionComponent = (props) => {

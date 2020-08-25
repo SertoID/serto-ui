@@ -8,20 +8,17 @@ import { routes } from "./constants";
 import { TrustAgencyContext } from "./context/TrustAgentProvider";
 import { TrustAgencyService } from "./services/TrustAgencyService";
 import { IdentityThemeProvider, fonts } from "./components/elements";
-import { AuthenticatedRoute } from "./components/auth/AuthenticatedRoute";
-import { HomePage } from "./components/HomePage";
-import { AdminPage } from "./components/Admin/AdminPage";
-import { TenantPage } from "./components/Tenant/TenantPage";
-import { FeedsPage } from "./components/Tenant/FeedsPage";
-import { SchemasPage } from "./components/Tenant/SchemasPage";
-import { IssuedCredentialsPage } from "./components/Tenant/IssuedCredentialsPage";
-import { ReceivedCredentialsPage } from "./components/Tenant/ReceivedCredentialsPage";
-import { LoginPage } from "./components/auth/LoginPage";
-import { AccountPage } from "./components/Tenant/Account/AccountPage";
-import { DeveloperPage } from "./components/Tenant/DeveloperPage";
-import { OnboardingPage } from "./components/Tenant/OnboardingPage";
-import { CreateOrganizationPage } from "./components/Tenant/CreateOrganizationPage";
-import { OrganizationManagementPage } from "./components/Tenant/OrganizationManagementPage";
+
+import { AdminPage } from "./components/views/Admin/AdminPage";
+import { LoginPage } from "./components/views/Auth/LoginPage";
+import { AuthenticatedRoute } from "./components/views/Auth/AuthenticatedRoute";
+import { OnboardingPage } from "./components/views/Onboarding/OnboardingPage";
+import { CreateOrganizationPage } from "./components/views/Onboarding/CreateOrganizationPage";
+import { FeedsPage } from "./components/views/Feeds/FeedsPage";
+import { CredentialsPage } from "./components/views/Credentials/CredentialsPage";
+import { SchemasPage } from "./components/views/Schemas/SchemasPage";
+import { SettingsPage } from "./components/views/Settings/SettingsPage";
+import { DeveloperPage } from "./components/views/Developers/DeveloperPage";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -51,18 +48,15 @@ export const App = () => {
               <GlobalStyle />
               <Switch>
                 <Route path={routes.LOGIN} component={LoginPage} />
-                <AuthenticatedRoute exact path={routes.HOMEPAGE} component={HomePage} />
                 <AuthenticatedRoute path={routes.ADMIN} component={AdminPage} />
-                <AuthenticatedRoute exact path={routes.TENANT} component={TenantPage} />
-                <AuthenticatedRoute path={routes.FEEDS} component={FeedsPage} />
-                <AuthenticatedRoute path={routes.SCHEMAS} component={SchemasPage} />
-                <AuthenticatedRoute path={routes.ISSUED_CREDENTIAL} component={IssuedCredentialsPage} />
-                <AuthenticatedRoute path={routes.RECEIVED_CREDENTIAL} component={ReceivedCredentialsPage} />
-                <AuthenticatedRoute path={routes.DEVELOPER} component={DeveloperPage} />
-                <AuthenticatedRoute path={routes.ORGANIZATION_MANAGEMENT} component={OrganizationManagementPage} />
-                <AuthenticatedRoute path={routes.ACCOUNT} component={AccountPage} />
                 <AuthenticatedRoute path={routes.ONBOARDING} component={OnboardingPage} />
                 <AuthenticatedRoute path={routes.CREATE_ORGANIZATION} component={CreateOrganizationPage} />
+                <AuthenticatedRoute exact path={routes.HOMEPAGE} component={FeedsPage} />
+                <AuthenticatedRoute path={routes.FEEDS} component={FeedsPage} />
+                <AuthenticatedRoute path={routes.CREDENTIALS} component={CredentialsPage} />
+                <AuthenticatedRoute path={routes.SCHEMAS} component={SchemasPage} />
+                <AuthenticatedRoute path={routes.SETTINGS} component={SettingsPage} />
+                <AuthenticatedRoute path={routes.DEVELOPER} component={DeveloperPage} />
               </Switch>
             </IdentityThemeProvider>
           </React.Suspense>

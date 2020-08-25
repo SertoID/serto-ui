@@ -1,14 +1,12 @@
 import * as React from "react";
 import { Box, Button, Flash, Flex, Loader, Card, Modal, Table, Text } from "rimble-ui";
 import useSWR from "swr";
-import { routes } from "../../constants";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { baseColors, colors, GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../elements";
-import { CreateSchema } from "../elements/components/Schemas/CreateSchema";
-import { SchemaDataResponse } from "../elements/components/Schemas/types";
-import { Toggle } from "../elements/components/Toggle";
-import { SchemaDetail } from "../elements/components/Schemas/SchemaDetail";
+import { routes } from "../../../constants";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { CreateSchema, SchemaDataResponse, SchemaDetail, Toggle } from "../../elements/components";
+import { GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../../elements/layouts";
+import { baseColors, colors } from "../../elements/themes";
 
 export const SchemasPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -23,7 +21,7 @@ export const SchemasPage: React.FunctionComponent = (props) => {
   return (
     <GlobalLayout url={routes.SCHEMAS}>
       <HeaderBox>
-        <Header heading="Credential Schemas">
+        <Header heading="Schemas">
           <Flex>
             <Toggle
               options={modes}

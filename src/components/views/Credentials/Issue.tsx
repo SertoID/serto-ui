@@ -1,13 +1,12 @@
 import * as React from "react";
 import useSWR, { mutate } from "swr";
-import { routes } from "../../constants";
 import { Box, Button, Modal, Card, Tooltip, Loader } from "rimble-ui";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { IssueVc } from "./IssueVc";
-import { GlobalLayout, HeaderBox, Header, baseColors } from "../elements";
+import { baseColors } from "../../elements/themes";
 
-export const TenantPage: React.FunctionComponent = (props) => {
+export const Issue: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
 
   const [error, setError] = React.useState<string | undefined>();
@@ -35,11 +34,7 @@ export const TenantPage: React.FunctionComponent = (props) => {
   }
 
   return (
-    <GlobalLayout url={routes.TENANT}>
-      <HeaderBox>
-        <Header heading="Tenant" />
-      </HeaderBox>
-
+    <>
       <Box bg={baseColors.white} borderRadius={1} p={3}>
         <Box width="100%" mb={2}>
           <Button onClick={createIdentifier} disabled={identifiersLoading && !hasIdentifier}>
@@ -81,6 +76,6 @@ export const TenantPage: React.FunctionComponent = (props) => {
           </Box>
         </Card>
       </Modal>
-    </GlobalLayout>
+    </>
   );
 };

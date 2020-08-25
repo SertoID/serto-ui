@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { mutate } from "swr";
 import { Check } from "@rimble/icons";
 import { Text, Heading, Flex, Card, Box, Input, Field, Button, Checkbox, Flash } from "rimble-ui";
-import { Credential, CredentialViewTypes, colors } from "../elements";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
+import { Credential, CredentialViewTypes } from "../../elements/components";
+import { colors } from "../../elements/themes";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 
 // @TODO/tobek Dumb hardcoded stuff for now
 interface Schema {

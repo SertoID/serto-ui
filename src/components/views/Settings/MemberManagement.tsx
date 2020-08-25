@@ -1,12 +1,14 @@
 import * as React from "react";
 import useSWR, { mutate } from "swr";
 import { Box, Button, Card, Flash, Flex, Heading, Loader, Modal, Table, Text } from "rimble-ui";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { TH, TR, TBody, baseColors, colors, CopyableTruncatableText } from "../elements";
-import { config } from "../../config";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { CopyableTruncatableText } from "../../elements/components";
+import { TBody, TH, TR } from "../../elements/layouts";
+import { baseColors, colors } from "../../elements/themes";
+import { config } from "../../../config";
 
-export const MemberManagementComponent: React.FunctionComponent = (props) => {
+export const MemberManagement: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const activeTenantID = TrustAgent.getAuth()?.tenantid;
   const [createError, setGetInviteCodeError] = React.useState("");

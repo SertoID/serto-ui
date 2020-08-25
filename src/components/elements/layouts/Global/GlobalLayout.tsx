@@ -3,8 +3,9 @@ import useSWR from "swr";
 import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../../services/TrustAgencyService";
 import { Box, Flex } from "rimble-ui";
-import { LogOut } from "../../../auth/LogOut";
-import { Nav, SwitchTenant } from "../../";
+import { LogOut } from "../../../views/Auth/LogOut";
+import { Nav } from "./Nav";
+import { SwitchTenant } from "./SwitchTenant";
 
 export interface GlobalLayoutProps {
   activeTenantID?: string;

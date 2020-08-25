@@ -1,8 +1,8 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { routes } from "../../constants";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
+import { routes } from "../../../constants";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
 
 export const AuthenticatedRoute = ({ ...otherProps }) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);

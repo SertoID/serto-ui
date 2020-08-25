@@ -1,7 +1,7 @@
 import * as React from "react";
 import { freeAccount } from "../../../constants";
 import { Box, Button, Flex, Heading, Text } from "rimble-ui";
-import { colors } from "../../elements";
+import { colors } from "../../elements/themes";
 
 export interface RowProps {
   amount: string;
@@ -23,7 +23,7 @@ export const Row: React.FunctionComponent<RowProps> = (props) => {
 
 export const AccountPlan: React.FunctionComponent = (props) => {
   return (
-    <>
+    <Box p={3}>
       <Flex border={1} borderColor={colors.success.base} borderRadius={2} mb={5} padding={4}>
         <Box mr={4} width="150px">
           <Heading as="h4" color={colors.success.base} mb={3} mt={0}>
@@ -64,6 +64,6 @@ export const AccountPlan: React.FunctionComponent = (props) => {
           </Button>
         </Box>
       </Flex>
-    </>
+    </Box>
   );
 };

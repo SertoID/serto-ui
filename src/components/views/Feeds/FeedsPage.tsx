@@ -1,11 +1,12 @@
 import * as React from "react";
 import useSWR, { mutate } from "swr";
 import slugify from "@sindresorhus/slugify";
-import { routes } from "../../constants";
+import { routes } from "../../../constants";
 import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text, Checkbox } from "rimble-ui";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { GlobalLayout, HeaderBox, Header, TH, TR, TBody, baseColors, colors } from "../elements";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../../elements/layouts";
+import { baseColors, colors } from "../../elements/themes";
 
 export const FeedsPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -54,7 +55,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
       {data && data.length > 0 ? (
         <>
           <HeaderBox>
-            <Header heading="Credential Feeds">
+            <Header heading="Feeds">
               <Button.Outline onClick={() => setIsCreateModalOpen(true)} size="small">
                 Create Feed
               </Button.Outline>

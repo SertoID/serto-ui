@@ -2,10 +2,10 @@ import * as React from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { Box, Button, Card, Flash, Heading, Text } from "rimble-ui";
 import { useAuth0 } from "@auth0/auth0-react";
-import { TrustAgencyContext } from "../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../services/TrustAgencyService";
-import { routes } from "../../constants";
-import { colors } from "../elements";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { routes } from "../../../constants";
+import { colors } from "../../elements/themes";
 
 export const LoginPage = () => {
   const { loginWithPopup, getIdTokenClaims } = useAuth0();
@@ -20,7 +20,7 @@ export const LoginPage = () => {
       const token = await getIdTokenClaims();
       console.log({ token });
       await TrustAgent.login(token.__raw);
-      history.push(routes.TENANT);
+      history.push(routes.HOMEPAGE);
     } catch (err) {
       console.error("error logging in:", err);
       setError("Login failed: " + err.message);
@@ -41,7 +41,7 @@ export const LoginPage = () => {
   }
 
   if (TrustAgent.isAuthenticated()) {
-    return <Redirect to={routes.TENANT} />;
+    return <Redirect to={routes.HOMEPAGE} />;
   }
 
   return (

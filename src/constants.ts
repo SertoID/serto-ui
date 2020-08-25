@@ -2,16 +2,13 @@ export enum routes {
   HOMEPAGE = "/",
   ADMIN = "/admin",
   LOGIN = "/login",
-  TENANT = "/tenant",
-  FEEDS = "/tenant/feeds",
-  SCHEMAS = "/tenant/schemas",
-  ISSUED_CREDENTIAL = "/tenant/issued-credentials",
-  RECEIVED_CREDENTIAL = "/tenant/received-credentials",
-  DEVELOPER = "/tenant/developer/:tabName?",
-  ACCOUNT = "/tenant/account",
   ONBOARDING = "/onboarding",
   CREATE_ORGANIZATION = "/create-organization",
-  ORGANIZATION_MANAGEMENT = "/tenant/management/:tabName?",
+  FEEDS = "/feeds",
+  CREDENTIALS = "/credentials/:tabName?",
+  SCHEMAS = "/schemas",
+  SETTINGS = "/settings/:tabName?",
+  DEVELOPER = "/developer/:tabName?",
 }
 
 export enum freeAccount {
