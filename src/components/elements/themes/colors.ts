@@ -78,7 +78,7 @@ export const colors = {
   },
   danger: {
     base: baseColors.danger,
-    text: readableColor(baseColors.danger),
+    text: baseColors.white,
     light: [null, tint(0.9, baseColors.danger)],
     dark: [null, shade(0.4, baseColors.danger)],
   },
