@@ -148,6 +148,12 @@ export class TrustAgencyService {
     });
   }
 
+  public async acceptInvite(jwt: string): Promise<any> {
+    return this.request("/v1/tenant/acceptInvite", "POST", {
+      invite: jwt,
+    });
+  }
+
   public async deleteApiKey(data: { keyName: string }): Promise<any> {
     return this.request("/v1/tenant/apiKeys", "DELETE", {
       tenantId: this.getAuth()?.tenantid,

@@ -2,6 +2,7 @@ export enum routes {
   HOMEPAGE = "/",
   ADMIN = "/admin",
   LOGIN = "/login",
+  ACCEPT_INVITE = "/acceptInvite/:jwt",
   ONBOARDING = "/onboarding",
   CREATE_ORGANIZATION = "/create-organization",
   FEEDS = "/feeds",

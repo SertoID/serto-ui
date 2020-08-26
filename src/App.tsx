@@ -12,6 +12,7 @@ import { IdentityThemeProvider, fonts } from "./components/elements";
 import { AdminPage } from "./components/views/Admin/AdminPage";
 import { LoginPage } from "./components/views/Auth/LoginPage";
 import { AuthenticatedRoute } from "./components/views/Auth/AuthenticatedRoute";
+import { AcceptInvitePage } from "./components/views/Auth/AcceptInvitePage";
 import { OnboardingPage } from "./components/views/Onboarding/OnboardingPage";
 import { CreateOrganizationPage } from "./components/views/Onboarding/CreateOrganizationPage";
 import { FeedsPage } from "./components/views/Feeds/FeedsPage";
@@ -48,6 +49,7 @@ export const App = () => {
               <GlobalStyle />
               <Switch>
                 <Route path={routes.LOGIN} component={LoginPage} />
+                <Route path={routes.ACCEPT_INVITE} component={AcceptInvitePage} />
                 <AuthenticatedRoute path={routes.ADMIN} component={AdminPage} />
                 <AuthenticatedRoute path={routes.ONBOARDING} component={OnboardingPage} />
                 <AuthenticatedRoute path={routes.CREATE_ORGANIZATION} component={CreateOrganizationPage} />
