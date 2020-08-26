@@ -21,6 +21,17 @@ export const FeedsPage: React.FunctionComponent = (props) => {
 
   const feedSlug = React.useMemo(() => slugify(feedName), [feedName]);
 
+  function clearCreateFields() {
+    setFeedName("");
+    setFeedDescription("");
+    setIsPublic(false);
+  }
+
+  function closeModal() {
+    setIsCreateModalOpen(false);
+    clearCreateFields();
+  }
+
   const createFeed = async () => {
     if (!feedName || !feedDescription) {
       setCreateError("Please supply a name and description.");
@@ -37,11 +48,8 @@ export const FeedsPage: React.FunctionComponent = (props) => {
         description: feedDescription,
         public: isPublic,
       });
-      setFeedName("");
-      setFeedDescription("");
-      setIsPublic(false);
       await mutate("/v1/feeds");
-      setIsCreateModalOpen(false);
+      closeModal();
     } catch (err) {
       console.error("failed to create feed:", err);
       setCreateError("Error: " + err.message);
@@ -129,16 +137,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
 
       <Modal isOpen={isCreateModalOpen}>
         <Card p={0}>
-          <Button.Text
-            icononly
-            icon="Close"
-            position="absolute"
-            top={0}
-            right={0}
-            mt={3}
-            mr={3}
-            onClick={() => setIsCreateModalOpen(false)}
-          />
+          <Button.Text icononly icon="Close" position="absolute" top={0} right={0} mt={3} mr={3} onClick={closeModal} />
 
           <Box p={4}>
             <Heading.h4>Create Feed</Heading.h4>
@@ -172,7 +171,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
             )}
           </Box>
           <Flex px={4} py={3} justifyContent="flex-end">
-            <Button.Outline onClick={() => setIsCreateModalOpen(false)}>Cancel</Button.Outline>
+            <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
             <Button ml={3} onClick={createFeed} disabled={createLoading}>
               {createLoading || isValidating ? <Loader color="white" /> : "Create Feed"}
             </Button>
