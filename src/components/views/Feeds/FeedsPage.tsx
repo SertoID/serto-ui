@@ -106,7 +106,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
       ) : getFeedsError ? (
         <Box bg={baseColors.white} borderRadius={1} py={3}>
           <Flash my={3} variant="danger">
-            Error loading feeds: {JSON.stringify(getFeedsError)}
+            Error loading feeds: {getFeedsError.toString()}
           </Flash>
         </Box>
       ) : (
