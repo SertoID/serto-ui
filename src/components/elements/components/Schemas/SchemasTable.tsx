@@ -1,9 +1,9 @@
 import * as React from "react";
 import { generatePath, Link } from "react-router-dom";
-import { Box, Button, Card, Flash, Flex, Loader, Modal, Table, Text } from "rimble-ui";
+import { Button, Card, Flash, Flex, Loader, Modal, Table, Text } from "rimble-ui";
 import useSWR from "swr";
 import { SchemaDataResponse } from "..";
-import { baseColors, colors } from "../../";
+import { colors } from "../../";
 import { routes } from "../../../../constants";
 import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../../services/TrustAgencyService";
@@ -12,11 +12,13 @@ import { SchemaDetail } from "./SchemaDetail";
 
 export interface SchemasTableProps {
   discover?: boolean;
+  selectable?: boolean;
   noSchemasElement?: JSX.Element;
+  onSchemaSelect?(schema: SchemaDataResponse): void;
 }
 
 export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) => {
-  const [selectedSchema, setSelectedSchema] = React.useState<SchemaDataResponse | undefined>();
+  const [viewedSchema, setViewedSchema] = React.useState<SchemaDataResponse | undefined>();
 
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const { data, error, isValidating } = useSWR(["/v1/schemas", props.discover], () =>
@@ -36,6 +38,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
               <TH>Discoverable</TH>
               <TH>Created</TH>
               <TH></TH>
+              {props.selectable && <TH></TH>}
             </TR>
           </thead>
           <TBody>
@@ -55,19 +58,26 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
                     )}
                   </td>
                   <td>
-                    <Button.Outline size="small" onClick={() => setSelectedSchema(schema)}>
+                    <Button.Outline size="small" onClick={() => setViewedSchema(schema)}>
                       View
                     </Button.Outline>
                   </td>
+                  {props.selectable && props.onSchemaSelect && (
+                    <td>
+                      <Button.Outline size="small" onClick={() => props.onSchemaSelect?.(schema)}>
+                        Select
+                      </Button.Outline>
+                    </td>
+                  )}
                 </TR>
               );
             })}
           </TBody>
         </Table>
-        <Modal isOpen={!!selectedSchema}>
+        <Modal isOpen={!!viewedSchema}>
           <Card p={4}>
-            {selectedSchema && <SchemaDetail schema={selectedSchema} />}
-            <Button width="100%" onClick={() => setSelectedSchema(undefined)}>
+            {viewedSchema && <SchemaDetail schema={viewedSchema} />}
+            <Button width="100%" onClick={() => setViewedSchema(undefined)}>
               Close
             </Button>
           </Card>
@@ -89,15 +99,11 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
   } else {
     return (
       props.noSchemasElement || (
-        <Flex alignItems="center" justifyContent="center" minHeight={8}>
-          <Box bg={baseColors.white} borderRadius={1} py={3} maxWidth={9}>
-            <Text.span display="block" fontSize={1} lineHeight="copy" textAlign="center">
-              <b style={{ display: "block", fontWeight: 600 }}>There are no credential schemas yet.</b>
-              Please navigate to the <Link to={generatePath(routes.SCHEMAS)}>Schemas page</Link> in order to create a
-              credential schema to coordinate around verified data with your customers and partners.
-            </Text.span>
-          </Box>
-        </Flex>
+        <Text.p display="block" fontSize={1} py={2} lineHeight="copy">
+          <b style={{ display: "block", fontWeight: 600 }}>There are no credential schemas yet.</b>
+          Please navigate to the <Link to={generatePath(routes.SCHEMAS)}>Schemas page</Link> in order to create a
+          credential schema to coordinate around verified data with your customers and partners.
+        </Text.p>
       )
     );
   }
