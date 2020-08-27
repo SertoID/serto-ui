@@ -3,7 +3,7 @@ import slugify from "@sindresorhus/slugify";
 import * as React from "react";
 import { Flex, Box, Button, Checkbox, Field, Form, Input, Heading, Text, Tooltip } from "rimble-ui";
 import styled from "styled-components";
-import { baseColors, colors, fonts } from "../../../";
+import { baseColors, colors, fonts } from "../../../themes/";
 import { WorkingSchema } from "../types";
 
 const SchemaField = styled(Field)`

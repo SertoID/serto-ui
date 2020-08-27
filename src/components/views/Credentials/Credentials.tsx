@@ -58,7 +58,7 @@ export const Credentials: React.FunctionComponent = (props) => {
     return (
       <Box bg={baseColors.white} borderRadius={1} py={3}>
         <Flash my={3} variant="danger">
-          Error loading credentials: {JSON.stringify(getCredentialsError)}
+          Error loading credentials: {getCredentialsError.toString()}
         </Flash>
       </Box>
     );

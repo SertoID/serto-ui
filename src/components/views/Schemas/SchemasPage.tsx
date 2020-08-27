@@ -83,7 +83,7 @@ export const SchemasPage: React.FunctionComponent = (props) => {
           </Flex>
         ) : getSchemasError ? (
           <Flash my={3} variant="danger">
-            Error loading schemas: {JSON.stringify(getSchemasError)}
+            Error loading schemas: {getSchemasError.toString()}
           </Flash>
         ) : (
           <Flex alignItems="center" justifyContent="center" minHeight={8}>

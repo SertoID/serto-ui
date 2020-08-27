@@ -126,7 +126,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
       ) : getMembersError ? (
         <Box bg={baseColors.white} borderRadius={1} py={3}>
           <Flash my={3} variant="danger">
-            Error loading organization members: {JSON.stringify(getMembersError)}
+            Error loading organization members: {getMembersError.toString()}
           </Flash>
         </Box>
       ) : (
