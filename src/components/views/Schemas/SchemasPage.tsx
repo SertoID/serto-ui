@@ -1,14 +1,11 @@
 import * as React from "react";
-import { useParams, useHistory, generatePath } from "react-router-dom";
-import { Box, Button, Flash, Flex, Loader, Card, Modal, Table, Text } from "rimble-ui";
-import useSWR from "swr";
+import { generatePath, useHistory, useParams } from "react-router-dom";
+import { Box, Button, Flex, Modal, Text } from "rimble-ui";
 import { routes } from "../../../constants";
-import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { CreateSchema, SchemaDataResponse, SchemasTable, Toggle } from "../../elements/components";
-import { GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../../elements/layouts";
-import { baseColors, colors } from "../../elements/themes";
+import { CreateSchema, SchemasTable } from "../../elements/components";
+import { GlobalLayout, Header, HeaderBox } from "../../elements/layouts";
 import { Tabs } from "../../elements/layouts/Tabs/Tabs";
+import { baseColors } from "../../elements/themes";
 
 export const SchemasPage: React.FunctionComponent = (props) => {
   const { tabName } = useParams();
@@ -17,19 +14,14 @@ export const SchemasPage: React.FunctionComponent = (props) => {
     history.push(generatePath(routes.SCHEMAS));
   }
 
-  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-  const getGlobal = tabName === "discover";
-  const { data, error: getSchemasError, isValidating } = useSWR(["/v1/schemas", getGlobal], () =>
-    TrustAgent.getSchemas(getGlobal),
-  );
 
   const noSchemas = (
     <Flex alignItems="center" justifyContent="center" minHeight={8}>
       <Box bg={baseColors.white} borderRadius={1} py={3} maxWidth={9}>
         <Text.span display="block" fontSize={1} lineHeight="copy" textAlign="center">
           <b style={{ display: "block", fontWeight: 600 }}>
-            {getGlobal
+            {tabName === "discover"
               ? "There are no publicly discoverable credential schemas yet."
               : "You do not have any credential schemas."}
           </b>
@@ -61,26 +53,12 @@ export const SchemasPage: React.FunctionComponent = (props) => {
             {
               tabName: "created",
               title: "Created",
-              content: (
-                <SchemasTable
-                  schemas={data}
-                  loading={isValidating}
-                  error={getSchemasError}
-                  noSchemasElement={noSchemas}
-                />
-              ),
+              content: <SchemasTable discover={false} noSchemasElement={noSchemas} />,
             },
             {
               tabName: "discover",
               title: "Discover",
-              content: (
-                <SchemasTable
-                  schemas={data}
-                  loading={isValidating}
-                  error={getSchemasError}
-                  noSchemasElement={noSchemas}
-                />
-              ),
+              content: <SchemasTable discover={true} noSchemasElement={noSchemas} />,
             },
           ]}
           onTabClicked={(tabName) => {

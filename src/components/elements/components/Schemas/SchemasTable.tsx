@@ -1,23 +1,29 @@
 import * as React from "react";
 import { generatePath, Link } from "react-router-dom";
 import { Box, Button, Card, Flash, Flex, Loader, Modal, Table, Text } from "rimble-ui";
+import useSWR from "swr";
 import { SchemaDataResponse } from "..";
 import { baseColors, colors } from "../../";
 import { routes } from "../../../../constants";
+import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../../services/TrustAgencyService";
 import { TBody, TH, TR } from "../../layouts/LayoutComponents";
 import { SchemaDetail } from "./SchemaDetail";
 
 export interface SchemasTableProps {
-  schemas?: SchemaDataResponse[];
-  loading?: boolean;
-  error?: any;
+  discover?: boolean;
   noSchemasElement?: JSX.Element;
 }
 
 export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) => {
   const [selectedSchema, setSelectedSchema] = React.useState<SchemaDataResponse | undefined>();
 
-  if (props.schemas?.length) {
+  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
+  const { data, error, isValidating } = useSWR(["/v1/schemas", props.discover], () =>
+    TrustAgent.getSchemas(props.discover),
+  );
+
+  if (data?.length) {
     return (
       <>
         <Table border={0} boxShadow={0} width="100%">
@@ -33,7 +39,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
             </TR>
           </thead>
           <TBody>
-            {props.schemas.map((schema, i) => {
+            {data.map((schema, i) => {
               return (
                 <TR key={i}>
                   <td style={{ maxWidth: 32 }}>{schema.icon}</td>
@@ -68,13 +74,13 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
         </Modal>
       </>
     );
-  } else if (props.error) {
+  } else if (error) {
     return (
       <Flash my={3} variant="danger">
-        Error loading schemas: {props.error.toString()}
+        Error loading schemas: {error.toString()}
       </Flash>
     );
-  } else if (props.loading) {
+  } else if (isValidating) {
     return (
       <Flex minHeight={8} alignItems="center" justifyContent="center">
         <Loader color={colors.primary.base} size={4} />
