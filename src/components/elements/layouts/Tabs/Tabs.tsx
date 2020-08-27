@@ -25,14 +25,14 @@ const TabTitle = styled.li<TabTitleProps>`
 `;
 
 export interface TabsProps {
-  activeTabName: String;
+  activeTabName: string;
   tabs: Tab[];
-  onTabClicked(tabName: String): void;
+  onTabClicked(tabName: string): void;
 }
 
 export interface Tab {
-  tabName: String;
-  title: String;
+  tabName: string;
+  title: string;
   content: JSX.Element;
 }
 

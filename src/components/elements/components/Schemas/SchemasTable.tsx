@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 import { Box, Button, Card, Flash, Flex, Loader, Modal, Table, Text } from "rimble-ui";
 import { SchemaDataResponse } from "..";
 import { baseColors, colors } from "../../";
@@ -87,8 +87,8 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
           <Box bg={baseColors.white} borderRadius={1} py={3} maxWidth={9}>
             <Text.span display="block" fontSize={1} lineHeight="copy" textAlign="center">
               <b style={{ display: "block", fontWeight: 600 }}>There are no credential schemas yet.</b>
-              Please navigate to the <Link to={routes.SCHEMAS}>Schemas page</Link> in order to create a credential
-              schema to coordinate around verified data with your customers and partners.
+              Please navigate to the <Link to={generatePath(routes.SCHEMAS)}>Schemas page</Link> in order to create a
+              credential schema to coordinate around verified data with your customers and partners.
             </Text.span>
           </Box>
         </Flex>
