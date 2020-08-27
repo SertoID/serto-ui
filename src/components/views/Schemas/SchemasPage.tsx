@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useParams, useHistory, generatePath } from "react-router-dom";
 import { Box, Button, Flash, Flex, Loader, Card, Modal, Table, Text } from "rimble-ui";
 import useSWR from "swr";
 import { routes } from "../../../constants";
@@ -7,12 +8,18 @@ import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { CreateSchema, SchemaDataResponse, SchemasTable, Toggle } from "../../elements/components";
 import { GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../../elements/layouts";
 import { baseColors, colors } from "../../elements/themes";
+import { Tabs } from "../../elements/layouts/Tabs/Tabs";
 
 export const SchemasPage: React.FunctionComponent = (props) => {
+  const { tabName } = useParams();
+  const history = useHistory();
+  if (tabName && tabName !== "created" && tabName !== "discover") {
+    history.push(generatePath(routes.SCHEMAS));
+  }
+
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-  const modes: [string, string] = ["Your Schemas", "Global Schemas"];
-  const [getGlobal, setGetGlobal] = React.useState(false);
+  const getGlobal = tabName === "discover";
   const { data, error: getSchemasError, isValidating } = useSWR(["/v1/schemas", getGlobal], () =>
     TrustAgent.getSchemas(getGlobal),
   );
@@ -41,23 +48,45 @@ export const SchemasPage: React.FunctionComponent = (props) => {
     <GlobalLayout url={routes.SCHEMAS}>
       <HeaderBox>
         <Header heading="Schemas">
-          <Flex>
-            <Toggle
-              options={modes}
-              onChange={(mode) => {
-                setGetGlobal(mode === modes[1]);
-              }}
-              style={{ marginRight: 16 }}
-            />
-            <Button.Outline onClick={() => setIsCreateModalOpen(true)} size="small" minWidth="150px">
-              Create Schema
-            </Button.Outline>
-          </Flex>
+          <Button.Outline onClick={() => setIsCreateModalOpen(true)} size="small" minWidth="150px">
+            Create Schema
+          </Button.Outline>
         </Header>
       </HeaderBox>
 
-      <Box bg={baseColors.white} borderRadius={1} py={3}>
-        <SchemasTable schemas={data} loading={isValidating} error={getSchemasError} noSchemasElement={noSchemas} />
+      <Box bg={baseColors.white} borderRadius={1} pt={2} pb={3}>
+        <Tabs
+          activeTabName={tabName || "created"}
+          tabs={[
+            {
+              tabName: "created",
+              title: "Created",
+              content: (
+                <SchemasTable
+                  schemas={data}
+                  loading={isValidating}
+                  error={getSchemasError}
+                  noSchemasElement={noSchemas}
+                />
+              ),
+            },
+            {
+              tabName: "discover",
+              title: "Discover",
+              content: (
+                <SchemasTable
+                  schemas={data}
+                  loading={isValidating}
+                  error={getSchemasError}
+                  noSchemasElement={noSchemas}
+                />
+              ),
+            },
+          ]}
+          onTabClicked={(tabName) => {
+            history.push(generatePath(routes.SCHEMAS, { tabName }));
+          }}
+        />
       </Box>
 
       <Modal isOpen={isCreateModalOpen}>

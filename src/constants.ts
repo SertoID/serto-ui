@@ -7,7 +7,7 @@ export enum routes {
   CREATE_ORGANIZATION = "/create-organization",
   FEEDS = "/feeds",
   CREDENTIALS = "/credentials/:tabName?",
-  SCHEMAS = "/schemas",
+  SCHEMAS = "/schemas/:tabName?",
   SETTINGS = "/settings/:tabName?",
   DEVELOPER = "/developer/:tabName?",
 }
