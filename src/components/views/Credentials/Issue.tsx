@@ -71,7 +71,7 @@ export const Issue: React.FunctionComponent = (props) => {
             mr={3}
             onClick={() => setIsIssueModalOpen(false)}
           />
-          <Box p={4} width="480px" maxWidth="95%" maxHeight="95vh" style={{ overflowY: "auto" }}>
+          <Box p={4} width={11} maxWidth="95%" maxHeight="95vh" style={{ overflowY: "auto" }}>
             <IssueVc defaultIssuer={identifiers?.[0]?.did} onComplete={() => setIsIssueModalOpen(false)} />
           </Box>
         </Card>

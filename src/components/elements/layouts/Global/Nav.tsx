@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, generatePath } from "react-router-dom";
 import { routes } from "../../../../constants";
 import { Box, Flex, Text } from "rimble-ui";
 import { Code, Home, SelectAll, Send, Settings } from "@rimble/icons";
@@ -62,11 +62,11 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
   const { url } = props;
   return (
     <>
-      <NavItem url={routes.FEEDS} text="Feeds" icon={Home} currentUrl={url} />
-      <NavItem url={routes.CREDENTIALS} text="Credentials" icon={Send} currentUrl={url} />
-      <NavItem url={routes.SCHEMAS} text="Schemas" icon={SelectAll} currentUrl={url} />
-      <NavItem url={routes.SETTINGS} text="Settings" icon={Settings} currentUrl={url} />
-      <NavItem url={routes.DEVELOPER} text="Developer" icon={Code} currentUrl={url} />
+      <NavItem url={generatePath(routes.FEEDS)} text="Feeds" icon={Home} currentUrl={url} />
+      <NavItem url={generatePath(routes.CREDENTIALS)} text="Credentials" icon={Send} currentUrl={url} />
+      <NavItem url={generatePath(routes.SCHEMAS)} text="Schemas" icon={SelectAll} currentUrl={url} />
+      <NavItem url={generatePath(routes.SETTINGS)} text="Settings" icon={Settings} currentUrl={url} />
+      <NavItem url={generatePath(routes.DEVELOPER)} text="Developer" icon={Code} currentUrl={url} />
     </>
   );
 };

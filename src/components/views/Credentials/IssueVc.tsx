@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
-import styled from "styled-components";
-import { mutate } from "swr";
 import { Check } from "@rimble/icons";
-import { Text, Heading, Flex, Card, Box, Input, Field, Button, Checkbox, Flash } from "rimble-ui";
-import { Credential, CredentialViewTypes } from "../../elements/components";
-import { colors } from "../../elements/themes";
-import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import React, { useContext, useState } from "react";
+import { Box, Button, Checkbox, Field, Flash, Heading, Input, Text } from "rimble-ui";
+import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { Credential, CredentialViewTypes } from "../../elements/components";
+import { SchemasTable } from "../../elements/components/Schemas/SchemasTable";
+import { colors } from "../../elements/themes";
 
 // @TODO/tobek Dumb hardcoded stuff for now
 interface Schema {
@@ -24,43 +24,7 @@ const SCHEMAS: { [key: string]: Schema } = {
     name: "News Article",
     fields: ["Subject ID", "Article Title", "Description", "URL", "Author", "Keywords", "Image URL"],
   },
-  CONTENT_RATING: {
-    icon: "✨",
-    name: "Content Rating",
-    fields: ["Article UUID", "Content Score"],
-  },
-  KYC: {
-    icon: "📇",
-    name: "KYC Check",
-  },
-  DIPLOMA: {
-    icon: "🎓",
-    name: "Diploma",
-  },
-  AGE: {
-    icon: "🎂",
-    name: "Age Verification",
-  },
 };
-
-const SchemaChoiceCard = styled(Card)``;
-const SchemaChoiceBox = styled(Box)`
-  &:hover ${SchemaChoiceCard} {
-    border-color: #5952ff;
-  }
-  cursor: pointer;
-`;
-
-const SchemaChoice: React.FunctionComponent<{ schema: Schema; onClick?(): void }> = (props) => (
-  <SchemaChoiceBox width="32%" mb={4} onClick={props.onClick}>
-    <SchemaChoiceCard p={4} m="auto" width="120px" height="120px" textAlign="center">
-      <Text p={2} width="72px" bg={colors.nearWhite} style={{ borderRadius: "50%" }} fontSize={5}>
-        {props.schema.icon}
-      </Text>
-    </SchemaChoiceCard>
-    <Text>{props.schema.name}</Text>
-  </SchemaChoiceBox>
-);
 
 export interface IssueVcProps {
   defaultIssuer: string;
@@ -178,12 +142,20 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
     return (
       <>
         <Heading as="h3">Issue Credential</Heading>
-        <Text>Choose Schema</Text>
-        <Flex width="380px" my={2} style={{ flexWrap: "wrap", justifyContent: "space-between" }}>
-          {Object.keys(SCHEMAS).map((key) => (
-            <SchemaChoice key={key} schema={SCHEMAS[key]} onClick={() => setSchema(SCHEMAS[key])} />
-          ))}
-        </Flex>
+        <Text>
+          Please select a credential schema, or{" "}
+          <Button.Text p={0} onClick={() => setSchema(SCHEMAS.GENERIC)}>
+            enter credential as JSON
+          </Button.Text>
+          .
+        </Text>
+        <SchemasTable
+          selectable={true}
+          onSchemaSelect={
+            (schema) =>
+              setSchema(SCHEMAS.NEWS_ARTICLE) /* @TODO/tobek When VC issuer supports arbitrary schemas, change this. */
+          }
+        />
       </>
     );
   }

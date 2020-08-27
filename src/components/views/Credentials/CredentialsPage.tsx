@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, generatePath } from "react-router-dom";
 import { routes } from "../../../constants";
 import { GlobalLayout, Header, HeaderBox } from "../../elements/layouts";
 import { Tabs } from "../../elements/layouts";
@@ -11,7 +11,7 @@ export const CredentialsPage: React.FunctionComponent = (props) => {
   const { tabName } = useParams();
   const history = useHistory();
   if (tabName && tabName !== "issue" && tabName !== "issued" && tabName !== "received") {
-    history.push(`/credentials`);
+    history.push(generatePath(routes.CREDENTIALS));
   }
 
   return (
@@ -39,7 +39,7 @@ export const CredentialsPage: React.FunctionComponent = (props) => {
           },
         ]}
         onTabClicked={(tabName) => {
-          history.push(`/credentials/${tabName}`);
+          history.push(generatePath(routes.CREDENTIALS, { tabName }));
         }}
       />
     </GlobalLayout>

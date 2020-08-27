@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, generatePath } from "react-router-dom";
 import { routes } from "../../../constants";
 import { GlobalLayout, Header, HeaderBox } from "../../elements/layouts";
 import { Tabs } from "../../elements/layouts";
@@ -10,7 +10,7 @@ export const DeveloperPage: React.FunctionComponent = (props) => {
   const { tabName } = useParams();
   const history = useHistory();
   if (tabName && tabName !== "api-keys" && tabName !== "docs") {
-    history.push(`/developer`);
+    history.push(generatePath(routes.DEVELOPER));
   }
 
   return (
@@ -33,7 +33,7 @@ export const DeveloperPage: React.FunctionComponent = (props) => {
           },
         ]}
         onTabClicked={(tabName) => {
-          history.push(`/developer/${tabName}`);
+          history.push(generatePath(routes.DEVELOPER, { tabName }));
         }}
       />
     </GlobalLayout>
