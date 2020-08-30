@@ -7,6 +7,7 @@ import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { Credential, CredentialViewTypes } from "../../elements/components";
 import { SchemasTable } from "../../elements/components/Schemas/SchemasTable";
 import { colors } from "../../elements/themes";
+import { Tabs } from "../../elements/layouts/Tabs/Tabs";
 
 // @TODO/tobek Dumb hardcoded stuff for now
 interface Schema {
@@ -57,6 +58,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
   const [success, setSuccess] = useState<boolean>(false);
   const [schema, setSchema] = useState<Schema | undefined>();
+  const [schemaTab, setSchemaTab] = useState("created");
 
   async function issueVc() {
     if (schema !== SCHEMAS.GENERIC) {
@@ -149,12 +151,41 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           </Button.Text>
           .
         </Text>
-        <SchemasTable
-          selectable={true}
-          onSchemaSelect={
-            (schema) =>
-              setSchema(SCHEMAS.NEWS_ARTICLE) /* @TODO/tobek When VC issuer supports arbitrary schemas, change this. */
-          }
+        <Tabs
+          activeTabName={schemaTab}
+          tabs={[
+            {
+              tabName: "created",
+              title: "Created",
+              content: (
+                <SchemasTable
+                  discover={false}
+                  onSchemaSelect={
+                    (schema) =>
+                      setSchema(
+                        SCHEMAS.NEWS_ARTICLE,
+                      ) /* @TODO/tobek When VC issuer supports arbitrary schemas, change this. */
+                  }
+                />
+              ),
+            },
+            {
+              tabName: "discover",
+              title: "Discover",
+              content: (
+                <SchemasTable
+                  discover={true}
+                  onSchemaSelect={
+                    (schema) =>
+                      setSchema(
+                        SCHEMAS.NEWS_ARTICLE,
+                      ) /* @TODO/tobek When VC issuer supports arbitrary schemas, change this. */
+                  }
+                />
+              ),
+            },
+          ]}
+          onTabClicked={setSchemaTab}
         />
       </>
     );
