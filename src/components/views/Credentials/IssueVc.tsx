@@ -1,15 +1,12 @@
 import { Check } from "@rimble/icons";
-import React, { useContext, useState } from "react";
-import { Box, Button, Checkbox, Field, Flash, Heading, Input, Text } from "rimble-ui";
-import { mutate } from "swr";
-import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import React, { useState } from "react";
+import { Box, Button, Heading, Text } from "rimble-ui";
 import { Credential, CredentialViewTypes } from "../../elements/components";
-import { SchemasTable } from "../../elements/components/Schemas/SchemasTable";
-import { colors } from "../../elements/themes";
-import { Tabs } from "../../elements/layouts/Tabs/Tabs";
-import { IssueVcForm } from "./IssueVcForm";
 import { SchemaDataResponse } from "../../elements/components/Schemas";
+import { SchemasTable } from "../../elements/components/Schemas/SchemasTable";
+import { Tabs } from "../../elements/layouts/Tabs/Tabs";
+import { colors } from "../../elements/themes";
+import { IssueVcForm } from "./IssueVcForm";
 
 export interface IssueVcProps {
   defaultIssuer: string;
@@ -17,10 +14,8 @@ export interface IssueVcProps {
 }
 
 export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
-  const TrustAgent = useContext<TrustAgencyService>(TrustAgencyContext);
-
-  const [publishedToFeed, setPublishedToFeed] = React.useState<string | undefined>();
-  const [response, setResponse] = React.useState<any>();
+  const [publishedToFeed, setPublishedToFeed] = useState<string | undefined>();
+  const [response, setResponse] = useState<any>();
   const [schema, setSchema] = useState<SchemaDataResponse | null | undefined>();
   const [schemaTab, setSchemaTab] = useState("created");
 
@@ -51,7 +46,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           issuanceDate={response.issuanceDate}
           issuer={response.issuer.id}
           jwt={response.jwt}
-          title={response.credentialSubject.title || "Generic Credential"}
+          title={response.credentialSubject.title || response.type[response.type.length - 1]}
           viewType={CredentialViewTypes.COLLAPSIBLE}
         />
         <Box my={2}>

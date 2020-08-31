@@ -1,51 +1,80 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, Checkbox, Field, Flash, Heading, Input } from "rimble-ui";
+import { Form, Box, Button, Checkbox, Field, Flash, Heading, Input, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { SchemaDataResponse } from "../../elements/components/Schemas";
+import { SchemaDataResponse, VcSchema } from "../../elements/components/Schemas";
+import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
   defaultIssuer: string;
   onSuccessResponse(response: any, publishedToFeed?: string): void;
+  onVcDataChange?(vcData: any): void;
 }
 
 export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) => {
-  const TrustAgent = useContext<TrustAgencyService>(TrustAgencyContext);
-
-  const credential = {
-    "@context": ["https://www.w3.org/2018/credentials/v1", "https://www.w3.org/2018/credentials/examples/v1"],
+  const initialCred = {
+    "@context": ["https://www.w3.org/2018/credentials/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
     issuer: { id: props.defaultIssuer },
     issuanceDate: Date.now() / 1000, // @TODO VC spec expects RFC3339 (ISO 8601) format as produced by `(new Date).toISOString()`, but API throws TypeError `not a unix timestamp in seconds` so sending unix timestamp in seconds for now - check if API transforms date or what.
     credentialSubject: {
       id: props.defaultIssuer,
-      foo: {
-        bar: 123,
-        baz: true,
+      exampleData: {
+        foo: 123,
+        bar: true,
       },
     },
   };
 
-  const [error, setError] = React.useState<string | undefined>();
-  const [body, setBody] = useState(JSON.stringify(credential, null, 2));
-  const [publishToFeedSlug, setPublishToFeedSlug] = React.useState<string | undefined>();
+  const TrustAgent = useContext<TrustAgencyService>(TrustAgencyContext);
+  const [error, setError] = useState<string | undefined>();
+  const [vcData, setVcData] = useState<{ [key: string]: any }>({});
+  const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
+  const [publishToFeedSlug, setPublishToFeedSlug] = useState<string | undefined>();
   const [revocable, setRevocable] = useState<boolean>(false);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
-  const { schema } = props;
-
-  async function issueVc() {
-    if (schema) {
-      setError("Non-generic VC issuance not yet supported");
-      return;
+  const schemaInstance = React.useMemo(() => {
+    if (props.schema) {
+      try {
+        setError("");
+        return new VcSchema(props.schema.ldContextPlus, props.schema.slug);
+      } catch (err) {
+        console.error("Failed to generate schema instance:", err);
+        setError(err.toString());
+      }
     }
+  }, [props.schema]);
 
+  React.useEffect(() => {
+    props.onVcDataChange?.(vcData);
+  }, [props.onVcDataChange, vcData]);
+
+  async function issueVc(e: Event) {
+    e.preventDefault();
     setError(undefined);
+
+    const credType = schemaInstance?.schema["@context"]["@rootType"];
+
     try {
-      const credential = JSON.parse(body);
+      let credential: any;
+      if (props.schema) {
+        credential = {
+          ...initialCred,
+          type: credType ? [...initialCred.type, credType] : initialCred.type,
+          credentialSubject: vcData,
+        };
+      } else {
+        credential = JSON.parse(rawJsonVc);
+      }
+
+      props.onVcDataChange?.(credential);
+
+      // @TODO/tobek Actually validate VC according to schema instance
+
       const vcResponse = await TrustAgent.issueVc({
         credential,
         revocable,
@@ -76,51 +105,101 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     }
   }
 
+  const credSchema = schemaInstance?.jsonSchema?.properties?.credentialSubject;
+
+  function renderInput(key: string, node: JsonSchemaNode): JSX.Element {
+    const required = credSchema?.required?.indexOf(key) !== -1;
+
+    if (node.type === "boolean") {
+      return (
+        <Checkbox
+          checked={!!vcData[key]}
+          required={required}
+          onChange={() => setVcData({ ...vcData, [key]: !vcData[key] })}
+        />
+      );
+    }
+
+    let type = "text";
+    let disabled = false;
+    let placeholder = "";
+    let width: string | undefined = "100%";
+    if (node.type === "object") {
+      disabled = true;
+      placeholder = "[nested properties not yet supported]";
+    } else if (node.type === "number" || node.type === "integer") {
+      type = "number";
+      width = undefined;
+    } else if (node.format === "date-time") {
+      type = "datetime-local";
+    } else if (node.format === "uri") {
+      type = "url";
+      placeholder = "URL";
+    }
+
+    return (
+      <Input
+        type={type}
+        disabled={disabled}
+        value={vcData[key] || ""}
+        onChange={(event: any) =>
+          setVcData({ ...vcData, [key]: type === "number" ? parseInt(event.target.value, 10) : event.target.value })
+        }
+        required={required}
+        width={width}
+        placeholder={placeholder}
+      />
+    );
+  }
+
   return (
     <>
       <Heading as="h3" mt={4}>
-        Issue {schema?.name} Credential
+        Issue {props.schema?.name?.replace(/\s?Credential$/, "")} Credential
       </Heading>
-      {!schema ? (
-        <Field label="Credential body JSON" width="100%">
-          {/*@NOTE Rimble Textarea component doesn't work - uses <input> instead of <textarea> element*/}
-          <textarea
-            required
-            value={body}
-            spellCheck={false}
-            style={{ width: "100%", minHeight: "250px" }}
-            onChange={(e: any) => setBody(e.target.value)}
+      <Form onSubmit={issueVc}>
+        {!credSchema?.properties ? (
+          <Field label="Credential body JSON" width="100%">
+            {/*@NOTE Rimble Textarea component doesn't work - uses <input> instead of <textarea> element*/}
+            <textarea
+              required
+              value={rawJsonVc}
+              spellCheck={false}
+              style={{ width: "100%", minHeight: "250px" }}
+              onChange={(e: any) => setRawJsonVc(e.target.value)}
+            />
+          </Field>
+        ) : (
+          <>
+            {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
+              <Field key={key} label={node.title || key} width="100%">
+                {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
+                {renderInput(key, node)}
+              </Field>
+            ))}
+          </>
+        )}
+
+        <hr />
+        <Field label={"Publish to Feed"} width="100%">
+          <Input
+            type="text"
+            width="100%"
+            required={false}
+            placeholder="Feed slug"
+            value={publishToFeedSlug}
+            onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
           />
         </Field>
-      ) : (
-        <>
-          {/*@TODO/tobek Hardcoded non-functional fields just for demo - generic version above still works but this doesn't work, use WP plugin instead!*/}
-          {["Subject ID", "Article Title", "Description", "URL", "Author", "Keywords", "Image URL"].map((field) => (
-            <Field key={field} label={field} width="100%">
-              <Input type="text" required={true} width="100%" />
-            </Field>
-          ))}
-        </>
-      )}
+        <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
+        <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
 
-      <Field label={"Publish to Feed"} width="100%">
-        <Input
-          type="text"
-          width="100%"
-          required={false}
-          placeholder="Feed slug"
-          value={publishToFeedSlug}
-          onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
-        />
-      </Field>
-      <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
-      <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
-
-      <Box my={10}>
-        <Button width="100%" onClick={issueVc}>
-          Issue Credential
-        </Button>
-      </Box>
+        <Box my={3}>
+          <Button type="submit" width="100%">
+            Issue Credential
+          </Button>
+        </Box>
+      </Form>
 
       {error && (
         <Flash my={3} variant="danger">
