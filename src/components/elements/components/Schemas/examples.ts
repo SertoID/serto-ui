@@ -62,7 +62,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
     "ContentPublishCredential": {
       "@id": "schema-id",
-      "@contains": ["issuer", "issuanceDate", "credentialSubject"]
+      "@contains": "credentialSubject"
     },
     "credentialSubject": {
       "@id": "w3ccred:credentialSubject",
@@ -206,7 +206,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
     "ContentPublishCredential": {
       "@id": "schema-id",
-      "@contains": ["credentialSubject", "issuer", "issuanceDate"]
+      "@contains": "credentialSubject"
     },
     "credentialSubject": {
       "@id": "w3ccred:credentialSubject",
@@ -336,12 +336,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
     "ContentPublishCredential": {
       "@id": "schema-id",
-      "@contains": ["credentialSubject", "issuer", "issuanceDate"]
+      "@contains": "credentialSubject"
     },
     "credentialSubject": {
       "@id": "w3ccred:credentialSubject",
       "@required": true,
-      "@contains": "publishedContent",
       "@context": {
         "publisherId": {
           "@id": "@id",
@@ -480,6 +479,88 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
           "@id": "http://schema.org/url",
           "@type": "@id",
           "@required": true
+        }
+      }
+    }
+  }
+}`,
+  TestCredential: `{
+  "@context": {
+    "@version": 1.1,
+    "@rootType": "TestCredential",
+    "@title": "Test Credential",
+    "@description": "A flat test credential with all of the data types supported by our wizard UIs.",
+    "@metadata": {
+      "version": "1.0",
+      "slug": "test-credential",
+      "icon": "🧪",
+      "discoverable": true
+    },
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "w3ccred": "https://www.w3.org/2018/credentials#",
+    "schema-id": "https://consensysidentity.com/schema/TestCredential#",
+    "TestCredential": {
+      "@id": "schema-id",
+      "@contains": "credentialSubject"
+    },
+    "credentialSubject": {
+      "@id": "w3ccred:credentialSubject",
+      "@required": true,
+      "@context": {
+        "id": {
+          "@id": "@id",
+          "@type": "http://schema.org/Text",
+          "@description": "Globally unique identifier for this piece of content",
+          "@required": true
+        },
+        "headline": {
+          "@title": "Headline",
+          "@id": "schema-id:headline",
+          "@type": "http://schema.org/Text",
+          "@required": true
+        },
+        "description": {
+          "@title": "Description",
+          "@id": "schema-id:description",
+          "@type": "http://schema.org/Text"
+        },
+        "url": {
+          "@title": "URL",
+          "@id": "schema-id:url",
+          "@type": "http://schema.org/URL",
+          "@required": true
+        },
+        "datePublished": {
+          "@title": "Date Published",
+          "@id": "schema-id:date-published",
+          "@type": "http://schema.org/DateTime",
+          "@required": true
+        },
+        "author": {
+          "@title": "Author",
+          "@id": "schema-id:author",
+          "@context": {
+            "id": {
+              "@id": "schema-id:publisher-id",
+              "@type": "http://schema.org/Text",
+              "@description": "Author DID or other unique identifier URI"
+            },
+            "name": {
+              "@id": "schema-id:author-name",
+              "@type": "http://schema.org/Text",
+              "@required": true
+            }
+          }
+        },
+        "opinion": {
+          "@title": "Opinion",
+          "@id": "schema-id:opinion",
+          "@type": "http://schema.org/Boolean"
+        },
+        "numRevisions": {
+          "@title": "Number of Revisions",
+          "@id": "schema-id:num-revisions",
+          "@type": "http://schema.org/Number"
         }
       }
     }

@@ -12,7 +12,6 @@ import { SchemaDetail } from "./SchemaDetail";
 
 export interface SchemasTableProps {
   discover?: boolean;
-  selectable?: boolean;
   noSchemasElement?: JSX.Element;
   onSchemaSelect?(schema: SchemaDataResponse): void;
 }
@@ -38,7 +37,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
               <TH>Discoverable</TH>
               <TH>Created</TH>
               <TH></TH>
-              {props.selectable && <TH></TH>}
+              {props.onSchemaSelect && <TH></TH>}
             </TR>
           </thead>
           <TBody>
@@ -62,7 +61,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
                       View
                     </Button.Outline>
                   </td>
-                  {props.selectable && props.onSchemaSelect && (
+                  {props.onSchemaSelect && (
                     <td>
                       <Button.Outline size="small" onClick={() => props.onSchemaSelect?.(schema)}>
                         Select
@@ -75,7 +74,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
           </TBody>
         </Table>
         <Modal isOpen={!!viewedSchema}>
-          <Card p={4}>
+          <Card p={4} minWidth={9} maxHeight="95vh" overflowY="auto">
             {viewedSchema && <SchemaDetail schema={viewedSchema} />}
             <Button width="100%" onClick={() => setViewedSchema(undefined)}>
               Close

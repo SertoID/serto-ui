@@ -118,10 +118,10 @@ export class VcSchema {
   public id: string;
   public jsonSchemaMessage?: string; // @TODO/tobek This should probably be an array and some of the compilation warnings should get added to it.
   public schema: LdContextPlus;
+  public jsonLdContext?: any;
+  public jsonSchema?: JsonSchema;
 
   private debugMode?: boolean;
-  private jsonLdContext?: any;
-  private jsonSchema?: JsonSchema;
   private jsonSchemaValidate?: Ajv.ValidateFunction;
 
   constructor(schema: string | LdContextPlus, id: string, debugMode?: boolean) {
