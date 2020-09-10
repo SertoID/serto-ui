@@ -1,7 +1,7 @@
 import { Check } from "@rimble/icons";
 import * as React from "react";
 import { mutate } from "swr";
-import { Box, Button, Card, Heading, Text } from "rimble-ui";
+import { Box, Button, Card, Heading, Text, Flash } from "rimble-ui";
 import { colors } from "../../../";
 import { LdContextPlus } from "../VcSchema";
 import { AttributesStep } from "./AttributesStep";
@@ -29,6 +29,8 @@ export interface CreateSchemaProps {
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
   const [schema, setSchema] = React.useState<WorkingSchema>(initialWorkingSchema);
 
   React.useEffect(() => {
@@ -43,28 +45,34 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   }
 
   function goBack() {
+    setError("");
     setCurrentStep(STEPS[STEPS.indexOf(currentStep) - 1]);
   }
   async function goForward() {
+    setError("");
     const nextStep = STEPS[STEPS.indexOf(currentStep) + 1];
     if (nextStep === "DONE") {
-      await createSchema();
-      // @TODO/tobek Loading state before moving to "done" step + handle errors
+      setLoading(true);
+      try {
+        await createSchema();
+        setCurrentStep(nextStep);
+      } catch (err) {
+        console.error("Failed to create schema:", err);
+        setError(err.toString());
+      }
+      setLoading(false);
+    } else {
+      setCurrentStep(nextStep);
     }
-    setCurrentStep(nextStep);
   }
 
   async function createSchema() {
-    try {
-      const schemaInput = createSchemaInput(schema as CompletedSchema);
-      props.onSchemaCreated?.(schemaInput.ldContextPlus);
-      await TrustAgent.createSchema(schemaInput);
-      mutate(["/v1/schemas", false]);
-      if (schema.discoverable) {
-        mutate(["/v1/schemas", true]);
-      }
-    } catch (err) {
-      console.error("Failed to create schema:", err);
+    const schemaInput = createSchemaInput(schema as CompletedSchema);
+    props.onSchemaCreated?.(schemaInput.ldContextPlus);
+    await TrustAgent.createSchema(schemaInput);
+    mutate(["/v1/schemas", false]);
+    if (schema.discoverable) {
+      mutate(["/v1/schemas", true]);
     }
   }
 
@@ -107,7 +115,12 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
         ) : currentStep === "ATTRIBUTES" ? (
           <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
         ) : (
-          <ConfirmStep schema={schema} onComplete={goForward} />
+          <ConfirmStep schema={schema} onComplete={goForward} loading={loading} />
+        )}
+        {error && (
+          <Flash my={3} variant="danger">
+            {error}
+          </Flash>
         )}
       </Box>
     </Wrapper>
