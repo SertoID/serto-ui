@@ -55,7 +55,7 @@ export interface JsonSchemaNode {
 }
 export interface JsonSchema extends JsonSchemaNode {
   $schema: string;
-  $id: string;
+  $id?: string;
 }
 
 const contextPlusFields = [
@@ -115,7 +115,7 @@ const baseVcJsonSchema = {
 };
 
 export class VcSchema {
-  public id: string;
+  public id?: string;
   public jsonSchemaMessage?: string; // @TODO/tobek This should probably be an array and some of the compilation warnings should get added to it.
   public schema: LdContextPlus;
   public jsonLdContext?: any;
@@ -124,8 +124,8 @@ export class VcSchema {
   private debugMode?: boolean;
   private jsonSchemaValidate?: Ajv.ValidateFunction;
 
-  constructor(schema: string | LdContextPlus, id: string, debugMode?: boolean) {
-    this.id = slugify(id);
+  constructor(schema: string | LdContextPlus, id?: string, debugMode?: boolean) {
+    this.id = id && slugify(id);
     this.debugMode = debugMode;
     if (typeof schema === "string") {
       try {
@@ -140,7 +140,7 @@ export class VcSchema {
     // @TODO/tobek Should make a JSON Schema for LdContextPlus and validate `this.schema` here and throw an error if invalid.
 
     this.jsonLdContext = omitDeep(this.schema, contextPlusFieldsRegexes);
-    if (!this.jsonLdContext["@context"]["@version"]) {
+    if (this.jsonLdContext["@context"] && !this.jsonLdContext["@context"]["@version"]) {
       // Default to JSON-LD proceessing mode version 1.1
       this.jsonLdContext["@context"]["@version"] = 1.1;
     }
@@ -195,7 +195,7 @@ export class VcSchema {
     if (!this.jsonSchema || !this.jsonSchemaValidate) {
       return cb(null, "VC could not be validated since JSON Schema could not be generated: " + this.jsonSchemaMessage);
     } else if (
-      this.schema["@context"]["@rootType"] &&
+      this.schema["@context"]?.["@rootType"] &&
       vcObj.type !== this.schema["@context"]["@rootType"] &&
       (!Array.isArray(vcObj.type) || vcObj.type.indexOf(this.schema["@context"]["@rootType"]) === -1)
     ) {
@@ -271,7 +271,7 @@ export class VcSchema {
 
     return {
       $schema: "http://json-schema.org/draft-07/schema#",
-      $id: `http://consensysidentity.com/schemas/${this.id}.json`, // @TODO/tobek Update URL and ensure this shema is available at this URL
+      $id: this.id && `http://consensysidentity.com/schemas/${this.id}.json`, // @TODO/tobek Update URL and ensure this shema is available at this URL
       title: context["@title"],
       description: context["@description"],
       ...baseVcJsonSchema,

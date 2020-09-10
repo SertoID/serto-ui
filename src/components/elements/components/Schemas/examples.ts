@@ -803,6 +803,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "proof": {"@id": "https://w3id.org/security#proof", "@type": "@id", "@container": "@graph"}
   }
 }`,
+  "[no schema]": `{}`,
 };
 
 export const EXAMPLE_VCS: { [key: string]: string } = {
@@ -905,6 +906,17 @@ export const EXAMPLE_VCS: { [key: string]: string } = {
     "publishedContent": {
       "url": "https://example-publisher.com/articles/a-very-important-article"
     }
+  }
+}`,
+  "[no schema]": `{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:publisher-did",
+  "issuanceDate": "2017-12-05T14:27:42Z",
+  "credentialSubject": {
+    "hi there": "these are the minimum required properties for all VCs - if you remove any, this VC won't validate"
   }
 }`,
 };
