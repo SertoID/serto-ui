@@ -25,16 +25,20 @@ export const SwitchTenant: React.FunctionComponent<SwitchTenantProps> = (props) 
   }
 
   if (user) {
+    let activeTenantName;
     const tenants: any[] = [];
     user.tenants.forEach((tenant: any) => {
+      if (activeTenantID === tenant.Tenant_id) {
+        activeTenantName = tenant.Tenant_name
+      }
       tenants.push({
-        name: tenant.tenantId,
-        value: tenant.tenantId,
+        name: tenant.Tenant_name,
+        value: tenant.Tenant_id,
       });
     });
 
     return (
-      <DropDown onChange={onChange} options={tenants} selected={activeTenantID}>
+      <DropDown onChange={onChange} options={tenants} selected={activeTenantName}>
         <Box p={2}>
           <Button onClick={createOrg} size="small" width="100%">
             Create Organization

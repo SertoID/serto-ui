@@ -25,7 +25,7 @@ export class TrustAgencyService {
     this.loggingIn = true;
     const user = await this.request("/v1/users/signup", "POST", { userToken: jwt }, true);
     console.log({ user });
-    const tenantid = user.tenants[0].tenantId;
+    const tenantid = user.tenants[0].Tenant_id;
     this.setAuth({ jwt, tenantid }, true);
     this.loggingIn = false;
   }
@@ -35,7 +35,7 @@ export class TrustAgencyService {
     this.setAuth({ jwt });
     const user = await this.request("/v1/users/currentUser");
     console.log({ user });
-    const tenantid = user.tenants[0].tenantId;
+    const tenantid = user.tenants[0].Tenant_id;
     this.setAuth({ jwt, tenantid }, true);
     this.loggingIn = false;
   }

@@ -20,8 +20,8 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
-  const onOptionClicked = (value: string) => () => {
-    setSelectedOption(value);
+  const onOptionClicked = (value: string, name: string) => () => {
+    setSelectedOption(name);
     setIsOpen(false);
     props.onChange(value);
   };
@@ -82,7 +82,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
               if (option.name !== selectedOption) {
                 return (
                   <Box
-                    onClick={onOptionClicked(option.value)}
+                    onClick={onOptionClicked(option.value, option.name)}
                     key={key}
                     borderBottom={1}
                     p={3}
