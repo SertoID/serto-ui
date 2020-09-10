@@ -208,6 +208,11 @@ export class TrustAgencyService {
       body: JSON.stringify(body),
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        // TODO: refresh token instead of logging out
+        this.logout();
+      }
+      
       const errorMessage = await response.text();
       console.error("api error", response.status, errorMessage);
       throw new Error("api error: " + errorMessage);

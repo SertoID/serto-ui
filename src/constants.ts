@@ -19,3 +19,7 @@ export enum freeAccount {
   FEEDS_CREATED = "5",
   FEED_SUBSCRIPTIONS = "5",
 }
+
+export const links = {
+  EMAIL_SUPPORT: "TKTK",
+};
