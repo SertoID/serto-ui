@@ -212,7 +212,7 @@ export class TrustAgencyService {
         // TODO: refresh token instead of logging out
         this.logout();
       }
-      
+
       const errorMessage = await response.text();
       console.error("api error", response.status, errorMessage);
       throw new Error("api error: " + errorMessage);

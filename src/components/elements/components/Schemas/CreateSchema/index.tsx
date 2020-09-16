@@ -1,24 +1,18 @@
 import { Check } from "@rimble/icons";
 import * as React from "react";
+import { Box, Button, Card, Flash, Flex, Heading, Text } from "rimble-ui";
 import { mutate } from "swr";
-import { Box, Button, Card, Heading, Text, Flash } from "rimble-ui";
 import { colors } from "../../../";
+import { TrustAgencyContext } from "../../../../../context/TrustAgentProvider";
+import { TrustAgencyService } from "../../../../../services/TrustAgencyService";
+import { CompletedSchema, initialWorkingSchema, SchemaMetadata, WorkingSchema } from "../types";
+import { createSchemaInput } from "../utils";
 import { LdContextPlus } from "../VcSchema";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
-import { CompletedSchema, SchemaMetadata, WorkingSchema, initialWorkingSchema } from "../types";
-import { createSchemaInput } from "../utils";
-import { TrustAgencyService } from "../../../../../services/TrustAgencyService";
-import { TrustAgencyContext } from "../../../../../context/TrustAgentProvider";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
-
-const Wrapper: React.FunctionComponent<any> = (props) => (
-  <Card width={9} style={{ maxHeight: "95vh", overflowY: "auto", overflowX: "hidden" }} {...props}>
-    {props.children}
-  </Card>
-);
 
 export interface CreateSchemaProps {
   onClose?(): void;
@@ -78,7 +72,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   if (currentStep === "DONE") {
     return (
-      <Wrapper>
+      <Card width={9}>
         <Text my={4} textAlign="center" color={colors.success.base}>
           <Text
             bg={colors.success.light}
@@ -98,18 +92,18 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
             Done
           </Button>
         </Box>
-      </Wrapper>
+      </Card>
     );
   }
 
   return (
-    <Wrapper p={0}>
+    <Card width={9} p={0}>
       {currentStep !== STEPS[0] && (
         <Button.Text icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={goBack} />
       )}
       <Button.Text icononly icon="Close" position="absolute" top={2} right={2} onClick={() => props.onClose?.()} />
 
-      <Box px={4} pt={5} pb={4}>
+      <Flex pt={5} pb={3} flexDirection="column" minHeight="0" maxHeight="95vh">
         {currentStep === "INFO" ? (
           <InfoStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
         ) : currentStep === "ATTRIBUTES" ? (
@@ -118,11 +112,13 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           <ConfirmStep schema={schema} onComplete={goForward} loading={loading} />
         )}
         {error && (
-          <Flash my={3} variant="danger">
-            {error}
-          </Flash>
+          <Box px={4}>
+            <Flash mt={3} variant="danger">
+              {error}
+            </Flash>
+          </Box>
         )}
-      </Box>
-    </Wrapper>
+      </Flex>
+    </Card>
   );
 };

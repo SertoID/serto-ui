@@ -76,7 +76,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
         <Modal isOpen={!!viewedSchema}>
           <Card p={4} minWidth={9} maxHeight="95vh" overflowY="auto">
             {viewedSchema && <SchemaDetail schema={viewedSchema} />}
-            <Button width="100%" onClick={() => setViewedSchema(undefined)}>
+            <Button mt={3} width="100%" onClick={() => setViewedSchema(undefined)}>
               Close
             </Button>
           </Card>

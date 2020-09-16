@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Button, Heading, Loader } from "rimble-ui";
-import { baseColors, fonts } from "../../../";
+import { Box, Button, Loader } from "rimble-ui";
 import { SchemaDetail } from "../SchemaDetail";
 import { CompletedSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
+import { StepHeading, StepWrapper } from "./CreateSchemaComponents";
 
 export interface ConfirmStepProps {
   schema: WorkingSchema;
@@ -16,13 +16,15 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
 
   return (
     <>
-      <Heading mt={4} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={4} fontWeight={3}>
-        Confirm and Publish
-      </Heading>
-      <SchemaDetail schema={createSchemaInput(schema as CompletedSchema)} />
-      <Button width="100%" onClick={props.onComplete} disabled={props.loading}>
-        {props.loading ? <Loader color="white" /> : "Publish"}
-      </Button>
+      <StepHeading>Confirm and Publish</StepHeading>
+      <StepWrapper>
+        <SchemaDetail schema={createSchemaInput(schema as CompletedSchema)} />
+      </StepWrapper>
+      <Box px={4}>
+        <Button my={3} width="100%" onClick={props.onComplete} disabled={props.loading}>
+          {props.loading ? <Loader color="white" /> : "Publish"}
+        </Button>
+      </Box>
     </>
   );
 };
