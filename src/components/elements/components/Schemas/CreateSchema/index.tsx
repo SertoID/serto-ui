@@ -1,6 +1,6 @@
 import { Check } from "@rimble/icons";
 import * as React from "react";
-import { Box, Button, Card, Flash, Flex, Heading, Text } from "rimble-ui";
+import { Box, Button, Flash, Heading, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { colors } from "../../../";
 import { TrustAgencyContext } from "../../../../../context/TrustAgentProvider";
@@ -15,7 +15,7 @@ import { InfoStep } from "./InfoStep";
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
 export interface CreateSchemaProps {
-  onClose?(): void;
+  onComplete?(): void;
   onSchemaUpdate?(schema: WorkingSchema): void;
   onSchemaCreated?(schema: LdContextPlus<SchemaMetadata> | string): void;
 }
@@ -72,7 +72,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   if (currentStep === "DONE") {
     return (
-      <Card width={9}>
+      <Box p={4} pt={3}>
         <Text my={4} textAlign="center" color={colors.success.base}>
           <Text
             bg={colors.success.light}
@@ -87,38 +87,34 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           </Text>
           <Heading as="h3">Credential Type Published</Heading>
         </Text>
-        <Box mt={5} mb={3}>
-          <Button width="100%" onClick={() => props.onClose?.()}>
+        <Box mt={5}>
+          <Button width="100%" onClick={() => props.onComplete?.()}>
             Done
           </Button>
         </Box>
-      </Card>
+      </Box>
     );
   }
 
   return (
-    <Card width={9} p={0}>
+    <>
       {currentStep !== STEPS[0] && (
         <Button.Text icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={goBack} />
       )}
-      <Button.Text icononly icon="Close" position="absolute" top={2} right={2} onClick={() => props.onClose?.()} />
-
-      <Flex pt={5} pb={3} flexDirection="column" minHeight="0" maxHeight="95vh">
-        {currentStep === "INFO" ? (
-          <InfoStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
-        ) : currentStep === "ATTRIBUTES" ? (
-          <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
-        ) : (
-          <ConfirmStep schema={schema} onComplete={goForward} loading={loading} />
-        )}
-        {error && (
-          <Box px={4}>
-            <Flash mt={3} variant="danger">
-              {error}
-            </Flash>
-          </Box>
-        )}
-      </Flex>
-    </Card>
+      {currentStep === "INFO" ? (
+        <InfoStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
+      ) : currentStep === "ATTRIBUTES" ? (
+        <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
+      ) : (
+        <ConfirmStep schema={schema} onComplete={goForward} loading={loading} />
+      )}
+      {error && (
+        <Box px={4}>
+          <Flash mt={3} variant="danger">
+            {error}
+          </Flash>
+        </Box>
+      )}
+    </>
   );
 };

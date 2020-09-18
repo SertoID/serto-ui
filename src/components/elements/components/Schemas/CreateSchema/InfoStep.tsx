@@ -5,7 +5,7 @@ import { Flex, Box, Button, Checkbox, Field, Form, Input, Text, Tooltip } from "
 import styled from "styled-components";
 import { colors, fonts } from "../../../themes/";
 import { WorkingSchema } from "../types";
-import { StepHeading, StepWrapper } from "./CreateSchemaComponents";
+import { ModalContent, ModalHeader } from "../../Modals";
 
 const SchemaField = styled(Field)`
   width: 100%;
@@ -59,8 +59,8 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   return (
     <>
-      <StepHeading>Create Credential Type</StepHeading>
-      <StepWrapper>
+      <ModalHeader>Create Credential Type</ModalHeader>
+      <ModalContent>
         <Form validated={doValidation} onSubmit={goNext}>
           <SchemaField label="Name">
             <Input
@@ -140,7 +140,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             Next
           </Button>
         </Form>
-      </StepWrapper>
+      </ModalContent>
     </>
   );
 };

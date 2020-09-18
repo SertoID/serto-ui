@@ -5,7 +5,7 @@ import { WorkingSchema } from "../types";
 import { typeOptions } from "../utils";
 import { LdContextPlusLeafNode } from "../VcSchema";
 import { convertToCamelCase } from "../../../utils";
-import { StepHeading, StepWrapperFullWidth } from "./CreateSchemaComponents";
+import { ModalContentFullWidth, ModalHeader } from "../../Modals";
 
 export interface AttributesStepProps {
   schema: WorkingSchema;
@@ -80,8 +80,8 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
 
   return (
     <>
-      <StepHeading>Define Credential Attributes</StepHeading>
-      <StepWrapperFullWidth>
+      <ModalHeader>Define Credential Attributes</ModalHeader>
+      <ModalContentFullWidth>
         <Form validated={doValidation} onSubmit={goNext}>
           {schema.properties.map((prop, i) => (
             <Box
@@ -150,17 +150,17 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
             <Button.Outline mb={3} mx="auto" type="submit" width="100%" onClick={addProperty}>
               Add Attribute
             </Button.Outline>
-            <Button type="submit" width="100%">
-              Review
-            </Button>
             {error && (
               <Flash mb={3} variant="danger">
                 Error: {error}
               </Flash>
             )}
+            <Button type="submit" width="100%">
+              Review
+            </Button>
           </Box>
         </Form>
-      </StepWrapperFullWidth>
+      </ModalContentFullWidth>
     </>
   );
 };
