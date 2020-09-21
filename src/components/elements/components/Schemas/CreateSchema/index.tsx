@@ -11,6 +11,7 @@ import { LdContextPlus } from "../VcSchema";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
+import { ModalBack } from "../../Modals";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -98,9 +99,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   return (
     <>
-      {currentStep !== STEPS[0] && (
-        <Button.Text icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={goBack} />
-      )}
+      {currentStep !== STEPS[0] && <ModalBack onClick={goBack} />}
       {currentStep === "INFO" ? (
         <InfoStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
       ) : currentStep === "ATTRIBUTES" ? (

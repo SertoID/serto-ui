@@ -21,6 +21,13 @@ export const ModalWithX: React.FunctionComponent<ModalWithXProps> = (props) => {
   );
 };
 
+export interface ModalBackProps {
+  onClick(e: MouseEvent): any;
+}
+export const ModalBack: React.FunctionComponent<ModalBackProps> = (props) => {
+  return <Button.Text icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={props.onClick} />;
+};
+
 export const ModalHeader: React.FunctionComponent = (props) => (
   <Heading px={4} mt={1} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={4} fontWeight={3}>
     {props.children}
