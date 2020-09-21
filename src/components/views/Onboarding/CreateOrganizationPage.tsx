@@ -3,13 +3,15 @@ import { useHistory } from "react-router-dom";
 import { routes } from "../../../constants";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { Box, Button, Card, Field, Flex, Heading, Input, Text } from "rimble-ui";
+import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Text } from "rimble-ui";
 import { colors } from "../../elements/themes";
+import { CreateOrgErrorMsg } from "../../elements/text";
 
 export const CreateOrganizationPage: React.FunctionComponent = (props) => {
   const history = useHistory();
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [tenantName, setTenantName] = React.useState("");
+  const [error, setError] = React.useState<any | undefined>();
 
   async function createTenant() {
     try {
@@ -17,6 +19,7 @@ export const CreateOrganizationPage: React.FunctionComponent = (props) => {
       history.push(routes.HOMEPAGE);
     } catch (err) {
       console.error("failed to create tenant:", err);
+      setError(CreateOrgErrorMsg);
       return;
     }
   }
@@ -41,9 +44,18 @@ export const CreateOrganizationPage: React.FunctionComponent = (props) => {
             />
           </Field>
         </Box>
+
         <Button onClick={createTenant} width="100%">
           Create organization
         </Button>
+
+        {error && (
+          <Box p={1} mb={1}>
+            <Flash my={3} variant="danger">
+              {error}
+            </Flash>
+          </Box>
+        )}
       </Card>
     </Flex>
   );

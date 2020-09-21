@@ -25,7 +25,7 @@ export class TrustAgencyService {
     this.loggingIn = true;
     const user = await this.request("/v1/users/signup", "POST", { userToken: jwt }, true);
     console.log({ user });
-    const tenantid = user.tenants[0].Tenant_id;
+    const tenantid = user.tenants[0].tenantId;
     this.setAuth({ jwt, tenantid }, true);
     this.loggingIn = false;
   }
@@ -212,7 +212,7 @@ export class TrustAgencyService {
         // TODO: refresh token instead of logging out
         this.logout();
       }
-      
+
       const errorMessage = await response.text();
       console.error("api error", response.status, errorMessage);
       throw new Error("api error: " + errorMessage);

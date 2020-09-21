@@ -16,7 +16,7 @@ const defaultConfig: ConfigType = {
   // API_URL: "http://localhost:8000",
   // NATS_WS_URL: "wss://0.0.0.0:9222",
   AUTH0_CLIENT_ID: "sAnzetlNs0HbyokOncaTUZmLRijPazBc",
-  AUTH0_DOMAIN: "dev-mdazdke4.us.auth0.com",
+  AUTH0_DOMAIN: "auth.consensys.id",
   GLOBAL_FEED_SLUG: "global",
 };
 

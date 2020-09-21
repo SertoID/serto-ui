@@ -29,7 +29,7 @@ export const SwitchTenant: React.FunctionComponent<SwitchTenantProps> = (props) 
     const tenants: any[] = [];
     user.tenants.forEach((tenant: any) => {
       if (activeTenantID === tenant.Tenant_id) {
-        activeTenantName = tenant.Tenant_name
+        activeTenantName = tenant.Tenant_name;
       }
       tenants.push({
         name: tenant.Tenant_name,
