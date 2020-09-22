@@ -6,6 +6,7 @@ import { baseColors, fonts } from "../themes";
 export interface ModalWithXProps {
   isOpen?: boolean;
   close(): any;
+  /** Props that will be passed to Rimble `Card` component around the modal: */
   [key: string]: any;
 }
 export const ModalWithX: React.FunctionComponent<ModalWithXProps> = (props) => {
