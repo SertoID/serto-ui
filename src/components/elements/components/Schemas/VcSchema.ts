@@ -1,7 +1,6 @@
 import Ajv from "ajv";
 import { omitDeep, mapValuesDeep } from "deepdash-es/standalone";
 import slugify from "@sindresorhus/slugify";
-import { config } from "../../../../config";
 import { getSchemaUrl } from "./utils";
 
 const ajv = new Ajv();

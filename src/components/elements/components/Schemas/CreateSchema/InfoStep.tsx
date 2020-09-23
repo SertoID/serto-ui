@@ -1,11 +1,11 @@
 import { Info } from "@rimble/icons";
 import slugify from "@sindresorhus/slugify";
 import * as React from "react";
-import { Flex, Box, Button, Checkbox, Field, Form, Input, Text, Tooltip } from "rimble-ui";
+import { Box, Button, Checkbox, Field, Form, Input, Text, Tooltip } from "rimble-ui";
 import styled from "styled-components";
 import { colors, fonts } from "../../../themes/";
-import { WorkingSchema } from "../types";
 import { ModalContent, ModalHeader } from "../../Modals";
+import { WorkingSchema } from "../types";
 
 const SchemaField = styled(Field)`
   width: 100%;

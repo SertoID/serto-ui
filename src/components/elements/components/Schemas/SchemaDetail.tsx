@@ -140,7 +140,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           {json === jsonTypes[1]?.value && (
             <Text mb={3}>
               To be used on top of{" "}
-              <a href="https://www.w3.org/2018/credentials/v1" target="_blank">
+              <a href="https://www.w3.org/2018/credentials/v1" rel="noopener noreferrer" target="_blank">
                 the base W3C credential context
               </a>
               .
