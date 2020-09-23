@@ -10,13 +10,13 @@ interface DropDownOptions {
 
 export interface DropDownProps {
   options: DropDownOptions[];
-  selected?: string;
+  defaultSelected?: string;
   onChange(value: string): void;
 }
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const node = React.useRef() as React.MutableRefObject<HTMLInputElement>;
-  const [selectedOption, setSelectedOption] = React.useState(props.selected || null);
+  const [selectedOption, setSelectedOption] = React.useState(props.defaultSelected || null);
   const [isOpen, setIsOpen] = React.useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -41,7 +41,14 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   });
 
   return (
-    <Box ref={node} bg={baseColors.white} borderRadius={1} boxShadow={1} width="100%" style={{ position: "relative" }}>
+    <Box
+      ref={node}
+      bg={baseColors.white}
+      borderRadius={1}
+      boxShadow={1}
+      width="100%"
+      style={{ position: "relative", zIndex: 1 }}
+    >
       <Flex
         onClick={toggle}
         alignItems="center"

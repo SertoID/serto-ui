@@ -6,6 +6,7 @@ import { typeOptions } from "./utils";
 import { Toggle } from "../Toggle";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "./VcSchema";
 import { HighlightedJson } from "../HighlightedJson";
+import { DropDown } from "../DropDown/DropDown";
 
 const MetadataText: React.FunctionComponent = (props) => (
   <Text color={colors.midGray} fontFamily={fonts.sansSerif} fontWeight={3} my={2}>
@@ -66,6 +67,27 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
     }
   }, [schema]);
 
+  const jsonTypes = React.useMemo(() => {
+    if (!schemaInstance) {
+      return [];
+    }
+    return [
+      {
+        name: "source",
+        value: schemaInstance?.getLdContextPlusString(true),
+      },
+      {
+        name: "JSON-LD Context",
+        value: schemaInstance?.getJsonLdContextString(true),
+      },
+      {
+        name: "JSON Schema",
+        value: schemaInstance?.getJsonSchemaString(true),
+      },
+    ];
+  }, [schemaInstance]);
+  const [json, setJson] = React.useState(jsonTypes[0]?.value);
+
   let outerContext: LdContextPlusRootNode | undefined;
   let innerContext:
     | {
@@ -110,9 +132,22 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           {error && <Flash variant="danger">Error: {error}</Flash>}
         </Box>
       ) : (
-        <HighlightedJson
-          json={schemaInstance ? schemaInstance.getLdContextPlusString(true) : JSON.stringify(schema, undefined, 2)}
-        />
+        <>
+          View as
+          <Box ml={2} width={8} display="inline-block">
+            <DropDown onChange={setJson} options={jsonTypes} />
+          </Box>
+          {json === jsonTypes[1]?.value && (
+            <Text mb={3}>
+              To be used on top of{" "}
+              <a href="https://www.w3.org/2018/credentials/v1" target="_blank">
+                the base W3C credential context
+              </a>
+              .
+            </Text>
+          )}
+          <HighlightedJson json={json || JSON.stringify(schema, undefined, 2)} />
+        </>
       )}
     </>
   );

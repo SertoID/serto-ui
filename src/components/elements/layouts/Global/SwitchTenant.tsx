@@ -38,7 +38,7 @@ export const SwitchTenant: React.FunctionComponent<SwitchTenantProps> = (props) 
     });
 
     return (
-      <DropDown onChange={onChange} options={tenants} selected={activeTenantName}>
+      <DropDown onChange={onChange} options={tenants} defaultSelected={activeTenantName}>
         <Box p={2}>
           <Button onClick={createOrg} size="small" width="100%">
             Create Organization

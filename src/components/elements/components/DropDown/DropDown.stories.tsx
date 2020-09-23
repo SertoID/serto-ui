@@ -11,7 +11,7 @@ const options = [
 
 storiesOf("DropDown", module)
   .add("Option List", () => {
-    return <DropDown onChange={() => console.log("change")} options={options} selected="Green" />;
+    return <DropDown onChange={() => console.log("change")} options={options} defaultSelected="Green" />;
   })
   .add("Option List with Button", () => {
     return (
