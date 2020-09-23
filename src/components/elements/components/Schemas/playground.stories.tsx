@@ -19,6 +19,7 @@ const Section = styled(Flex)`
 
 storiesOf("Schemas", module).add("LD Context Plus playground", () => {
   const [inputSchema, setInputSchema] = React.useState<string>("");
+  const [inputSchemaName, setInputSchemaName] = React.useState<string>("");
   const [debouncedSchema] = useDebounce(inputSchema, 500);
   const [inputSchemaError, setInputSchemaError] = React.useState<any>();
   const [vcSchema, setVcSchema] = React.useState<VcSchema | undefined>();
@@ -38,7 +39,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
       return;
     }
     try {
-      setVcSchema(new VcSchema(debouncedSchema, "example-schema", true));
+      setVcSchema(new VcSchema(debouncedSchema, inputSchemaName || "example-schema", true));
     } catch (err) {
       setInputSchemaError(err.message);
     }
@@ -76,6 +77,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
             const name = event.target.value;
             if (name) {
               setInputSchema(EXAMPLE_SCHEMAS[name]);
+              setInputSchemaName(name);
             }
             if (EXAMPLE_VCS[name]) {
               setInputVc(EXAMPLE_VCS[name]);

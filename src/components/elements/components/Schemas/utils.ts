@@ -1,6 +1,7 @@
 import { convertToPascalCase } from "../../utils";
 import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusLeafNode } from "./VcSchema";
 import { CompletedSchema, SchemaMetadata, SchemaDataInput } from "./types";
+import { config } from "../../../../config";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
 type NamedLdContextPlusNode = Partial<LdContextPlusLeafNode> & { niceName?: string };
@@ -50,7 +51,7 @@ export function createLdContextPlusSchema(schema: CompletedSchema): LdContextPlu
       "@title": schema.name,
       "@description": schema.description,
       w3ccred: "https://www.w3.org/2018/credentials#",
-      "schema-id": `https://uport.me/schema/${schema.slug}#`, // @TODO/tobek ensure this matches up with API
+      "schema-id": getSchemaUrl(schema.slug, "ld-context-plus") + "#",
       "@rootType": schemaTypeName,
       [schemaTypeName]: {
         "@id": "schema-id",
@@ -80,4 +81,8 @@ export function ldContextPlusToSchemaInput(ldContextPlus: LdContextPlus<SchemaMe
     ldContext: schemaInstance.getJsonLdContextString(),
     jsonSchema: schemaInstance.getJsonSchemaString(),
   };
+}
+
+export function getSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema"): string {
+  return `${config.API_URL}/v1/schemas/${slug}/${type}.json`;
 }

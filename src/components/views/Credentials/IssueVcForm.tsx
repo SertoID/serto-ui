@@ -6,6 +6,7 @@ import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { ModalContent, ModalHeader } from "../../elements/components/Modals";
 import { SchemaDataResponse, VcSchema } from "../../elements/components/Schemas";
 import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
+import { getSchemaUrl } from "../../elements/components/Schemas/utils";
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
@@ -65,7 +66,12 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       if (props.schema) {
         credential = {
           ...initialCred,
+          "@context": ["https://www.w3.org/2018/credentials/v1", getSchemaUrl(props.schema.slug, "ld-context")],
           type: credType ? [...initialCred.type, credType] : initialCred.type,
+          credentialSchema: {
+            id: getSchemaUrl(props.schema.slug, "json-schema"),
+            type: "JsonSchemaValidator2018",
+          },
           credentialSubject: vcData,
         };
       } else {
