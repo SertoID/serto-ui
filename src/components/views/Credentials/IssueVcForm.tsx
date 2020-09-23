@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Form, Box, Button, Checkbox, Field, Flash, Heading, Input, Text } from "rimble-ui";
+import { Box, Button, Checkbox, Field, Flash, Form, Input, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { ModalContent, ModalHeader } from "../../elements/components/Modals";
 import { SchemaDataResponse, VcSchema } from "../../elements/components/Schemas";
 import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 
@@ -154,58 +155,57 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
   return (
     <>
-      <Heading as="h3" mt={4}>
-        Issue {props.schema?.name?.replace(/\s?Credential$/, "")} Credential
-      </Heading>
-      <Form onSubmit={issueVc}>
-        {!credSchema?.properties ? (
-          <Field label="Credential body JSON" width="100%">
-            {/*@NOTE Rimble Textarea component doesn't work - uses <input> instead of <textarea> element*/}
-            <textarea
-              required
-              value={rawJsonVc}
-              spellCheck={false}
-              style={{ width: "100%", minHeight: "250px" }}
-              onChange={(e: any) => setRawJsonVc(e.target.value)}
+      <ModalHeader>Issue {props.schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
+      <ModalContent>
+        <Form onSubmit={issueVc}>
+          {!credSchema?.properties ? (
+            <Field label="Credential body JSON" width="100%">
+              {/*@NOTE Rimble Textarea component doesn't work - uses <input> instead of <textarea> element*/}
+              <textarea
+                required
+                value={rawJsonVc}
+                spellCheck={false}
+                style={{ width: "100%", minHeight: "250px" }}
+                onChange={(e: any) => setRawJsonVc(e.target.value)}
+              />
+            </Field>
+          ) : (
+            <>
+              {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
+                <Field key={key} label={node.title || key} width="100%">
+                  {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
+                  {renderInput(key, node)}
+                </Field>
+              ))}
+            </>
+          )}
+
+          <hr />
+          <Field label={"Publish to Feed"} width="100%">
+            <Input
+              type="text"
+              width="100%"
+              required={false}
+              placeholder="Feed slug"
+              value={publishToFeedSlug}
+              onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
             />
           </Field>
-        ) : (
-          <>
-            {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
-              <Field key={key} label={node.title || key} width="100%">
-                {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
-                {renderInput(key, node)}
-              </Field>
-            ))}
-          </>
-        )}
+          <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
+          <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
 
-        <hr />
-        <Field label={"Publish to Feed"} width="100%">
-          <Input
-            type="text"
-            width="100%"
-            required={false}
-            placeholder="Feed slug"
-            value={publishToFeedSlug}
-            onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
-          />
-        </Field>
-        <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
-        <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
-
-        <Box my={3}>
-          <Button type="submit" width="100%">
-            Issue Credential
-          </Button>
-        </Box>
-      </Form>
-
-      {error && (
-        <Flash my={3} variant="danger">
-          {error}
-        </Flash>
-      )}
+          {error && (
+            <Flash my={3} variant="danger">
+              {error}
+            </Flash>
+          )}
+          <Box my={3}>
+            <Button type="submit" width="100%">
+              Issue Credential
+            </Button>
+          </Box>
+        </Form>
+      </ModalContent>
     </>
   );
 };

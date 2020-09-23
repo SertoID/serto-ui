@@ -1,10 +1,11 @@
 import * as React from "react";
+import { Box, Button, Loader, Tooltip } from "rimble-ui";
 import useSWR, { mutate } from "swr";
-import { Box, Button, Modal, Card, Tooltip, Loader } from "rimble-ui";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { IssueVc } from "./IssueVc";
+import { ModalWithX } from "../../elements/components/Modals";
 import { baseColors } from "../../elements/themes";
+import { IssueVc } from "./IssueVc";
 
 export const Issue: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -59,23 +60,9 @@ export const Issue: React.FunctionComponent = (props) => {
         </Box>
       </Box>
 
-      <Modal isOpen={isIssueModalOpen}>
-        <Card p={0}>
-          <Button.Text
-            icononly
-            icon="Close"
-            position="absolute"
-            top={0}
-            right={0}
-            mt={3}
-            mr={3}
-            onClick={() => setIsIssueModalOpen(false)}
-          />
-          <Box p={4} width={11} maxWidth="95%" maxHeight="95vh" style={{ overflowY: "auto" }}>
-            <IssueVc defaultIssuer={identifiers?.[0]?.did} onComplete={() => setIsIssueModalOpen(false)} />
-          </Box>
-        </Card>
-      </Modal>
+      <ModalWithX isOpen={isIssueModalOpen} close={() => setIsIssueModalOpen(false)} width={11}>
+        <IssueVc defaultIssuer={identifiers?.[0]?.did} onComplete={() => setIsIssueModalOpen(false)} />
+      </ModalWithX>
     </>
   );
 };

@@ -1,12 +1,13 @@
 import * as React from "react";
-import { Button, Heading } from "rimble-ui";
-import { baseColors, fonts } from "../../../";
+import { Button, Loader } from "rimble-ui";
 import { SchemaDetail } from "../SchemaDetail";
 import { CompletedSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
+import { ModalContent, ModalHeader, ModalFooter } from "../../Modals";
 
 export interface ConfirmStepProps {
   schema: WorkingSchema;
+  loading?: boolean;
   onComplete(): void;
 }
 
@@ -15,13 +16,15 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
 
   return (
     <>
-      <Heading mt={4} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={4} fontWeight={3}>
-        Confirm and Publish
-      </Heading>
-      <SchemaDetail schema={createSchemaInput(schema as CompletedSchema)} />
-      <Button width="100%" onClick={props.onComplete}>
-        Publish
-      </Button>
+      <ModalHeader>Confirm and Publish</ModalHeader>
+      <ModalContent>
+        <SchemaDetail schema={createSchemaInput(schema as CompletedSchema)} />
+      </ModalContent>
+      <ModalFooter my={3}>
+        <Button width="100%" onClick={props.onComplete} disabled={props.loading}>
+          {props.loading ? <Loader color="white" /> : "Publish"}
+        </Button>
+      </ModalFooter>
     </>
   );
 };

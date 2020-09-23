@@ -1,6 +1,6 @@
 import * as React from "react";
 import { generatePath, Link } from "react-router-dom";
-import { Button, Card, Flash, Flex, Loader, Modal, Table, Text } from "rimble-ui";
+import { Button, Flash, Flex, Loader, Table, Text } from "rimble-ui";
 import useSWR from "swr";
 import { SchemaDataResponse } from "..";
 import { colors } from "../../";
@@ -8,6 +8,7 @@ import { routes } from "../../../../constants";
 import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../../services/TrustAgencyService";
 import { TBody, TH, TR } from "../../layouts/LayoutComponents";
+import { ModalContent, ModalFooter, ModalWithX } from "../Modals";
 import { SchemaDetail } from "./SchemaDetail";
 
 export interface SchemasTableProps {
@@ -73,14 +74,14 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
             })}
           </TBody>
         </Table>
-        <Modal isOpen={!!viewedSchema}>
-          <Card p={4} minWidth={9} maxHeight="95vh" overflowY="auto">
-            {viewedSchema && <SchemaDetail schema={viewedSchema} />}
+        <ModalWithX isOpen={!!viewedSchema} close={() => setViewedSchema(undefined)} minWidth={9}>
+          <ModalContent>{viewedSchema && <SchemaDetail schema={viewedSchema} />}</ModalContent>
+          <ModalFooter mt={3}>
             <Button width="100%" onClick={() => setViewedSchema(undefined)}>
               Close
             </Button>
-          </Card>
-        </Modal>
+          </ModalFooter>
+        </ModalWithX>
       </>
     );
   } else if (error) {

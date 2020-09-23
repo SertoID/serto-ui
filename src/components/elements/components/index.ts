@@ -6,3 +6,4 @@ export * from "./Expand";
 export * from "./HighlightedJson";
 export * from "./Schemas";
 export * from "./Toggle";
+export * from "./Modals";

@@ -93,7 +93,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
         <Toggle options={modes} onChange={setMode} width="100%" />
       </Box>
       {mode === "Preview" ? (
-        <Box p={4} mb={5} backgroundColor={colors.primary.background}>
+        <Box p={4} backgroundColor={colors.primary.background}>
           <Heading as="h3" mt={0}>
             {schema.icon} {schema.name}
           </Heading>

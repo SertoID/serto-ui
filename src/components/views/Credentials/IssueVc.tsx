@@ -2,6 +2,7 @@ import { Check } from "@rimble/icons";
 import React, { useState } from "react";
 import { Box, Button, Heading, Text } from "rimble-ui";
 import { Credential, CredentialViewTypes } from "../../elements/components";
+import { ModalBack, ModalContent, ModalHeader } from "../../elements/components/Modals";
 import { SchemaDataResponse } from "../../elements/components/Schemas";
 import { SchemasTable } from "../../elements/components/Schemas/SchemasTable";
 import { Tabs } from "../../elements/layouts/Tabs/Tabs";
@@ -25,7 +26,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
 
   if (response && typeof schema !== "undefined") {
     return (
-      <>
+      <ModalContent>
         <Text textAlign="center" color={colors.success.base}>
           <Text
             bg={colors.success.light}
@@ -54,54 +55,46 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
             Done
           </Button>
         </Box>
-      </>
+      </ModalContent>
     );
   }
 
   if (typeof schema === "undefined") {
     return (
       <>
-        <Heading as="h3">Issue Credential</Heading>
-        <Text>
-          Please select a credential schema, or{" "}
-          <Button.Text p={0} onClick={() => setSchema(null)}>
-            enter credential as JSON
-          </Button.Text>
-          .
-        </Text>
-        <Tabs
-          activeTabName={schemaTab}
-          tabs={[
-            {
-              tabName: "created",
-              title: "Created",
-              content: <SchemasTable discover={false} onSchemaSelect={setSchema} />,
-            },
-            {
-              tabName: "discover",
-              title: "Discover",
-              content: <SchemasTable discover={true} onSchemaSelect={setSchema} />,
-            },
-          ]}
-          onTabClicked={setSchemaTab}
-        />
+        <ModalHeader>Issue Credential</ModalHeader>
+        <ModalContent>
+          <Text>
+            Please select a credential schema, or{" "}
+            <Button.Text p={0} onClick={() => setSchema(null)}>
+              enter credential as JSON
+            </Button.Text>
+            .
+          </Text>
+          <Tabs
+            activeTabName={schemaTab}
+            tabs={[
+              {
+                tabName: "created",
+                title: "Created",
+                content: <SchemasTable discover={false} onSchemaSelect={setSchema} />,
+              },
+              {
+                tabName: "discover",
+                title: "Discover",
+                content: <SchemasTable discover={true} onSchemaSelect={setSchema} />,
+              },
+            ]}
+            onTabClicked={setSchemaTab}
+          />
+        </ModalContent>
       </>
     );
   }
 
   return (
     <>
-      <Button.Text
-        icononly
-        icon="ArrowBack"
-        position="absolute"
-        top={0}
-        left={0}
-        mt={3}
-        ml={3}
-        onClick={() => goBack()}
-      />
-
+      <ModalBack onClick={goBack} />
       <IssueVcForm
         defaultIssuer={props.defaultIssuer}
         schema={schema}

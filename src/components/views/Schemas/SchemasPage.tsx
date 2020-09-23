@@ -1,11 +1,12 @@
 import * as React from "react";
 import { generatePath, useHistory, useParams } from "react-router-dom";
-import { Box, Button, Flex, Modal, Text } from "rimble-ui";
+import { Box, Button, Flex, Text } from "rimble-ui";
 import { routes } from "../../../constants";
 import { CreateSchema, SchemasTable } from "../../elements/components";
 import { GlobalLayout, Header, HeaderBox } from "../../elements/layouts";
 import { Tabs } from "../../elements/layouts/Tabs/Tabs";
 import { baseColors } from "../../elements/themes";
+import { ModalWithX } from "../../elements/components/Modals";
 
 export const SchemasPage: React.FunctionComponent = (props) => {
   const { tabName } = useParams();
@@ -67,9 +68,9 @@ export const SchemasPage: React.FunctionComponent = (props) => {
         />
       </Box>
 
-      <Modal isOpen={isCreateModalOpen}>
-        <CreateSchema onClose={() => setIsCreateModalOpen(false)}></CreateSchema>
-      </Modal>
+      <ModalWithX isOpen={isCreateModalOpen} close={() => setIsCreateModalOpen(false)} width={9}>
+        <CreateSchema onComplete={() => setIsCreateModalOpen(false)}></CreateSchema>
+      </ModalWithX>
     </GlobalLayout>
   );
 };
