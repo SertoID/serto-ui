@@ -1,7 +1,14 @@
 import * as React from "react";
+import styled from "styled-components";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { baseColors, colors } from "../../themes";
+
+export const Option = styled(Box)`
+  &:hover span {
+    color: ${colors.primary.base};
+  }
+`;
 
 interface DropDownOptions {
   name: string;
@@ -88,7 +95,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
             {props.options.map((option: any, key: number) => {
               if (option.name !== selectedOption) {
                 return (
-                  <Box
+                  <Option
                     onClick={onOptionClicked(option.value, option.name)}
                     key={key}
                     borderBottom={1}
@@ -98,7 +105,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
                     <Text.span fontSize={2} fontWeight={3}>
                       {option.name}
                     </Text.span>
-                  </Box>
+                  </Option>
                 );
               }
               return null;

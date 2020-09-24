@@ -35,7 +35,8 @@ export class TrustAgencyService {
     this.setAuth({ jwt });
     const user = await this.request("/v1/users/currentUser");
     console.log({ user });
-    const tenantid = user.tenants[0].Tenant_id;
+    const tenantOrg = user.tenants.find((tenant: { Tenant_type: string }) => tenant.Tenant_type === "organization");
+    const tenantid = tenantOrg ? tenantOrg.Tenant_id : user.tenants[0].Tenant_id;
     this.setAuth({ jwt, tenantid }, true);
     this.loggingIn = false;
   }

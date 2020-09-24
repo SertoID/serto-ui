@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { routes } from "../../../constants";
-import { LoginErrorMsg } from "../../elements/text";
+import { ErrorUserNameUnique, ErrorUserNotFound, ErrorLogin, ErrorSignup } from "../../elements/text";
 import { colors } from "../../elements/themes";
 
 export const LoginPage = () => {
@@ -29,7 +29,11 @@ export const LoginPage = () => {
       history.push(routes.HOMEPAGE);
     } catch (err) {
       console.error("error logging in:", err);
-      setError(LoginErrorMsg);
+      if (err.toString().includes("312")) {
+        setError(ErrorUserNotFound);
+      } else {
+        setError(ErrorLogin);
+      }
       doLogout();
     }
   }
@@ -43,7 +47,11 @@ export const LoginPage = () => {
       history.push(routes.ONBOARDING);
     } catch (err) {
       console.error("error signing up:", err);
-      setError("Sign up failed: " + err.message);
+      if (err.includes("455")) {
+        setError(ErrorUserNameUnique);
+      } else {
+        setError(ErrorSignup);
+      }
       doLogout();
     }
   }

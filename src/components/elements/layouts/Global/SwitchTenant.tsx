@@ -31,10 +31,12 @@ export const SwitchTenant: React.FunctionComponent<SwitchTenantProps> = (props) 
       if (activeTenantID === tenant.Tenant_id) {
         activeTenantName = tenant.Tenant_name;
       }
-      tenants.push({
-        name: tenant.Tenant_name,
-        value: tenant.Tenant_id,
-      });
+      if (tenant.Tenant_type === "organization") {
+        tenants.push({
+          name: tenant.Tenant_name,
+          value: tenant.Tenant_id,
+        });
+      }
     });
 
     return (

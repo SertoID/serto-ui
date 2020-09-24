@@ -2,12 +2,13 @@ import * as React from "react";
 import { routes } from "../../../constants";
 import { Box, Button, Flex, Heading, Text } from "rimble-ui";
 import { baseColors } from "../../elements/themes";
+import { links } from "../../../constants";
 
 export const OnboardingPage: React.FunctionComponent = (props) => {
   return (
     <Flex flexDirection="column" height="100vh">
       <Box bg={baseColors.white} borderRadius={1} m={3} mb={0} p={3}>
-        <Button.Text as="a" href="#">
+        <Button.Text as="a" href={links.DOCUMENTATION}>
           Help Docs?
         </Button.Text>
       </Box>

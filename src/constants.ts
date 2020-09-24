@@ -21,5 +21,6 @@ export enum freeAccount {
 }
 
 export const links = {
-  EMAIL_SUPPORT: "TKTK",
+  EMAIL_SUPPORT: "help@consensys.id",
+  DOCUMENTATION: "https://docs.consensys.id/docs/",
 };
