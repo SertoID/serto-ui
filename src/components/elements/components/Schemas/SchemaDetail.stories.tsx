@@ -5,6 +5,7 @@ import { SchemaDetail } from "./SchemaDetail";
 import { ldContextPlusToSchemaInput } from "./utils";
 import { EXAMPLE_SCHEMAS } from "./examples";
 import { SchemaDataInput } from "./types";
+import { IdentityThemeProvider } from "../../themes/IdentityTheme";
 
 const DEFAULT_SCHEMA = "ContentPublishCredential (flat)";
 
@@ -21,7 +22,7 @@ storiesOf("Schemas", module).add("SchemaDetail", () => {
   }
 
   return (
-    <>
+    <IdentityThemeProvider>
       <Box mb={3}>
         <select value={schemaKey} onChange={(event: any) => setSchemaKey(event.target.value)}>
           {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
@@ -32,10 +33,10 @@ storiesOf("Schemas", module).add("SchemaDetail", () => {
         </select>
       </Box>
 
-      <Box width={480}>
+      <Box width={480} key={schemaKey}>
         {ldContextPlus && <SchemaDetail schema={ldContextPlus} />}
         {error && <Flash variant="danger">Error: {error}</Flash>}
       </Box>
-    </>
+    </IdentityThemeProvider>
   );
 });

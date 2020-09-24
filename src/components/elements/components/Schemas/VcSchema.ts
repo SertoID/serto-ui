@@ -1,6 +1,7 @@
 import Ajv from "ajv";
 import { omitDeep, mapValuesDeep } from "deepdash-es/standalone";
 import slugify from "@sindresorhus/slugify";
+import { getSchemaUrl } from "./utils";
 
 const ajv = new Ajv();
 
@@ -157,6 +158,10 @@ export class VcSchema {
       { callbackAfterIterate: true },
     );
 
+    if (this.id && this.jsonLdContext["@context"]?.["schema-id"]) {
+      this.jsonLdContext["@context"]["schema-id"] = getSchemaUrl(this.id, "ld-context") + "#";
+    }
+
     try {
       this.jsonSchema = this.generateJsonSchema();
       if (this.jsonSchema) {
@@ -271,7 +276,7 @@ export class VcSchema {
 
     return {
       $schema: "http://json-schema.org/draft-07/schema#",
-      $id: this.id && `http://consensysidentity.com/schemas/${this.id}.json`, // @TODO/tobek Update URL and ensure this shema is available at this URL
+      $id: this.id && getSchemaUrl(this.id, "json-schema"),
       title: context["@title"],
       description: context["@description"],
       ...baseVcJsonSchema,

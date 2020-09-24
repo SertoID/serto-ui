@@ -1,3 +1,6 @@
+import { config } from "../../../../config";
+import { getSchemaUrl } from "./utils";
+
 export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
   DiplomaCredential: `{
   "@context": {
@@ -12,7 +15,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     },
     "w3ccred": "https://www.w3.org/2018/credentials#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-    "schema-id": "https://consensysidentity.com/schema/DiplomaCredential#",
+    "schema-id": "${getSchemaUrl("diploma-credential", "ld-context-plus")}#",
     "DiplomaCredential": {
       "@id": "schema-id",
       "@contains": "credentialSubject"
@@ -59,7 +62,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "discoverable": true
     },
     "w3ccred": "https://www.w3.org/2018/credentials#",
-    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "schema-id": "${getSchemaUrl("content-publish-credential", "ld-context-plus")}#",
     "ContentPublishCredential": {
       "@id": "schema-id",
       "@contains": "credentialSubject"
@@ -203,7 +206,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     },
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "w3ccred": "https://www.w3.org/2018/credentials#",
-    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "schema-id": "${getSchemaUrl("content-publish-credential", "ld-context-plus")}#",
     "ContentPublishCredential": {
       "@id": "schema-id",
       "@contains": "credentialSubject"
@@ -333,7 +336,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     },
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "w3ccred": "https://www.w3.org/2018/credentials#",
-    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "schema-id": "${getSchemaUrl("content-publish-credential", "ld-context-plus")}#",
     "ContentPublishCredential": {
       "@id": "schema-id",
       "@contains": "credentialSubject"
@@ -453,7 +456,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "discoverable": true
     },
     "w3ccred": "https://www.w3.org/2018/credentials#",
-    "schema-id": "https://consensysidentity.com/schema/ContentPublishCredential#",
+    "schema-id": "${getSchemaUrl("content-publish-credential", "ld-context-plus")}#",
     "ContentPublishCredential": {
       "@id": "schema-id",
       "@contains": "credentialSubject"
@@ -498,7 +501,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     },
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "w3ccred": "https://www.w3.org/2018/credentials#",
-    "schema-id": "https://consensysidentity.com/schema/TestCredential#",
+    "schema-id": "${getSchemaUrl("test-credential", "ld-context-plus")}#",
     "TestCredential": {
       "@id": "schema-id",
       "@contains": "credentialSubject"
