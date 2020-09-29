@@ -5,8 +5,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 import { config } from "./config";
 import { routes } from "./constants";
-import { TrustAgencyContext } from "./context/TrustAgentProvider";
-import { TrustAgencyService } from "./services/TrustAgencyService";
+import { TrustAgencyProvider } from "./context/TrustAgentProvider";
 import { IdentityThemeProvider, fonts } from "./components/elements";
 
 import { AdminPage } from "./components/views/Admin/AdminPage";
@@ -38,12 +37,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export const App = () => {
-  const trustAgent = React.useMemo(() => new TrustAgencyService(), []);
+  const featureFlags = config.FEATURE_FLAGS ? config.FEATURE_FLAGS.split(",") : [];
 
   return (
     <Auth0Provider domain={config.AUTH0_DOMAIN} clientId={config.AUTH0_CLIENT_ID} redirectUri={window.location.origin}>
       <BrowserRouter>
-        <TrustAgencyContext.Provider value={trustAgent}>
+        <TrustAgencyProvider featureFlags={featureFlags}>
           <React.Suspense fallback={<></>}>
             <IdentityThemeProvider>
               <GlobalStyle />
@@ -53,7 +52,7 @@ export const App = () => {
                 <AuthenticatedRoute path={routes.ADMIN} component={AdminPage} />
                 <AuthenticatedRoute path={routes.ONBOARDING} component={OnboardingPage} />
                 <AuthenticatedRoute path={routes.CREATE_ORGANIZATION} component={CreateOrganizationPage} />
-                <AuthenticatedRoute exact path={routes.HOMEPAGE} component={FeedsPage} />
+                <AuthenticatedRoute exact path={routes.HOMEPAGE} component={CredentialsPage} />
                 <AuthenticatedRoute path={routes.FEEDS} component={FeedsPage} />
                 <AuthenticatedRoute path={routes.CREDENTIALS} component={CredentialsPage} />
                 <AuthenticatedRoute path={routes.SCHEMAS} component={SchemasPage} />
@@ -62,7 +61,7 @@ export const App = () => {
               </Switch>
             </IdentityThemeProvider>
           </React.Suspense>
-        </TrustAgencyContext.Provider>
+        </TrustAgencyProvider>
       </BrowserRouter>
     </Auth0Provider>
   );

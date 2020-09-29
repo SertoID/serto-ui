@@ -4,7 +4,7 @@ import { routes } from "../../../constants";
 import { GlobalLayout, Header, HeaderBox } from "../../elements/layouts";
 import { Tabs } from "../../elements/layouts";
 import { MemberManagement } from "./MemberManagement";
-import { AccountPlan } from "./AccountPlan";
+// import { AccountPlan } from "./AccountPlan";
 
 export const SettingsPage: React.FunctionComponent = (props) => {
   const { tabName } = useParams();
@@ -26,11 +26,11 @@ export const SettingsPage: React.FunctionComponent = (props) => {
             title: "Members",
             content: <MemberManagement />,
           },
-          {
+          /*{
             tabName: "account-plan",
             title: "Account Plan",
             content: <AccountPlan />,
-          },
+          },*/
         ]}
         onTabClicked={(tabName) => {
           history.push(generatePath(routes.SETTINGS, { tabName }));

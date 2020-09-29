@@ -40,14 +40,14 @@ export const LoginPage = () => {
 
   async function doSignup() {
     try {
-      await loginWithPopup();
+      await loginWithPopup({screen_hint: "signup"});
       const token = await getIdTokenClaims();
       console.log({ token });
       await TrustAgent.signup(token.__raw);
       history.push(routes.ONBOARDING);
     } catch (err) {
       console.error("error signing up:", err);
-      if (err.includes("455")) {
+      if (err.toString().includes("455")) {
         setError(ErrorUserNameUnique);
       } else {
         setError(ErrorSignup);

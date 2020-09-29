@@ -6,6 +6,7 @@ export interface ConfigType {
   AUTH0_CLIENT_ID: string;
   AUTH0_DOMAIN: string;
   GLOBAL_FEED_SLUG: string;
+  FEATURE_FLAGS?: string;
 }
 
 const defaultConfig: ConfigType = {
@@ -18,6 +19,7 @@ const defaultConfig: ConfigType = {
   AUTH0_CLIENT_ID: "sAnzetlNs0HbyokOncaTUZmLRijPazBc",
   AUTH0_DOMAIN: "auth.consensys.id",
   GLOBAL_FEED_SLUG: "global",
+  FEATURE_FLAGS: process.env.REACT_APP_FEATURE_FLAGS,
 };
 
 const serverConfigString = (window as any).SERVER_CONFIG;

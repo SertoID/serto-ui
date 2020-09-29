@@ -52,7 +52,7 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
 
   async function doSignup() {
     try {
-      await loginWithPopup();
+      await loginWithPopup({screen_hint: "signup"});
       const token = await getIdTokenClaims();
       setIsLoading(true);
       await TrustAgent.signup(token.__raw);

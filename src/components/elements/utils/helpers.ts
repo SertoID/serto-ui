@@ -39,3 +39,24 @@ export function convertToCamelCase(s: string): string {
 export function convertToPascalCase(s: string): string {
   return slugify(s).replace(/(^|-)./g, (x) => x.replace("-", "").toUpperCase());
 }
+
+export function getAllUrlSearchParam(name: string): string[] {
+  if (window.URLSearchParams) {
+    const urlParams = new URLSearchParams(window.location.search.slice(1));
+    return urlParams.getAll(name);
+  } else {
+    // eslint-disable-next-line no-useless-escape
+    const nameForRegex = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    const regex = new RegExp("[\\?&]" + nameForRegex + "=([^&#]*)", "g");
+    const output = [];
+    let results: RegExpExecArray | null;
+    while (true) {
+      results = regex.exec(window.location.search);
+      if (!results) {
+        break;
+      }
+      output.push(decodeURIComponent(results[1].replace(/\+/g, " ")));
+    }
+    return output;
+  }
+}
