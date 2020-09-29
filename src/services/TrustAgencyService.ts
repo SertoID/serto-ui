@@ -248,7 +248,6 @@ export class TrustAgencyService {
     document.onreadystatechange = () => {
       if (document.readyState === "complete") {
         const auth = this.getAuth();
-        console.log("Authenticating extension");
         if (auth?.jwt && auth?.tenantid) {
           this.authenticateExtension({ id_token: auth.jwt }, auth.tenantid);
         }
@@ -284,8 +283,6 @@ export class TrustAgencyService {
     try {
       const auth = JSON.parse(authString);
       this.auth = auth;
-
-      console.log("AUTH", auth);
     } catch (err) {
       console.error("failed to parse auth", authString);
     }
