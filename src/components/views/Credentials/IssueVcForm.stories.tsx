@@ -1,12 +1,14 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Box, Flash } from "rimble-ui";
+import { Box, Flex, Flash } from "rimble-ui";
+import { TrustAgencyProvider } from "../../../context/TrustAgentProvider";
 import { EXAMPLE_SCHEMAS } from "../../elements/components/Schemas/examples";
 import { SchemaDataInput } from "../../elements/components/Schemas";
 import { ldContextPlusToSchemaInput } from "../../elements/components/Schemas/utils";
 import { IssueVcForm } from "./IssueVcForm";
 import { SchemaDataResponse } from "../../elements";
 import { HighlightedJson } from "../../elements/components/HighlightedJson/HighlightedJson";
+import { IdentityThemeProvider } from "../../elements/themes/IdentityTheme";
 
 const DEFAULT_SCHEMA = "TestCredential";
 
@@ -28,29 +30,38 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
   }, [schemaKey]);
 
   return (
-    <>
-      <Box mb={3}>
-        Schema:{" "}
-        <select value={schemaKey} onChange={(event: any) => setSchemaKey(event.target.value)}>
-          <option value="">[Raw JSON input]</option>
-          {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
-            <option key={key} value={key}>
-              {key}
-            </option>
-          ))}
-        </select>
-      </Box>
+    <TrustAgencyProvider>
+      <IdentityThemeProvider>
+        <Flex>
+          <div>
+            <Box mb={3}>
+              Schema:{" "}
+              <select value={schemaKey} onChange={(event: any) => setSchemaKey(event.target.value)}>
+                <option value="">[Raw JSON input]</option>
+                {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
+                  <option key={key} value={key}>
+                    {key}
+                  </option>
+                ))}
+              </select>
+            </Box>
 
-      <Box width={480}>
-        {error && <Flash variant="danger">{error}</Flash>}
-        <IssueVcForm
-          schema={ldContextPlus as SchemaDataResponse}
-          defaultIssuer="0xabc123"
-          onSuccessResponse={() => {}}
-          onVcDataChange={setVcData}
-        />
-      </Box>
-      <HighlightedJson json={JSON.stringify(vcData, null, 2)} />
-    </>
+            <Box width={480}>
+              {error && <Flash variant="danger">{error}</Flash>}
+              <IssueVcForm
+                schema={ldContextPlus as SchemaDataResponse}
+                defaultIssuer="0xabc123"
+                onSuccessResponse={() => {}}
+                onVcDataChange={setVcData}
+              />
+            </Box>
+          </div>
+          <Box flexGrow={1}>
+            <Box mb={1}>debug:</Box>
+            <HighlightedJson json={JSON.stringify(vcData, null, 2)} />
+          </Box>
+        </Flex>
+      </IdentityThemeProvider>
+    </TrustAgencyProvider>
   );
 });

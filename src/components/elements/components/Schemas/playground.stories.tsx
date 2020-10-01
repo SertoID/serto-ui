@@ -43,7 +43,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
     } catch (err) {
       setInputSchemaError(err.message);
     }
-  }, [debouncedSchema]);
+  }, [inputSchemaName, debouncedSchema]);
 
   React.useEffect(() => {
     if (vcSchema) {

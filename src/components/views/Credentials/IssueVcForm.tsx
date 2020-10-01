@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import { Box, Button, Checkbox, Field, Flash, Form, Input, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
@@ -9,6 +10,14 @@ import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 import { getSchemaUrl } from "../../elements/components/Schemas/utils";
 import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
 import { featureFlags } from "../../../constants";
+import { DropDown } from "../../elements/components/DropDown/DropDown";
+
+/** `Field` component shows "(optional)" text if it doesn't find an `<input required ...>` child, but sometimes we want to use `Field` with other children like our custom `DropDown` so we have to hide it. */
+const FieldNotOptional = styled(Field)`
+  div::after {
+    display: none;
+  }
+`;
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
@@ -37,6 +46,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
+  const [issuer, setIssuer] = useState<string>(props.defaultIssuer);
   const [publishToFeedSlug, setPublishToFeedSlug] = useState<string | undefined>();
   const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
@@ -70,6 +80,9 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
           ...initialCred,
           "@context": ["https://www.w3.org/2018/credentials/v1", getSchemaUrl(props.schema.slug, "ld-context")],
           type: credType ? [...initialCred.type, credType] : initialCred.type,
+          issuer: {
+            id: issuer,
+          },
           credentialSchema: {
             id: getSchemaUrl(props.schema.slug, "json-schema"),
             type: "JsonSchemaValidator2018",
@@ -179,6 +192,19 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
             </Field>
           ) : (
             <>
+              <Field label="Issuance Date" width="100%">
+                <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
+              </Field>
+              <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
+                <DropDown
+                  onChange={setIssuer}
+                  options={[
+                    { name: props.defaultIssuer, value: props.defaultIssuer },
+                    { name: "foo", value: "bar" },
+                  ]}
+                  optionsTextProps={{ fontWeight: 2 }}
+                />
+              </FieldNotOptional>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
                 <Field key={key} label={node.title || key} width="100%">
                   {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
