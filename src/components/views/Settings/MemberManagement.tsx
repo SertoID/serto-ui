@@ -55,10 +55,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
     setRemoveError("");
     setRemoveLoading(true);
     try {
-      // TODO: actually delete member once endpoint is ready
-      // await TrustAgent.removeMember({
-      //   memberID: memberToDeleteID,
-      // });
+      await TrustAgent.removeMember(memberToDeleteID);
       setMemberToDeleteID("");
       await mutate("/v1/tenant/members");
       setIsDeleteModalOpen(false);
@@ -89,15 +86,16 @@ export const MemberManagement: React.FunctionComponent = (props) => {
               </THead>
               <TBody>
                 {data.map((member: any, i: number) => {
+                  console.log(member);
                   return (
                     <TR key={i}>
                       <td>{member.user.email}</td>
-                      <td>{member.id}</td>
+                      <td>{member.user.id}</td>
                       <td>Full access</td>
                       <td>
                         <Button.Outline
                           onClick={() => {
-                            setMemberToDeleteID(member.id);
+                            setMemberToDeleteID(member.user.id);
                             setIsDeleteModalOpen(true);
                           }}
                           size="small"
@@ -176,7 +174,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
           </ModalContent>
           <ModalFooter mb={1}>
             <Button onClick={removeMember} disabled={removeLoading} variant="danger" width="100%">
-              {"TODO: REMOVE"}
+              Remove
             </Button>
           </ModalFooter>
         </Box>
