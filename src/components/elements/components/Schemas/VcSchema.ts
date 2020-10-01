@@ -94,6 +94,7 @@ const baseVcJsonSchema = {
     },
     id: {
       type: "string",
+      format: "uri",
     },
     type: {
       type: ["string", "array"],
@@ -102,15 +103,21 @@ const baseVcJsonSchema = {
       },
     },
     issuer: {
-      format: "uri",
       type: "string",
+      format: "uri",
     },
     issuanceDate: {
-      format: "date-time",
       type: "string",
+      format: "date-time",
     },
     credentialSubject: {
       type: "object",
+      properties: {
+        id: {
+          type: "string",
+          format: "uri",
+        },
+      },
     },
   },
 };

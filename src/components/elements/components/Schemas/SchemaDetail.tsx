@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, Flex, Heading, Text, Flash } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../";
-import { SchemaDataInput, SchemaDataResponse } from "./types";
+import { SchemaDataInput, SchemaDataResponse, requiredSchemaProperties } from "./types";
 import { typeOptions } from "./utils";
 import { Toggle } from "../Toggle";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "./VcSchema";
@@ -27,7 +27,11 @@ const PropertyDescription: React.FunctionComponent = (props) => (
 const renderProperty = ([key, prop]: [string, LdContextPlusNode]): React.ReactNode => {
   let propType: string;
   if ("@type" in prop && prop["@type"]) {
-    propType = typeOptions[prop["@type"]]?.niceName || prop["@type"];
+    if (prop["@type"] === "@id") {
+      propType = "URI";
+    } else {
+      propType = typeOptions[prop["@type"]]?.niceName || prop["@type"];
+    }
   } else if ("@context" in prop && prop["@context"]) {
     // @TODO/tobek We should support these fully eventually.
     propType = "[nested object]";
@@ -124,6 +128,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           <MetadataText>Discoverable: {(!!schema.discoverable).toString()}</MetadataText>
           {schema.description && <MetadataText>{schema.description}</MetadataText>}
 
+          {requiredSchemaProperties.map((prop) => renderProperty([prop["@id"], prop]))}
           {innerContext && Object.entries(innerContext).map(renderProperty)}
           {credContains?.map(
             (contained) => outerContext?.[contained] && renderProperty([contained, outerContext[contained]]),

@@ -38,6 +38,27 @@ export interface SchemaDataResponse extends SchemaDataInput {
   deleted?: string;
 }
 
+export const requiredSchemaProperties = [
+  {
+    "@id": "credentialId",
+    "@type": "@id",
+    "@title": "Credential ID",
+    "@required": true,
+  },
+  {
+    "@id": "issuanceDate",
+    "@type": "http://schema.org/DateTime",
+    "@title": "Issuance Date",
+    "@required": true,
+  },
+  {
+    "@id": "issuer",
+    "@type": "@id",
+    "@title": "Issuer ID",
+    "@required": true,
+  },
+];
+
 export const initialWorkingSchema: WorkingSchema = {
   name: "",
   description: "",
@@ -47,12 +68,20 @@ export const initialWorkingSchema: WorkingSchema = {
   discoverable: false,
   properties: [
     {
-      "@id": "title",
-      "@type": "http://schema.org/Text",
+      "@id": "id",
+      "@type": "@id",
       "@dataType": "string",
-      "@title": "Title",
-      "@description": "A human-friendly name for this verified credential.",
+      "@format": "uri",
+      "@title": "Credential Subject ID",
+      "@required": true,
     },
+    // {
+    //   "@id": "title",
+    //   "@type": "http://schema.org/Text",
+    //   "@dataType": "string",
+    //   "@title": "Title",
+    //   "@description": "A human-friendly name for this verified credential.",
+    // },
     {
       "@id": "",
       "@type": "http://schema.org/Text",

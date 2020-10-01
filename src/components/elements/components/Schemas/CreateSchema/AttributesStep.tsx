@@ -1,11 +1,18 @@
 import * as React from "react";
+import styled from "styled-components";
 import { Box, Button, Checkbox, Flash, Flex, Form, Input } from "rimble-ui";
 import { colors, fonts } from "../../../";
-import { WorkingSchema } from "../types";
+import { WorkingSchema, requiredSchemaProperties } from "../types";
 import { typeOptions } from "../utils";
 import { LdContextPlusLeafNode } from "../VcSchema";
 import { convertToCamelCase } from "../../../utils";
 import { ModalContentFullWidth, ModalHeader } from "../../Modals";
+
+const AttributeBox = styled(Box)`
+  &:first-child {
+    margin-top: 4px;
+  }
+`;
 
 export interface AttributesStepProps {
   schema: WorkingSchema;
@@ -78,74 +85,80 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     }
   }
 
+  function renderSchemaProperty(prop: Partial<LdContextPlusLeafNode>, i: number, readOnly = false): JSX.Element {
+    return (
+      <AttributeBox key={i + readOnly.toString()} backgroundColor={colors.nearWhite} p={4} my={4}>
+        <Flex>
+          <Input
+            width="100%"
+            type="text"
+            required={true}
+            placeholder="Attribute name"
+            mr={2}
+            value={prop["@title"]}
+            onChange={(event: any) => updateProperty(i, "@title", event.target.value)}
+            disabled={readOnly}
+          />
+          <select
+            onChange={(event: any) => updateType(i, event.target.value)}
+            style={{ fontSize: 16, padding: "0 16px" }}
+            value={prop["@type"] === "@id" ? "http://schema.org/URL" : prop["@type"]}
+            disabled={readOnly}
+          >
+            {Object.keys(typeOptions).map((type) => (
+              <option key={type} value={type}>
+                {typeOptions[type].niceName}
+              </option>
+            ))}
+            {/* @TODO/tobek Add "custom" option that opens fields to manually enter type details. */}
+          </select>
+        </Flex>
+        {!readOnly && (
+          <textarea
+            placeholder="Description"
+            value={prop["@description"] || ""}
+            style={{
+              width: "100%",
+              boxSizing: "border-box",
+              minHeight: "50px",
+              fontFamily: fonts.sansSerif,
+              fontSize: 16,
+              padding: 16,
+              marginTop: 16,
+            }}
+            onChange={(event: any) => updateProperty(i, "@description", event.target.value)}
+          />
+        )}
+        <Flex justifyContent="space-between" mt={3}>
+          <Checkbox
+            fontFamily={fonts.sansSerif}
+            label="Required"
+            checked={!!prop["@required"]}
+            onChange={() => updateProperty(i, "@required", !prop["@required"])}
+            disabled={readOnly}
+          />
+          {!readOnly && (
+            <Button.Text
+              icononly
+              icon="DeleteForever"
+              onClick={(e: Event) => {
+                e.preventDefault();
+                removeProperty(i);
+              }}
+            />
+          )}
+        </Flex>
+      </AttributeBox>
+    );
+  }
+
   return (
     <>
       <ModalHeader>Define Credential Attributes</ModalHeader>
       <ModalContentFullWidth>
         <Form validated={doValidation} onSubmit={goNext}>
-          {schema.properties.map((prop, i) => (
-            <Box
-              key={i}
-              backgroundColor={colors.nearWhite}
-              p={4}
-              mt={i === 0 ? 1 : 4 /* can't believe i am reimplementing `:first-child` */}
-              mb={4}
-            >
-              <Flex>
-                <Input
-                  width="100%"
-                  type="text"
-                  required={true}
-                  placeholder="Attribute name"
-                  mr={2}
-                  value={schema.properties[i]["@title"]}
-                  onChange={(event: any) => updateProperty(i, "@title", event.target.value)}
-                />
-                <select
-                  onChange={(event: any) => updateType(i, event.target.value)}
-                  style={{ fontSize: 16, padding: "0 16px" }}
-                  value={schema.properties[i]["@type"]}
-                >
-                  {Object.keys(typeOptions).map((type) => (
-                    <option key={type} value={type}>
-                      {typeOptions[type].niceName}
-                    </option>
-                  ))}
-                  {/* @TODO/tobek Add "custom" option that opens fields to manually enter type details. */}
-                </select>
-              </Flex>
-              <textarea
-                placeholder="Description"
-                value={schema.properties[i]["@description"] || ""}
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  minHeight: "50px",
-                  fontFamily: fonts.sansSerif,
-                  fontSize: 16,
-                  padding: 16,
-                  margin: "16px 0",
-                }}
-                onChange={(event: any) => updateProperty(i, "@description", event.target.value)}
-              />
-              <Flex justifyContent="space-between">
-                <Checkbox
-                  fontFamily={fonts.sansSerif}
-                  label="Required"
-                  checked={!!schema.properties[i]["@required"]}
-                  onChange={() => updateProperty(i, "@required", !prop["@required"])}
-                />
-                <Button.Text
-                  icononly
-                  icon="DeleteForever"
-                  onClick={(e: Event) => {
-                    e.preventDefault();
-                    removeProperty(i);
-                  }}
-                />
-              </Flex>
-            </Box>
-          ))}
+          {requiredSchemaProperties.map((prop, i) => renderSchemaProperty(prop, i, true))}
+          {schema.properties.map((prop, i) => renderSchemaProperty(prop, i))}
           <Box px={4} mt={3}>
             <Button.Outline mb={3} mx="auto" type="submit" width="100%" onClick={addProperty}>
               Add Attribute

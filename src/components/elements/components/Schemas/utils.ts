@@ -15,7 +15,7 @@ Object.keys(jsonLdContextTypeMap).forEach((type) => {
     "@format": jsonLdContextTypeMap[type].format,
     "@dataType": jsonLdContextTypeMap[type].type,
     "@type": type,
-    niceName: type.replace("http://schema.org/", ""),
+    niceName: type.replace("http://schema.org/", "").replace("URL", "URI"),
   };
 });
 
