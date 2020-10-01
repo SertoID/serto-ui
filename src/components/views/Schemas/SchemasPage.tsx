@@ -47,26 +47,24 @@ export const SchemasPage: React.FunctionComponent = (props) => {
         </Header>
       </HeaderBox>
 
-      <Box bg={baseColors.white} borderRadius={1} pt={2} pb={3}>
-        <Tabs
-          activeTabName={tabName || "created"}
-          tabs={[
-            {
-              tabName: "created",
-              title: "Created",
-              content: <SchemasTable discover={false} noSchemasElement={noSchemas} />,
-            },
-            {
-              tabName: "discover",
-              title: "Discover",
-              content: <SchemasTable discover={true} noSchemasElement={noSchemas} />,
-            },
-          ]}
-          onTabClicked={(tabName) => {
-            history.push(generatePath(routes.SCHEMAS, { tabName }));
-          }}
-        />
-      </Box>
+      <Tabs
+        activeTabName={tabName || "created"}
+        tabs={[
+          {
+            tabName: "created",
+            title: "Created",
+            content: <SchemasTable discover={false} noSchemasElement={noSchemas} />,
+          },
+          {
+            tabName: "discover",
+            title: "Discover",
+            content: <SchemasTable discover={true} noSchemasElement={noSchemas} />,
+          },
+        ]}
+        onTabClicked={(tabName) => {
+          history.push(generatePath(routes.SCHEMAS, { tabName }));
+        }}
+      />
 
       <ModalWithX isOpen={isCreateModalOpen} close={() => setIsCreateModalOpen(false)} width={9}>
         <CreateSchema onComplete={() => setIsCreateModalOpen(false)}></CreateSchema>

@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import { routes } from "../../../../constants";
 import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../../services/TrustAgencyService";
-import { Box, Flex, Loader } from "rimble-ui";
+import { Box, Flex } from "rimble-ui";
 import { LogOut } from "../../../views/Auth/LogOut";
 import { Nav } from "./Nav";
 import { SwitchTenant } from "./SwitchTenant";
@@ -16,30 +16,22 @@ export interface GlobalLayoutProps {
 
 export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
-  const { data: user, isValidating } = useSWR("/v1/tenant/users/currentUser", () => TrustAgent.getUser());
-
-  if (isValidating) {
-    return (
-      <Flex alignItems="center" justifyContent="center" height="100vh">
-        <Loader size="30px" />
-      </Flex>
-    );
-  }
+  const { data: user } = useSWR("/v1/tenant/users/currentUser", () => TrustAgent.getUser());
 
   if (user && user.tenants.length === 1) {
     return <Redirect to={routes.CREATE_ORGANIZATION} />;
   }
 
   return (
-    <Flex p={2}>
+    <Flex p={2} height="100vh">
       <Box width={8} p={2}>
         <SwitchTenant user={user} />
         <Nav url={props.url} />
         <LogOut />
       </Box>
-      <Box flexGrow="1" p={2}>
+      <Flex flexDirection="column" height="98vh" flexGrow="1" p={2}>
         {props.children}
-      </Box>
+      </Flex>
     </Flex>
   );
 };

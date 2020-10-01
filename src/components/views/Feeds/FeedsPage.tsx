@@ -2,12 +2,12 @@ import * as React from "react";
 import useSWR, { mutate } from "swr";
 import slugify from "@sindresorhus/slugify";
 import { routes, featureFlags } from "../../../constants";
-import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text, Checkbox } from "rimble-ui";
+import { Box, Button, Field, Flash, Flex, Input, Loader, Table, Text, Checkbox } from "rimble-ui";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { GlobalLayout, Header, HeaderBox, TBody, TH, TR } from "../../elements/layouts";
 import { baseColors, colors } from "../../elements/themes";
-import { Error404, FeatureFlag } from "../../elements/components";
+import { Error404, FeatureFlag, ModalWithX, ModalContent, ModalFooter, ModalHeader } from "../../elements/components";
 
 export const FeedsPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -110,7 +110,7 @@ export const FeedsPage: React.FunctionComponent = (props) => {
         ) : isValidating ? (
           <Box bg={baseColors.white} borderRadius={1} py={3}>
             <Flex minHeight={8} alignItems="center" justifyContent="center">
-              <Loader color={colors.primary.base} size={4} />
+              <Loader color={colors.primary.base} size={5} />
             </Flex>
           </Box>
         ) : getFeedsError ? (
@@ -137,21 +137,10 @@ export const FeedsPage: React.FunctionComponent = (props) => {
           </Box>
         )}
 
-        <Modal isOpen={isCreateModalOpen}>
-          <Card p={0}>
-            <Button.Text
-              icononly
-              icon="Close"
-              position="absolute"
-              top={0}
-              right={0}
-              mt={3}
-              mr={3}
-              onClick={closeModal}
-            />
-
-            <Box p={4}>
-              <Heading.h4>Create Feed</Heading.h4>
+        <ModalWithX isOpen={isCreateModalOpen} close={closeModal}>
+          <Box width="425px">
+            <ModalHeader>Create Feed</ModalHeader>
+            <ModalContent>
               <Field width="100%" label="Name">
                 <Input
                   type="text"
@@ -180,15 +169,14 @@ export const FeedsPage: React.FunctionComponent = (props) => {
                   </Flash>
                 </Box>
               )}
-            </Box>
-            <Flex px={4} py={3} justifyContent="flex-end">
-              <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
-              <Button ml={3} onClick={createFeed} disabled={createLoading}>
+            </ModalContent>
+            <ModalFooter mb={1}>
+              <Button onClick={createFeed} disabled={createLoading}>
                 {createLoading || isValidating ? <Loader color="white" /> : "Create Feed"}
               </Button>
-            </Flex>
-          </Card>
-        </Modal>
+            </ModalFooter>
+          </Box>
+        </ModalWithX>
       </GlobalLayout>
     </FeatureFlag>
   );

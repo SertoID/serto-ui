@@ -13,7 +13,7 @@ export const AuthenticatedRoute = ({ ...otherProps }) => {
   if (isLoading) {
     return (
       <Flex alignItems="center" justifyContent="center" height="100vh">
-        <Loader size="30px" />
+        <Loader size={5} />
       </Flex>
     );
   }

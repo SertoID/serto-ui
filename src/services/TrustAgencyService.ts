@@ -82,8 +82,8 @@ export class TrustAgencyService {
     return identifiers?.[0]?.did;
   }
 
-  public async createTenantIdentifier(): Promise<any> {
-    return this.request("/v1/tenant/agent/identityManagerCreateIdentity", "POST");
+  public async createTenantIdentifier(alias?: string): Promise<any> {
+    return this.request("/v1/tenant/agent/identityManagerCreateIdentity", "POST", { alias });
   }
 
   public async getCredentials(): Promise<any> {

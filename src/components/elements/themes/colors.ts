@@ -55,7 +55,7 @@ export const colors = {
     light: [null, tint(0.2, baseColors.blurple)], // #7A74FF
     dark: [null, shade(0.2, baseColors.blurple)], // #4741CC
     disabled: [null, tint(0.5, baseColors.blurple)], // #ACA8FF
-    border: [null, tint(0.7, baseColors.blurple)], // #CDCBFF
+    border: "#EDECFA",
     background: [null, tint(0.9, baseColors.blurple)], // #EEEDFF
   },
   info: {

@@ -93,7 +93,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
   } else if (isValidating) {
     return (
       <Flex minHeight={8} alignItems="center" justifyContent="center">
-        <Loader color={colors.primary.base} size={4} />
+        <Loader color={colors.primary.base} size={5} />
       </Flex>
     );
   } else {

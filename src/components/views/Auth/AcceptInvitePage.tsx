@@ -52,7 +52,7 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
 
   async function doSignup() {
     try {
-      await loginWithPopup({screen_hint: "signup"});
+      await loginWithPopup({ screen_hint: "signup" });
       const token = await getIdTokenClaims();
       setIsLoading(true);
       await TrustAgent.signup(token.__raw);
@@ -108,7 +108,7 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
     return (
       <AcceptInviteWrap>
         <Flex justifyContent="center">
-          <Loader size="30px" mt={6} />
+          <Loader size={5} mt={6} />
         </Flex>
       </AcceptInviteWrap>
     );

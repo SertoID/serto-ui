@@ -40,7 +40,7 @@ export const LoginPage = () => {
 
   async function doSignup() {
     try {
-      await loginWithPopup({screen_hint: "signup"});
+      await loginWithPopup({ screen_hint: "signup" });
       const token = await getIdTokenClaims();
       console.log({ token });
       await TrustAgent.signup(token.__raw);

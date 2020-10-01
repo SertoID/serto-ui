@@ -1,10 +1,11 @@
 import * as React from "react";
 import useSWR, { mutate } from "swr";
-import { Box, Button, Card, Flash, Flex, Heading, Loader, Modal, Table, Text } from "rimble-ui";
+import { Box, Button, Flash, Flex, Loader, Table, Text } from "rimble-ui";
+import { AddCircle } from "@rimble/icons";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { CopyableTruncatableText } from "../../elements/components";
-import { TBody, TH, TR } from "../../elements/layouts";
+import { CopyableTruncatableText, ModalWithX, ModalContent, ModalFooter, ModalHeader } from "../../elements/components";
+import { SecondaryHeader, TBody, TH, THead, TR } from "../../elements/layouts";
 import { baseColors, colors } from "../../elements/themes";
 import { config } from "../../../config";
 
@@ -15,7 +16,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
   const [getCodeLoading, setGetInviteCodeLoading] = React.useState(false);
   const [inviteCode, setInviteCodeKey] = React.useState("");
   const [isCreateModalOpen, setIsGetInviteCodeModalOpen] = React.useState(false);
-  const [isReceiveApiKeyModalOpen, setIsReceiveInviteCodeModalOpen] = React.useState(false);
+  const [isReceiveApiKey, setIsReceiveInviteCode] = React.useState(false);
   const [memberToDeleteID, setMemberToDeleteID] = React.useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [deleteError, setRemoveError] = React.useState("");
@@ -33,8 +34,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
       const resp = await TrustAgent.getInviteCode();
       setInviteCodeKey(resp);
       await mutate("/v1/tenant/members");
-      setIsGetInviteCodeModalOpen(false);
-      setIsReceiveInviteCodeModalOpen(true);
+      setIsReceiveInviteCode(true);
     } catch (err) {
       setGetInviteCodeError("Error: " + err.message);
     }
@@ -44,7 +44,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
 
   const confirmReceiptOfInviteCode = async () => {
     setInviteCodeKey("");
-    setIsReceiveInviteCodeModalOpen(false);
+    setIsGetInviteCodeModalOpen(false);
   };
 
   const removeMember = async () => {
@@ -69,29 +69,24 @@ export const MemberManagement: React.FunctionComponent = (props) => {
   };
   return (
     <>
-      <Flex justifyContent="space-between" ml={3} mr={3}>
-        <Flex flexDirection="column" justifyContent="flex-end">
-          <Heading.h4>Members</Heading.h4>
-          <Text>Organization ID: {activeTenantID}</Text>
-        </Flex>
-        <Flex flexDirection="column" justifyContent="flex-end">
-          <Button onClick={() => setIsGetInviteCodeModalOpen(true)} size="small">
-            Get Invite Code
-          </Button>
-        </Flex>
-      </Flex>
+      <SecondaryHeader heading="Members" activeTenantID={activeTenantID}>
+        <Button onClick={() => setIsGetInviteCodeModalOpen(true)} size="small">
+          <AddCircle size="14px" mr={1} color={colors.primary.disabled} />
+          Invite a Member
+        </Button>
+      </SecondaryHeader>
       {data && data.length > 0 ? (
         <>
           <Box bg={baseColors.white} borderRadius={1} py={3}>
             <Table border={0} boxShadow={0} width="100%">
-              <thead>
+              <THead>
                 <TR>
                   <TH>Email</TH>
                   <TH>Organization Member ID</TH>
                   <TH>Permissions</TH>
                   <TH />
                 </TR>
-              </thead>
+              </THead>
               <TBody>
                 {data.map((member: any, i: number) => {
                   return (
@@ -120,7 +115,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
       ) : isValidating ? (
         <Box bg={baseColors.white} borderRadius={1} py={3}>
           <Flex minHeight={8} alignItems="center" justifyContent="center">
-            <Loader color={colors.primary.base} size={4} />
+            <Loader color={colors.primary.base} size={5} />
           </Flex>
         </Box>
       ) : getMembersError ? (
@@ -137,21 +132,10 @@ export const MemberManagement: React.FunctionComponent = (props) => {
         </Box>
       )}
 
-      <Modal isOpen={isCreateModalOpen}>
-        <Card p={0}>
-          <Button.Text
-            icononly
-            icon="Close"
-            position="absolute"
-            top={0}
-            right={0}
-            mt={3}
-            mr={3}
-            onClick={() => setIsGetInviteCodeModalOpen(false)}
-          />
-
-          <Box p={4}>
-            <Heading.h4>Get Member Invite URL</Heading.h4>
+      <ModalWithX isOpen={isCreateModalOpen} close={() => setIsGetInviteCodeModalOpen(false)}>
+        <Box width="425px">
+          <ModalHeader>Get Member Invite</ModalHeader>
+          <ModalContent>
             {createError && (
               <Box p={1} mb={1}>
                 <Flash my={3} variant="danger">
@@ -159,37 +143,28 @@ export const MemberManagement: React.FunctionComponent = (props) => {
                 </Flash>
               </Box>
             )}
-          </Box>
-          <Flex px={4} py={3} justifyContent="flex-end">
-            <Button.Outline onClick={() => setIsGetInviteCodeModalOpen(false)}>Cancel</Button.Outline>
-            <Button ml={3} onClick={getInviteCode} disabled={getCodeLoading}>
-              {getCodeLoading || isValidating ? <Loader color="white" /> : "Get Invite Code"}
-            </Button>
-          </Flex>
-        </Card>
-      </Modal>
+            {!isReceiveApiKey ? (
+              <Button onClick={getInviteCode} disabled={getCodeLoading} width="100%">
+                {getCodeLoading || isValidating ? <Loader color={baseColors.white} /> : "Get Invite Code"}
+              </Button>
+            ) : (
+              <>
+                <Text mb={2}>Send this URL to whoever you'd like to invite</Text>
+                <CopyableTruncatableText text={`${config.UI_URL}acceptInvite/${inviteCode}`} textButton />
+                <Button.Outline onClick={confirmReceiptOfInviteCode} mt={3} width="100%">
+                  Done
+                </Button.Outline>
+              </>
+            )}
+          </ModalContent>
+        </Box>
+      </ModalWithX>
 
-      <Modal isOpen={isReceiveApiKeyModalOpen}>
-        <Card p={0}>
-          <Box p={4}>
-            <Heading.h4>Get Member Invite URL</Heading.h4>
-            <Heading.h6>Send this URL to whoever you'd like to invite</Heading.h6>
-            <CopyableTruncatableText text={`${config.UI_URL}acceptInvite/${inviteCode}`} textButton />
-          </Box>
-          <Flex px={4} py={3} justifyContent="flex-end">
-            <Button ml={3} onClick={confirmReceiptOfInviteCode}>
-              {"Continue"}
-            </Button>
-          </Flex>
-        </Card>
-      </Modal>
-
-      <Modal isOpen={isDeleteModalOpen}>
-        <Card p={0}>
-          <Box p={4}>
-            <Heading.h4>This Member will be Removed:</Heading.h4>
-            <Heading.h6>Organization Member ID:</Heading.h6>
-            <Text.span>{memberToDeleteID}</Text.span>
+      <ModalWithX isOpen={isDeleteModalOpen} close={() => setIsDeleteModalOpen(false)}>
+        <Box width="425px">
+          <ModalHeader>Remove Member</ModalHeader>
+          <ModalContent>
+            <Text fontSize={2}>Organization Member ID: {memberToDeleteID}</Text>
 
             {deleteError && (
               <Box p={1} mb={1}>
@@ -198,15 +173,14 @@ export const MemberManagement: React.FunctionComponent = (props) => {
                 </Flash>
               </Box>
             )}
-          </Box>
-          <Flex px={4} py={3} justifyContent="flex-end">
-            <Button.Outline onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button.Outline>
-            <Button ml={3} onClick={removeMember} disabled={removeLoading} variant="danger">
+          </ModalContent>
+          <ModalFooter mb={1}>
+            <Button onClick={removeMember} disabled={removeLoading} variant="danger" width="100%">
               {"TODO: REMOVE"}
             </Button>
-          </Flex>
-        </Card>
-      </Modal>
+          </ModalFooter>
+        </Box>
+      </ModalWithX>
     </>
   );
 };

@@ -1,16 +1,17 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Flex, Text } from "rimble-ui";
+import { Box, Text } from "rimble-ui";
 import { baseColors, colors } from "../../themes";
 
 const TabsHeader = styled.ul`
   align-items: center;
   background-color: ${baseColors.white};
-  border-bottom: 2px solid ${colors.lightGray};
+  border-bottom: 2px solid ${colors.primary.border};
   display: flex;
   list-style: none;
   justify-content: flex-start;
-  padding: 0 16px;
+  margin-bottom: 0;
+  padding: 0;
   width: 100%;
 `;
 
@@ -38,7 +39,7 @@ export interface Tab {
 
 export const Tabs: React.FunctionComponent<React.PropsWithChildren<TabsProps>> = (props) => {
   return (
-    <Flex bg={baseColors.white} borderRadius={1} flexDirection="column">
+    <Box bg={baseColors.white} borderRadius={1} flexGrow="1">
       <TabsHeader>
         {props.tabs.map((tab: any, i: number) => {
           const active = (!props.activeTabName && i === 0) || props.activeTabName === tab.tabName;
@@ -57,6 +58,6 @@ export const Tabs: React.FunctionComponent<React.PropsWithChildren<TabsProps>> =
         }
         return <React.Fragment key={i}>{tab.content}</React.Fragment>;
       })}
-    </Flex>
+    </Box>
   );
 };

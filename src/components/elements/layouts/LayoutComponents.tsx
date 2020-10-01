@@ -26,6 +26,33 @@ export const HeaderBox: React.FunctionComponent = (props) => {
   );
 };
 
+export interface SecondaryHeaderProps {
+  activeTenantID?: string;
+  heading: string;
+}
+
+export const SecondaryHeader: React.FunctionComponent<SecondaryHeaderProps> = (props) => {
+  return (
+    <Box mb={4} mt={5} mx={3}>
+      <Heading.h3 letterSpacing=".3px" mb={2} mt={0}>
+        {props.heading}
+      </Heading.h3>
+      <Flex alignItems="center" justifyContent="space-between">
+        {props.activeTenantID && (
+          <Text fontSize={2} color={colors.silver}>
+            Organization ID: {props.activeTenantID}
+          </Text>
+        )}
+        {props.children}
+      </Flex>
+    </Box>
+  );
+};
+
+export const THead = styled.thead`
+  border-top: 1px solid #edecfa;
+`;
+
 export const TH: React.FunctionComponent = (props) => {
   return (
     <th style={{ borderTop: "none", padding: "16px", textTransform: "none" }}>
@@ -40,12 +67,13 @@ export const TR = styled.tr`
   border-bottom: 1px solid #edecfa;
 `;
 
-export const TBody = styled.thead`
+export const TBody = styled.tbody`
   tr {
     height: auto;
   }
 
   td {
+    font-size: 16px;
     padding: 30px 15px;
   }
 `;

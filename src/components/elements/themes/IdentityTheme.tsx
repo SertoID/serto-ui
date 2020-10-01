@@ -130,6 +130,10 @@ const identityTheme = {
       "--main-color": primary.base,
       "--contrast-color": primary.text,
     },
+    warning: {
+      "--main-color": "#FDF1E3",
+      "--contrast-color": "#91622A",
+    },
     success: {
       "--main-color": success.base,
       "--contrast-color": success.text,

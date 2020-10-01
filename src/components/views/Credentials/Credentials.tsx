@@ -50,7 +50,7 @@ export const Credentials: React.FunctionComponent = (props) => {
     return (
       <Box bg={baseColors.white} borderRadius={1} py={3}>
         <Flex minHeight={8} alignItems="center" justifyContent="center">
-          <Loader color={colors.primary.base} size={4} />
+          <Loader color={colors.primary.base} size={5} />
         </Flex>
       </Box>
     );

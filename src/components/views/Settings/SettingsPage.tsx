@@ -4,12 +4,13 @@ import { routes } from "../../../constants";
 import { GlobalLayout, Header, HeaderBox } from "../../elements/layouts";
 import { Tabs } from "../../elements/layouts";
 import { MemberManagement } from "./MemberManagement";
+import { DIDManagement } from "./DIDManagement";
 // import { AccountPlan } from "./AccountPlan";
 
 export const SettingsPage: React.FunctionComponent = (props) => {
   const { tabName } = useParams();
   const history = useHistory();
-  if (tabName && tabName !== "members" && tabName !== "account-plan") {
+  if (tabName && tabName !== "members" && tabName !== "identifiers" && tabName !== "account-plan") {
     history.push(generatePath(routes.SETTINGS));
   }
 
@@ -25,6 +26,11 @@ export const SettingsPage: React.FunctionComponent = (props) => {
             tabName: "members",
             title: "Members",
             content: <MemberManagement />,
+          },
+          {
+            tabName: "identifiers",
+            title: "Identifiers",
+            content: <DIDManagement />,
           },
           /*{
             tabName: "account-plan",

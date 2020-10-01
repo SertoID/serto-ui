@@ -30,9 +30,9 @@ export const ModalBack: React.FunctionComponent<ModalBackProps> = (props) => {
 };
 
 export const ModalHeader: React.FunctionComponent = (props) => (
-  <Heading px={4} mt={1} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={4} fontWeight={3}>
+  <Heading.h3 px={4} mt={1} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} letterSpacing=".3px">
     {props.children}
-  </Heading>
+  </Heading.h3>
 );
 
 export const ModalContent = styled(Box)`

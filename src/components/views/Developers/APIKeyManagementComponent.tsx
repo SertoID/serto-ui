@@ -1,10 +1,11 @@
 import * as React from "react";
 import useSWR, { mutate } from "swr";
-import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Loader, Modal, Table, Text } from "rimble-ui";
+import { Box, Button, Field, Flash, Flex, Input, Loader, Table, Text } from "rimble-ui";
+import { AddCircle } from "@rimble/icons";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { CopyableTruncatableText } from "../../elements/components";
-import { TBody, TH, TR } from "../../elements/layouts";
+import { CopyableTruncatableText, ModalWithX, ModalContent, ModalFooter, ModalHeader } from "../../elements/components";
+import { SecondaryHeader, TBody, TH, THead, TR } from "../../elements/layouts";
 import { baseColors, colors } from "../../elements/themes";
 
 export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
@@ -79,33 +80,30 @@ export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
 
   return (
     <>
-      <Flex justifyContent="space-between" ml={3} mr={3}>
-        <Flex flexDirection="column" justifyContent="flex-end">
-          <Heading.h4>API Keys</Heading.h4>
-          <Text>Organization ID: {activeTenantID}</Text>
-        </Flex>
-        <Flex flexDirection="column" justifyContent="flex-end">
-          <Button onClick={() => setIsCreateModalOpen(true)} size="small">
-            Create API Key
-          </Button>
-        </Flex>
-      </Flex>
+      <SecondaryHeader heading="API Keys" activeTenantID={activeTenantID}>
+        <Button onClick={() => setIsCreateModalOpen(true)} size="small">
+          <AddCircle size="14px" mr={1} color={colors.primary.disabled} />
+          Create API Key
+        </Button>
+      </SecondaryHeader>
       {data && data.length > 0 ? (
         <>
           <Box bg={baseColors.white} borderRadius={1} py={3}>
             <Table border={0} boxShadow={0} width="100%">
-              <thead>
+              <THead>
                 <TR>
                   <TH>Name</TH>
                   <TH>Hash</TH>
                   <TH />
                 </TR>
-              </thead>
+              </THead>
               <TBody>
                 {data.map((apiKey: any, i: number) => {
                   return (
                     <TR key={i}>
-                      <td>{apiKey.name}</td>
+                      <td>
+                        <Text.span fontWeight={3}>{apiKey.name}</Text.span>
+                      </td>
                       <td>{apiKey.hash}</td>
                       <td>
                         <Button.Outline
@@ -128,7 +126,7 @@ export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
       ) : isValidating ? (
         <Box bg={baseColors.white} borderRadius={1} py={3}>
           <Flex minHeight={8} alignItems="center" justifyContent="center">
-            <Loader color={colors.primary.base} size={4} />
+            <Loader color={colors.primary.base} size={5} />
           </Flex>
         </Box>
       ) : getFeedsError ? (
@@ -155,21 +153,10 @@ export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
         </Box>
       )}
 
-      <Modal isOpen={isCreateModalOpen}>
-        <Card p={0}>
-          <Button.Text
-            icononly
-            icon="Close"
-            position="absolute"
-            top={0}
-            right={0}
-            mt={3}
-            mr={3}
-            onClick={() => setIsCreateModalOpen(false)}
-          />
-
-          <Box p={4} width="424px">
-            <Heading.h4>Create API Key</Heading.h4>
+      <ModalWithX isOpen={isCreateModalOpen} close={() => setIsCreateModalOpen(false)}>
+        <Box width="425px">
+          <ModalHeader>Create API Key</ModalHeader>
+          <ModalContent>
             <Field width="100%" label="Name your API key">
               <Input
                 type="text"
@@ -187,60 +174,46 @@ export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
                 </Flash>
               </Box>
             )}
+          </ModalContent>
+          <ModalFooter mb={1}>
             <Button onClick={createApiKey} disabled={createLoading} width="100%">
               {createLoading || isValidating ? <Loader color="white" /> : "Generate API Key"}
             </Button>
-          </Box>
-        </Card>
-      </Modal>
+          </ModalFooter>
+        </Box>
+      </ModalWithX>
 
-      <Modal isOpen={isReceiveApiKeyModalOpen}>
-        <Card p={0}>
-          <Box p={4} width="424px">
-            <Heading.h4>Create API Key</Heading.h4>
-            <Box bg="#DFF6EC" borderRadius="4px" color="#28C081" p={4} border="#28C081" mb={4}>
+      <ModalWithX isOpen={isReceiveApiKeyModalOpen} close={confirmReceiptOfApiKey}>
+        <Box width="425px">
+          <ModalHeader>Create API Key</ModalHeader>
+          <ModalContent>
+            <Flash my={3} variant="success">
               <Text>
                 Your API Key has been generated. Please copy this API Key and save it in a safe place, as you will not
                 be able to see it again.
               </Text>
-            </Box>
-            <Box
-              as={"label"}
-              display={"inline-flex"}
-              flexDirection={"column"}
-              alignItems={"flex-start"}
-              mb={3}
-              width="100%"
-            >
-              <Text fontSize={1} fontWeight={3} mb={2}>
-                API Key
-              </Text>
-              <CopyableTruncatableText text={apiKey} textButton />
-            </Box>
-            <Button.Outline onClick={confirmReceiptOfApiKey} width="100%">
-              {"Done"}
+            </Flash>
+            <Text fontSize={1} fontWeight={3} mb={2}>
+              API Key
+            </Text>
+            <CopyableTruncatableText text={apiKey} textButton />
+          </ModalContent>
+          <ModalFooter mb={1}>
+            <Button.Outline onClick={confirmReceiptOfApiKey} mt={2} width="100%">
+              Done
             </Button.Outline>
-          </Box>
-        </Card>
-      </Modal>
+          </ModalFooter>
+        </Box>
+      </ModalWithX>
 
-      <Modal isOpen={isDeleteModalOpen}>
-        <Card p={0}>
-          <Box p={4}>
-            <Heading.h4>Delete API Key</Heading.h4>
-            <Box
-              as={"label"}
-              display={"inline-flex"}
-              flexDirection={"column"}
-              alignItems={"flex-start"}
-              mb={3}
-              width="100%"
-            >
-              <Text fontSize={1} fontWeight={3} mb={2}>
-                API Key
-              </Text>
-              <Text>{apiKeyToDeleteName}</Text>
-            </Box>
+      <ModalWithX isOpen={isDeleteModalOpen} close={() => setIsDeleteModalOpen(false)}>
+        <Box width="425px">
+          <ModalHeader>Delete API Key</ModalHeader>
+          <ModalContent>
+            <Text fontSize={1} fontWeight={3} mb={2}>
+              API Key
+            </Text>
+            <Text mb={2}>{apiKeyToDeleteName}</Text>
 
             {deleteError && (
               <Box p={1} mb={1}>
@@ -249,15 +222,14 @@ export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
                 </Flash>
               </Box>
             )}
-          </Box>
-          <Flex px={4} py={3} justifyContent="flex-end">
-            <Button.Outline onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button.Outline>
-            <Button ml={3} onClick={deleteApiKey} disabled={deleteLoading} variant="danger">
-              {"DELETE"}
+          </ModalContent>
+          <ModalFooter mb={1}>
+            <Button onClick={deleteApiKey} disabled={deleteLoading} variant="danger" width="100%">
+              Delete
             </Button>
-          </Flex>
-        </Card>
-      </Modal>
+          </ModalFooter>
+        </Box>
+      </ModalWithX>
     </>
   );
 };
