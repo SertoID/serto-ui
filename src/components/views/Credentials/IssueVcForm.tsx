@@ -7,6 +7,8 @@ import { ModalContent, ModalHeader } from "../../elements/components/Modals";
 import { SchemaDataResponse, VcSchema } from "../../elements/components/Schemas";
 import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 import { getSchemaUrl } from "../../elements/components/Schemas/utils";
+import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
+import { featureFlags } from "../../../constants";
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
@@ -36,7 +38,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
   const [publishToFeedSlug, setPublishToFeedSlug] = useState<string | undefined>();
-  const [revocable, setRevocable] = useState<boolean>(false);
+  const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
   const schemaInstance = React.useMemo(() => {
@@ -186,19 +188,21 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
             </>
           )}
 
-          <hr />
-          <Field label={"Publish to Feed"} width="100%">
-            <Input
-              type="text"
-              width="100%"
-              required={false}
-              placeholder="Feed slug"
-              value={publishToFeedSlug}
-              onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
-            />
-          </Field>
-          <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
-          <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
+          <FeatureFlag feature={featureFlags.VC_WIP}>
+            <hr />
+            <Field label={"Publish to Feed"} width="100%">
+              <Input
+                type="text"
+                width="100%"
+                required={false}
+                placeholder="Feed slug"
+                value={publishToFeedSlug}
+                onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
+              />
+            </Field>
+            <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
+            <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
+          </FeatureFlag>
 
           {error && (
             <Flash my={3} variant="danger">

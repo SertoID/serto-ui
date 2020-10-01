@@ -3,15 +3,18 @@ import useSWR from "swr";
 import { useParams, useHistory, generatePath } from "react-router-dom";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { routes } from "../../../constants";
 import { Button } from "rimble-ui";
 import { GlobalLayout, Header, HeaderBox, Tabs } from "../../elements/layouts";
+import { ModalWithX } from "../../elements/components/Modals";
+import { featureFlags, routes } from "../../../constants";
+import { IssueVc } from "./IssueVc";
 import { IssuedCredentials } from "./IssuedCredentials";
 import { ReceivedCredentials } from "./ReceivedCredentials";
-import { ModalWithX } from "../../elements/components/Modals";
-import { IssueVc } from "./IssueVc";
+import { FeatureFlagContext } from "../../../context/TrustAgentProvider";
+import { FeatureFlagService } from "../../../services/FeatureFlagService";
 
 export const CredentialsPage: React.FunctionComponent = (props) => {
+  const features = React.useContext<FeatureFlagService>(FeatureFlagContext);
   const { tabName } = useParams();
   const history = useHistory();
   if (tabName && tabName !== "issued" && tabName !== "received") {
@@ -44,12 +47,15 @@ export const CredentialsPage: React.FunctionComponent = (props) => {
             title: "Issued Credentials",
             content: <IssuedCredentials />,
           },
-          {
-            tabName: "received",
-            title: "Received Credentials",
-            content: <ReceivedCredentials />,
-          },
-        ]}
+        ].concat(
+          features.featureEnabled(featureFlags.VC_WIP)
+            ? {
+                tabName: "received",
+                title: "Received Credentials",
+                content: <ReceivedCredentials />,
+              }
+            : [],
+        )}
         onTabClicked={(tabName) => {
           history.push(generatePath(routes.CREDENTIALS, { tabName }));
         }}
