@@ -21,7 +21,7 @@ const FieldNotOptional = styled(Field)`
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
-  defaultIssuer: string;
+  identifiers: string[];
   onSuccessResponse(response: any, publishedToFeed?: string): void;
   onVcDataChange?(vcData: any): void;
 }
@@ -31,10 +31,10 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     "@context": ["https://www.w3.org/2018/credentials/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
-    issuer: { id: props.defaultIssuer },
+    issuer: { id: props.identifiers[0] },
     issuanceDate: Date.now() / 1000, // @TODO VC spec expects RFC3339 (ISO 8601) format as produced by `(new Date).toISOString()`, but API throws TypeError `not a unix timestamp in seconds` so sending unix timestamp in seconds for now - check if API transforms date or what.
     credentialSubject: {
-      id: props.defaultIssuer,
+      id: props.identifiers[0],
       exampleData: {
         foo: 123,
         bar: true,
@@ -46,7 +46,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
-  const [issuer, setIssuer] = useState<string>(props.defaultIssuer);
+  const [issuer, setIssuer] = useState<string>(props.identifiers[0]);
   const [publishToFeedSlug, setPublishToFeedSlug] = useState<string | undefined>();
   const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
@@ -198,10 +198,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
               <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
                 <DropDown
                   onChange={setIssuer}
-                  options={[
-                    { name: props.defaultIssuer, value: props.defaultIssuer },
-                    { name: "foo", value: "bar" },
-                  ]}
+                  options={props.identifiers.map((did) => ({ name: did, value: did }))}
                   optionsTextProps={{ fontWeight: 2 }}
                 />
               </FieldNotOptional>

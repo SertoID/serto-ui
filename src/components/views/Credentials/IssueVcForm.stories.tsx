@@ -50,7 +50,7 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
               {error && <Flash variant="danger">{error}</Flash>}
               <IssueVcForm
                 schema={ldContextPlus as SchemaDataResponse}
-                defaultIssuer="0xabc123"
+                identifiers={["0xabc123", "0x123abc"]}
                 onSuccessResponse={() => {}}
                 onVcDataChange={setVcData}
               />
