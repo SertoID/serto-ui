@@ -10,7 +10,7 @@ import { colors } from "../../elements/themes";
 import { IssueVcForm } from "./IssueVcForm";
 
 export interface IssueVcProps {
-  defaultIssuer: string;
+  identifiers: string[];
   onComplete(): void;
 }
 
@@ -96,7 +96,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
     <>
       <ModalBack onClick={goBack} />
       <IssueVcForm
-        defaultIssuer={props.defaultIssuer}
+        identifiers={props.identifiers}
         schema={schema}
         onSuccessResponse={(response, feed) => {
           setResponse(response);

@@ -18,6 +18,7 @@ interface DropDownOptions {
 export interface DropDownProps {
   options: DropDownOptions[];
   defaultSelected?: string;
+  optionsTextProps?: { [key: string]: any };
   onChange(value: string): void;
 }
 
@@ -26,6 +27,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const [selectedOption, setSelectedOption] = React.useState(props.defaultSelected || null);
   const [isOpen, setIsOpen] = React.useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const { optionsTextProps } = props;
 
   const onOptionClicked = (value: string, name: string) => () => {
     setSelectedOption(name);
@@ -54,19 +56,19 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       borderRadius={1}
       boxShadow={1}
       width="100%"
+      mb={3}
       style={{ position: "relative", zIndex: 1 }}
     >
       <Flex
         onClick={toggle}
         alignItems="center"
         height={6}
-        mb={3}
         p={3}
         pr={4}
         width="100%"
         style={{ cursor: "pointer", position: "relative" }}
       >
-        <Text.span fontSize={2} fontWeight={3}>
+        <Text.span fontSize={2} fontWeight={3} {...optionsTextProps}>
           {selectedOption || props.options[0].name}
         </Text.span>
         {isOpen ? (
@@ -102,7 +104,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
                     p={3}
                     style={{ cursor: "pointer" }}
                   >
-                    <Text.span fontSize={2} fontWeight={3}>
+                    <Text.span fontSize={2} fontWeight={3} {...optionsTextProps}>
                       {option.name}
                     </Text.span>
                   </Option>

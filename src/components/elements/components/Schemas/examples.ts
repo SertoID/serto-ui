@@ -1,4 +1,3 @@
-import { config } from "../../../../config";
 import { getSchemaUrl } from "./utils";
 
 export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
@@ -512,8 +511,9 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "@context": {
         "id": {
           "@id": "@id",
+          "@title": "Credential Subject ID",
           "@type": "http://schema.org/Text",
-          "@description": "Globally unique identifier for this piece of content",
+          "@description": "Globally unique identifier for the piece of content this credential is about",
           "@required": true
         },
         "headline": {

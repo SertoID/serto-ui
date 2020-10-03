@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import { Box, Button, Checkbox, Field, Flash, Form, Input, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
@@ -7,10 +8,20 @@ import { ModalContent, ModalHeader } from "../../elements/components/Modals";
 import { SchemaDataResponse, VcSchema } from "../../elements/components/Schemas";
 import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 import { getSchemaUrl } from "../../elements/components/Schemas/utils";
+import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
+import { featureFlags } from "../../../constants";
+import { DropDown } from "../../elements/components/DropDown/DropDown";
+
+/** `Field` component shows "(optional)" text if it doesn't find an `<input required ...>` child, but sometimes we want to use `Field` with other children like our custom `DropDown` so we have to hide it. */
+const FieldNotOptional = styled(Field)`
+  div::after {
+    display: none;
+  }
+`;
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
-  defaultIssuer: string;
+  identifiers: string[];
   onSuccessResponse(response: any, publishedToFeed?: string): void;
   onVcDataChange?(vcData: any): void;
 }
@@ -20,10 +31,10 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     "@context": ["https://www.w3.org/2018/credentials/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
-    issuer: { id: props.defaultIssuer },
+    issuer: { id: props.identifiers[0] },
     issuanceDate: Date.now() / 1000, // @TODO VC spec expects RFC3339 (ISO 8601) format as produced by `(new Date).toISOString()`, but API throws TypeError `not a unix timestamp in seconds` so sending unix timestamp in seconds for now - check if API transforms date or what.
     credentialSubject: {
-      id: props.defaultIssuer,
+      id: props.identifiers[0],
       exampleData: {
         foo: 123,
         bar: true,
@@ -35,8 +46,9 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
+  const [issuer, setIssuer] = useState<string>(props.identifiers[0]);
   const [publishToFeedSlug, setPublishToFeedSlug] = useState<string | undefined>();
-  const [revocable, setRevocable] = useState<boolean>(false);
+  const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
   const schemaInstance = React.useMemo(() => {
@@ -68,6 +80,9 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
           ...initialCred,
           "@context": ["https://www.w3.org/2018/credentials/v1", getSchemaUrl(props.schema.slug, "ld-context")],
           type: credType ? [...initialCred.type, credType] : initialCred.type,
+          issuer: {
+            id: issuer,
+          },
           credentialSchema: {
             id: getSchemaUrl(props.schema.slug, "json-schema"),
             type: "JsonSchemaValidator2018",
@@ -177,6 +192,16 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
             </Field>
           ) : (
             <>
+              <Field label="Issuance Date" width="100%">
+                <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
+              </Field>
+              <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
+                <DropDown
+                  onChange={setIssuer}
+                  options={props.identifiers.map((did) => ({ name: did, value: did }))}
+                  optionsTextProps={{ fontWeight: 2 }}
+                />
+              </FieldNotOptional>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
                 <Field key={key} label={node.title || key} width="100%">
                   {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
@@ -186,19 +211,21 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
             </>
           )}
 
-          <hr />
-          <Field label={"Publish to Feed"} width="100%">
-            <Input
-              type="text"
-              width="100%"
-              required={false}
-              placeholder="Feed slug"
-              value={publishToFeedSlug}
-              onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
-            />
-          </Field>
-          <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
-          <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
+          <FeatureFlag feature={featureFlags.VC_WIP}>
+            <hr />
+            <Field label={"Publish to Feed"} width="100%">
+              <Input
+                type="text"
+                width="100%"
+                required={false}
+                placeholder="Feed slug"
+                value={publishToFeedSlug}
+                onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
+              />
+            </Field>
+            <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
+            <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
+          </FeatureFlag>
 
           {error && (
             <Flash my={3} variant="danger">

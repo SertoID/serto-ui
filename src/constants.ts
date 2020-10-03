@@ -27,4 +27,5 @@ export const links = {
 
 export const featureFlags = {
   FEEDS: "feeds",
+  VC_WIP: "vc-wip", // WIP VC features like publish to feed, revocable, received VCs tab
 };

@@ -24,7 +24,7 @@ const defaultConfig: ConfigType = {
 
 const serverConfigString = (window as any).SERVER_CONFIG;
 let serverConfig: ConfigType | undefined;
-if (serverConfigString !== "$ENVIRONMENT") {
+if (serverConfigString && serverConfigString !== "$ENVIRONMENT") {
   try {
     serverConfig = JSON.parse(serverConfigString);
   } catch (e) {
