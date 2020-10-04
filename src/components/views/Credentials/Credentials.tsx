@@ -37,7 +37,7 @@ export const Credentials: React.FunctionComponent = (props) => {
             key={i}
             attributes={attributes}
             credentialType={jwtDecoded.vc.type[jwtDecoded.vc.type.length - 1]}
-            issuanceDate={jwtDecoded.issuanceDate}
+            issuanceDate={jwtDecoded.issuanceDate || verifiableCredential.issuanceDate}
             issuer={jwtDecoded.iss}
             jwt={jwt}
             title={title}
