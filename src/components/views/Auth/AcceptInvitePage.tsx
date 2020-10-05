@@ -38,7 +38,6 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
   const [isAuthenticated, setAuthenticated] = React.useState(TrustAgent.isAuthenticated());
   const [isLoading, setIsLoading] = React.useState(false);
 
-
   const doLogout = () => {
     TrustAgent.logout();
     logout();
