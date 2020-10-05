@@ -26,7 +26,10 @@ export interface CredentialProps {
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const { attributes, credentialType, jwt, title, issuer } = props;
   const viewType = props.viewType || "default";
-  const issuanceDate = dateTimeFormat(new Date(props.issuanceDate * 1000));
+  const issuanceDate =
+    typeof props.issuanceDate === "number"
+      ? dateTimeFormat(new Date(props.issuanceDate * 1000))
+      : dateTimeFormat(new Date(props.issuanceDate));
   const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 5, 3);
 
   const VerifiedCredentialHeader = () => (
