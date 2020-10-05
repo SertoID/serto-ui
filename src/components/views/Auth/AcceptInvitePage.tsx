@@ -135,7 +135,7 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
   return (
     <AcceptInviteWrap>
       <Text.p mb={6} textAlign="center">
-        Create or log into your “product name” account to continue
+        Create or log into your Verifiable Data Platform account to continue
       </Text.p>
       <Flex justifyContent="center">
         <Box width="425px">
