@@ -13,7 +13,7 @@ const defaultConfig: ConfigType = {
   ENVIRONMENT: process.env.NODE_ENV || "development",
   API_URL: "https://alpha.consensysidentity.com",
   NATS_WS_URL: "wss://alpha-nats.consensysidentity.com:9222",
-  UI_URL: "https://alpha-ui.consensysidentity.com/",
+  UI_URL: window.location.origin,
   // API_URL: "http://localhost:8000",
   // NATS_WS_URL: "wss://0.0.0.0:9222",
   AUTH0_CLIENT_ID: "sAnzetlNs0HbyokOncaTUZmLRijPazBc",

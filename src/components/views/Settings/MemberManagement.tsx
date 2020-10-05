@@ -55,10 +55,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
     setRemoveError("");
     setRemoveLoading(true);
     try {
-      // TODO: actually delete member once endpoint is ready
-      // await TrustAgent.removeMember({
-      //   memberID: memberToDeleteID,
-      // });
+      await TrustAgent.removeMember(memberToDeleteID);
       setMemberToDeleteID("");
       await mutate("/v1/tenant/members");
       setIsDeleteModalOpen(false);
@@ -92,12 +89,12 @@ export const MemberManagement: React.FunctionComponent = (props) => {
                   return (
                     <TR key={i}>
                       <td>{member.user.email}</td>
-                      <td>{member.id}</td>
+                      <td>{member.user.id}</td>
                       <td>Full access</td>
                       <td>
                         <Button.Outline
                           onClick={() => {
-                            setMemberToDeleteID(member.id);
+                            setMemberToDeleteID(member.user.id);
                             setIsDeleteModalOpen(true);
                           }}
                           size="small"
@@ -150,7 +147,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
             ) : (
               <>
                 <Text mb={2}>Send this URL to whoever you'd like to invite</Text>
-                <CopyableTruncatableText text={`${config.UI_URL}acceptInvite/${inviteCode}`} textButton />
+                <CopyableTruncatableText text={`${config.UI_URL}/acceptInvite/${inviteCode}`} textButton />
                 <Button.Outline onClick={confirmReceiptOfInviteCode} mt={3} width="100%">
                   Done
                 </Button.Outline>
@@ -176,7 +173,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
           </ModalContent>
           <ModalFooter mb={1}>
             <Button onClick={removeMember} disabled={removeLoading} variant="danger" width="100%">
-              {"TODO: REMOVE"}
+              Remove
             </Button>
           </ModalFooter>
         </Box>
