@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import useSWR, { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { Box, Button, Flash, Input, Table, Text } from "rimble-ui";
+import { Box, Button, Flash, Flex, Input, Loader, Table, Text } from "rimble-ui";
 import { AddCircle } from "@rimble/icons";
 import { ModalWithX, ModalContent, ModalFooter, ModalHeader } from "../../elements/components";
 import { SecondaryHeader, TBody, TH, THead, TR } from "../../elements/layouts";
@@ -13,10 +13,12 @@ export const DIDManagement: React.FunctionComponent = () => {
   const TrustAgent = useContext<TrustAgencyService>(TrustAgencyContext);
   const activeTenantID = TrustAgent.getAuth()?.tenantid;
   const [isCreateDidModalOpen, setIsCreateDidModalOpen] = useState(false);
-  const [isEditExternalIDModalOpen, setIsEditExternalIDModalOpen] = useState(false);
-  const [externalID, setExternalID] = useState("");
-  // const [didToEdit, setDidToEdit] = useState("");
-  const [error, setError] = useState<string | undefined>();
+  const [isEditAliasModalOpen, setIsEditAliasModalOpen] = useState(false);
+  const [alias, setAlias] = useState("");
+  const [didToEdit, setDidToEdit] = useState("");
+  const [getIdentifierLoading, setGetIdentifierLoading] = React.useState(false);
+  const [createError, setCreateError] = useState<string | undefined>();
+  const [editError, setEditError] = useState<string | undefined>();
 
   const { data: identifiers, error: getIdentifiersError } = useSWR(
     "/v1/tenant/agent/identityManagerGetIdentities",
@@ -27,16 +29,45 @@ export const DIDManagement: React.FunctionComponent = () => {
   }
 
   async function createIdentifier() {
-    setError("");
+    setCreateError("");
     try {
-      await TrustAgent.createTenantIdentifier(externalID);
+      await TrustAgent.createTenantIdentifier(alias);
     } catch (err) {
       console.error("failed to create identifier:", err);
-      setError("Failed to create identifier");
+      setCreateError("Failed to create identifier");
       return;
     }
     setIsCreateDidModalOpen(false);
-    setExternalID("");
+    setAlias("");
+    mutate("/v1/tenant/agent/identityManagerGetIdentities");
+  }
+
+  async function getIdentifier(did: string) {
+    setEditError("");
+    setIsEditAliasModalOpen(true);
+    setGetIdentifierLoading(true);
+    setDidToEdit(did);
+    try {
+      const data = await TrustAgent.getTenantIdentifier(did);
+      setAlias(data.alias);
+    } catch (err) {
+      console.error("Identity not found:", err);
+      setEditError("Identity not found");
+    }
+    setGetIdentifierLoading(false);
+  }
+
+  async function editAlias() {
+    setEditError("");
+    try {
+      await TrustAgent.setTenantIdentifierAlias(didToEdit, alias);
+    } catch (err) {
+      console.error("failed to set alias:", err);
+      setEditError("Failed to edit external ID");
+      return;
+    }
+    setIsEditAliasModalOpen(false);
+    setAlias("");
     mutate("/v1/tenant/agent/identityManagerGetIdentities");
   }
 
@@ -72,16 +103,9 @@ export const DIDManagement: React.FunctionComponent = () => {
                   <td>{new Date(identifier.saveDate).toLocaleDateString()}</td>
                   <td>{new Date(identifier.updateDate).toLocaleDateString()}</td>
                   <td>
-                    {/*<Button
-                      onClick={() => {
-                        setDidToEdit("");
-                        setIsEditExternalIDModalOpen(true);
-                      }}
-                      size="small"
-                      variant="warning"
-                    >
+                    <Button onClick={() => getIdentifier(identifier.did)} size="small" variant="warning">
                       Edit External ID
-                    </Button>*/}
+                    </Button>
                   </td>
                 </TR>
               );
@@ -99,14 +123,13 @@ export const DIDManagement: React.FunctionComponent = () => {
             <Input
               type="text"
               placeholder="Enter External ID"
-              value={externalID}
-              onChange={(event: any) => setExternalID(event.target.value)}
+              onChange={(event: any) => setAlias(event.target.value)}
               width="100%"
             />
-            {error && (
+            {createError && (
               <Box p={1} mb={1}>
                 <Flash my={3} variant="danger">
-                  {error}
+                  {createError}
                 </Flash>
               </Box>
             )}
@@ -119,12 +142,40 @@ export const DIDManagement: React.FunctionComponent = () => {
         </Box>
       </ModalWithX>
 
-      <ModalWithX isOpen={isEditExternalIDModalOpen} close={() => setIsEditExternalIDModalOpen(false)}>
+      <ModalWithX isOpen={isEditAliasModalOpen} close={() => setIsEditAliasModalOpen(false)}>
         <Box width="425px">
           <ModalHeader>Edit External ID</ModalHeader>
-          <ModalContent></ModalContent>
+          <ModalContent>
+            {getIdentifierLoading ? (
+              <Flex justifyContent="center">
+                <Loader size={5} my={3} />
+              </Flex>
+            ) : (
+              <>
+                <Text fontSize={1} fontWeight={3} mb={1}>
+                  External ID
+                </Text>
+                <Input
+                  type="text"
+                  placeholder={alias || "Enter External ID"}
+                  value={alias}
+                  onChange={(event: any) => setAlias(event.target.value)}
+                  width="100%"
+                />
+                {editError && (
+                  <Box p={1} mb={1}>
+                    <Flash my={3} variant="danger">
+                      {editError}
+                    </Flash>
+                  </Box>
+                )}
+              </>
+            )}
+          </ModalContent>
           <ModalFooter mb={1}>
-            <Button onClick={() => console.log("Edit External ID")}>Edit External ID</Button>
+            <Button onClick={editAlias} disabled={getIdentifierLoading} width="100%">
+              Edit External ID
+            </Button>
           </ModalFooter>
         </Box>
       </ModalWithX>
