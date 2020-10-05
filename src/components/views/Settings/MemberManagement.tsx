@@ -86,7 +86,6 @@ export const MemberManagement: React.FunctionComponent = (props) => {
               </THead>
               <TBody>
                 {data.map((member: any, i: number) => {
-                  console.log(member);
                   return (
                     <TR key={i}>
                       <td>{member.user.email}</td>

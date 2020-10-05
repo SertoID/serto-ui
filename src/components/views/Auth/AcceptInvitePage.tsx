@@ -8,6 +8,7 @@ import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { Box, Button, Card, Flash, Flex, Heading, Loader, Text } from "rimble-ui";
 import { Person } from "@rimble/icons";
 import { baseColors, colors } from "../../elements/themes";
+import { ErrorUserNameUnique, ErrorUserNotFound, ErrorLogin, ErrorSignup } from "../../elements/text";
 
 export interface AcceptInviteProps {
   match: any;
@@ -32,9 +33,16 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
   const { data: user, isValidating } = useSWR("/v1/users/currentUser", () => TrustAgent.getUser());
 
   const jwt = props.match.params.jwt;
-  const [error, setError] = React.useState<string | undefined>();
+
+  const [error, setError] = React.useState<any | undefined>();
   const [isAuthenticated, setAuthenticated] = React.useState(TrustAgent.isAuthenticated());
   const [isLoading, setIsLoading] = React.useState(false);
+
+
+  const doLogout = () => {
+    TrustAgent.logout();
+    logout();
+  };
 
   async function doLogin() {
     try {
@@ -46,7 +54,12 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
     } catch (err) {
       setIsLoading(false);
       console.error("error logging in:", err);
-      setError("Login failed: " + err.message);
+      if (err.toString().includes("312")) {
+        setError(ErrorUserNotFound);
+      } else {
+        setError(ErrorLogin);
+      }
+      doLogout();
     }
   }
 
@@ -60,7 +73,12 @@ export const AcceptInvitePage: React.FunctionComponent<AcceptInviteProps> = (pro
     } catch (err) {
       setIsLoading(false);
       console.error("error signing up:", err);
-      setError("Sign up failed: " + err.message);
+      if (err.toString().includes("455")) {
+        setError(ErrorUserNameUnique);
+      } else {
+        setError(ErrorSignup);
+      }
+      doLogout();
     }
   }
 
