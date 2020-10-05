@@ -147,7 +147,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
             ) : (
               <>
                 <Text mb={2}>Send this URL to whoever you'd like to invite</Text>
-                <CopyableTruncatableText text={`${config.UI_URL}acceptInvite/${inviteCode}`} textButton />
+                <CopyableTruncatableText text={`${config.UI_URL}/acceptInvite/${inviteCode}`} textButton />
                 <Button.Outline onClick={confirmReceiptOfInviteCode} mt={3} width="100%">
                   Done
                 </Button.Outline>
