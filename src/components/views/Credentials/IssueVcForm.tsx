@@ -130,17 +130,11 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const credSchema = schemaInstance?.jsonSchema?.properties?.credentialSubject;
 
   function renderInput(key: string, node: JsonSchemaNode): JSX.Element {
-    const required = credSchema?.required?.indexOf(key) !== -1;
-
     if (node.type === "boolean") {
-      return (
-        <Checkbox
-          checked={!!vcData[key]}
-          required={required}
-          onChange={() => setVcData({ ...vcData, [key]: !vcData[key] })}
-        />
-      );
+      return <Checkbox checked={!!vcData[key]} onChange={() => setVcData({ ...vcData, [key]: !vcData[key] })} />;
     }
+
+    const required = credSchema?.required?.indexOf(key) !== -1;
 
     let type = "text";
     let disabled = false;

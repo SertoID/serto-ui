@@ -50,6 +50,10 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
       ...schema.properties[i],
       ...typeOptions[type],
     };
+    if (type === "http://schema.org/Boolean") {
+      delete updatedProp["@required"];
+    }
+
     delete updatedProp.niceName;
     updateSchema({ properties: [...schema.properties.slice(0, i), updatedProp, ...schema.properties.slice(i + 1)] });
   }
@@ -130,13 +134,17 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
           />
         )}
         <Flex justifyContent="space-between" mt={3}>
-          <Checkbox
-            fontFamily={fonts.sansSerif}
-            label="Required"
-            checked={!!prop["@required"]}
-            onChange={() => updateProperty(i, "@required", !prop["@required"])}
-            disabled={readOnly}
-          />
+          {prop["@type"] !== "http://schema.org/Boolean" ? (
+            <Checkbox
+              fontFamily={fonts.sansSerif}
+              label="Required"
+              checked={!!prop["@required"]}
+              onChange={() => updateProperty(i, "@required", !prop["@required"])}
+              disabled={readOnly}
+            />
+          ) : (
+            <div></div>
+          )}
           {!readOnly && (
             <Button.Text
               icononly
