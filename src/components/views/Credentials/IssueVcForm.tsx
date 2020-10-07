@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { Box, Button, Checkbox, Field, Flash, Form, Input, Text } from "rimble-ui";
+import { Box, Button, Checkbox, Field, Flash, Form, Input, Text, Loader } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
@@ -43,6 +43,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   };
 
   const TrustAgent = useContext<TrustAgencyService>(TrustAgencyContext);
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
@@ -70,6 +71,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   async function issueVc(e: Event) {
     e.preventDefault();
     setError(undefined);
+    setLoading(true);
 
     const credType = schemaInstance?.schema["@context"]["@rootType"];
 
@@ -115,14 +117,17 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
         } catch (publishErr) {
           console.error("failed to publish VC to feed:", publishErr);
           setError("VC issued successfully but failed to publish VC to feed: " + publishErr.message);
+          setLoading(false);
           return;
         }
       }
 
       props.onSuccessResponse(vcResponse, publishToFeedSlug);
+      setLoading(false);
     } catch (err) {
       console.error("failed to issue VC:", err);
       setError("Failed to issue VC: " + err.message);
+      setLoading(false);
       return;
     }
   }
@@ -227,8 +232,8 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
             </Flash>
           )}
           <Box my={3}>
-            <Button type="submit" width="100%">
-              Issue Credential
+            <Button type="submit" width="100%" disabled={loading}>
+              {loading ? <Loader color="white" /> : "Issue Credential"}
             </Button>
           </Box>
         </Form>
