@@ -24,7 +24,7 @@ export interface DropDownProps {
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const node = React.useRef() as React.MutableRefObject<HTMLInputElement>;
-  const [selectedOption, setSelectedOption] = React.useState(props.defaultSelected || null);
+  const [selectedOption, setSelectedOption] = React.useState(props.defaultSelected || props.options[0].name);
   const [isOpen, setIsOpen] = React.useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const { optionsTextProps } = props;
@@ -69,7 +69,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
         style={{ cursor: "pointer", position: "relative" }}
       >
         <Text.span fontSize={2} fontWeight={3} {...optionsTextProps}>
-          {selectedOption || props.options[0].name}
+          {selectedOption}
         </Text.span>
         {isOpen ? (
           <KeyboardArrowUp

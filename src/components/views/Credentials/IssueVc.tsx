@@ -41,15 +41,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           </Text>
           <Heading as="h3">Credential Issued{publishedToFeed && " & Published"}</Heading>
         </Text>
-        <Credential
-          attributes={response.credentialSubject}
-          credentialType={response.type[response.type.length - 1]}
-          issuanceDate={response.issuanceDate}
-          issuer={response.issuer.id}
-          jwt={response.jwt}
-          title={response.credentialSubject.title || response.type[response.type.length - 1]}
-          viewType={CredentialViewTypes.COLLAPSIBLE}
-        />
+        <Credential vc={response} viewType={CredentialViewTypes.COLLAPSIBLE} />
         <Box my={2}>
           <Button width="100%" onClick={props.onComplete}>
             Done

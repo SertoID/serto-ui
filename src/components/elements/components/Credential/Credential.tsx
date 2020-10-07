@@ -13,23 +13,30 @@ export enum CredentialViewTypes {
   DEFAULT = "DEFAULT",
 }
 
+/** Quick n dirty VC type with properties we need, the full W3C VC spec has much much more. */
+export interface VC {
+  "@context": string | string[];
+  type: string[];
+  issuer: string | { id: string };
+  issuanceDate: string;
+  credentialSubject: { [key: string]: any };
+  proof: { jwt: string };
+}
+
 export interface CredentialProps {
-  attributes?: any;
-  credentialType: string;
-  issuanceDate: number;
-  issuer: string;
-  jwt: string;
-  title: string;
+  vc: VC;
   viewType?: string;
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
-  const { attributes, credentialType, jwt, title, issuer } = props;
+  const { vc } = props;
+  const vcType = vc.type[vc.type.length - 1];
+  const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
   const viewType = props.viewType || "default";
   const issuanceDate =
-    typeof props.issuanceDate === "number"
-      ? dateTimeFormat(new Date(props.issuanceDate * 1000))
-      : dateTimeFormat(new Date(props.issuanceDate));
+    typeof vc.issuanceDate === "number"
+      ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
+      : dateTimeFormat(new Date(vc.issuanceDate));
   const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 5, 3);
 
   const VerifiedCredentialHeader = () => (
@@ -61,7 +68,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         <Box flexGrow="1">
           <Flex alignItems="center" justifyContent="flex-end">
             <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={0} height={4} mr={2}>
-              {credentialType}
+              {vcType}
             </Pill>
             <VerifiedUser size="24px" color={colors.primary.disabled[1]} />
           </Flex>
@@ -69,7 +76,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
       </Flex>
       <Box>
         <Text color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3} mr={2}>
-          {title}
+          {vc.credentialSubject.title || vcType}
         </Text>
       </Box>
     </>
@@ -79,24 +86,16 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     <>
       <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
         <tbody>
-          {/* This is just for demo purposes need to rework this */}
-          {attributes ? (
-            Object.entries(attributes).map((value: any, key: number) => {
-              return (
-                <CredentialTR key={key}>
-                  <CredentialTDLeft>{value[0].toString()}</CredentialTDLeft>
-                  <CredentialTDRight>
-                    {typeof value[1] === "object" ? JSON.stringify(value[1]) : value[1].toString()}
-                  </CredentialTDRight>
-                </CredentialTR>
-              );
-            })
-          ) : (
-            <CredentialTR>
-              <CredentialTDLeft>KYC Check</CredentialTDLeft>
-              <CredentialTDRight>Approved</CredentialTDRight>
-            </CredentialTR>
-          )}
+          {Object.entries(vc.credentialSubject).map((value: any, key: number) => {
+            return (
+              <CredentialTR key={key}>
+                <CredentialTDLeft>{value[0].toString()}</CredentialTDLeft>
+                <CredentialTDRight>
+                  {typeof value[1] === "object" ? JSON.stringify(value[1]) : value[1].toString()}
+                </CredentialTDRight>
+              </CredentialTR>
+            );
+          })}
         </tbody>
       </Table>
       <Box my={2}>
@@ -108,7 +107,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               </Text.span>
               <Info size="14px" ml={1} />
             </Flex>
-            <CopyToClipboard text={jwt} size="16px" />
+            <CopyToClipboard text={vc.proof.jwt} size="16px" />
           </Flex>
           <Text.span
             color={colors.midGray}
@@ -117,7 +116,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
             lineHeight="copy"
             style={{ wordWrap: "break-word" }}
           >
-            {jwt}
+            {vc.proof.jwt}
           </Text.span>
         </Box>
       </Box>
