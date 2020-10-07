@@ -223,20 +223,34 @@ export class TrustAgencyService {
       headers,
       body: JSON.stringify(body),
     });
+    const responseIsJson = response.headers.get("content-type")?.indexOf("application/json") === 0;
+
     if (!response.ok) {
       if (response.status === 401) {
         // TODO: refresh token instead of logging out
         this.logout();
       }
 
-      const errorMessage = await response.text();
-      console.error("api error", response.status, errorMessage);
-      throw new Error("api error: " + errorMessage);
+      let errorMessage;
+      if (responseIsJson) {
+        const errorJson = await response.json();
+        errorMessage = errorJson?.error?.message || JSON.stringify(errorJson);
+      } else {
+        errorMessage = await response.text();
+      }
+      console.error("API error", response.status, errorMessage);
+      throw new Error("API error: " + errorMessage);
     }
 
-    const responseContentType = response.headers.get("content-type");
-    if (responseContentType?.indexOf("application/json") !== -1) {
-      return await response.json();
+    if (responseIsJson) {
+      try {
+        return await response.json();
+      } catch (err) {
+        if (response.headers.get("content-length") === "0") {
+          throw new Error('API error: API returned invalid JSON: ""');
+        }
+        throw err;
+      }
     } else {
       return await response.text();
     }

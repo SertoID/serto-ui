@@ -63,7 +63,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
     return (
       <>
         <ModalHeader>Issue Credential</ModalHeader>
-        <ModalContent>
+        <ModalContent width={11}>
           <Text>
             Please select a credential schema, or{" "}
             <Button.Text p={0} onClick={() => setSchema(null)}>

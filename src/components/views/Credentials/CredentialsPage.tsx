@@ -61,7 +61,7 @@ export const CredentialsPage: React.FunctionComponent = (props) => {
         }}
       />
 
-      <ModalWithX isOpen={isIssueModalOpen} close={() => setIsIssueModalOpen(false)} width={11}>
+      <ModalWithX isOpen={isIssueModalOpen} close={() => setIsIssueModalOpen(false)} minWidth={9} maxWidth={11}>
         <IssueVc
           identifiers={identifiers?.map((identifier: any) => identifier.did)}
           onComplete={() => setIsIssueModalOpen(false)}
