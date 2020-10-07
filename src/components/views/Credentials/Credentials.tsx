@@ -18,20 +18,7 @@ export const Credentials: React.FunctionComponent = (props) => {
     return data
       .map((vc: any, i: number) => {
         console.log(vc);
-        const vcType = vc.type[vc.type.length - 1];
-
-        return (
-          <Credential
-            key={i}
-            attributes={vc.credentialSubject}
-            credentialType={vcType}
-            issuanceDate={vc.issuanceDate}
-            issuer={vc.issuer.id || vc.issuer}
-            jwt={vc.proof.jwt}
-            title={vc.credentialSubject?.title || vcType}
-            viewType={CredentialViewTypes.COLLAPSIBLE}
-          />
-        );
+        return <Credential key={i} vc={vc} viewType={CredentialViewTypes.COLLAPSIBLE} />;
       })
       .reverse();
   } else if (isValidating) {
