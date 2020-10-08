@@ -15,6 +15,7 @@ export class TrustAgencyService {
 
   constructor() {
     this.loadAuthFromStorage();
+    this.onDocumentReady();
   }
 
   public getAuth(): Auth | undefined {
@@ -39,6 +40,8 @@ export class TrustAgencyService {
     const tenantid = tenantOrg ? tenantOrg.Tenant_id : user.tenants[0].Tenant_id;
     this.setAuth({ jwt, tenantid }, true);
     this.loggingIn = false;
+
+    this.authenticateExtension({ id_token: jwt }, tenantid);
   }
 
   public async getUser(): Promise<any> {
@@ -254,6 +257,31 @@ export class TrustAgencyService {
     } else {
       return await response.text();
     }
+  }
+
+  /**
+   * **Experimental** ~ If the extension is installed it will pass the token and tenant ID to it
+   */
+  private authenticateExtension(session: { id_token: string }, tenantId: string) {
+    // @ts-ignore
+    if (window.idWallet) {
+      // @ts-ignore
+      idWallet.authenticate(session, tenantId);
+    }
+  }
+
+  /**
+   * **Experimental** ~ Need to wait for all scripts to load before calling extension API
+   */
+  private onDocumentReady() {
+    document.onreadystatechange = () => {
+      if (document.readyState === "complete") {
+        const auth = this.getAuth();
+        if (auth?.jwt && auth?.tenantid) {
+          this.authenticateExtension({ id_token: auth.jwt }, auth.tenantid);
+        }
+      }
+    };
   }
 
   private setAuth(auth: Auth, persist?: boolean) {
