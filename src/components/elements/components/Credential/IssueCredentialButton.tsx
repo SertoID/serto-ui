@@ -26,7 +26,6 @@ export const IssueCredentialButton: React.FunctionComponent = () => {
       identifiersResponse &&
       !hasIdentifier
     ) {
-      console.log("Creating initial DID");
       setCreateIdentifierLoading(true);
       TrustAgent.createTenantIdentifier().then(
         async () => {
