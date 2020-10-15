@@ -22,7 +22,7 @@ export const ErrorTenantNameUnique: React.FunctionComponent = () => <>Organizati
 export const ErrorValueTooLong: React.FunctionComponent = () => <>Organization name is too long.</>;
 
 // code: 455
-export const ErrorUserNameUnique: React.FunctionComponent = () => <>User name must be unique.</>;
+export const ErrorUserNameUnique: React.FunctionComponent = () => <>A user already exists with that username.</>;
 
 // code: 312
 export const ErrorUserNotFound: React.FunctionComponent = () => <>User does not exist.</>;

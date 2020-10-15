@@ -237,7 +237,14 @@ export class TrustAgencyService {
       let errorMessage;
       if (responseIsJson) {
         const errorJson = await response.json();
-        errorMessage = errorJson?.error?.message || JSON.stringify(errorJson);
+        if (errorJson?.error?.message) {
+          errorMessage = errorJson.error.message;
+          if (errorJson.error.code) {
+            errorMessage += ` (${errorJson.error.code})`;
+          }
+        } else {
+          errorMessage = JSON.stringify(errorJson);
+        }
       } else {
         errorMessage = await response.text();
       }
