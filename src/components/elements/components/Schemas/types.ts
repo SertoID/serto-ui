@@ -63,7 +63,7 @@ export const initialWorkingSchema: WorkingSchema = {
   name: "",
   description: "",
   slug: "",
-  version: "",
+  version: "1.0",
   icon: "",
   discoverable: false,
   properties: [

@@ -8,21 +8,25 @@ import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSch
 import { HighlightedJson } from "../HighlightedJson";
 import { DropDown } from "../DropDown/DropDown";
 
-const MetadataText: React.FunctionComponent = (props) => (
-  <Text color={colors.midGray} fontFamily={fonts.sansSerif} fontWeight={3} my={2}>
+const MetadataText: React.FunctionComponent<any> = (props) => (
+  <Text color={colors.silver} my={2} {...props}>
     {props.children}
   </Text>
 );
-const PropertyText: React.FunctionComponent = (props) => (
-  <Text color={baseColors.black} fontSize={1} fontFamily={fonts.sansSerif} fontWeight={3} my={1}>
+const PropertyText: React.FunctionComponent<any> = (props) => (
+  <Text color={colors.silver} fontSize={1} my={1} {...props}>
     {props.children}
   </Text>
 );
-const PropertyDescription: React.FunctionComponent = (props) => (
-  <Text color={baseColors.black} fontSize={1} fontFamily={fonts.sansSerif} my={1}>
-    {props.children}
-  </Text>
+const PropertyRequired: React.FunctionComponent = (props) => (
+  <PropertyText fontWeight={3}>{props.children}</PropertyText>
 );
+const PropertyType: React.FunctionComponent<any> = (props) => (
+  <PropertyText color={baseColors.black} fontSize={2} mb={0} {...props}>
+    {props.children}
+  </PropertyText>
+);
+const PropertyName: React.FunctionComponent = (props) => <PropertyType fontWeight={3}>{props.children}</PropertyType>;
 
 const renderProperty = ([key, prop]: [string, LdContextPlusNode]): React.ReactNode => {
   let propType: string;
@@ -40,13 +44,13 @@ const renderProperty = ([key, prop]: [string, LdContextPlusNode]): React.ReactNo
   }
 
   return (
-    <Box key={key} my={5}>
+    <Box key={key} my={3}>
       <Flex justifyContent="space-between">
-        <PropertyText>{prop["@title"] || key}</PropertyText>
-        <PropertyText>{propType}</PropertyText>
+        <PropertyName>{prop["@title"] || key}</PropertyName>
+        <PropertyType>{propType}</PropertyType>
       </Flex>
-      {prop["@required"] && <PropertyText>Required</PropertyText>}
-      {prop["@description"] && <PropertyDescription>{prop["@description"]}</PropertyDescription>}
+      {prop["@description"] && <PropertyText>{prop["@description"]}</PropertyText>}
+      {prop["@required"] && <PropertyRequired>Required</PropertyRequired>}
     </Box>
   );
 };
@@ -119,13 +123,13 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
         <Toggle options={modes} onChange={setMode} width="100%" />
       </Box>
       {mode === "Preview" ? (
-        <Box p={4} backgroundColor={colors.primary.background}>
+        <Box p={4} pb={3} border={3} borderRadius={1} fontFamily={fonts.sansSerif}>
           <Heading as="h3" mt={0}>
             {schema.icon} {schema.name}
           </Heading>
-          <MetadataText>{schema.slug}</MetadataText>
-          <MetadataText>Version: {schema.version}</MetadataText>
-          <MetadataText>Discoverable: {(!!schema.discoverable).toString()}</MetadataText>
+          <MetadataText fontFamily={fonts.monospace}>{schema.slug}</MetadataText>
+          <MetadataText>Version {schema.version}</MetadataText>
+          <MetadataText>{!schema.discoverable && "Not "}Discoverable</MetadataText>
           {schema.description && <MetadataText>{schema.description}</MetadataText>}
 
           {requiredSchemaProperties.map((prop) => renderProperty([prop["@id"], prop]))}

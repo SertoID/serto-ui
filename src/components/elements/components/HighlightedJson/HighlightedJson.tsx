@@ -3,16 +3,17 @@ import { Card } from "rimble-ui";
 import styled from "styled-components";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
-import { fonts } from "../../themes/fonts";
+import { fonts, colors } from "../../themes/";
 
 export const PrismHighlightedCodeWrap = styled(Card)`
-  background: #fdfdfd;
+  background: ${colors.nearWhite};
   flex-grow: 1;
   overflow: auto;
   padding: 16px;
   margin: 0 8px 8px 0;
   font-size: 12px;
   font-family: ${fonts.monospace};
+  border-radius: 4px;
 
   pre {
     margin: 0;

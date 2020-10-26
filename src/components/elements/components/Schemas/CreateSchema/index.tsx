@@ -12,6 +12,7 @@ import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
 import { ModalBack } from "../../Modals";
+import { fonts } from "../../../themes";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -86,7 +87,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           >
             <Check size="36px" />
           </Text>
-          <Heading as="h3">Credential Type Published</Heading>
+          <Heading as="h3" fontSize={4} fontFamily={fonts.sansSerif}>
+            Schema Published
+          </Heading>
         </Text>
         <Box mt={5}>
           <Button width="100%" onClick={() => props.onComplete?.()}>

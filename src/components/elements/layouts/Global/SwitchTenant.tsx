@@ -40,7 +40,13 @@ export const SwitchTenant: React.FunctionComponent<SwitchTenantProps> = (props) 
     });
 
     return (
-      <DropDown onChange={onChange} options={tenants} defaultSelected={activeTenantName}>
+      <DropDown
+        onChange={onChange}
+        options={tenants}
+        defaultSelected={activeTenantName}
+        style={{ height: 64, border: 0 }}
+        optionsTextProps={{ fontWeight: 3 }}
+      >
         <Box p={2}>
           <Button onClick={createOrg} size="small" width="100%">
             Create Organization

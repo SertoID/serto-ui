@@ -6,7 +6,8 @@ import { WorkingSchema, requiredSchemaProperties } from "../types";
 import { typeOptions } from "../utils";
 import { LdContextPlusLeafNode } from "../VcSchema";
 import { convertToCamelCase } from "../../../utils";
-import { ModalContentFullWidth, ModalHeader } from "../../Modals";
+import { ModalContent, ModalHeader } from "../../Modals";
+import { DropDown } from "../../DropDown/DropDown";
 
 const AttributeBox = styled(Box)`
   &:first-child {
@@ -91,49 +92,51 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
 
   function renderSchemaProperty(prop: Partial<LdContextPlusLeafNode>, i: number, readOnly = false): JSX.Element {
     return (
-      <AttributeBox key={i + readOnly.toString()} backgroundColor={colors.nearWhite} p={4} my={4}>
+      <AttributeBox
+        key={i + readOnly.toString()}
+        border={1}
+        borderRadius={1}
+        p={3}
+        pb={readOnly ? 3 : 1}
+        my={3}
+        backgroundColor={readOnly ? colors.nearWhite : "transparent"}
+      >
         <Flex>
           <Input
             width="100%"
             type="text"
             required={true}
-            placeholder="Attribute name"
+            placeholder="Attribute Name"
             mr={2}
             value={prop["@title"]}
             onChange={(event: any) => updateProperty(i, "@title", event.target.value)}
             disabled={readOnly}
+            style={{ borderColor: colors.lightGray }}
           />
-          <select
-            onChange={(event: any) => updateType(i, event.target.value)}
-            style={{ fontSize: 16, padding: "0 16px" }}
-            value={prop["@type"] === "@id" ? "http://schema.org/URL" : prop["@type"]}
+          <DropDown
+            onChange={(value) => updateType(i, value)}
+            defaultSelected={
+              typeOptions[prop["@type"] === "@id" ? "http://schema.org/URL" : prop["@type"]!].niceName || "Text"
+            }
             disabled={readOnly}
-          >
-            {Object.keys(typeOptions).map((type) => (
-              <option key={type} value={type}>
-                {typeOptions[type].niceName}
-              </option>
-            ))}
-            {/* @TODO/tobek Add "custom" option that opens fields to manually enter type details. */}
-          </select>
+            options={Object.keys(typeOptions).map((type) => ({
+              name: typeOptions[type].niceName || type,
+              value: type,
+            }))}
+            style={{ borderColor: colors.lightGray }}
+          />
+          {/* @TODO/tobek Add "custom" option that opens fields to manually enter type details. */}
         </Flex>
         {!readOnly && (
-          <textarea
+          <Input
+            width="100%"
             placeholder="Description"
             value={prop["@description"] || ""}
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              minHeight: "50px",
-              fontFamily: fonts.sansSerif,
-              fontSize: 16,
-              padding: 16,
-              marginTop: 16,
-            }}
+            style={{ borderColor: colors.lightGray }}
             onChange={(event: any) => updateProperty(i, "@description", event.target.value)}
           />
         )}
-        <Flex justifyContent="space-between" mt={3}>
+        <Flex justifyContent="space-between">
           {prop["@type"] !== "http://schema.org/Boolean" ? (
             <Checkbox
               fontFamily={fonts.sansSerif}
@@ -163,13 +166,20 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
   return (
     <>
       <ModalHeader>Define Credential Attributes</ModalHeader>
-      <ModalContentFullWidth>
+      <ModalContent>
         <Form validated={doValidation} onSubmit={goNext}>
           {requiredSchemaProperties.map((prop, i) => renderSchemaProperty(prop, i, true))}
           {schema.properties.map((prop, i) => renderSchemaProperty(prop, i))}
-          <Box px={4} mt={3}>
-            <Button.Outline mb={3} mx="auto" type="submit" width="100%" onClick={addProperty}>
-              Add Attribute
+          <Box mt={3}>
+            <Button.Outline
+              mb={3}
+              mx="auto"
+              type="submit"
+              width="100%"
+              onClick={addProperty}
+              style={{ borderColor: colors.primary.base }}
+            >
+              Add Another Attribute
             </Button.Outline>
             {error && (
               <Flash mb={3} variant="danger">
@@ -181,7 +191,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
             </Button>
           </Box>
         </Form>
-      </ModalContentFullWidth>
+      </ModalContent>
     </>
   );
 };

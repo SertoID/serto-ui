@@ -195,11 +195,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
               </Field>
               <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
-                <DropDown
-                  onChange={setIssuer}
-                  options={props.identifiers.map((did) => ({ name: did, value: did }))}
-                  optionsTextProps={{ fontWeight: 2 }}
-                />
+                <DropDown onChange={setIssuer} options={props.identifiers.map((did) => ({ name: did, value: did }))} />
               </FieldNotOptional>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
                 <Field key={key} label={node.title || key} width="100%">
