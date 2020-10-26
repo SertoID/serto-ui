@@ -4,8 +4,7 @@ import { routes } from "../../../constants";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Text } from "rimble-ui";
-import { colors } from "../../elements/themes";
-import { ErrorTenantNameUnique, ErrorValueTooLong } from "../../elements/text";
+import { ErrorTenantNameUnique, ErrorValueTooLong, RequiredField } from "../../elements/text";
 
 export const CreateOrganizationPage: React.FunctionComponent = (props) => {
   const history = useHistory();
@@ -54,9 +53,7 @@ export const CreateOrganizationPage: React.FunctionComponent = (props) => {
       <Card borderRadius={2} width="480px">
         <Heading as="h2">Create Your Organization</Heading>
         <Text.p>Complete this step to issue and receive credentials through your organization</Text.p>
-        <Text.span color={colors.silver} display="block" fontSize={1} mb={3}>
-          * Indicates a required field
-        </Text.span>
+        <RequiredField />
         <Box mb={2}>
           <Field label="Organization Name *" width="100%">
             <Input

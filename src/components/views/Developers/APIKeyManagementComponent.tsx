@@ -105,7 +105,7 @@ export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
                         <Text.span fontWeight={3}>{apiKey.name}</Text.span>
                       </td>
                       <td>{apiKey.hash}</td>
-                      <td>
+                      <td style={{ textAlign: "right" }}>
                         <Button.Outline
                           onClick={() => {
                             setApiKeyToDeleteName(apiKey.name);
@@ -153,82 +153,76 @@ export const APIKeyManagementComponent: React.FunctionComponent = (props) => {
         </Box>
       )}
 
-      <ModalWithX isOpen={isCreateModalOpen} close={() => setIsCreateModalOpen(false)}>
-        <Box width="425px">
-          <ModalHeader>Create API Key</ModalHeader>
-          <ModalContent>
-            <Field width="100%" label="Name your API key">
-              <Input
-                type="text"
-                width="100%"
-                required={true}
-                value={apiKeyName}
-                onChange={(event: any) => setApiKeyName(event.target.value)}
-              />
-            </Field>
+      <ModalWithX isOpen={isCreateModalOpen} close={() => setIsCreateModalOpen(false)} borderRadius={2} width="425px">
+        <ModalHeader>Create API Key</ModalHeader>
+        <ModalContent>
+          <Field width="100%" label="Name your API key">
+            <Input
+              type="text"
+              width="100%"
+              required={true}
+              value={apiKeyName}
+              onChange={(event: any) => setApiKeyName(event.target.value)}
+            />
+          </Field>
 
-            {createError && (
-              <Box p={1} mb={1}>
-                <Flash my={3} variant="danger">
-                  {createError}
-                </Flash>
-              </Box>
-            )}
-          </ModalContent>
-          <ModalFooter mb={1}>
-            <Button onClick={createApiKey} disabled={createLoading} width="100%">
-              {createLoading || isValidating ? <Loader color="white" /> : "Generate API Key"}
-            </Button>
-          </ModalFooter>
-        </Box>
+          {createError && (
+            <Box p={1} mb={1}>
+              <Flash my={3} variant="danger">
+                {createError}
+              </Flash>
+            </Box>
+          )}
+        </ModalContent>
+        <ModalFooter mb={1}>
+          <Button onClick={createApiKey} disabled={createLoading} width="100%">
+            {createLoading || isValidating ? <Loader color="white" /> : "Generate API Key"}
+          </Button>
+        </ModalFooter>
       </ModalWithX>
 
-      <ModalWithX isOpen={isReceiveApiKeyModalOpen} close={confirmReceiptOfApiKey}>
-        <Box width="425px">
-          <ModalHeader>Create API Key</ModalHeader>
-          <ModalContent>
-            <Flash my={3} variant="success">
-              <Text>
-                Your API Key has been generated. Please copy this API Key and save it in a safe place, as you will not
-                be able to see it again.
-              </Text>
-            </Flash>
-            <Text fontSize={1} fontWeight={3} mb={2}>
-              API Key
+      <ModalWithX isOpen={isReceiveApiKeyModalOpen} close={confirmReceiptOfApiKey} borderRadius={2} width="425px">
+        <ModalHeader>Create API Key</ModalHeader>
+        <ModalContent>
+          <Flash my={3} variant="success">
+            <Text>
+              Your API Key has been generated. Please copy this API Key and save it in a safe place, as you will not be
+              able to see it again.
             </Text>
-            <CopyableTruncatableText text={apiKey} textButton />
-          </ModalContent>
-          <ModalFooter mb={1}>
-            <Button.Outline onClick={confirmReceiptOfApiKey} mt={2} width="100%">
-              Done
-            </Button.Outline>
-          </ModalFooter>
-        </Box>
+          </Flash>
+          <Text fontSize={1} fontWeight={3} mb={2}>
+            API Key
+          </Text>
+          <CopyableTruncatableText text={apiKey} textButton />
+        </ModalContent>
+        <ModalFooter mb={1}>
+          <Button.Outline onClick={confirmReceiptOfApiKey} mt={2} width="100%">
+            Done
+          </Button.Outline>
+        </ModalFooter>
       </ModalWithX>
 
-      <ModalWithX isOpen={isDeleteModalOpen} close={() => setIsDeleteModalOpen(false)}>
-        <Box width="425px">
-          <ModalHeader>Delete API Key</ModalHeader>
-          <ModalContent>
-            <Text fontSize={1} fontWeight={3} mb={2}>
-              API Key
-            </Text>
-            <Text mb={2}>{apiKeyToDeleteName}</Text>
+      <ModalWithX isOpen={isDeleteModalOpen} close={() => setIsDeleteModalOpen(false)} borderRadius={2} width="425px">
+        <ModalHeader>Delete API Key</ModalHeader>
+        <ModalContent>
+          <Text fontSize={1} fontWeight={3} mb={2}>
+            API Key
+          </Text>
+          <Text mb={2}>{apiKeyToDeleteName}</Text>
 
-            {deleteError && (
-              <Box p={1} mb={1}>
-                <Flash my={3} variant="danger">
-                  {deleteError}
-                </Flash>
-              </Box>
-            )}
-          </ModalContent>
-          <ModalFooter mb={1}>
-            <Button onClick={deleteApiKey} disabled={deleteLoading} variant="danger" width="100%">
-              Delete
-            </Button>
-          </ModalFooter>
-        </Box>
+          {deleteError && (
+            <Box p={1} mb={1}>
+              <Flash my={3} variant="danger">
+                {deleteError}
+              </Flash>
+            </Box>
+          )}
+        </ModalContent>
+        <ModalFooter mb={1}>
+          <Button onClick={deleteApiKey} disabled={deleteLoading} variant="danger" width="100%">
+            Delete
+          </Button>
+        </ModalFooter>
       </ModalWithX>
     </>
   );

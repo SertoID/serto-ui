@@ -91,7 +91,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
                       <td>{member.user.email}</td>
                       <td>{member.user.id}</td>
                       <td>Full access</td>
-                      <td>
+                      <td style={{ textAlign: "right" }}>
                         <Button.Outline
                           onClick={() => {
                             setMemberToDeleteID(member.user.id);
@@ -129,54 +129,52 @@ export const MemberManagement: React.FunctionComponent = (props) => {
         </Box>
       )}
 
-      <ModalWithX isOpen={isCreateModalOpen} close={() => setIsGetInviteCodeModalOpen(false)}>
-        <Box width="425px">
-          <ModalHeader>Get Member Invite</ModalHeader>
-          <ModalContent>
-            {createError && (
-              <Box p={1} mb={1}>
-                <Flash my={3} variant="danger">
-                  {createError}
-                </Flash>
-              </Box>
-            )}
-            {!isReceiveApiKey ? (
-              <Button onClick={getInviteCode} disabled={getCodeLoading} width="100%">
-                {getCodeLoading || isValidating ? <Loader color={baseColors.white} /> : "Get Invite Code"}
-              </Button>
-            ) : (
-              <>
-                <Text mb={2}>Send this URL to whoever you'd like to invite</Text>
-                <CopyableTruncatableText text={`${config.UI_URL}/acceptInvite/${inviteCode}`} textButton />
-                <Button.Outline onClick={confirmReceiptOfInviteCode} mt={3} width="100%">
-                  Done
-                </Button.Outline>
-              </>
-            )}
-          </ModalContent>
-        </Box>
+      <ModalWithX
+        isOpen={isCreateModalOpen}
+        close={confirmReceiptOfInviteCode}
+        borderRadius={2}
+        width="425px"
+      >
+        <ModalHeader>Get Member Invite</ModalHeader>
+        <ModalContent>
+          {createError && (
+            <Box p={1} mb={1}>
+              <Flash my={3} variant="danger">
+                {createError}
+              </Flash>
+            </Box>
+          )}
+          {!isReceiveApiKey ? (
+            <Button onClick={getInviteCode} disabled={getCodeLoading} width="100%">
+              {getCodeLoading || isValidating ? <Loader color={baseColors.white} /> : "Get Invite Code"}
+            </Button>
+          ) : (
+            <>
+              <Text mb={2}>Send this URL to whoever you'd like to invite</Text>
+              <CopyableTruncatableText text={`${config.UI_URL}/acceptInvite/${inviteCode}`} textButton />
+            </>
+          )}
+        </ModalContent>
       </ModalWithX>
 
-      <ModalWithX isOpen={isDeleteModalOpen} close={() => setIsDeleteModalOpen(false)}>
-        <Box width="425px">
-          <ModalHeader>Remove Member</ModalHeader>
-          <ModalContent>
-            <Text fontSize={2}>Organization Member ID: {memberToDeleteID}</Text>
+      <ModalWithX isOpen={isDeleteModalOpen} close={() => setIsDeleteModalOpen(false)} borderRadius={2} width="425px">
+        <ModalHeader>Remove Member</ModalHeader>
+        <ModalContent>
+          <Text fontSize={2}>Organization Member ID: {memberToDeleteID}</Text>
 
-            {deleteError && (
-              <Box p={1} mb={1}>
-                <Flash my={3} variant="danger">
-                  {deleteError}
-                </Flash>
-              </Box>
-            )}
-          </ModalContent>
-          <ModalFooter mb={1}>
-            <Button onClick={removeMember} disabled={removeLoading} variant="danger" width="100%">
-              Remove
-            </Button>
-          </ModalFooter>
-        </Box>
+          {deleteError && (
+            <Box p={1} mb={1}>
+              <Flash my={3} variant="danger">
+                {deleteError}
+              </Flash>
+            </Box>
+          )}
+        </ModalContent>
+        <ModalFooter mb={1}>
+          <Button onClick={removeMember} disabled={removeLoading} variant="danger" width="100%">
+            Remove
+          </Button>
+        </ModalFooter>
       </ModalWithX>
     </>
   );
