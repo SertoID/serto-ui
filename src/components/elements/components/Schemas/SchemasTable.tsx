@@ -35,7 +35,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
               <TH>Name</TH>
               <TH>Slug</TH>
               <TH>Version</TH>
-              <TH>Discoverable</TH>
+              {!props.discover && <TH>Discoverable</TH>}
               <TH>Created</TH>
               <TH></TH>
               {props.onSchemaSelect && <TH></TH>}
@@ -46,10 +46,10 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
               return (
                 <TR key={i}>
                   <td style={{ maxWidth: 32 }}>{schema.icon}</td>
-                  <td>{schema.name}</td>
+                  <td style={{ fontWeight: 600 }}>{schema.name}</td>
                   <td>{schema.slug}</td>
                   <td>{schema.version}</td>
-                  <td>{(!!schema.discoverable).toString()}</td>
+                  {!props.discover && <td>{(!!schema.discoverable).toString()}</td>}
                   <td>
                     {schema.created && (
                       <time title={schema.created} dateTime={schema.created}>

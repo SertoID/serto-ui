@@ -97,7 +97,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
           <Flex justifyContent="space-between" pr={2}>
             <Heading.h5 my={2}>@context+ input</Heading.h5>
           </Flex>
-          <PrismHighlightedCodeWrap>
+          <PrismHighlightedCodeWrap style={{ background: "#fdfdfd" }}>
             <Editor
               value={inputSchema}
               onValueChange={setInputSchema}
@@ -114,7 +114,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
               playground @context will automatically be appended
             </Text>
           </Flex>
-          <PrismHighlightedCodeWrap>
+          <PrismHighlightedCodeWrap style={{ background: "#fdfdfd" }}>
             <Editor
               value={inputVc}
               onValueChange={setInputVc}
@@ -145,11 +145,11 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
       <Flex>
         <Section>
           <Heading.h5 my={2}>JSON-LD @context output</Heading.h5>
-          <HighlightedJson json={outputContext} style={{ background: "#f8f8f8" }} />
+          <HighlightedJson json={outputContext} />
         </Section>
         <Section>
           <Heading.h5 my={2}>JSON Schema output</Heading.h5>
-          <HighlightedJson json={outputJsonSchema} style={{ background: "#f8f8f8" }} />
+          <HighlightedJson json={outputJsonSchema} />
           {vcSchema?.jsonSchemaMessage && <Flash variant="warning">{vcSchema.jsonSchemaMessage}</Flash>}
         </Section>
       </Flex>

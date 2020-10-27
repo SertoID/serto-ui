@@ -3,7 +3,7 @@ import { Button, Loader } from "rimble-ui";
 import { SchemaDetail } from "../SchemaDetail";
 import { CompletedSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
-import { ModalContent, ModalHeader, ModalFooter } from "../../Modals";
+import { ModalContent, ModalHeader } from "../../Modals";
 
 export interface ConfirmStepProps {
   schema: WorkingSchema;
@@ -19,12 +19,10 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
       <ModalHeader>Confirm and Publish</ModalHeader>
       <ModalContent>
         <SchemaDetail schema={createSchemaInput(schema as CompletedSchema)} />
-      </ModalContent>
-      <ModalFooter my={3}>
-        <Button width="100%" onClick={props.onComplete} disabled={props.loading}>
+        <Button mt={3} width="100%" onClick={props.onComplete} disabled={props.loading}>
           {props.loading ? <Loader color="white" /> : "Publish"}
         </Button>
-      </ModalFooter>
+      </ModalContent>
     </>
   );
 };

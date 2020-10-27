@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { baseColors, colors } from "../../themes";
+import { fonts } from "../..";
 
 export const Option = styled(Box)`
   &:hover span {
@@ -19,6 +20,8 @@ export interface DropDownProps {
   options: DropDownOptions[];
   defaultSelected?: string;
   optionsTextProps?: { [key: string]: any };
+  disabled?: boolean;
+  style?: { [key: string]: any };
   onChange(value: string): void;
 }
 
@@ -26,8 +29,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const node = React.useRef() as React.MutableRefObject<HTMLInputElement>;
   const [selectedOption, setSelectedOption] = React.useState(props.defaultSelected || props.options[0].name);
   const [isOpen, setIsOpen] = React.useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-  const { optionsTextProps } = props;
+  const toggle = () => !props.disabled && setIsOpen(!isOpen);
 
   const onOptionClicked = (value: string, name: string) => () => {
     setSelectedOption(name);
@@ -49,6 +51,12 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
     };
   });
 
+  const optionsTextProps = {
+    fontSize: 2,
+    fontFamily: fonts.sansSerif,
+    ...props.optionsTextProps,
+  };
+
   return (
     <Box
       ref={node}
@@ -57,20 +65,28 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       boxShadow={1}
       width="100%"
       mb={3}
-      style={{ position: "relative", zIndex: 1 }}
+      style={{
+        position: "relative",
+        zIndex: isOpen ? 2 : 1,
+        opacity: props.disabled ? 0.4 : 1,
+      }}
     >
       <Flex
         onClick={toggle}
         alignItems="center"
-        height={6}
+        height="48px"
         p={3}
         pr={4}
         width="100%"
-        style={{ cursor: "pointer", position: "relative" }}
+        style={{
+          cursor: props.disabled ? "default" : "pointer",
+          position: "relative",
+          border: `1px solid ${colors.moonGray}`,
+          borderRadius: 4,
+          ...props.style,
+        }}
       >
-        <Text.span fontSize={2} fontWeight={3} {...optionsTextProps}>
-          {selectedOption}
-        </Text.span>
+        <Text.span {...optionsTextProps}>{selectedOption}</Text.span>
         {isOpen ? (
           <KeyboardArrowUp
             color={colors.moonGray}
@@ -91,7 +107,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
           borderTop={1}
           boxShadow={1}
           width="100%"
-          style={{ position: "absolute", left: "0", top: "62px" }}
+          style={{ position: "absolute", left: "0" }}
         >
           <Box>
             {props.options.map((option: any, key: number) => {
@@ -104,9 +120,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
                     p={3}
                     style={{ cursor: "pointer" }}
                   >
-                    <Text.span fontSize={2} fontWeight={3} {...optionsTextProps}>
-                      {option.name}
-                    </Text.span>
+                    <Text.span {...optionsTextProps}>{option.name}</Text.span>
                   </Option>
                 );
               }

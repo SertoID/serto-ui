@@ -1,7 +1,7 @@
 import { Info } from "@rimble/icons";
 import slugify from "@sindresorhus/slugify";
 import * as React from "react";
-import { Box, Button, Checkbox, Field, Form, Input, Text, Tooltip } from "rimble-ui";
+import { Box, Button, Checkbox, Field, Form, Input, Text, Tooltip, Flex } from "rimble-ui";
 import styled from "styled-components";
 import { colors, fonts } from "../../../themes/";
 import { ModalContent, ModalHeader } from "../../Modals";
@@ -13,8 +13,9 @@ const SchemaField = styled(Field)`
 `;
 const SchemaLabel = styled.label`
   display: block;
-  width: 100%;
+  width: 50%;
   margin-bottom: 16px;
+  margin-left: 8px;
   font-family: ${fonts.sansSerif};
 `;
 
@@ -59,10 +60,10 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   return (
     <>
-      <ModalHeader>Create Credential Type</ModalHeader>
+      <ModalHeader>Create Schema</ModalHeader>
       <ModalContent>
         <Form validated={doValidation} onSubmit={goNext}>
-          <SchemaField label="Name">
+          <SchemaField label="Credential Schema Name">
             <Input
               width="100%"
               type="text"
@@ -71,50 +72,53 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
               onChange={(event: any) => updateSchema({ name: event.target.value })}
             />
           </SchemaField>
-          <SchemaField label="URL slug">
-            <Input
-              width="100%"
-              type="text"
-              value={schema.slug}
-              placeholder={defaultSchemaSlug}
-              onChange={(event: any) => updateSchema({ slug: event.target.value })}
-              onBlur={() => updateSchema({ slug: slugify(schema.slug) })}
-            />
-          </SchemaField>
-          <SchemaField label="Version">
+          <SchemaField label="URL Slug">
             <Input
               width="100%"
               type="text"
               required={true}
-              value={schema.version}
-              onChange={(event: any) => updateSchema({ version: event.target.value })}
+              value={schema.slug || defaultSchemaSlug}
+              onChange={(event: any) => updateSchema({ slug: event.target.value })}
+              onBlur={() => updateSchema({ slug: slugify(schema.slug) })}
             />
           </SchemaField>
-          <SchemaLabel>
-            <Text fontSize={1} fontWeight={3} mb={2}>
-              Icon{" "}
-              <Tooltip
-                message="This should be a single character, for example an emoji, that will be used to label this schema"
-                placement="top"
-              >
-                <Info size={16} color={colors.silver} style={{ verticalAlign: "text-top" }} />
-              </Tooltip>
-              <Text.span ml={1} fontWeight={1} fontStyle="italic" fontSize={1}>
-                (optional)
-              </Text.span>
-            </Text>
+          <Flex>
+            <SchemaField label="Version" style={{ width: "50%" }}>
+              <Input
+                width="100%"
+                type="text"
+                required={true}
+                value={schema.version}
+                onChange={(event: any) => updateSchema({ version: event.target.value })}
+              />
+            </SchemaField>
+            <SchemaLabel>
+              <Text fontSize={1} fontWeight={3} mb={2}>
+                Icon{" "}
+                <Tooltip
+                  message="This should be a single character, for example an emoji, that will be used to label this schema"
+                  placement="top"
+                >
+                  <Info size={16} color={colors.silver} style={{ verticalAlign: "text-top" }} />
+                </Tooltip>
+                <Text.span ml={1} fontWeight={1} fontStyle="italic" fontSize={1}>
+                  (optional)
+                </Text.span>
+              </Text>
+              <Input
+                width="100%"
+                type="text"
+                placeholder={defaultIcon}
+                value={schema.icon}
+                onChange={(event: any) => updateSchema({ icon: event.target.value })}
+              />
+            </SchemaLabel>
+          </Flex>
+          <SchemaField label="Schema Description">
             <Input
-              width={6}
+              width="100%"
               type="text"
-              placeholder={defaultIcon}
-              value={schema.icon}
-              onChange={(event: any) => updateSchema({ icon: event.target.value })}
-            />
-          </SchemaLabel>
-          <SchemaField label="Description">
-            <textarea
               value={schema.description}
-              style={{ width: "100%", minHeight: "150px" }}
               onChange={(event: any) => updateSchema({ description: event.target.value })}
             />
           </SchemaField>
@@ -125,7 +129,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
               checked={schema.discoverable}
               onChange={() => updateSchema({ discoverable: !schema.discoverable })}
             />
-            <Text mt={1} fontSize={1}>
+            <Text mt={1} fontSize={1} fontFamily={fonts.sansSerif} color={colors.midGray}>
               If checked, this schema will be listed in the public schema registry. If unchecked, your schema will still
               be accessible at a public URL via the above slug, but will not be listed in the registry.
             </Text>

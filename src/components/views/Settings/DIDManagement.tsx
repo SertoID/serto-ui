@@ -186,7 +186,7 @@ export const DIDManagement: React.FunctionComponent = () => {
                   <Input
                     type="text"
                     placeholder={alias || "Ex: “My Primary DID”"}
-                    value={alias}
+                    value={alias || ""}
                     onChange={(event: any) => setAlias(event.target.value)}
                     width="100%"
                   />
