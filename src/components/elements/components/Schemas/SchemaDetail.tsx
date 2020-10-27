@@ -20,16 +20,25 @@ const PropertyText: React.FunctionComponent<any> = (props) => (
   </Text>
 );
 const PropertyRequired: React.FunctionComponent = (props) => (
-  <PropertyText fontWeight={3}>{props.children}</PropertyText>
+  <PropertyText fontWeight={3}>
+    {props.children}
+  </PropertyText>
 );
 const PropertyType: React.FunctionComponent<any> = (props) => (
   <PropertyText color={baseColors.black} fontSize={2} mb={0} {...props}>
     {props.children}
   </PropertyText>
 );
-const PropertyName: React.FunctionComponent = (props) => <PropertyType fontWeight={3}>{props.children}</PropertyType>;
+const PropertyName: React.FunctionComponent = (props) => (
+  <PropertyType fontWeight={3}>
+    {props.children}
+  </PropertyType>
+);
 
-const renderProperty = ([key, prop]: [string, LdContextPlusNode]): React.ReactNode => {
+const renderProperty = (key: string, prop: LdContextPlusNode, outerContext?: LdContextPlusRootNode): React.ReactNode => {
+  if (outerContext && "@replaceWith" in prop && prop["@replaceWith"]) {
+    return renderProperty(key, outerContext[prop["@replaceWith"]], outerContext);
+  }
   let propType: string;
   if ("@type" in prop && prop["@type"]) {
     if (prop["@type"] === "@id") {
@@ -38,10 +47,11 @@ const renderProperty = ([key, prop]: [string, LdContextPlusNode]): React.ReactNo
       propType = typeOptions[prop["@type"]]?.niceName || prop["@type"];
     }
   } else if ("@context" in prop && prop["@context"]) {
-    // @TODO/tobek We should support these fully eventually.
-    propType = "[nested object]";
-  } else {
+    // Nested object will be displayed underneath
     propType = "";
+  } else {
+    console.warn("Unrecognized property:", { key, prop, outerContext });
+    propType = "[unknown]";
   }
 
   return (
@@ -52,6 +62,10 @@ const renderProperty = ([key, prop]: [string, LdContextPlusNode]): React.ReactNo
       </Flex>
       {prop["@description"] && <PropertyText>{prop["@description"]}</PropertyText>}
       {prop["@required"] && <PropertyRequired>Required</PropertyRequired>}
+
+      {"@context" in prop && prop["@context"] && (<Box pl={3} mt={3}>
+          {Object.entries(prop["@context"]).map(entry => renderProperty(entry[0], entry[1], outerContext))}
+      </Box>)}
     </Box>
   );
 };
@@ -133,10 +147,10 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           <MetadataText>{!schema.discoverable && "Not "}Discoverable</MetadataText>
           {schema.description && <MetadataText>{schema.description}</MetadataText>}
 
-          {requiredSchemaProperties.map((prop) => renderProperty([prop["@id"], prop]))}
-          {innerContext && Object.entries(innerContext).map(renderProperty)}
+          {requiredSchemaProperties.map((prop) => renderProperty(prop["@id"], prop))}
+          {innerContext && Object.entries(innerContext).map(entry => renderProperty(entry[0], entry[1], outerContext))}
           {credContains?.map(
-            (contained) => outerContext?.[contained] && renderProperty([contained, outerContext[contained]]),
+            (contained) => outerContext?.[contained] && renderProperty(contained, outerContext[contained], outerContext),
           )}
 
           {error && <Flash variant="danger">Error: {error}</Flash>}
