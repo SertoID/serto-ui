@@ -1,11 +1,11 @@
 import { Check } from "@rimble/icons";
 import React, { useState } from "react";
-import { Box, Button, Heading, Text } from "rimble-ui";
+import { Box, Button, Text } from "rimble-ui";
 import { Credential, CredentialViewTypes } from "../../elements/components";
 import { ModalBack, ModalContent, ModalHeader } from "../../elements/components/Modals";
 import { SchemaDataResponse } from "../../elements/components/Schemas";
 import { SchemasTable } from "../../elements/components/Schemas/SchemasTable";
-import { Tabs } from "../../elements/layouts/Tabs/Tabs";
+import { H3, Tabs } from "../../elements/layouts";
 import { colors } from "../../elements/themes";
 import { IssueVcForm } from "./IssueVcForm";
 
@@ -39,7 +39,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           >
             <Check />
           </Text>
-          <Heading as="h3">Credential Issued{publishedToFeed && " & Published"}</Heading>
+          <H3>Credential Issued{publishedToFeed && " & Published"}</H3>
         </Text>
         <Credential vc={response} viewType={CredentialViewTypes.COLLAPSIBLE} />
         <Box my={2}>

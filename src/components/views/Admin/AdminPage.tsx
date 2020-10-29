@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Box, Button, Heading, Input } from "rimble-ui";
+import { Box, Button, Input } from "rimble-ui";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { LogOut } from "../Auth/LogOut";
+import { H1 } from "../../elements/layouts";
 
 export const AdminPage: React.FunctionComponent = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -40,7 +41,7 @@ export const AdminPage: React.FunctionComponent = (props) => {
   return (
     <div>
       <LogOut />
-      <Heading as="h1">Admin</Heading>
+      <H1>Admin</H1>
       <Box width="100%" mb={2}>
         <Input
           type="text"

@@ -3,6 +3,58 @@ import styled from "styled-components";
 import { Box, Flex, Heading, Text } from "rimble-ui";
 import { baseColors, colors, fonts } from "../";
 
+export interface HeadingProps {
+  [key: string]: any;
+}
+// font-size: 48px
+export const H1: React.FunctionComponent<HeadingProps> = (props) => {
+  return (
+    <Heading.h1 fontFamily={fonts.sansSerifHeader} {...props}>
+      {props.children}
+    </Heading.h1>
+  );
+};
+// font-size: 32px
+export const H2: React.FunctionComponent<HeadingProps> = (props) => {
+  return (
+    <Heading.h2 fontFamily={fonts.sansSerifHeader} letterSpacing=".1px" {...props}>
+      {props.children}
+    </Heading.h2>
+  );
+};
+// font-size: 24px
+export const H3: React.FunctionComponent<HeadingProps> = (props) => {
+  return (
+    <Heading.h3 fontFamily={fonts.sansSerifHeader} letterSpacing=".3px" {...props}>
+      {props.children}
+    </Heading.h3>
+  );
+};
+// font-size: 20px
+export const H4: React.FunctionComponent<HeadingProps> = (props) => {
+  return (
+    <Heading.h4 fontFamily={fonts.sansSerifHeader} {...props}>
+      {props.children}
+    </Heading.h4>
+  );
+};
+// font-size: 16px
+export const H5: React.FunctionComponent<HeadingProps> = (props) => {
+  return (
+    <Heading.h5 fontFamily={fonts.sansSerifHeader} {...props}>
+      {props.children}
+    </Heading.h5>
+  );
+};
+// font-size: 14px
+export const H6: React.FunctionComponent<HeadingProps> = (props) => {
+  return (
+    <Heading.h6 fontFamily={fonts.sansSerifHeader} {...props}>
+      {props.children}
+    </Heading.h6>
+  );
+};
+
 export interface HeaderProps {
   heading: string;
 }
@@ -10,9 +62,9 @@ export interface HeaderProps {
 export const Header: React.FunctionComponent<HeaderProps> = (props) => {
   return (
     <Flex alignItems="center" justifyContent="space-between" p={3} minHeight="4rem">
-      <Heading as="h2" color={colors.primary.base} m={0}>
+      <H2 color={colors.primary.base} m={0}>
         {props.heading}
-      </Heading>
+      </H2>
       {props.children}
     </Flex>
   );
@@ -34,9 +86,9 @@ export interface SecondaryHeaderProps {
 export const SecondaryHeader: React.FunctionComponent<SecondaryHeaderProps> = (props) => {
   return (
     <Box mb={4} mt={5} mx={3}>
-      <Heading.h3 letterSpacing=".3px" mb={2} mt={0}>
+      <H3 mb={2} mt={0}>
         {props.heading}
-      </Heading.h3>
+      </H3>
       <Flex alignItems="center" justifyContent="space-between">
         {props.activeTenantID && (
           <Text fontSize={2} color={colors.silver}>

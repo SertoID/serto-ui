@@ -1,6 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Box, Flex, Text, Heading, Flash, Button, Tooltip } from "rimble-ui";
+import { Box, Flex, Text, Flash, Button, Tooltip } from "rimble-ui";
+import { H5 } from "../../layouts";
 import styled from "styled-components";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
@@ -95,7 +96,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
       <Flex>
         <Section>
           <Flex justifyContent="space-between" pr={2}>
-            <Heading.h5 my={2}>@context+ input</Heading.h5>
+            <H5 my={2}>@context+ input</H5>
           </Flex>
           <PrismHighlightedCodeWrap style={{ background: "#fdfdfd" }}>
             <Editor
@@ -109,7 +110,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
         </Section>
         <Section>
           <Flex justifyContent="space-between" pr={2}>
-            <Heading.h5 my={2}>VC input for validation</Heading.h5>
+            <H5 my={2}>VC input for validation</H5>
             <Text my={2} fontSize={1}>
               playground @context will automatically be appended
             </Text>
@@ -144,11 +145,11 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
       </Flex>
       <Flex>
         <Section>
-          <Heading.h5 my={2}>JSON-LD @context output</Heading.h5>
+          <H5 my={2}>JSON-LD @context output</H5>
           <HighlightedJson json={outputContext} />
         </Section>
         <Section>
-          <Heading.h5 my={2}>JSON Schema output</Heading.h5>
+          <H5 my={2}>JSON Schema output</H5>
           <HighlightedJson json={outputJsonSchema} />
           {vcSchema?.jsonSchemaMessage && <Flash variant="warning">{vcSchema.jsonSchemaMessage}</Flash>}
         </Section>

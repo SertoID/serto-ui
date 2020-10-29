@@ -1,8 +1,7 @@
 import { Check } from "@rimble/icons";
 import * as React from "react";
-import { Box, Button, Flash, Heading, Text } from "rimble-ui";
+import { Box, Button, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
-import { colors } from "../../../";
 import { TrustAgencyContext } from "../../../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../../../services/TrustAgencyService";
 import { CompletedSchema, initialWorkingSchema, SchemaMetadata, WorkingSchema } from "../types";
@@ -12,7 +11,8 @@ import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
 import { ModalBack } from "../../Modals";
-import { fonts } from "../../../themes";
+import { H3 } from "../../../layouts";
+import { colors } from "../../../themes";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -87,9 +87,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           >
             <Check size="36px" />
           </Text>
-          <Heading as="h3" fontSize={4} fontFamily={fonts.sansSerif}>
-            Schema Published
-          </Heading>
+          <H3>Schema Published</H3>
         </Text>
         <Box mt={5}>
           <Button width="100%" onClick={() => props.onComplete?.()}>

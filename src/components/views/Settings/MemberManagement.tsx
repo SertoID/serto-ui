@@ -129,12 +129,7 @@ export const MemberManagement: React.FunctionComponent = (props) => {
         </Box>
       )}
 
-      <ModalWithX
-        isOpen={isCreateModalOpen}
-        close={confirmReceiptOfInviteCode}
-        borderRadius={2}
-        width="425px"
-      >
+      <ModalWithX isOpen={isCreateModalOpen} close={confirmReceiptOfInviteCode} borderRadius={2} width="425px">
         <ModalHeader>Get Member Invite</ModalHeader>
         <ModalContent>
           {createError && (

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { routes } from "../../../constants";
-import { Box, Button, Flex, Heading, Text } from "rimble-ui";
+import { Box, Button, Flex, Text } from "rimble-ui";
+import { H2 } from "../../elements/layouts";
 import { baseColors } from "../../elements/themes";
 import { links } from "../../../constants";
 
@@ -13,9 +14,9 @@ export const OnboardingPage: React.FunctionComponent = (props) => {
         </Button.Text>
       </Box>
       <Box bg={baseColors.white} borderRadius={1} m={3} p={6} flexGrow="1">
-        <Heading as="h2" color={baseColors.blurple} mt={0} textAlign="center">
+        <H2 color={baseColors.blurple} mt={0} textAlign="center">
           Welcome!
-        </Heading>
+        </H2>
         <Box mx="auto" width="350px">
           <Box border={1} mb={4} p={5}>
             <Text fontSize={2} fontWeight={3}>

@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Redirect, useHistory } from "react-router-dom";
-import { Box, Button, Card, Flash, Text } from "rimble-ui";
+import { Box, Button, Card, Flash } from "rimble-ui";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { routes } from "../../../constants";
+import { H2 } from "../../elements/layouts";
 import { ErrorUserNameUnique, ErrorUserNotFound, ErrorLogin, ErrorSignup } from "../../elements/text";
 import { colors } from "../../elements/themes";
 
@@ -71,9 +72,9 @@ export const LoginPage = () => {
         top={0}
         width="525px"
       >
-        <Text color={colors.primary.base} fontSize={5} fontWeight={3} mb={5} mt={7}>
+        <H2 color={colors.primary.base} mb={5} mt={7}>
           Login to TrustAgent
-        </Text>
+        </H2>
         <Box width="100%">
           <Button onClick={doLogin} mb={3} width="100%">
             Login

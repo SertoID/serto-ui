@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Box, Button, Card, Flex, Heading, Modal } from "rimble-ui";
+import { Box, Button, Card, Flex, Modal } from "rimble-ui";
 import styled from "styled-components";
-import { baseColors, fonts } from "../themes";
+import { H3 } from "../layouts";
+import { baseColors } from "../themes";
 
 export interface ModalWithXProps {
   isOpen?: boolean;
@@ -30,9 +31,9 @@ export const ModalBack: React.FunctionComponent<ModalBackProps> = (props) => {
 };
 
 export const ModalHeader: React.FunctionComponent = (props) => (
-  <Heading.h3 px={4} mt={1} mb={3} color={baseColors.black} fontFamily={fonts.sansSerif} letterSpacing=".3px">
+  <H3 px={4} mt={1} mb={3} color={baseColors.black}>
     {props.children}
-  </Heading.h3>
+  </H3>
 );
 
 export const ModalContent = styled(Box)`

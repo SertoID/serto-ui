@@ -3,7 +3,8 @@ import { useHistory } from "react-router-dom";
 import { routes } from "../../../constants";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { Box, Button, Card, Field, Flash, Flex, Heading, Input, Text } from "rimble-ui";
+import { Box, Button, Card, Field, Flash, Flex, Input, Text } from "rimble-ui";
+import { H2 } from "../../elements/layouts";
 import { ErrorTenantNameUnique, ErrorValueTooLong, RequiredField } from "../../elements/text";
 
 export const CreateOrganizationPage: React.FunctionComponent = (props) => {
@@ -51,7 +52,7 @@ export const CreateOrganizationPage: React.FunctionComponent = (props) => {
   return (
     <Flex justifyContent="center" mt="10%">
       <Card borderRadius={2} width="480px">
-        <Heading as="h2">Create Your Organization</Heading>
+        <H2>Create Your Organization</H2>
         <Text.p>Complete this step to issue and receive credentials through your organization</Text.p>
         <RequiredField />
         <Box mb={2}>

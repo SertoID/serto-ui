@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Box, Flex, Heading, Text, Flash } from "rimble-ui";
-import { baseColors, colors, fonts } from "../../";
+import { Box, Flex, Text, Flash } from "rimble-ui";
+import { H3 } from "../../layouts";
+import { baseColors, colors, fonts } from "../../themes";
 import { SchemaDataInput, SchemaDataResponse, requiredSchemaProperties } from "./types";
 import { typeOptions } from "./utils";
 import { Toggle } from "../Toggle";
@@ -124,9 +125,9 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
       </Box>
       {mode === "Preview" ? (
         <Box p={4} pb={3} border={3} borderRadius={1} fontFamily={fonts.sansSerif}>
-          <Heading as="h3" mt={0}>
+          <H3 mt={0}>
             {schema.icon} {schema.name}
-          </Heading>
+          </H3>
           <MetadataText fontFamily={fonts.monospace}>{schema.slug}</MetadataText>
           <MetadataText>Version {schema.version}</MetadataText>
           <MetadataText>{!schema.discoverable && "Not "}Discoverable</MetadataText>

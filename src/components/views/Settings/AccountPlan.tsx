@@ -1,6 +1,7 @@
 import * as React from "react";
 import { freeAccount } from "../../../constants";
-import { Box, Button, Flex, Heading, Text } from "rimble-ui";
+import { Box, Button, Flex, Text } from "rimble-ui";
+import { H4 } from "../../elements/layouts";
 import { colors } from "../../elements/themes";
 
 export interface RowProps {
@@ -26,9 +27,9 @@ export const AccountPlan: React.FunctionComponent = (props) => {
     <Box p={3}>
       <Flex border={1} borderColor={colors.success.base} borderRadius={2} mb={5} padding={4}>
         <Box mr={4} width="150px">
-          <Heading as="h4" color={colors.success.base} mb={3} mt={0}>
+          <H4 color={colors.success.base} mb={3} mt={0}>
             Current Plan
-          </Heading>
+          </H4>
           <Text.span fontWeight={3}>Free</Text.span>
         </Box>
         <Box flexGrow="2">
@@ -46,9 +47,9 @@ export const AccountPlan: React.FunctionComponent = (props) => {
       </Flex>
       <Flex border={1} borderRadius={2} mb={5} padding={4}>
         <Box mr={4} width="150px">
-          <Heading as="h4" color={colors.primary.base} mb={3} mt={0}>
+          <H4 color={colors.primary.base} mb={3} mt={0}>
             Pro Plan
-          </Heading>
+          </H4>
           <Text.span fontWeight={3}>Free During Beta</Text.span>
         </Box>
         <Box flexGrow="2">

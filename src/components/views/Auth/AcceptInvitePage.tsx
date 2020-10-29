@@ -5,8 +5,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { routes } from "../../../constants";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { Box, Button, Card, Flash, Flex, Heading, Loader, Text } from "rimble-ui";
+import { Box, Button, Card, Flash, Flex, Loader, Text } from "rimble-ui";
 import { Person } from "@rimble/icons";
+import { H3 } from "../../elements/layouts";
 import { baseColors, colors } from "../../elements/themes";
 import { ErrorUserNameUnique, ErrorUserNotFound, ErrorLogin, ErrorSignup } from "../../elements/text";
 
@@ -17,9 +18,9 @@ export interface AcceptInviteProps {
 const AcceptInviteWrap: React.FunctionComponent = (props) => (
   <Flex bg={baseColors.white} height="100vh" justifyContent="center" pt="10%" width="100%">
     <Box>
-      <Heading color={colors.primary.base} fontSize={4} fontWeight={3} lineHeight="1" mt={0} mb={3} textAlign="center">
+      <H3 color={colors.primary.base} lineHeight="1" mt={0} mb={3} textAlign="center">
         Welcome! You’ve been invited to "Organization Name".
-      </Heading>
+      </H3>
       {props.children}
     </Box>
   </Flex>
