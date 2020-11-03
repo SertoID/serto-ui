@@ -43,8 +43,12 @@ export const Credentials: React.FunctionComponent = (props) => {
     <Box bg={baseColors.white} borderRadius={1} py={3}>
       <Flex alignItems="center" justifyContent="center" minHeight={8}>
         <Box bg={baseColors.white} borderRadius={1} py={3} maxWidth={9}>
-          <Text.span fontSize={1} fontWeight={3} textAlign="center">
-            You currently have no credentials
+          <Text.span display="block" fontSize={1} fontWeight={3} textAlign="center">
+            You have not issued any Verifiable Credentials yet.
+          </Text.span>
+          <Text.span display="block" fontSize={1} textAlign="center">
+            To issue a credential, make sure you have a schema to use in mind. If no schema exists, please create one
+            first.
           </Text.span>
         </Box>
       </Flex>

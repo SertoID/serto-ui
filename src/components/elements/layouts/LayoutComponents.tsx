@@ -61,7 +61,7 @@ export interface HeaderProps {
 
 export const Header: React.FunctionComponent<HeaderProps> = (props) => {
   return (
-    <Flex alignItems="center" justifyContent="space-between" p={3} minHeight="4rem">
+    <Flex alignItems="center" justifyContent="space-between" px={4} py={3} minHeight="4rem">
       <H2 color={colors.primary.base} m={0}>
         {props.heading}
       </H2>
@@ -85,7 +85,7 @@ export interface SecondaryHeaderProps {
 
 export const SecondaryHeader: React.FunctionComponent<SecondaryHeaderProps> = (props) => {
   return (
-    <Box mb={4} mt={5} mx={3}>
+    <Box mb={4} mt={5} mx={4}>
       <H3 mb={2} mt={0}>
         {props.heading}
       </H3>
@@ -103,6 +103,14 @@ export const SecondaryHeader: React.FunctionComponent<SecondaryHeaderProps> = (p
 
 export const THead = styled.thead`
   border-top: 1px solid #edecfa;
+
+  th:first-of-type {
+    padding: 16px 16px 16px 24px !important;
+  }
+
+  th:last-of-type {
+    padding: 16px 24px 16px 16px !important;
+  }
 `;
 
 export const TH: React.FunctionComponent = (props) => {
@@ -126,6 +134,14 @@ export const TBody = styled.tbody`
 
   td {
     font-size: 16px;
-    padding: 30px 15px;
+    padding: 30px 16px;
+  }
+
+  td:first-of-type {
+    padding: 30px 16px 30px 24px !important;
+  }
+
+  td:last-of-type {
+    padding: 30px 24px 30px 16px !important;
   }
 `;

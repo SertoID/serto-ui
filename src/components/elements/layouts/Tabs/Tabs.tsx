@@ -11,7 +11,7 @@ const TabsHeader = styled.ul`
   list-style: none;
   justify-content: flex-start;
   margin-bottom: 0;
-  padding: 0;
+  padding: 0 8px;
   width: 100%;
 `;
 

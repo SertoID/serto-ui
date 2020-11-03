@@ -23,12 +23,14 @@ export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) 
   }
 
   return (
-    <Flex p={2} height="100vh">
-      <Box width={8} p={2}>
-        <SwitchTenant user={user} />
-        <Nav url={props.url} />
+    <Flex p={4} height="100vh">
+      <Flex flexDirection="column" justifyContent="space-between" width={8} p={2} mr={2} minWidth={8}>
+        <Box>
+          <SwitchTenant user={user} />
+          <Nav url={props.url} />
+        </Box>
         <LogOut />
-      </Box>
+      </Flex>
       <Flex flexDirection="column" height="98vh" flexGrow="1" p={2}>
         {props.children}
       </Flex>

@@ -25,15 +25,16 @@ interface NavItemProps {
 }
 
 const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
-  const Icon = props.icon;
+  const { currentUrl, icon, text, url } = props;
+  const Icon = icon;
 
-  if (props.currentUrl === props.url) {
+  if (currentUrl === url) {
     return (
       <Box py={2}>
         <Flex alignItems="center">
-          <Icon color={colors.primary.base} size="16px" mr={3} />
+          <Icon color={colors.primary.base} size="16px" mr="20px" />
           <Text.span color={baseColors.black} fontSize={1} fontWeight={3}>
-            {props.text}
+            {text}
           </Text.span>
         </Flex>
       </Box>
@@ -42,11 +43,11 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
 
   return (
     <NavItemStyled>
-      <Link to={props.url}>
+      <Link to={generatePath(url)}>
         <Flex alignItems="center">
-          <Icon color={colors.midGray} size="16px" mr={3} />
+          <Icon color={colors.midGray} size="16px" mr="20px" />
           <Text.span color={colors.midGray} fontSize={1}>
-            {props.text}
+            {text}
           </Text.span>
         </Flex>
       </Link>
@@ -62,11 +63,11 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
   const { url } = props;
   return (
     <>
-      {/* <NavItem url={generatePath(routes.FEEDS)} text="Feeds" icon={Home} currentUrl={url} /> */}
-      <NavItem url={generatePath(routes.CREDENTIALS)} text="Credentials" icon={Send} currentUrl={url} />
-      <NavItem url={generatePath(routes.SCHEMAS)} text="Schemas" icon={SelectAll} currentUrl={url} />
-      <NavItem url={generatePath(routes.SETTINGS)} text="Settings" icon={Settings} currentUrl={url} />
-      <NavItem url={generatePath(routes.DEVELOPER)} text="Developer" icon={Code} currentUrl={url} />
+      {/* <NavItem url={routes.FEEDS} text="Feeds" icon={Home} currentUrl={url} /> */}
+      <NavItem url={routes.CREDENTIALS} text="Credentials" icon={Send} currentUrl={url} />
+      <NavItem url={routes.SCHEMAS} text="Schemas" icon={SelectAll} currentUrl={url} />
+      <NavItem url={routes.SETTINGS} text="Settings" icon={Settings} currentUrl={url} />
+      <NavItem url={routes.DEVELOPER} text="Developer" icon={Code} currentUrl={url} />
     </>
   );
 };
