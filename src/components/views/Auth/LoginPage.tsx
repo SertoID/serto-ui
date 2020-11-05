@@ -25,6 +25,10 @@ export const LoginPage = () => {
     try {
       await loginWithPopup();
       const token = await getIdTokenClaims();
+      if (!token) {
+        console.warn("Undefined token from Auth0 - popup cancelled or superceded?");
+        return;
+      }
       console.log({ token });
       await TrustAgent.login(token.__raw);
       history.push(routes.HOMEPAGE);

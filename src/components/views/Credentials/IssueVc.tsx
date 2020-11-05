@@ -8,9 +8,10 @@ import { SchemasTable } from "../../elements/components/Schemas/SchemasTable";
 import { H3, Tabs } from "../../elements/layouts";
 import { colors } from "../../elements/themes";
 import { IssueVcForm } from "./IssueVcForm";
+import { Identifier } from "../../../types";
 
 export interface IssueVcProps {
-  identifiers: string[];
+  identifiers: Identifier[];
   onComplete(): void;
 }
 

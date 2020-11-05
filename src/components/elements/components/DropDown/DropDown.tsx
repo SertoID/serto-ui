@@ -56,6 +56,15 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
     fontFamily: fonts.sansSerif,
     ...props.optionsTextProps,
   };
+  const selectedOptionTextProps = {
+    ...optionsTextProps,
+    style: {
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      ...props.optionsTextProps?.style,
+    },
+  };
 
   return (
     <Box
@@ -86,7 +95,9 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
           ...props.style,
         }}
       >
-        <Text.span {...optionsTextProps}>{selectedOption}</Text.span>
+        <Text.span {...selectedOptionTextProps} title={selectedOption}>
+          {selectedOption}
+        </Text.span>
         {isOpen ? (
           <KeyboardArrowUp
             color={colors.moonGray}

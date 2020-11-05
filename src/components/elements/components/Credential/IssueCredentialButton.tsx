@@ -77,10 +77,7 @@ export const IssueCredentialButton: React.FunctionComponent = () => {
         Issue Credential
       </Button.Outline>
       <ModalWithX isOpen={isIssueModalOpen} close={() => setIsIssueModalOpen(false)} minWidth={9} maxWidth={11}>
-        <IssueVc
-          identifiers={identifiersResponse?.map((identifier: any) => identifier.did)}
-          onComplete={() => setIsIssueModalOpen(false)}
-        />
+        <IssueVc identifiers={identifiersResponse!} onComplete={() => setIsIssueModalOpen(false)} />
       </ModalWithX>
     </>
   );

@@ -9,8 +9,24 @@ import { IssueVcForm } from "./IssueVcForm";
 import { SchemaDataResponse } from "../../elements";
 import { HighlightedJson } from "../../elements/components/HighlightedJson/HighlightedJson";
 import { IdentityThemeProvider } from "../../elements/themes/IdentityTheme";
+import { Identifier } from "../../../types";
 
 const DEFAULT_SCHEMA = "TestCredential";
+
+const IDENTIFIERS: Identifier[] = [
+  { did: "did:ethr:rinkeby:0xcfa8829812f1b4fe09b27cacf7d36e4d1b5dce76", provider: "did:ethr:rinkeby", alias: "Admin" },
+  {
+    did: "did:ethr:rinkeby:0x88298d36e4d1b5dce76cf9b27cacf7a12f1b4fe0",
+    provider: "did:ethr:rinkeby",
+    alias: "Another User",
+  },
+  {
+    did: "did:ethr:rinkeby:0x1b5dce8826e4d76cf9b27cac12f1b4fe098d3f7a",
+    provider: "did:ethr:rinkeby",
+    alias: "Really really really really really really long alias",
+  },
+  { did: "did:ethr:rinkeby:0x9812f1d36e4d1b5dce7acf76cfa882b4fe09b27c", provider: "did:ethr:rinkeby" },
+];
 
 storiesOf("Credential", module).add("IssueVcForm", () => {
   const [vcData, setVcData] = React.useState({});
@@ -46,11 +62,11 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
               </select>
             </Box>
 
-            <Box width={480}>
+            <Box width={10}>
               {error && <Flash variant="danger">{error}</Flash>}
               <IssueVcForm
                 schema={ldContextPlus as SchemaDataResponse}
-                identifiers={["0xabc123", "0x123abc"]}
+                identifiers={IDENTIFIERS}
                 onSuccessResponse={() => {}}
                 onVcDataChange={setVcData}
               />
