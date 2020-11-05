@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import styled from "styled-components";
+import React from "react";
 import { Input } from "rimble-ui";
 import { Identifier } from "../../../types";
 import { DropDown } from "./DropDown/DropDown";
@@ -21,7 +20,7 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
     if (props.autoSelectFirst) {
       props.onChange(props.identifiers[0].did);
     }
-  }, [props.autoSelectFirst, props.identifiers, props.onChange]);
+  }, [props, props.autoSelectFirst, props.identifiers, props.onChange]);
 
   let options = props.identifiers.map((id) => ({
     name: id.alias ? `${id.alias} (${id.did})` : id.did,
