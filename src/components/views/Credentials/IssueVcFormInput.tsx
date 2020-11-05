@@ -28,6 +28,7 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
         onChange={onChange}
         identifiers={identifiers}
         allowCustom={true}
+        value={value}
         required={required}
       />
     );

@@ -5,8 +5,9 @@ import { DropDown } from "./DropDown/DropDown";
 
 export interface DidSelectProps {
   identifiers: Identifier[];
-  autoSelectFirst?: boolean;
+  value?: string;
   allowCustom?: boolean;
+  defaultSelectFirst?: boolean;
   required?: boolean;
   onChange(value: string): void;
 }
@@ -14,16 +15,19 @@ export interface DidSelectProps {
 const CUSTOM_DID = Symbol() as any;
 
 export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
+  const { value, onChange, identifiers, defaultSelectFirst } = props;
+
   const [showCustom, setShowCustom] = React.useState(false);
+  const [selectedDid, setSelectedDid] = React.useState(props.defaultSelectFirst ? identifiers[0].did : "");
   const [customDid, setCustomDid] = React.useState("");
 
   React.useEffect(() => {
-    if (props.autoSelectFirst) {
-      props.onChange(props.identifiers[0].did);
+    if (defaultSelectFirst && !showCustom && value !== identifiers[0].did && selectedDid === identifiers[0].did) {
+      onChange(identifiers[0].did);
     }
-  }, [props, props.autoSelectFirst, props.identifiers, props.onChange]);
+  }, [defaultSelectFirst, showCustom, identifiers, onChange, selectedDid, value]);
 
-  let options = props.identifiers.map((id) => ({
+  let options = identifiers.map((id) => ({
     name: id.alias ? `${id.alias} (${id.did})` : id.did,
     value: id.did,
   }));
@@ -44,11 +48,11 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
   const onDropDownChange = (value: string) => {
     if (value === CUSTOM_DID) {
       setShowCustom(true);
-      props.onChange(customDid);
+      onChange(customDid);
     } else {
       setShowCustom(false);
       setSelectedDid(value);
-      props.onChange(value);
+      onChange(value);
     }
   };
 
@@ -57,6 +61,7 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
       <DropDown
         onChange={onDropDownChange}
         options={options}
+        defaultSelectedValue={defaultSelectFirst ? identifiers[0].did : undefined}
       />
       <Input
         type="url"
@@ -67,7 +72,7 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
             return false;
           }
           setCustomDid(event.target.value);
-          props.onChange(event.target.value);
+          onChange(event.target.value);
         }}
         width="100%"
         placeholder="did:example:0xabc123"
