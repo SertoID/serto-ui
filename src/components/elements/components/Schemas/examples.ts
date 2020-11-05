@@ -22,30 +22,42 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "credentialSubject": {
       "@id": "w3ccred:credentialSubject",
       "@required": true,
-      "@contains": ["alumniOf", "universityId", "title"],
+      "@contains": ["degreeName", "universityName", "universityId", "year"],
       "@context": {
         "id": {
           "@id": "@id",
           "@type": "@id",
+          "@title": "Alumni ID",
           "@required": true
         }
       }
     },
-    "alumniOf": {
-      "@id": "schema-id:alumniOf",
+    "degreeName": {
+      "@id": "schema-id:degreeName",
       "@type": "rdf:HTML",
+      "@dataType": "string",
       "@required": true,
-      "@dataType": "string"
+      "@title": "Degree Name",
+      "@description": "E.g. \\"Bachelor of Arts in Astrophysics\\""
+    },
+    "universityName": {
+      "@id": "schema-id:universityName",
+      "@type": "rdf:HTML",
+      "@dataType": "string",
+      "@required": true,
+      "@title": "University Name"
     },
     "universityId": {
       "@id": "schema-id:universityId",
       "@type": "rdf:langString",
-      "@dataType": "string"
+      "@dataType": "string",
+      "@title": "University ID"
     },
-    "title": {
-      "@id": "schema-id:title",
-      "@type": "rdf:HTML",
-      "@dataType": "string"
+    "year": {
+      "@id": "schema-id:year",
+      "@type": "rdf:langString",
+      "@dataType": "integer",
+      "@title": "Year"
     }
   }
 }`,

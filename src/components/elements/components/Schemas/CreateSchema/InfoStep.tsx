@@ -131,7 +131,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             />
             <Text mt={1} fontSize={1} fontFamily={fonts.sansSerif} color={colors.midGray}>
               If checked, this schema will be listed in the public schema registry. If unchecked, your schema will still
-              be accessible at a public URL via the above slug, but will not be listed in the registry.
+              be publicly accessible at an unlisted URL via the above slug.
             </Text>
           </Box>
 
