@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "rimble-ui";
+import { Box, Input } from "rimble-ui";
 import { Identifier } from "../../../types";
 import { DropDown } from "./DropDown/DropDown";
 
@@ -7,6 +7,7 @@ export interface DidSelectProps {
   identifiers: Identifier[];
   autoSelectFirst?: boolean;
   allowCustom?: boolean;
+  required?: boolean;
   onChange(value: string): void;
 }
 
@@ -30,7 +31,7 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
   if (props.allowCustom) {
     options = [
       {
-        name: "Select DID",
+        name: "Select DID...",
         value: "",
       },
       {
@@ -46,25 +47,42 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
       props.onChange(customDid);
     } else {
       setShowCustom(false);
+      setSelectedDid(value);
       props.onChange(value);
     }
   };
 
   return (
-    <>
-      <DropDown onChange={onDropDownChange} options={options} />
-      {showCustom && (
-        <Input
-          type="url"
-          value={customDid}
-          onChange={(event: any) => {
-            setCustomDid(event.target.value);
-            props.onChange(event.target.value);
-          }}
-          width="100%"
-          placeholder="did:example:0xabc123"
-        />
-      )}
-    </>
+    <Box width="100%" position="relative">
+      <DropDown
+        onChange={onDropDownChange}
+        options={options}
+      />
+      <Input
+        type="url"
+        value={showCustom ? customDid : selectedDid}
+        required={props.required}
+        onChange={(event: any) => {
+          if (!showCustom) {
+            return false;
+          }
+          setCustomDid(event.target.value);
+          props.onChange(event.target.value);
+        }}
+        width="100%"
+        placeholder="did:example:0xabc123"
+        style={
+          showCustom
+            ? undefined
+            : {
+                /* When `showCustom` is true we have a normal input field here and browser can handle "required" validation normally. When `showCustom` is not true, we hide this with CSS but fill it out based on value selected in DropDown, so that if user tries to submit and this is required and no value has been selected, the native browser validation tooltip ("please fill out this required field") points to our DropDown. The reason we have to hide with CSS is that if we hide with input `hidden` attribute (and/or use `disabled`) then browser ignores validation for the input. */
+                position: "absolute",
+                opacity: 0,
+                top: 0,
+                pointerEvents: "none",
+              }
+        }
+      />
+    </Box>
   );
 };

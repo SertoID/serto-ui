@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { Box, Button, Checkbox, Field, Flash, Form, Input, Text, Loader } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
@@ -12,13 +11,6 @@ import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
 import { featureFlags } from "../../../constants";
 import { Identifier } from "../../../types";
 import { DidSelect } from "../../elements/components/DidSelect";
-
-/** `Field` component shows "(optional)" text if it doesn't find an `<input required ...>` child, but sometimes we want to use `Field` with other children like our custom `DropDown` so we have to hide it. */
-const FieldNotOptional = styled(Field)`
-  div::after {
-    display: none;
-  }
-`;
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
@@ -207,9 +199,15 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
               <Field label="Issuance Date" width="100%">
                 <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
               </Field>
-              <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
-                <DidSelect onChange={setIssuer} identifiers={props.identifiers} autoSelectFirst={true} />
-              </FieldNotOptional>
+              <Field label="Issuer ID" width="100%" mb={0}>
+                <DidSelect
+                  onChange={setIssuer}
+                  value={issuer}
+                  identifiers={props.identifiers}
+                  defaultSelectFirst={true}
+                  required={true}
+                />
+              </Field>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
                 <Field key={key} label={node.title || key} width="100%">
                   {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
