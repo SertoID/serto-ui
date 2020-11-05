@@ -6,21 +6,12 @@ import { CopyToClipboard } from "../CopyToClipboard";
 import { Expand } from "../Expand";
 import { baseColors, colors, fonts } from "../../themes";
 import { dateTimeFormat, ellipsis } from "../../utils";
+import { VC } from "../../../../types";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
   LIST = "LIST",
   DEFAULT = "DEFAULT",
-}
-
-/** Quick n dirty VC type with properties we need, the full W3C VC spec has much much more. */
-export interface VC {
-  "@context": string | string[];
-  type: string[];
-  issuer: string | { id: string };
-  issuanceDate: string;
-  credentialSubject: { [key: string]: any };
-  proof: { jwt: string };
 }
 
 export interface CredentialProps {

@@ -1,5 +1,6 @@
 import { config } from "../config";
 import { SchemaDataInput, SchemaDataResponse } from "../components/elements/components/Schemas/types";
+import { Identifier } from "../types";
 
 const AUTH_LOCALSTORAGE_KEY = `trust-agent-auth-${config.API_URL}`;
 
@@ -76,7 +77,7 @@ export class TrustAgencyService {
     return this.request("/v1/tenant/activate", "POST", { activateJwt: token }, true);
   }
 
-  public async getTenantIdentifiers(): Promise<any> {
+  public async getTenantIdentifiers(): Promise<Identifier[]> {
     return this.request("/v1/tenant/agent/identityManagerGetIdentities", "POST");
   }
 

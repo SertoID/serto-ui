@@ -11,6 +11,7 @@ import { getSchemaUrl } from "../../elements/components/Schemas/utils";
 import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
 import { featureFlags } from "../../../constants";
 import { DropDown } from "../../elements/components/DropDown/DropDown";
+import { Identifier } from "../../../types";
 
 /** `Field` component shows "(optional)" text if it doesn't find an `<input required ...>` child, but sometimes we want to use `Field` with other children like our custom `DropDown` so we have to hide it. */
 const FieldNotOptional = styled(Field)`
@@ -21,7 +22,7 @@ const FieldNotOptional = styled(Field)`
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
-  identifiers: string[];
+  identifiers: Identifier[];
   onSuccessResponse(response: any, publishedToFeed?: string): void;
   onVcDataChange?(vcData: any): void;
 }
@@ -31,10 +32,10 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     "@context": ["https://www.w3.org/2018/credentials/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
-    issuer: { id: props.identifiers[0] },
+    issuer: { id: props.identifiers[0].did },
     issuanceDate: new Date().toISOString(),
     credentialSubject: {
-      id: props.identifiers[0],
+      id: props.identifiers[0].did,
       exampleData: {
         foo: 123,
         bar: true,
@@ -47,7 +48,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
-  const [issuer, setIssuer] = useState<string>(props.identifiers[0]);
+  const [issuer, setIssuer] = useState<string>(props.identifiers[0].did);
   const [publishToFeedSlug, setPublishToFeedSlug] = useState<string | undefined>();
   const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
@@ -195,7 +196,13 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
               </Field>
               <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
-                <DropDown onChange={setIssuer} options={props.identifiers.map((did) => ({ name: did, value: did }))} />
+                <DropDown
+                  onChange={setIssuer}
+                  options={props.identifiers.map((id) => ({
+                    name: id.alias ? `${id.alias} (${id.did})` : id.did,
+                    value: id.did,
+                  }))}
+                />
               </FieldNotOptional>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
                 <Field key={key} label={node.title || key} width="100%">
