@@ -115,9 +115,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
           />
           <DropDown
             onChange={(value) => updateType(i, value)}
-            defaultSelected={
-              typeOptions[prop["@type"] === "@id" ? "http://schema.org/URL" : prop["@type"]!].niceName || "Text"
-            }
+            defaultSelectedValue={prop["@type"] || "http://schema.org/Text"}
             disabled={readOnly}
             options={Object.keys(typeOptions).map((type) => ({
               name: typeOptions[type].niceName || type,

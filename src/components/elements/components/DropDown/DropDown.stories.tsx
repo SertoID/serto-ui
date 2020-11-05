@@ -11,11 +11,13 @@ const options = [
 
 storiesOf("DropDown", module)
   .add("Option List", () => {
-    return <DropDown onChange={() => console.log("change")} options={options} defaultSelected="Green" />;
+    return (
+      <DropDown onChange={(value) => console.log("changed to", value)} options={options} defaultSelectedValue="3" />
+    );
   })
   .add("Option List with Button", () => {
     return (
-      <DropDown onChange={() => console.log("change")} options={options}>
+      <DropDown onChange={(value) => console.log("changed to", value)} options={options}>
         <Button onClick={() => console.log("click")} width="100%">
           Add Color
         </Button>
