@@ -511,8 +511,8 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "@context": {
         "id": {
           "@id": "@id",
+          "@type": "@id",
           "@title": "Credential Subject ID",
-          "@type": "http://schema.org/Text",
           "@description": "Globally unique identifier for the piece of content this credential is about",
           "@required": true
         },

@@ -2,6 +2,7 @@ export * from "./CopyableTruncatableText";
 export * from "./CopyToClipboard";
 export * from "./Credential";
 export * from "./DropDown";
+export * from "./DidSelect";
 export * from "./Error";
 export * from "./Expand";
 export * from "./FeatureFlag";

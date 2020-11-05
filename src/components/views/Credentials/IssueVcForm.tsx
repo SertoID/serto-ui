@@ -10,8 +10,8 @@ import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 import { getSchemaUrl } from "../../elements/components/Schemas/utils";
 import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
 import { featureFlags } from "../../../constants";
-import { DropDown } from "../../elements/components/DropDown/DropDown";
 import { Identifier } from "../../../types";
+import { DidSelect } from "../../elements/components/DidSelect";
 
 /** `Field` component shows "(optional)" text if it doesn't find an `<input required ...>` child, but sometimes we want to use `Field` with other children like our custom `DropDown` so we have to hide it. */
 const FieldNotOptional = styled(Field)`
@@ -142,6 +142,18 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
     const required = credSchema?.required?.indexOf(key) !== -1;
 
+    // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
+    const isDid = key === "id" && node.type === "string" && node.format === "uri";
+    if (isDid) {
+      return (
+        <DidSelect
+          onChange={(value) => setVcData({ ...vcData, [key]: value })}
+          identifiers={props.identifiers}
+          allowCustom={true}
+        />
+      );
+    }
+
     let type = "text";
     let disabled = false;
     let placeholder = "";
@@ -196,13 +208,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
               </Field>
               <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
-                <DropDown
-                  onChange={setIssuer}
-                  options={props.identifiers.map((id) => ({
-                    name: id.alias ? `${id.alias} (${id.did})` : id.did,
-                    value: id.did,
-                  }))}
-                />
+                <DidSelect onChange={setIssuer} identifiers={props.identifiers} autoSelectFirst={true} />
               </FieldNotOptional>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
                 <Field key={key} label={node.title || key} width="100%">
