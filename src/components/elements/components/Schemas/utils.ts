@@ -21,8 +21,10 @@ Object.keys(jsonLdContextTypeMap).forEach((type) => {
 
 export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
   const schemaInstance = new VcSchema(createLdContextPlusSchema(schema), schema.slug);
+  const schemaInput = { ...schema }
+  delete schemaInput.properties;
   return {
-    ...schema,
+    ...schemaInput,
     ldContextPlus: schemaInstance.getLdContextPlusString(),
     ldContext: schemaInstance.getJsonLdContextString(),
     jsonSchema: schemaInstance.getJsonSchemaString(),
