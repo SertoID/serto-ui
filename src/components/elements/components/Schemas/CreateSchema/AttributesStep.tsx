@@ -163,7 +163,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
 
   return (
     <>
-      <ModalHeader>Define Credential Attributes</ModalHeader>
+      <ModalHeader>Define Schema Attributes</ModalHeader>
       <ModalContent>
         <Form validated={doValidation} onSubmit={goNext}>
           {requiredSchemaProperties.map((prop, i) => renderSchemaProperty(prop, i, true))}

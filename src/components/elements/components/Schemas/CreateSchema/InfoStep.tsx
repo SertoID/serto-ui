@@ -60,7 +60,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   return (
     <>
-      <ModalHeader>Create Schema</ModalHeader>
+      <ModalHeader>Create New Schema</ModalHeader>
       <ModalContent>
         <Form validated={doValidation} onSubmit={goNext}>
           <SchemaField label="Credential Schema Name">
@@ -68,6 +68,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
               width="100%"
               type="text"
               required={true}
+              placeholder="Enter name"
               value={schema.name || ""}
               onChange={(event: any) => updateSchema({ name: event.target.value })}
             />
@@ -77,6 +78,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
               width="100%"
               type="text"
               required={true}
+              placeholder="Enter slug/ID"
               value={schema.slug || defaultSchemaSlug}
               onChange={(event: any) => updateSchema({ slug: event.target.value })}
               onBlur={() => updateSchema({ slug: slugify(schema.slug) })}
@@ -101,7 +103,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
                 >
                   <Info size={16} color={colors.silver} style={{ verticalAlign: "text-top" }} />
                 </Tooltip>
-                <Text.span ml={1} fontWeight={1} fontStyle="italic" fontSize={1}>
+                <Text.span ml={1} fontStyle="italic" fontSize={1}>
                   (optional)
                 </Text.span>
               </Text>
@@ -119,6 +121,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
               width="100%"
               type="text"
               value={schema.description}
+              placeholder="Briefly describe how this schema will be used"
               onChange={(event: any) => updateSchema({ description: event.target.value })}
             />
           </SchemaField>
@@ -129,7 +132,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
               checked={schema.discoverable}
               onChange={() => updateSchema({ discoverable: !schema.discoverable })}
             />
-            <Text mt={1} fontSize={1} fontFamily={fonts.sansSerif} color={colors.midGray}>
+            <Text mt={1} fontSize={1} fontFamily={fonts.sansSerif} color={colors.gray60}>
               If checked, this schema will be listed in the public schema registry. If unchecked, your schema will still
               be publicly accessible at an unlisted URL via the above slug.
             </Text>

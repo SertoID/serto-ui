@@ -6,6 +6,7 @@ import { baseColors } from "../themes";
 
 export interface ModalWithXProps {
   isOpen?: boolean;
+  hideX?: boolean;
   close(): any;
   /** Any additional props will be passed to Rimble `Card` component around the modal: */
   [key: string]: any;
@@ -14,7 +15,9 @@ export const ModalWithX: React.FunctionComponent<ModalWithXProps> = (props) => {
   return (
     <Modal isOpen={props.isOpen}>
       <Card p={0} pb={3} pt="48px" {...props}>
-        <Button.Text icononly icon="Close" position="absolute" top={1} right={2} onClick={props.close} />
+        {!props.hideX && (
+          <Button.Text icononly icon="Close" position="absolute" top={1} right={2} onClick={props.close} />
+        )}
         <Flex flexDirection="column" minHeight="0" maxHeight="calc(95vh - 48px)">
           {props.children}
         </Flex>
@@ -27,7 +30,17 @@ export interface ModalBackProps {
   onClick(e: MouseEvent): any;
 }
 export const ModalBack: React.FunctionComponent<ModalBackProps> = (props) => {
-  return <Button.Text icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={props.onClick} />;
+  return (
+    <Button.Text
+      icononly
+      icon="ArrowBack"
+      position="absolute"
+      top={2}
+      left={2}
+      style={{ color: baseColors.black }}
+      onClick={props.onClick}
+    />
+  );
 };
 
 export const ModalHeader: React.FunctionComponent = (props) => (
