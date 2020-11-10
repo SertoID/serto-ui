@@ -11,14 +11,14 @@ export const Option = styled(Box)`
   }
 `;
 
-interface DropDownOptions {
+interface DropDownOption {
   name: string;
   value: string;
 }
 
 export interface DropDownProps {
-  options: DropDownOptions[];
-  defaultSelected?: string;
+  options: DropDownOption[];
+  defaultSelectedValue?: string;
   optionsTextProps?: { [key: string]: any };
   disabled?: boolean;
   style?: { [key: string]: any };
@@ -27,14 +27,18 @@ export interface DropDownProps {
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const node = React.useRef() as React.MutableRefObject<HTMLInputElement>;
-  const [selectedOption, setSelectedOption] = React.useState(props.defaultSelected || props.options[0].name);
+  const [selectedOption, setSelectedOption] = React.useState(
+    props.defaultSelectedValue
+      ? props.options.filter((option) => option.value === props.defaultSelectedValue)[0] || props.options[0]
+      : props.options[0],
+  );
   const [isOpen, setIsOpen] = React.useState(false);
   const toggle = () => !props.disabled && setIsOpen(!isOpen);
 
-  const onOptionClicked = (value: string, name: string) => () => {
-    setSelectedOption(name);
+  const onOptionClicked = (option: DropDownOption) => () => {
+    setSelectedOption(option);
     setIsOpen(false);
-    props.onChange(value);
+    props.onChange(option.value);
   };
 
   const onClickOutside = (e: any) => {
@@ -95,8 +99,8 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
           ...props.style,
         }}
       >
-        <Text.span {...selectedOptionTextProps} title={selectedOption}>
-          {selectedOption}
+        <Text.span {...selectedOptionTextProps} title={selectedOption.name}>
+          {selectedOption.name}
         </Text.span>
         {isOpen ? (
           <KeyboardArrowUp
@@ -122,10 +126,10 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
         >
           <Box>
             {props.options.map((option: any, key: number) => {
-              if (option.name !== selectedOption) {
+              if (option !== selectedOption) {
                 return (
                   <Option
-                    onClick={onOptionClicked(option.value, option.name)}
+                    onClick={onOptionClicked(option)}
                     key={key}
                     borderBottom={1}
                     p={3}

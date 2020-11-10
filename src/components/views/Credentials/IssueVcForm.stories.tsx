@@ -52,7 +52,14 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
           <div>
             <Box mb={3}>
               Schema:{" "}
-              <select value={schemaKey} onChange={(event: any) => setSchemaKey(event.target.value)}>
+              <select
+                value={schemaKey}
+                onChange={(event: any) => {
+                  setSchemaKey(event.target.value);
+                  setVcData({});
+                  setError("");
+                }}
+              >
                 <option value="">[Raw JSON input]</option>
                 {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
                   <option key={key} value={key}>
@@ -65,6 +72,7 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
             <Box width={10}>
               {error && <Flash variant="danger">{error}</Flash>}
               <IssueVcForm
+                key={schemaKey}
                 schema={ldContextPlus as SchemaDataResponse}
                 identifiers={IDENTIFIERS}
                 onSuccessResponse={() => {}}

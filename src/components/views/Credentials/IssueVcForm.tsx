@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { Box, Button, Checkbox, Field, Flash, Form, Input, Text, Loader } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
@@ -12,13 +11,7 @@ import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
 import { featureFlags } from "../../../constants";
 import { Identifier } from "../../../types";
 import { DidSelect } from "../../elements/components/DidSelect";
-
-/** `Field` component shows "(optional)" text if it doesn't find an `<input required ...>` child, but sometimes we want to use `Field` with other children like our custom `DropDown` so we have to hide it. */
-const FieldNotOptional = styled(Field)`
-  div::after {
-    display: none;
-  }
-`;
+import { IssueVcFormInput } from "./IssueVcFormInput";
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
@@ -135,57 +128,6 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
   const credSchema = schemaInstance?.jsonSchema?.properties?.credentialSubject;
 
-  function renderInput(key: string, node: JsonSchemaNode): JSX.Element {
-    if (node.type === "boolean") {
-      return <Checkbox checked={!!vcData[key]} onChange={() => setVcData({ ...vcData, [key]: !vcData[key] })} />;
-    }
-
-    const required = credSchema?.required?.indexOf(key) !== -1;
-
-    // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
-    const isDid = key === "id" && node.type === "string" && node.format === "uri";
-    if (isDid) {
-      return (
-        <DidSelect
-          onChange={(value) => setVcData({ ...vcData, [key]: value })}
-          identifiers={props.identifiers}
-          allowCustom={true}
-        />
-      );
-    }
-
-    let type = "text";
-    let disabled = false;
-    let placeholder = "";
-    let width: string | undefined = "100%";
-    if (node.type === "object") {
-      disabled = true;
-      placeholder = "[nested properties not yet supported]";
-    } else if (node.type === "number" || node.type === "integer") {
-      type = "number";
-      width = undefined;
-    } else if (node.format === "date-time") {
-      type = "datetime-local";
-    } else if (node.format === "uri") {
-      type = "url";
-      placeholder = "URL";
-    }
-
-    return (
-      <Input
-        type={type}
-        disabled={disabled}
-        value={vcData[key] || ""}
-        onChange={(event: any) =>
-          setVcData({ ...vcData, [key]: type === "number" ? parseInt(event.target.value, 10) : event.target.value })
-        }
-        required={required}
-        width={width}
-        placeholder={placeholder}
-      />
-    );
-  }
-
   return (
     <>
       <ModalHeader>Issue {props.schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
@@ -207,13 +149,27 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
               <Field label="Issuance Date" width="100%">
                 <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
               </Field>
-              <FieldNotOptional label="Issuer ID" width="100%" mb={0}>
-                <DidSelect onChange={setIssuer} identifiers={props.identifiers} autoSelectFirst={true} />
-              </FieldNotOptional>
+              <Field label="Issuer ID" width="100%" mb={0}>
+                <DidSelect
+                  onChange={setIssuer}
+                  value={issuer}
+                  identifiers={props.identifiers}
+                  defaultSelectFirst={true}
+                  required={true}
+                />
+              </Field>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
                 <Field key={key} label={node.title || key} width="100%">
                   {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
-                  {renderInput(key, node)}
+                  <IssueVcFormInput
+                    key={key}
+                    name={key}
+                    node={node}
+                    identifiers={props.identifiers}
+                    value={vcData[key]}
+                    required={credSchema?.required?.indexOf(key) !== -1}
+                    onChange={(value) => setVcData({ ...vcData, [key]: value })}
+                  />
                 </Field>
               ))}
             </>

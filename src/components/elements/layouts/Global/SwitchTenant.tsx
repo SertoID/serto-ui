@@ -25,12 +25,8 @@ export const SwitchTenant: React.FunctionComponent<SwitchTenantProps> = (props) 
   }
 
   if (user) {
-    let activeTenantName;
     const tenants: any[] = [];
     user.tenants.forEach((tenant: any) => {
-      if (activeTenantID === tenant.Tenant_id) {
-        activeTenantName = tenant.Tenant_name;
-      }
       if (tenant.Tenant_type === "organization") {
         tenants.push({
           name: tenant.Tenant_name,
@@ -44,7 +40,7 @@ export const SwitchTenant: React.FunctionComponent<SwitchTenantProps> = (props) 
         <DropDown
           onChange={onChange}
           options={tenants}
-          defaultSelected={activeTenantName}
+          defaultSelectedValue={activeTenantID}
           style={{ height: 64, border: 0 }}
           optionsTextProps={{ fontWeight: 3 }}
         >
