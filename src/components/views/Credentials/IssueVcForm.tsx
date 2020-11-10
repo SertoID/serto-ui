@@ -153,9 +153,9 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 <DidSelect
                   onChange={setIssuer}
                   value={issuer}
-                  identifiers={props.identifiers}
                   defaultSelectFirst={true}
                   required={true}
+                  ownDidsOnly={true}
                 />
               </Field>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
@@ -165,7 +165,6 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                     key={key}
                     name={key}
                     node={node}
-                    identifiers={props.identifiers}
                     value={vcData[key]}
                     required={credSchema?.required?.indexOf(key) !== -1}
                     onChange={(value) => setVcData({ ...vcData, [key]: value })}

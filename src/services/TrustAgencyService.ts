@@ -98,6 +98,24 @@ export class TrustAgencyService {
     return this.request("/v1/tenant/agent/identityManagerSetAlias", "POST", { did, alias });
   }
 
+  public async getAllIdentifiers(): Promise<Identifier[]> {
+    const allUsers = await this.request("/v1/tenant/all");
+    const identifiers: Identifier[] = [];
+    allUsers?.forEach?.((user: any) => {
+      if (!user.identities?.length) {
+        return;
+      }
+      user.identities.forEach((id: Identifier) => {
+        identifiers.push({
+          ...id,
+          userName: user.name,
+          userType: user.type,
+        });
+      });
+    });
+    return identifiers;
+  }
+
   public async getCredentials(): Promise<any> {
     return this.request("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials", "POST");
   }

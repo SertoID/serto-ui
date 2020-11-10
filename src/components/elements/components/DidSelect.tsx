@@ -1,10 +1,12 @@
 import React from "react";
-import { Box, Input } from "rimble-ui";
-import { Identifier } from "../../../types";
+import useSWR from "swr";
+import { Box, Input, Loader } from "rimble-ui";
 import { DropDown } from "./DropDown/DropDown";
+import { TrustAgencyService } from "../../../services/TrustAgencyService";
+import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 
 export interface DidSelectProps {
-  identifiers: Identifier[];
+  ownDidsOnly?: boolean;
   value?: string;
   allowCustom?: boolean;
   defaultSelectFirst?: boolean;
@@ -15,22 +17,58 @@ export interface DidSelectProps {
 const CUSTOM_DID = Symbol() as any;
 
 export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
-  const { value, onChange, identifiers, defaultSelectFirst } = props;
+  const { value, onChange, defaultSelectFirst } = props;
+
+  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
+  const identifiersEndpoint = props.ownDidsOnly ? "/v1/tenant/agent/identityManagerGetIdentities" : "/v1/tenant/all";
+  const getIdentifiersFunc = () =>
+    props.ownDidsOnly ? TrustAgent.getTenantIdentifiers() : TrustAgent.getAllIdentifiers();
+  const { data: identifiers, error: getIdentifiersError } = useSWR(identifiersEndpoint, getIdentifiersFunc);
+
+  if (getIdentifiersError) {
+    console.error(`Failed to fetch identifiers from ${identifiersEndpoint}:`, getIdentifiersError);
+  }
 
   const [showCustom, setShowCustom] = React.useState(false);
-  const [selectedDid, setSelectedDid] = React.useState(props.defaultSelectFirst ? identifiers[0].did : "");
+  const [selectedDid, setSelectedDid] = React.useState(props.defaultSelectFirst ? identifiers?.[0].did : "");
   const [customDid, setCustomDid] = React.useState("");
 
   React.useEffect(() => {
-    if (defaultSelectFirst && !showCustom && value !== identifiers[0].did && selectedDid === identifiers[0].did) {
+    if (
+      defaultSelectFirst &&
+      !showCustom &&
+      identifiers?.[0] &&
+      value !== identifiers[0].did &&
+      selectedDid === identifiers[0].did
+    ) {
       onChange(identifiers[0].did);
     }
   }, [defaultSelectFirst, showCustom, identifiers, onChange, selectedDid, value]);
 
-  let options = identifiers.map((id) => ({
-    name: id.alias ? `${id.alias} (${id.did})` : id.did,
-    value: id.did,
-  }));
+  if (!identifiers?.[0]?.did) {
+    return (
+      <Box width="100%" height="48px" border={1} borderRadius={1} p={3}>
+        <Loader />
+      </Box>
+    );
+  }
+
+  let options = identifiers.map((id) => {
+    let name;
+    if (id.alias && id.userName) {
+      name = `${id.userName}: ${id.alias} (${id.did})`;
+    } else if (id.alias) {
+      name = `${id.alias} (${id.did})`;
+    } else if (id.userName) {
+      name = `${id.userName}: ${id.did}`;
+    } else {
+      name = id.did;
+    }
+    return {
+      name,
+      value: id.did,
+    };
+  });
 
   if (props.allowCustom) {
     options = [
