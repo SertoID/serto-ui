@@ -29,7 +29,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const node = React.useRef() as React.MutableRefObject<HTMLInputElement>;
   const [selectedOption, setSelectedOption] = React.useState(
     props.defaultSelectedValue
-      ? props.options.filter((option) => option.value === props.defaultSelectedValue)[0]
+      ? props.options.filter((option) => option.value === props.defaultSelectedValue)[0] || props.options[0]
       : props.options[0],
   );
   const [isOpen, setIsOpen] = React.useState(false);
