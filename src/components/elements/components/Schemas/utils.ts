@@ -8,20 +8,20 @@ type NamedLdContextPlusNode = Partial<LdContextPlusLeafNode> & { niceName?: stri
 
 export const typeOptions: { [key: string]: NamedLdContextPlusNode } = {};
 Object.keys(jsonLdContextTypeMap).forEach((type) => {
-  if (type.indexOf("http://schema.org/") !== 0) {
+  if (type !== "@id" && type.indexOf("http://schema.org/") !== 0) {
     return;
   }
   typeOptions[type] = {
     "@format": jsonLdContextTypeMap[type].format,
     "@dataType": jsonLdContextTypeMap[type].type,
     "@type": type,
-    niceName: type.replace("http://schema.org/", "").replace("URL", "URI"),
+    niceName: type === "@id" ? "Identifier" : type.replace("http://schema.org/", "").replace("URL", "URI"),
   };
 });
 
 export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
   const schemaInstance = new VcSchema(createLdContextPlusSchema(schema), schema.slug);
-  const schemaInput = { ...schema }
+  const schemaInput = { ...schema };
   delete schemaInput.properties;
   return {
     ...schemaInput,
