@@ -1,19 +1,11 @@
 import * as React from "react";
-import styled from "styled-components";
-import { Box, Button, Checkbox, Flash, Flex, Form, Input } from "rimble-ui";
-import { colors, fonts } from "../../../";
+import { Box, Button, Flash, Form } from "rimble-ui";
+import { colors } from "../../../";
 import { WorkingSchema, requiredSchemaProperties } from "../types";
 import { typeOptions } from "../utils";
-import { LdContextPlusLeafNode } from "../VcSchema";
-import { convertToCamelCase } from "../../../utils";
+import { LdContextPlusNode } from "../VcSchema";
 import { ModalContent, ModalHeader } from "../../Modals";
-import { DropDown } from "../../DropDown/DropDown";
-
-const AttributeBox = styled(Box)`
-  &:first-child {
-    margin-top: 4px;
-  }
-`;
+import { SchemaAttribute } from "./SchemaAttribute";
 
 export interface AttributesStepProps {
   schema: WorkingSchema;
@@ -26,40 +18,23 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
   const [doValidation, setDoValidation] = React.useState(false);
   const [error, setError] = React.useState("");
 
-  function addProperty(e: Event) {
+  function addAttribute(e: Event) {
     e.preventDefault();
     const newProp = {
       "@title": "",
-      ...typeOptions[Object.keys(typeOptions)[0]],
+      ...typeOptions["http://schema.org/Text"],
     };
     delete newProp.niceName;
     updateSchema({ properties: [...schema.properties, newProp] });
   }
 
-  function updateProperty(i: number, propertyProperty: keyof LdContextPlusLeafNode, value: any) {
-    const updatedProperty = { ...schema.properties[i], [propertyProperty]: value };
-    if (propertyProperty === "@title") {
-      updatedProperty["@id"] = convertToCamelCase(value);
-    }
+  function updateAttribute(i: number, attribute: Partial<LdContextPlusNode>) {
     updateSchema({
-      properties: [...schema.properties.slice(0, i), updatedProperty, ...schema.properties.slice(i + 1)],
+      properties: [...schema.properties.slice(0, i), attribute, ...schema.properties.slice(i + 1)],
     });
   }
 
-  function updateType(i: number, type: string) {
-    const updatedProp = {
-      ...schema.properties[i],
-      ...typeOptions[type],
-    };
-    if (type === "http://schema.org/Boolean") {
-      delete updatedProp["@required"];
-    }
-
-    delete updatedProp.niceName;
-    updateSchema({ properties: [...schema.properties.slice(0, i), updatedProp, ...schema.properties.slice(i + 1)] });
-  }
-
-  function removeProperty(i: number) {
+  function removeAttribute(i: number) {
     updateSchema({ properties: [...schema.properties.slice(0, i), ...schema.properties.slice(i + 1)] });
   }
 
@@ -90,91 +65,29 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     }
   }
 
-  function renderSchemaProperty(prop: Partial<LdContextPlusLeafNode>, i: number, readOnly = false): JSX.Element {
-    return (
-      <AttributeBox
-        key={i + readOnly.toString()}
-        border={1}
-        borderRadius={1}
-        p={3}
-        pb={readOnly ? 3 : 1}
-        my={3}
-        backgroundColor={readOnly ? colors.nearWhite : "transparent"}
-      >
-        <Flex>
-          <Input
-            width="100%"
-            type="text"
-            required={true}
-            placeholder="Attribute Name"
-            mr={2}
-            value={prop["@title"]}
-            onChange={(event: any) => updateProperty(i, "@title", event.target.value)}
-            disabled={readOnly}
-            style={{ borderColor: colors.lightGray }}
-          />
-          <DropDown
-            onChange={(value) => updateType(i, value)}
-            defaultSelectedValue={prop["@type"] || "http://schema.org/Text"}
-            disabled={readOnly}
-            options={Object.keys(typeOptions).map((type) => ({
-              name: typeOptions[type].niceName || type,
-              value: type,
-            }))}
-            style={{ borderColor: colors.lightGray }}
-          />
-          {/* @TODO/tobek Add "custom" option that opens fields to manually enter type details. */}
-        </Flex>
-        {!readOnly && (
-          <Input
-            width="100%"
-            placeholder="Description"
-            value={prop["@description"] || ""}
-            style={{ borderColor: colors.lightGray }}
-            onChange={(event: any) => updateProperty(i, "@description", event.target.value)}
-          />
-        )}
-        <Flex justifyContent="space-between">
-          {prop["@type"] !== "http://schema.org/Boolean" ? (
-            <Checkbox
-              fontFamily={fonts.sansSerif}
-              label="Required"
-              checked={!!prop["@required"]}
-              onChange={() => updateProperty(i, "@required", !prop["@required"])}
-              disabled={readOnly}
-            />
-          ) : (
-            <div></div>
-          )}
-          {!readOnly && (
-            <Button.Text
-              icononly
-              icon="DeleteForever"
-              onClick={(e: Event) => {
-                e.preventDefault();
-                removeProperty(i);
-              }}
-            />
-          )}
-        </Flex>
-      </AttributeBox>
-    );
-  }
-
   return (
     <>
       <ModalHeader>Define Schema Attributes</ModalHeader>
       <ModalContent>
         <Form validated={doValidation} onSubmit={goNext}>
-          {requiredSchemaProperties.map((prop, i) => renderSchemaProperty(prop, i, true))}
-          {schema.properties.map((prop, i) => renderSchemaProperty(prop, i))}
+          {requiredSchemaProperties.map((prop, i) => (
+            <SchemaAttribute key={i + "required"} attr={prop} readOnly={true} />
+          ))}
+          {schema.properties.map((prop, i) => (
+            <SchemaAttribute
+              key={i}
+              attr={prop}
+              updateAttribute={(attr) => updateAttribute(i, attr)}
+              removeAttribute={() => removeAttribute(i)}
+            />
+          ))}
           <Box mt={3}>
             <Button.Outline
               mb={3}
               mx="auto"
               type="submit"
               width="100%"
-              onClick={addProperty}
+              onClick={addAttribute}
               style={{ borderColor: colors.primary.base }}
             >
               Add Another Attribute

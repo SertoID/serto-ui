@@ -41,6 +41,8 @@ export interface LdContextPlusLeafNode<MetadataType = any> {
   "@items"?: JsonSchemaNode;
 }
 
+export type LdContextPlusNodeKey = keyof LdContextPlusLeafNode | keyof LdContextPlusInnerNode;
+
 export type LdContextPlusNode<MetadataType = any> =
   | LdContextPlusInnerNode<MetadataType>
   | LdContextPlusLeafNode<MetadataType>;
