@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Box, Button, Checkbox, Flex, Input } from "rimble-ui";
-import { colors, fonts } from "../../../";
+import { fonts, colors } from "../../../themes";
 import { typeOptions } from "../utils";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusNodeKey } from "../VcSchema";
 import { convertToCamelCase } from "../../../utils";
@@ -11,6 +11,15 @@ import { DropDown } from "../../DropDown/DropDown";
 const AttributeBox = styled(Box)`
   &:first-child {
     margin-top: 4px;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+const IconButton = styled(Button.Text)`
+  color: ${colors.midGray};
+  &:hover {
+    color: ${colors.primary.base};
   }
 `;
 
@@ -142,7 +151,7 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
       )}
 
       {"@context" in props.attr && props.attr["@context"] && (
-        <Box pl={3} mt={3}>
+        <Box mt={3}>
           {Object.entries(props.attr["@context"]).map(([key, node]) => {
             return (
               <SchemaAttribute
@@ -166,12 +175,14 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
             disabled={props.readOnly}
           />
         ) : "@context" in props.attr ? (
-          <Button.Text onClick={addNestedAttribute}>Add Nested Attribute</Button.Text>
+          <Button.Text onClick={addNestedAttribute} fontSize={1}>
+            Add Nested Attribute
+          </Button.Text>
         ) : (
           <div></div>
         )}
         {!props.readOnly && (
-          <Button.Text
+          <IconButton
             icononly
             icon="DeleteForever"
             onClick={(e: Event) => {

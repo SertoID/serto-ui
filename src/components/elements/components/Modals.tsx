@@ -1,8 +1,15 @@
 import * as React from "react";
-import { Box, Button, Card, Flex, Modal } from "rimble-ui";
 import styled from "styled-components";
+import { Box, Button, Card, Flex, Modal } from "rimble-ui";
 import { H3 } from "../layouts";
 import { baseColors } from "../themes";
+
+const IconButton = styled(Button.Text)`
+  color: ${baseColors.black};
+  &:hover {
+    color: ${baseColors.blurple};
+  }
+`;
 
 export interface ModalWithXProps {
   isOpen?: boolean;
@@ -30,17 +37,7 @@ export interface ModalBackProps {
   onClick(e: MouseEvent): any;
 }
 export const ModalBack: React.FunctionComponent<ModalBackProps> = (props) => {
-  return (
-    <Button.Text
-      icononly
-      icon="ArrowBack"
-      position="absolute"
-      top={2}
-      left={2}
-      style={{ color: baseColors.black }}
-      onClick={props.onClick}
-    />
-  );
+  return <IconButton icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={props.onClick} />;
 };
 
 export const ModalHeader: React.FunctionComponent = (props) => (

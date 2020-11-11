@@ -1,9 +1,8 @@
 import { mapValuesDeep } from "deepdash-es/standalone";
 import { convertToPascalCase } from "../../utils";
 import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "./VcSchema";
-import { CompletedSchema, SchemaMetadata, SchemaDataInput } from "./types";
+import { CompletedSchema, SchemaMetadata, SchemaDataInput, newSchemaAttribute } from "./types";
 import { config } from "../../../../config";
-import { newSchemaAttribute } from "../..";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
 type NamedLdContextPlusNode = Partial<LdContextPlusNode> & { niceName?: string };
@@ -26,7 +25,7 @@ typeOptions["nested"] = {
       ...newSchemaAttribute,
     },
   },
-  niceName: "Nested Object",
+  niceName: "Nested Attributes",
 };
 
 export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
