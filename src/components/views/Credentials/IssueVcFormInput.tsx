@@ -1,6 +1,5 @@
 import React from "react";
 import { Checkbox, Input } from "rimble-ui";
-import { Identifier } from "../../../types";
 import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 import { DidSelect } from "../../elements/components/DidSelect";
 
@@ -8,13 +7,12 @@ export interface IssueVcFormInputProps {
   name: string;
   value: any;
   node: JsonSchemaNode;
-  identifiers: Identifier[];
   required?: boolean;
   onChange(value: any): void;
 }
 
 export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = (props) => {
-  const { name, node, identifiers, value, onChange, required } = props;
+  const { name, node, value, onChange, required } = props;
   if (node.type === "boolean") {
     return <Checkbox checked={!!value} onChange={() => onChange(!value)} />;
   }
@@ -22,16 +20,7 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
   // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
   const isDid = name === "id" && node.type === "string" && node.format === "uri";
   if (isDid) {
-    return (
-      <DidSelect
-        key={name}
-        onChange={onChange}
-        identifiers={identifiers}
-        allowCustom={true}
-        value={value}
-        required={required}
-      />
-    );
+    return <DidSelect key={name} onChange={onChange} allowCustom={true} value={value} required={required} />;
   }
 
   let type = "text";

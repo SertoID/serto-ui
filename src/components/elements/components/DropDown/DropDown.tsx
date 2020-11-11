@@ -90,12 +90,12 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
         height="48px"
         p={3}
         pr={4}
+        border={1}
+        borderRadius={1}
         width="100%"
         style={{
           cursor: props.disabled ? "default" : "pointer",
           position: "relative",
-          border: `1px solid ${colors.moonGray}`,
-          borderRadius: 4,
           ...props.style,
         }}
       >
