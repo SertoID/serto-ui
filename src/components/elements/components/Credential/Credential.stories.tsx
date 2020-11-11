@@ -4,7 +4,7 @@ import { Credential, CredentialViewTypes } from "./Credential";
 import { IdentityThemeProvider } from "../../themes/IdentityTheme";
 import { EXAMPLE_VCS } from "../Schemas/examples";
 
-const vc = {
+const diplomaVc = {
   ...JSON.parse(EXAMPLE_VCS.DiplomaCredential),
   proof: {
     jwt:
@@ -12,15 +12,17 @@ const vc = {
   },
 };
 
-const credentialStory = (viewType?: string): JSX.Element => {
-  return (
-    <IdentityThemeProvider>
-      <Credential vc={vc} viewType={viewType} />
-    </IdentityThemeProvider>
-  );
+const contentPubVc = {
+  ...JSON.parse(EXAMPLE_VCS.ContentPublishCredential),
+  proof: {
+    jwt:
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJ2YyI6eyJjcmVkZW50aWFsU3ViamVjdCI6eyJwdWJsaXNoZWRDb250ZW50Ijp7ImlkZW50aWZpZXIiOiI5ZGU3ZGMxYi05Yjc0LTRjNGItYjQwOC0zZjQ1OTA0ZjFkZmUiLCJ2ZXJzaW9uSWRlbnRpZmllciI6ImNlZjFkYTU1LThhOGQtNGQ4Ni05YzQwLTE0ZjAzZjQxZmEwZCIsImhlYWRsaW5lIjoibmV3IHBvc3QgdGVzdCB3aXRoIG5ldyB0aXRsZSIsImRlc2NyaXB0aW9uIjoiIiwidXJsIjoiaHR0cDovL2xvY2FsLmNpdmlsLmNvLzIwMjAvMDQvMjcvbmV3LXBvc3QtdGVzdC13aXRoLW5ldy11cmwvIiwiZGF0ZU1vZGlmaWVkIjoiMjAyMC0xMS0xMSAwNjoyNToxOCIsImRhdGVQdWJsaXNoZWQiOiIyMDIwLTA0LTI4IDAyOjA2OjIxIiwicHVibGlzaGVyIjp7ImlkZW50aWZpZXIiOiJkaWQ6ZXRocjpyaW5rZWJ5OjB4N2QwZjdhNmZjOTQ3OWIyNzQ4OGQxNmZiZmFmY2ZlYjYwOWY3OTczZiIsIm5hbWUiOiJMb2NhbCBDaXZpbCIsInVybCI6Imh0dHA6Ly9sb2NhbC5jaXZpbC5jbyJ9LCJhdXRob3IiOnsiaWRlbnRpZmllciI6ImRpZDpldGhyOnJpbmtlYnk6MHg3ZDBmN2E2ZmM5NDc5YjI3NDg4ZDE2ZmJmYWZjZmViNjA5Zjc5NzNmI3VzZXItMiIsIm5hbWUiOiJNci4gQWRtaW4ifSwia2V5d29yZHMiOlsidW5jYXRlZ29yaXplZCIsInRlc3QiXSwiaW1hZ2UiOm51bGwsInJhd0NvbnRlbnRIYXNoIjoiMHhiM2EyN2QzZTE0NDBmNjI5OGYzMDMyZmY2ZDAxYzlhNGNiNjg4MjY5YzU4ZjIyNDQxY2I2Y2Y5MDhiZmEwMzcxIiwicmF3Q29udGVudFVSTCI6Imh0dHA6Ly9sb2NhbC5jaXZpbC5jbz9jb25zZW5zeXNfdmNfcHVibGlzaGVyX3V1aWQ9Y2VmMWRhNTUtOGE4ZC00ZDg2LTljNDAtMTRmMDNmNDFmYTBkJmNvbnNlbnN5c192Y19wdWJsaXNoZXJfcmF3X2NvbnRlbnQ9dHJ1ZSJ9fSwiQGNvbnRleHQiOlsiaHR0cHM6Ly93d3cudzMub3JnLzIwMTgvY3JlZGVudGlhbHMvdjEiLCJodHRwczovL2V4YW1wbGUuY29tL0BUT0RPL2FydGljbGUtcHVibGlzaC92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQXJ0aWNsZVB1Ymxpc2hDcmVkZW50aWFsIl19LCJzdWIiOiJkaWQ6ZXRocjpyaW5rZWJ5OjB4N2QwZjdhNmZjOTQ3OWIyNzQ4OGQxNmZiZmFmY2ZlYjYwOWY3OTczZiIsIm5iZiI6MTYwNTA3NTkxOCwiaXNzIjoiZGlkOmV0aHI6cmlua2VieToweDdkMGY3YTZmYzk0NzliMjc0ODhkMTZmYmZhZmNmZWI2MDlmNzk3M2YifQ.kAupFuoTJXBz7zhL5fedV1NwF7tIhE00O-EbCQEeNikeBrD49Xk106dGJDNTtAshtcZlY4BTDvy176wfosvuTA",
+  },
 };
 
 storiesOf("Credential", module)
-  .add("List view", () => credentialStory(CredentialViewTypes.LIST))
-  .add("Collapsible view", () => credentialStory(CredentialViewTypes.COLLAPSIBLE))
-  .add("Full view", () => credentialStory());
+  .addDecorator((story) => <IdentityThemeProvider>{story()}</IdentityThemeProvider>)
+  .add("List view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.LIST} />)
+  .add("Collapsible view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.COLLAPSIBLE} />)
+  .add("Full view", () => <Credential vc={diplomaVc} />)
+  .add("Full view (nested props)", () => <Credential vc={contentPubVc} />);
