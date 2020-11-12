@@ -2,7 +2,6 @@ import * as React from "react";
 import { Box, Button, Flash, Form } from "rimble-ui";
 import { colors } from "../../../";
 import { WorkingSchema, newSchemaAttribute, requiredSchemaProperties } from "../types";
-import { typeOptions } from "../utils";
 import { LdContextPlusNode } from "../VcSchema";
 import { ModalContent, ModalHeader } from "../../Modals";
 import { SchemaAttribute } from "./SchemaAttribute";
