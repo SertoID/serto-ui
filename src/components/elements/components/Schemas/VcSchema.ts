@@ -82,6 +82,7 @@ export const jsonLdContextTypeMap: { [key: string]: { type: string; format?: str
   "http://schema.org/DateTime": { type: "string", format: "date-time" },
   "http://schema.org/Number": { type: "number" },
   "http://schema.org/Boolean": { type: "boolean" },
+  "xsd:anyURI": { type: "string", format: "uri" },
   "xsd:string": { type: "string" },
   "xsd:integer": { type: "integer" },
   "xsd:dateTime": { type: "string", format: "date-time" },

@@ -47,7 +47,7 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
 
   if (!identifiers?.[0]?.did) {
     return (
-      <Box width="100%" height="48px" border={1} borderRadius={1} p={3}>
+      <Box width="100%" height="48px" border={1} borderRadius={1} p={3} mb={3}>
         <Loader />
       </Box>
     );

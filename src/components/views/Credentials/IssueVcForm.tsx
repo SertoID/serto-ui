@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, Checkbox, Field, Flash, Form, Input, Text, Loader } from "rimble-ui";
+import { Box, Button, Checkbox, Field, Flash, Form, Input, Loader } from "rimble-ui";
 import { mutate } from "swr";
 import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { TrustAgencyService } from "../../../services/TrustAgencyService";
@@ -159,17 +159,14 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 />
               </Field>
               {Object.entries(credSchema.properties).map(([key, node]: [string, JsonSchemaNode]) => (
-                <Field key={key} label={node.title || key} width="100%">
-                  {node.description ? <Text fontSize={1}>{node.description}</Text> : <></>}
-                  <IssueVcFormInput
-                    key={key}
-                    name={key}
-                    node={node}
-                    value={vcData[key]}
-                    required={credSchema?.required?.indexOf(key) !== -1}
-                    onChange={(value) => setVcData({ ...vcData, [key]: value })}
-                  />
-                </Field>
+                <IssueVcFormInput
+                  key={key}
+                  name={key}
+                  node={node}
+                  value={vcData[key]}
+                  required={credSchema?.required?.indexOf(key) !== -1}
+                  onChange={(value) => setVcData({ ...vcData, [key]: value })}
+                />
               ))}
             </>
           )}
