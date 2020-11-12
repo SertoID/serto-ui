@@ -80,7 +80,9 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
           <Box pl={nestedLevel * 24}>{key}</Box>
         </CredentialTDLeft>
         <CredentialTDRight>
-          {Array.isArray(value) ? JSON.stringify(value) : value && typeof value !== "object" && value}
+          {typeof value === "boolean" || Array.isArray(value)
+            ? JSON.stringify(value)
+            : value && typeof value !== "object" && value}
         </CredentialTDRight>
       </CredentialTR>
       {value &&
