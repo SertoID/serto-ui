@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, Button, Flash, Form } from "rimble-ui";
 import { colors } from "../../../";
-import { WorkingSchema, requiredSchemaProperties } from "../types";
+import { WorkingSchema, newSchemaAttribute, requiredSchemaProperties } from "../types";
 import { typeOptions } from "../utils";
 import { LdContextPlusNode } from "../VcSchema";
 import { ModalContent, ModalHeader } from "../../Modals";
@@ -20,12 +20,14 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
 
   function addAttribute(e: Event) {
     e.preventDefault();
-    const newProp = {
-      "@title": "",
-      ...typeOptions["http://schema.org/Text"],
-    };
-    delete newProp.niceName;
-    updateSchema({ properties: [...schema.properties, newProp] });
+    updateSchema({
+      properties: [
+        ...schema.properties,
+        {
+          ...newSchemaAttribute,
+        },
+      ],
+    });
   }
 
   function updateAttribute(i: number, attribute: Partial<LdContextPlusNode>) {
@@ -45,6 +47,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     const propertyIds = new Set();
     let missingField = false;
     let duplicateId = false;
+    // @TODO/tobek These checks should be recursive. Empty `@title`'s are already handled by native browser form checks, but `@id` collisions (which would have to be unique only among sibling properties) are not handled.
     schema.properties.forEach((prop) => {
       if (!prop["@title"]) {
         missingField = true;

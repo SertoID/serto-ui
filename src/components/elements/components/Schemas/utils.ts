@@ -7,6 +7,8 @@ import { config } from "../../../../config";
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
 type NamedLdContextPlusNode = Partial<LdContextPlusNode> & { niceName?: string };
 
+export const NESTED_TYPE_KEY = "NESTED";
+
 export const typeOptions: { [key: string]: NamedLdContextPlusNode } = {};
 Object.keys(jsonLdContextTypeMap).forEach((type) => {
   if (type !== "@id" && type.indexOf("http://schema.org/") !== 0) {
@@ -19,13 +21,13 @@ Object.keys(jsonLdContextTypeMap).forEach((type) => {
     niceName: type === "@id" ? "Identifier" : type.replace("http://schema.org/", "").replace("URL", "URI"),
   };
 });
-typeOptions["nested"] = {
+typeOptions[NESTED_TYPE_KEY] = {
   "@context": {
     "": {
       ...newSchemaAttribute,
     },
   },
-  niceName: "Nested Attributes",
+  niceName: "[nest attributes]",
 };
 
 export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {

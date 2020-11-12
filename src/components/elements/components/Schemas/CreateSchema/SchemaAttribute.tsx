@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Box, Button, Checkbox, Flex, Input } from "rimble-ui";
 import { fonts, colors } from "../../../themes";
-import { typeOptions } from "../utils";
+import { NESTED_TYPE_KEY, typeOptions } from "../utils";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusNodeKey } from "../VcSchema";
 import { convertToCamelCase } from "../../../utils";
 import { newSchemaAttribute } from "../../../";
@@ -47,15 +47,15 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
       ...typeOptions[type],
     };
 
-    if (type === "nested" && "@type" in updatedAttr) {
+    if (type === NESTED_TYPE_KEY && "@type" in updatedAttr) {
       delete updatedAttr["@type"];
       delete updatedAttr["@dataType"];
       delete updatedAttr["@format"];
-    } else if (type !== "nested" && "@context" in updatedAttr) {
+    } else if (type !== NESTED_TYPE_KEY && "@context" in updatedAttr) {
       delete updatedAttr["@context"];
     }
 
-    if (type === "nested" || type === "http://schema.org/Boolean") {
+    if (type === NESTED_TYPE_KEY || type === "http://schema.org/Boolean") {
       delete updatedAttr["@required"];
     }
 
@@ -104,7 +104,12 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
   const removeNestedAttribute = (key: string) => {
     const updatedContext = { ...nestedAttr["@context"] };
     delete updatedContext[key];
-    updateAttrProperty("@context", updatedContext);
+    if (Object.keys(updatedContext).length) {
+      updateAttrProperty("@context", updatedContext);
+    } else {
+      // No nested attributes left so delete the parent one. Maybe a weird flow but certainly simpler than either allowing empty nested attributes or performing a recursive check for empty nested attributes before letting user continue.
+      props.removeAttribute?.();
+    }
   };
 
   return (
@@ -130,7 +135,11 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
         />
         <DropDown
           onChange={(value) => updateType(value)}
-          defaultSelectedValue={("@type" in props.attr && props.attr["@type"]) || "http://schema.org/Text"}
+          defaultSelectedValue={
+            "@context" in props.attr
+              ? NESTED_TYPE_KEY
+              : ("@type" in props.attr && props.attr["@type"]) || "http://schema.org/Text"
+          }
           disabled={props.readOnly}
           options={Object.keys(typeOptions).map((type) => ({
             name: typeOptions[type].niceName || type,
