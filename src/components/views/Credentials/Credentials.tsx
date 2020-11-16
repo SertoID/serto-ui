@@ -17,7 +17,6 @@ export const Credentials: React.FunctionComponent = (props) => {
   if (data && data.length > 0) {
     return data
       .map((vc: any, i: number) => {
-        console.log(vc);
         return <Credential key={i} vc={vc} viewType={CredentialViewTypes.COLLAPSIBLE} />;
       })
       .reverse();

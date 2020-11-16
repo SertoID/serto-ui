@@ -7,7 +7,7 @@ import { EXAMPLE_SCHEMAS } from "./examples";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../themes/IdentityTheme";
 
-const DEFAULT_SCHEMA = "ContentPublishCredential (flat)";
+const DEFAULT_SCHEMA = "ContentPublishCredential";
 
 storiesOf("Schemas", module).add("SchemaDetail", () => {
   const [schemaKey, setSchemaKey] = React.useState<string>(DEFAULT_SCHEMA);

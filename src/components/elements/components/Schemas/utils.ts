@@ -1,28 +1,41 @@
+import { mapValuesDeep } from "deepdash-es/standalone";
 import { convertToPascalCase } from "../../utils";
-import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusLeafNode } from "./VcSchema";
-import { CompletedSchema, SchemaMetadata, SchemaDataInput } from "./types";
+import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "./VcSchema";
+import { CompletedSchema, SchemaMetadata, SchemaDataInput, newSchemaAttribute } from "./types";
 import { config } from "../../../../config";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
-type NamedLdContextPlusNode = Partial<LdContextPlusLeafNode> & { niceName?: string };
+type NamedLdContextPlusNode = Partial<LdContextPlusNode> & { niceName?: string };
+
+export const NESTED_TYPE_KEY = "NESTED";
 
 export const typeOptions: { [key: string]: NamedLdContextPlusNode } = {};
 Object.keys(jsonLdContextTypeMap).forEach((type) => {
-  if (type.indexOf("http://schema.org/") !== 0) {
+  if (type !== "@id" && type.indexOf("http://schema.org/") !== 0) {
     return;
   }
   typeOptions[type] = {
     "@format": jsonLdContextTypeMap[type].format,
     "@dataType": jsonLdContextTypeMap[type].type,
     "@type": type,
-    niceName: type.replace("http://schema.org/", "").replace("URL", "URI"),
+    niceName: type === "@id" ? "Identifier" : type.replace("http://schema.org/", "").replace("URL", "URI"),
   };
 });
+typeOptions[NESTED_TYPE_KEY] = {
+  "@context": {
+    "": {
+      ...newSchemaAttribute,
+    },
+  },
+  niceName: "[nest attributes]",
+};
 
 export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
   const schemaInstance = new VcSchema(createLdContextPlusSchema(schema), schema.slug);
+  const schemaInput = { ...schema };
+  delete schemaInput.properties;
   return {
-    ...schema,
+    ...schemaInput,
     ldContextPlus: schemaInstance.getLdContextPlusString(),
     ldContext: schemaInstance.getJsonLdContextString(),
     jsonSchema: schemaInstance.getJsonSchemaString(),
@@ -31,13 +44,20 @@ export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
 
 export function createLdContextPlusSchema(schema: CompletedSchema): LdContextPlus<SchemaMetadata> {
   const schemaTypeName = convertToPascalCase(schema.name);
-  const schemaProperties: { [key: string]: LdContextPlusLeafNode } = {};
 
+  // Prefix each `@id` value with "schema-id:" to make it a valid JSON-LD Context identifier:
+  // @TODO/tobek In the edge case where a nested property has the same ID as another property elsewhere in the schema, the resulting `@id`s will be duplicates which would result in a technically incorrect JSON-LD Context.
+  const schemaProperties: { [key: string]: LdContextPlusNode } = {};
   schema.properties.forEach((prop) => {
-    schemaProperties[prop["@id"]] = {
-      ...prop,
-      "@id": `schema-id:${prop["@id"]}`,
-    };
+    schemaProperties[prop["@id"]] = mapValuesDeep({ ...prop }, (value, key) => {
+      if (key === "@id") {
+        return `schema-id:${value}`;
+      } else if (typeof value === "object") {
+        return { ...value }; // new object reference to avoid changing deeper values in-place
+      } else {
+        return value;
+      }
+    });
   });
 
   return {

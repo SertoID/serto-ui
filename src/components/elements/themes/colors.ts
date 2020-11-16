@@ -15,6 +15,7 @@ export const colors = {
   nearBlack: "#111",
   darkGray: "#32323F",
   midGray: "#53535F",
+  gray60: "#838393",
   grey: "#BDBDC6",
   silver: "#9797A5",
   lightSilver: "#AAAAB5",

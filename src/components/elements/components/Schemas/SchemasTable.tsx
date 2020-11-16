@@ -100,7 +100,9 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
     return (
       props.noSchemasElement || (
         <Text.p display="block" fontSize={1} py={2} lineHeight="copy">
-          <b style={{ display: "block", fontWeight: 600 }}>There are no credential schemas yet.</b>
+          <b style={{ display: "block", fontWeight: 600 }}>
+            {props.discover ? "There are" : "You have"} no credential schemas yet.
+          </b>
           Please navigate to the <Link to={generatePath(routes.SCHEMAS)}>Schemas page</Link> in order to create a
           credential schema to coordinate around verified data with your customers and partners.
         </Text.p>

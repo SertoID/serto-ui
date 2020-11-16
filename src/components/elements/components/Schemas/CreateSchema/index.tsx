@@ -17,6 +17,7 @@ import { colors } from "../../../themes";
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
 export interface CreateSchemaProps {
+  onFinalStep?(): void;
   onComplete?(): void;
   onSchemaUpdate?(schema: WorkingSchema): void;
   onSchemaCreated?(schema: LdContextPlus<SchemaMetadata> | string): void;
@@ -52,6 +53,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       try {
         await createSchema();
         setCurrentStep(nextStep);
+        props.onFinalStep?.();
       } catch (err) {
         console.error("Failed to create schema:", err);
         setError(err.toString());
@@ -74,8 +76,8 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   if (currentStep === "DONE") {
     return (
-      <Box p={4} pt={3}>
-        <Text my={4} textAlign="center" color={colors.success.base}>
+      <Box px={4} py={0}>
+        <Text mt={3} mb={6} textAlign="center" color={colors.success.base}>
           <Text
             bg={colors.success.light}
             borderRadius="50%"

@@ -160,10 +160,7 @@ export class TrustAgencyService {
   }
 
   public async createSchema(schema: SchemaDataInput): Promise<any> {
-    return this.request("/v1/schemas", "POST", {
-      tenantId: this.getAuth()?.tenantid,
-      ...schema,
-    });
+    return this.request("/v1/schemas", "POST", schema);
   }
 
   public async createApiKey(data: { keyName: string }): Promise<any> {

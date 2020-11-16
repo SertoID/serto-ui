@@ -16,6 +16,7 @@ export const SchemasPage: React.FunctionComponent = (props) => {
   }
 
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [isCreateModalFinalStep, setIsCreateModalFinalStep] = React.useState(false);
 
   const noSchemas = (
     <Flex alignItems="center" justifyContent="center" minHeight={8}>
@@ -66,8 +67,18 @@ export const SchemasPage: React.FunctionComponent = (props) => {
         }}
       />
 
-      <ModalWithX isOpen={isCreateModalOpen} close={() => setIsCreateModalOpen(false)} width={9}>
-        <CreateSchema onComplete={() => setIsCreateModalOpen(false)}></CreateSchema>
+      <ModalWithX
+        isOpen={isCreateModalOpen}
+        hideX={isCreateModalFinalStep}
+        close={() => setIsCreateModalOpen(false)}
+        width={9}
+      >
+        <CreateSchema
+          onFinalStep={() => {
+            setIsCreateModalFinalStep(true);
+          }}
+          onComplete={() => setIsCreateModalOpen(false)}
+        ></CreateSchema>
       </ModalWithX>
     </GlobalLayout>
   );

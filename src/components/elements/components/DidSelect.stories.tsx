@@ -47,7 +47,5 @@ storiesOf("DID Select", module)
     return <DidSelect onChange={(value) => console.log("changed to", value)} />;
   })
   .add("Allow custom DID", () => {
-    return (
-      <DidSelect onChange={(value) => console.log("changed to", value)} allowCustom={true} />
-    );
+    return <DidSelect onChange={(value) => console.log("changed to", value)} allowCustom={true} />;
   });

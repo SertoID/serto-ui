@@ -73,20 +73,30 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     </>
   );
 
+  const renderCredentialProperty = (key: string, value: any, nestedLevel = 0): JSX.Element => (
+    <>
+      <CredentialTR key={key}>
+        <CredentialTDLeft>
+          <Box pl={nestedLevel * 24}>{key}</Box>
+        </CredentialTDLeft>
+        <CredentialTDRight>
+          {typeof value === "boolean" || Array.isArray(value)
+            ? JSON.stringify(value)
+            : value && typeof value !== "object" && value}
+        </CredentialTDRight>
+      </CredentialTR>
+      {value &&
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        Object.entries(value).map(([key, value]) => renderCredentialProperty(key, value, nestedLevel + 1))}
+    </>
+  );
+
   const VerifiedCredentialBody = () => (
     <>
       <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
         <tbody>
-          {Object.entries(vc.credentialSubject).map((value: any, key: number) => {
-            return (
-              <CredentialTR key={key}>
-                <CredentialTDLeft>{value[0].toString()}</CredentialTDLeft>
-                <CredentialTDRight>
-                  {typeof value[1] === "object" ? JSON.stringify(value[1]) : value[1].toString()}
-                </CredentialTDRight>
-              </CredentialTR>
-            );
-          })}
+          {Object.entries(vc.credentialSubject).map(([key, value]) => renderCredentialProperty(key, value))}
         </tbody>
       </Table>
       <Box my={2}>

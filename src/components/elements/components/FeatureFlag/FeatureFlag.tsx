@@ -13,7 +13,7 @@ export const FeatureFlag: React.FunctionComponent<FeatureFlagProps> = (props) =>
   const features = React.useContext<FeatureFlagService>(FeatureFlagContext);
   const { feature, children, replacement, replacementComponent } = props;
 
-  if (features.featureEnabled(feature)) {
+  if (features.featureEnabled?.(feature)) {
     return <>{children}</>;
   } else if (replacementComponent) {
     const Replacement = replacementComponent;

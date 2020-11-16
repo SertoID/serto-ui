@@ -22,30 +22,42 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
     "credentialSubject": {
       "@id": "w3ccred:credentialSubject",
       "@required": true,
-      "@contains": ["alumniOf", "universityId", "title"],
+      "@contains": ["degreeName", "universityName", "universityId", "year"],
       "@context": {
         "id": {
           "@id": "@id",
           "@type": "@id",
+          "@title": "Alumni ID",
           "@required": true
         }
       }
     },
-    "alumniOf": {
-      "@id": "schema-id:alumniOf",
+    "degreeName": {
+      "@id": "schema-id:degreeName",
       "@type": "rdf:HTML",
+      "@dataType": "string",
       "@required": true,
-      "@dataType": "string"
+      "@title": "Degree Name",
+      "@description": "E.g. \\"Bachelor of Arts in Astrophysics\\""
+    },
+    "universityName": {
+      "@id": "schema-id:universityName",
+      "@type": "rdf:HTML",
+      "@dataType": "string",
+      "@required": true,
+      "@title": "University Name"
     },
     "universityId": {
       "@id": "schema-id:universityId",
       "@type": "rdf:langString",
-      "@dataType": "string"
+      "@dataType": "string",
+      "@title": "University ID"
     },
-    "title": {
-      "@id": "schema-id:title",
-      "@type": "rdf:HTML",
-      "@dataType": "string"
+    "year": {
+      "@id": "schema-id:year",
+      "@type": "rdf:langString",
+      "@dataType": "integer",
+      "@title": "Year"
     }
   }
 }`,
@@ -94,7 +106,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         },
         "url": {
           "@id": "http://schema.org/url",
-          "@type": "@id",
+          "@type": "http://schema.org/URL",
           "@required": true,
           "@description": "Publisher homepage"
         }
@@ -140,7 +152,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         },
         "url": {
           "@id": "http://schema.org/url",
-          "@type": "@id",
+          "@type": "http://schema.org/URL",
           "@required": true
         },
         "datePublished": {
@@ -170,11 +182,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         },
         "image": {
           "@id": "http://schema.org/image",
-          "@type": "@id"
+          "@type": "http://schema.org/URL"
         },
         "rawContentUrl": {
           "@id": "schema-id:raw-content-url",
-          "@type": "@id",
+          "@type": "http://schema.org/URL",
           "@description": "URL where raw, machine-readable, full text of content can be found (may require authentication)"
         },
         "rawContentHash": {
@@ -250,7 +262,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         },
         "url": {
           "@id": "schema-id:url",
-          "@type": "@id",
+          "@type": "xsd:anyURI",
           "@required": true
         },
         "datePublished": {
@@ -278,7 +290,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
             },
             "url": {
               "@id": "schema-id:publisher-url",
-              "@type": "@id",
+              "@type": "xsd:anyURI",
               "@required": true,
               "@description": "Publisher homepage"
             }
@@ -306,11 +318,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         },
         "image": {
           "@id": "schema-id:image",
-          "@type": "@id"
+          "@type": "xsd:anyURI"
         },
         "rawContentUrl": {
           "@id": "schema-id:raw-content-url",
-          "@type": "@id",
+          "@type": "xsd:anyURI",
           "@description": "URL where raw, machine-readable, full text of content can be found (may require authentication)"
         },
         "rawContentHash": {
@@ -372,7 +384,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         },
         "url": {
           "@id": "schema-id:url",
-          "@type": "@id",
+          "@type": "xsd:anyURI",
           "@required": true
         },
         "datePublished": {
@@ -400,7 +412,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
             },
             "url": {
               "@id": "schema-id:publisher-url",
-              "@type": "@id",
+              "@type": "xsd:anyURI",
               "@required": true,
               "@description": "Publisher homepage"
             }
@@ -428,11 +440,11 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
         },
         "image": {
           "@id": "schema-id:image",
-          "@type": "@id"
+          "@type": "xsd:anyURI"
         },
         "rawContentUrl": {
           "@id": "schema-id:raw-content-url",
-          "@type": "@id",
+          "@type": "xsd:anyURI",
           "@description": "URL where raw, machine-readable, full text of content can be found (may require authentication)"
         },
         "rawContentHash": {
@@ -479,7 +491,7 @@ export const EXAMPLE_SCHEMAS: { [key: string]: string } = {
       "@context": {
         "url": {
           "@id": "http://schema.org/url",
-          "@type": "@id",
+          "@type": "http://schema.org/URL",
           "@required": true
         }
       }
