@@ -17,6 +17,7 @@ import { CreateOrganizationPage } from "./components/views/Onboarding/CreateOrga
 import { FeedsPage } from "./components/views/Feeds/FeedsPage";
 import { CredentialsPage } from "./components/views/Credentials/CredentialsPage";
 import { SchemasPage } from "./components/views/Schemas/SchemasPage";
+import { IdentitiesPage } from "./components/views/Identities/IdentitiesPage";
 import { SettingsPage } from "./components/views/Settings/SettingsPage";
 import { DeveloperPage } from "./components/views/Developers/DeveloperPage";
 
@@ -56,6 +57,7 @@ export const App = () => {
                 <AuthenticatedRoute path={routes.FEEDS} component={FeedsPage} />
                 <AuthenticatedRoute path={routes.CREDENTIALS} component={CredentialsPage} />
                 <AuthenticatedRoute path={routes.SCHEMAS} component={SchemasPage} />
+                <AuthenticatedRoute path={routes.IDENTITIES} component={IdentitiesPage} />
                 <AuthenticatedRoute path={routes.SETTINGS} component={SettingsPage} />
                 <AuthenticatedRoute path={routes.DEVELOPER} component={DeveloperPage} />
               </Switch>

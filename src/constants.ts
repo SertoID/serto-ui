@@ -8,6 +8,7 @@ export enum routes {
   FEEDS = "/feeds",
   CREDENTIALS = "/credentials/:tabName?",
   SCHEMAS = "/schemas/:tabName?",
+  IDENTITIES = "/identities",
   SETTINGS = "/settings/:tabName?",
   DEVELOPER = "/developer/:tabName?",
 }
