@@ -23,7 +23,9 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
   const identifiersEndpoint = props.ownDidsOnly ? "/v1/tenant/agent/identityManagerGetIdentities" : "/v1/tenant/all";
   const getIdentifiersFunc = () =>
     props.ownDidsOnly ? TrustAgent.getTenantIdentifiers() : TrustAgent.getAllIdentifiers();
-  const { data: identifiers, error: getIdentifiersError } = useSWR(identifiersEndpoint, getIdentifiersFunc);
+  const { data: identifiers, error: getIdentifiersError } = useSWR(identifiersEndpoint, getIdentifiersFunc, {
+    revalidateOnFocus: false,
+  });
 
   if (getIdentifiersError) {
     console.error(`Failed to fetch identifiers from ${identifiersEndpoint}:`, getIdentifiersError);
