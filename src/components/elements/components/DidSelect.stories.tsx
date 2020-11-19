@@ -48,4 +48,13 @@ storiesOf("DID Select", module)
   })
   .add("Allow custom DID", () => {
     return <DidSelect onChange={(value) => console.log("changed to", value)} allowCustom={true} />;
+  })
+  .add("Allow custom w/ default selected DID", () => {
+    return (
+      <DidSelect
+        defaultSelectedDid="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac"
+        onChange={(value) => console.log("changed to", value)}
+        allowCustom={true}
+      />
+    );
   });

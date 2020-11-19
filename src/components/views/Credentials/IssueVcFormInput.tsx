@@ -8,11 +8,12 @@ export interface IssueVcFormInputProps {
   value: any;
   node: JsonSchemaNode;
   required?: boolean;
+  defaultSubjectDid?: string;
   onChange(value: any): void;
 }
 
 export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = (props) => {
-  const { name, node, value, onChange, required } = props;
+  const { name, node, value, onChange, required, defaultSubjectDid } = props;
 
   // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
   const isDid = name === "id" && node.type === "string" && node.format === "uri";
@@ -41,7 +42,16 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     }
 
     if (isDid) {
-      return <DidSelect key={name} onChange={onChange} allowCustom={true} value={value} required={required} />;
+      return (
+        <DidSelect
+          key={name}
+          onChange={onChange}
+          allowCustom={true}
+          value={value}
+          required={required}
+          defaultSelectedDid={defaultSubjectDid}
+        />
+      );
     }
 
     if (node.type === "boolean") {

@@ -5,8 +5,13 @@ import { ModalWithX } from "../Modals";
 import { TrustAgencyService } from "../../../../services/TrustAgencyService";
 import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
 import { IssueVc } from "../../../views/Credentials/IssueVc";
+import { Identifier } from "../../../../types";
 
-export const IssueCredentialButton: React.FunctionComponent = () => {
+export interface IssueCredentialButtonProps {
+  subjectIdentifier?: Identifier;
+}
+
+export const IssueCredentialButton: React.FunctionComponent<IssueCredentialButtonProps> = (props) => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [createIdentifierLoading, setCreateIdentifierLoading] = React.useState(false);
   const [createIdentifierError, setCreateIdentifierError] = React.useState("");
@@ -77,7 +82,11 @@ export const IssueCredentialButton: React.FunctionComponent = () => {
         Issue Credential
       </Button.Outline>
       <ModalWithX isOpen={isIssueModalOpen} close={() => setIsIssueModalOpen(false)} minWidth={9} maxWidth={11}>
-        <IssueVc identifiers={identifiersResponse!} onComplete={() => setIsIssueModalOpen(false)} />
+        <IssueVc
+          subjectIdentifier={props.subjectIdentifier}
+          identifiers={identifiersResponse!}
+          onComplete={() => setIsIssueModalOpen(false)}
+        />
       </ModalWithX>
     </>
   );

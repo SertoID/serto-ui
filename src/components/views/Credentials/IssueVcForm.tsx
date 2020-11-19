@@ -16,6 +16,7 @@ import { IssueVcFormInput } from "./IssueVcFormInput";
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
   identifiers: Identifier[];
+  subjectIdentifier?: Identifier;
   onSuccessResponse(response: any, publishedToFeed?: string): void;
   onVcDataChange?(vcData: any): void;
 }
@@ -28,7 +29,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     issuer: { id: props.identifiers[0].did },
     issuanceDate: new Date().toISOString(),
     credentialSubject: {
-      id: props.identifiers[0].did,
+      id: props.subjectIdentifier?.did || props.identifiers[0].did,
       exampleData: {
         foo: 123,
         bar: true,
@@ -153,7 +154,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 <DidSelect
                   onChange={setIssuer}
                   value={issuer}
-                  defaultSelectFirst={true}
+                  defaultSelectedDid={props.identifiers[0].did}
                   required={true}
                   ownDidsOnly={true}
                 />
@@ -164,6 +165,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                   name={key}
                   node={node}
                   value={vcData[key]}
+                  defaultSubjectDid={key === "id" && node.format === "uri" ? props.subjectIdentifier?.did : undefined}
                   required={credSchema?.required?.indexOf(key) !== -1}
                   onChange={(value) => setVcData({ ...vcData, [key]: value })}
                 />
