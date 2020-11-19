@@ -9,9 +9,11 @@ import { H3, Tabs } from "../../elements/layouts";
 import { colors } from "../../elements/themes";
 import { IssueVcForm } from "./IssueVcForm";
 import { Identifier } from "../../../types";
+import { ellipsis } from "../../elements/utils/helpers";
 
 export interface IssueVcProps {
   identifiers: Identifier[];
+  subjectIdentifier?: Identifier;
   onComplete(): void;
 }
 
@@ -53,10 +55,26 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   }
 
   if (typeof schema === "undefined") {
+    let subjectName = "";
+    if (props.subjectIdentifier) {
+      const identifier = props.subjectIdentifier;
+      if (identifier.alias && identifier.userName) {
+        subjectName = `${identifier.alias} (${identifier.userName} - ${ellipsis(identifier.did, 4, 4)})`;
+      } else if (identifier.alias || identifier.userName) {
+        subjectName = `${identifier.alias || identifier.userName} (${ellipsis(identifier.did, 4, 4)})`;
+      } else {
+        subjectName = identifier.did;
+      }
+    }
     return (
       <>
         <ModalHeader>Issue Credential</ModalHeader>
         <ModalContent width={11}>
+          {subjectName && (
+            <Text>
+              Issuing credential about <b title={props.subjectIdentifier?.did}>{subjectName}</b>.
+            </Text>
+          )}
           <Text>
             Please select a credential schema, or{" "}
             <Button.Text p={0} onClick={() => setSchema(null)}>
@@ -90,6 +108,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
       <ModalBack onClick={goBack} />
       <IssueVcForm
         identifiers={props.identifiers}
+        subjectIdentifier={props.subjectIdentifier}
         schema={schema}
         onSuccessResponse={(response, feed) => {
           setResponse(response);

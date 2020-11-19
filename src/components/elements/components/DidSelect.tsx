@@ -9,7 +9,7 @@ export interface DidSelectProps {
   ownDidsOnly?: boolean;
   value?: string;
   allowCustom?: boolean;
-  defaultSelectFirst?: boolean;
+  defaultSelectedDid?: string;
   required?: boolean;
   onChange(value: string): void;
 }
@@ -17,7 +17,7 @@ export interface DidSelectProps {
 const CUSTOM_DID = Symbol() as any;
 
 export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
-  const { value, onChange, defaultSelectFirst } = props;
+  const { value, onChange, defaultSelectedDid } = props;
 
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const identifiersEndpoint = props.ownDidsOnly ? "/v1/tenant/agent/identityManagerGetIdentities" : "/v1/tenant/all";
@@ -32,20 +32,14 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
   }
 
   const [showCustom, setShowCustom] = React.useState(false);
-  const [selectedDid, setSelectedDid] = React.useState(props.defaultSelectFirst ? identifiers?.[0].did : "");
+  const [selectedDid, setSelectedDid] = React.useState(props.defaultSelectedDid || "");
   const [customDid, setCustomDid] = React.useState("");
 
   React.useEffect(() => {
-    if (
-      defaultSelectFirst &&
-      !showCustom &&
-      identifiers?.[0] &&
-      value !== identifiers[0].did &&
-      selectedDid === identifiers[0].did
-    ) {
-      onChange(identifiers[0].did);
+    if (defaultSelectedDid && !showCustom && value !== defaultSelectedDid && selectedDid === defaultSelectedDid) {
+      onChange(defaultSelectedDid);
     }
-  }, [defaultSelectFirst, showCustom, identifiers, onChange, selectedDid, value]);
+  }, [defaultSelectedDid, showCustom, onChange, selectedDid, value]);
 
   if (!identifiers?.[0]?.did) {
     return (
@@ -98,11 +92,7 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
 
   return (
     <Box width="100%" position="relative">
-      <DropDown
-        onChange={onDropDownChange}
-        options={options}
-        defaultSelectedValue={defaultSelectFirst ? identifiers[0].did : undefined}
-      />
+      <DropDown onChange={onDropDownChange} options={options} defaultSelectedValue={defaultSelectedDid} />
       <Input
         type="url"
         value={showCustom ? customDid : selectedDid}
