@@ -73,7 +73,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     </>
   );
 
-  const renderCredentialProperty = (key: string, value: any, nestedLevel = 0): JSX.Element => {
+  const renderCredentialProperty = (key: string, value: any, nestedLevel = 0, parentKey = ""): JSX.Element => {
     let valueDisplay = "";
     let valueTooltip = "";
     if (value === "boolean" || Array.isArray(value)) {
@@ -86,8 +86,8 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     }
 
     return (
-      <>
-        <CredentialTR key={key}>
+      <React.Fragment key={parentKey + key}>
+        <CredentialTR key={parentKey + key}>
           <CredentialTDLeft>
             <Box pl={nestedLevel * 24}>{key}</Box>
           </CredentialTDLeft>
@@ -104,8 +104,10 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         {value &&
           typeof value === "object" &&
           !Array.isArray(value) &&
-          Object.entries(value).map(([key, value]) => renderCredentialProperty(key, value, nestedLevel + 1))}
-      </>
+          Object.entries(value).map(([nestedKey, nestedValue]) =>
+            renderCredentialProperty(nestedKey, nestedValue, nestedLevel + 1, parentKey + key),
+          )}
+      </React.Fragment>
     );
   };
 
