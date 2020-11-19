@@ -19,8 +19,18 @@ export function copyToClipboard(text: string): boolean {
   return true;
 }
 
-export function ellipsis(text: string, startLength: number, endlength: number): string {
-  return text.substr(0, startLength) + "..." + text.substr(text.length - endlength, text.length);
+export function ellipsis(text: string, startLength: number, endLength: number): string {
+  if (startLength + endLength + 2 >= text.length) {
+    // +2 because there's reason to ellide something shorter than "..."
+    return text;
+  }
+  return text.substr(0, startLength) + "..." + text.substr(text.length - endLength, text.length);
+}
+
+/** Finds where "0x" hex value starts and takes start length from there. */
+export function hexEllipsis(text: string, startLength = 4, endLength = 4): string {
+  const addressIndex = text.indexOf("0x");
+  return ellipsis(text, (addressIndex === -1 ? 0 : addressIndex + 2) + startLength, endLength);
 }
 
 export function dateTimeFormat(date: Date): string {

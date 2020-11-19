@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Box, Flex, Pill, Table, Text } from "rimble-ui";
+import { Box, Flex, Pill, Table, Text, Tooltip } from "rimble-ui";
 import { Info, Person, VerifiedUser } from "@rimble/icons";
 import { CredentialBorder, CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
 import { CopyToClipboard } from "../CopyToClipboard";
 import { Expand } from "../Expand";
 import { baseColors, colors, fonts } from "../../themes";
-import { dateTimeFormat, ellipsis } from "../../utils";
+import { dateTimeFormat, ellipsis, hexEllipsis } from "../../utils";
 import { VC } from "../../../../types";
 
 export enum CredentialViewTypes {
@@ -28,7 +28,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     typeof vc.issuanceDate === "number"
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
       : dateTimeFormat(new Date(vc.issuanceDate));
-  const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 5, 3);
+  const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 6, 4);
 
   const VerifiedCredentialHeader = () => (
     <>
@@ -43,7 +43,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               fontFamily={fonts.sansSerif}
               fontSize={0}
               mr={2}
-              maxWidth={6}
+              maxWidth={7}
               style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
               title={issuer}
             >
@@ -73,24 +73,41 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     </>
   );
 
-  const renderCredentialProperty = (key: string, value: any, nestedLevel = 0): JSX.Element => (
-    <>
-      <CredentialTR key={key}>
-        <CredentialTDLeft>
-          <Box pl={nestedLevel * 24}>{key}</Box>
-        </CredentialTDLeft>
-        <CredentialTDRight>
-          {typeof value === "boolean" || Array.isArray(value)
-            ? JSON.stringify(value)
-            : value && typeof value !== "object" && value}
-        </CredentialTDRight>
-      </CredentialTR>
-      {value &&
-        typeof value === "object" &&
-        !Array.isArray(value) &&
-        Object.entries(value).map(([key, value]) => renderCredentialProperty(key, value, nestedLevel + 1))}
-    </>
-  );
+  const renderCredentialProperty = (key: string, value: any, nestedLevel = 0): JSX.Element => {
+    let valueDisplay = "";
+    let valueTooltip = "";
+    if (value === "boolean" || Array.isArray(value)) {
+      valueDisplay = JSON.stringify(value);
+    } else if (typeof value === "string" && value.indexOf("0x") !== -1) {
+      valueDisplay = hexEllipsis(value);
+      valueTooltip = value;
+    } else if (value && typeof value !== "object") {
+      valueDisplay = value;
+    }
+
+    return (
+      <>
+        <CredentialTR key={key}>
+          <CredentialTDLeft>
+            <Box pl={nestedLevel * 24}>{key}</Box>
+          </CredentialTDLeft>
+          <CredentialTDRight>
+            {valueTooltip ? (
+              <Tooltip message={valueTooltip} placement="top">
+                <Box>{valueDisplay}</Box>
+              </Tooltip>
+            ) : (
+              valueDisplay
+            )}
+          </CredentialTDRight>
+        </CredentialTR>
+        {value &&
+          typeof value === "object" &&
+          !Array.isArray(value) &&
+          Object.entries(value).map(([key, value]) => renderCredentialProperty(key, value, nestedLevel + 1))}
+      </>
+    );
+  };
 
   const VerifiedCredentialBody = () => (
     <>

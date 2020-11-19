@@ -9,7 +9,7 @@ import { H3, Tabs } from "../../elements/layouts";
 import { colors } from "../../elements/themes";
 import { IssueVcForm } from "./IssueVcForm";
 import { Identifier } from "../../../types";
-import { ellipsis } from "../../elements/utils/helpers";
+import { hexEllipsis } from "../../elements/utils/helpers";
 
 export interface IssueVcProps {
   identifiers: Identifier[];
@@ -59,9 +59,9 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
     if (props.subjectIdentifier) {
       const identifier = props.subjectIdentifier;
       if (identifier.alias && identifier.userName) {
-        subjectName = `${identifier.alias} (${identifier.userName} - ${ellipsis(identifier.did, 4, 4)})`;
+        subjectName = `${identifier.alias} (${identifier.userName} - ${hexEllipsis(identifier.did)})`;
       } else if (identifier.alias || identifier.userName) {
-        subjectName = `${identifier.alias || identifier.userName} (${ellipsis(identifier.did, 4, 4)})`;
+        subjectName = `${identifier.alias || identifier.userName} (${hexEllipsis(identifier.did)})`;
       } else {
         subjectName = identifier.did;
       }

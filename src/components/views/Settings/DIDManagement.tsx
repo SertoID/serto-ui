@@ -7,7 +7,7 @@ import { AddCircle } from "@rimble/icons";
 import { ModalWithX, ModalContent, ModalFooter, ModalHeader } from "../../elements/components";
 import { SecondaryHeader, TBody, TH, THead, TR } from "../../elements/layouts";
 import { colors } from "../../elements/themes";
-import { ellipsis } from "../../elements/utils";
+import { hexEllipsis } from "../../elements/utils";
 
 export const AliasExplainerText: React.FunctionComponent = () => (
   <>
@@ -111,7 +111,7 @@ export const DIDManagement: React.FunctionComponent = () => {
                 <TR key={i}>
                   <td>
                     <Text.span fontWeight={3} title={identifier.did}>
-                      {ellipsis(identifier.did, 14, 5)}
+                      {hexEllipsis(identifier.did)}
                     </Text.span>
                   </td>
                   <td>{identifier.alias}</td>
@@ -168,7 +168,7 @@ export const DIDManagement: React.FunctionComponent = () => {
           setIdentifierSelected(undefined);
         }}
         borderRadius={2}
-        width="425px"
+        width="480px"
       >
         {getIdentifierLoading ? (
           <Flex justifyContent="center">
@@ -178,7 +178,7 @@ export const DIDManagement: React.FunctionComponent = () => {
           <>
             {identifierSelected && (
               <>
-                <ModalHeader>{ellipsis(identifierSelected.did, 14, 5)}</ModalHeader>
+                <ModalHeader>{hexEllipsis(identifierSelected.did)}</ModalHeader>
                 <ModalContent>
                   <Text fontSize={1} fontWeight={3} mb={1}>
                     Alias

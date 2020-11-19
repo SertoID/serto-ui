@@ -8,7 +8,6 @@ import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { IssueCredentialButton } from "../../elements/components";
 import { TBody, TH, THead, TR } from "../../elements/layouts";
 import { baseColors, colors } from "../../elements/themes";
-import { ellipsis } from "../../elements/utils";
 
 export const IdentitiesPage: React.FunctionComponent = () => {
   const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
@@ -46,11 +45,11 @@ export const IdentitiesPage: React.FunctionComponent = () => {
                       <td>{identity.alias}</td>
                       <td>
                         <Text.span fontWeight={3} title={identity.did}>
-                          {ellipsis(identity.did, 14, 5)}
+                          {identity.did}
                         </Text.span>
                       </td>
                       <td style={{ textAlign: "right" }}>
-                        <IssueCredentialButton />
+                        <IssueCredentialButton subjectIdentifier={identity} />
                       </td>
                     </TR>
                   );
