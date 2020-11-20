@@ -25,7 +25,12 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
     TrustAgent.getSchemas(props.discover),
   );
 
-  if (data?.length) {
+  const sortedData = React.useMemo(
+    () => data?.sort((schema1, schema2) => (schema1.updated < schema2.updated ? 1 : -1)),
+    [data],
+  );
+
+  if (sortedData?.length) {
     return (
       <>
         <Table border={0} boxShadow={0} width="100%">
@@ -42,7 +47,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
             </TR>
           </thead>
           <TBody>
-            {data.map((schema, i) => {
+            {sortedData.map((schema, i) => {
               return (
                 <TR key={i}>
                   <td style={{ maxWidth: 32 }}>{schema.icon}</td>
