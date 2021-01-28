@@ -1,7 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import { Box, Flex, Flash } from "rimble-ui";
-import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
 import { EXAMPLE_SCHEMAS } from "../../elements/components/Schemas/examples";
 import { SchemaDataInput } from "../../elements/components/Schemas";
 import { ldContextPlusToSchemaInput } from "../../elements/components/Schemas/utils";
@@ -27,25 +26,6 @@ const IDENTIFIERS: Identifier[] = [
   },
   { did: "did:ethr:rinkeby:0x9812f1d36e4d1b5dce7acf76cfa882b4fe09b27c", provider: "did:ethr:rinkeby" },
 ];
-const ALL_IDENTIFIERS: Identifier[] = [
-  ...IDENTIFIERS,
-  {
-    did: "did:ethr:rinkeby:0x82b4fe09b27c5dce7acbd3fa1d36e4d1bf76cfa8",
-    alias: "ABC user 1",
-    provider: "did:ethr:rinkeby",
-    userName: "Organization ABC",
-  },
-  {
-    did: "did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac",
-    provider: "did:ethr:rinkeby",
-    userName: "Organization ABC",
-  },
-];
-
-const mockTrustAgent = {
-  getTenantIdentifiers: () => IDENTIFIERS,
-  getAllIdentifiers: () => ALL_IDENTIFIERS,
-} as any;
 
 storiesOf("Credential", module).add("IssueVcForm", () => {
   const [vcData, setVcData] = React.useState({});
@@ -65,46 +45,44 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
   }, [schemaKey]);
 
   return (
-    <TrustAgencyContext.Provider value={mockTrustAgent}>
-      <IdentityThemeProvider>
-        <Flex>
-          <div>
-            <Box mb={3}>
-              Schema:{" "}
-              <select
-                value={schemaKey}
-                onChange={(event: any) => {
-                  setSchemaKey(event.target.value);
-                  setVcData({});
-                  setError("");
-                }}
-              >
-                <option value="">[Raw JSON input]</option>
-                {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
-                  <option key={key} value={key}>
-                    {key}
-                  </option>
-                ))}
-              </select>
-            </Box>
-
-            <Box width={10}>
-              {error && <Flash variant="danger">{error}</Flash>}
-              <IssueVcForm
-                key={schemaKey}
-                schema={ldContextPlus as SchemaDataResponse}
-                identifiers={IDENTIFIERS}
-                onSuccessResponse={() => {}}
-                onVcDataChange={setVcData}
-              />
-            </Box>
-          </div>
-          <Box flexGrow={1}>
-            <Box mb={1}>debug:</Box>
-            <HighlightedJson json={JSON.stringify(vcData, null, 2)} />
+    <IdentityThemeProvider>
+      <Flex>
+        <div>
+          <Box mb={3}>
+            Schema:{" "}
+            <select
+              value={schemaKey}
+              onChange={(event: any) => {
+                setSchemaKey(event.target.value);
+                setVcData({});
+                setError("");
+              }}
+            >
+              <option value="">[Raw JSON input]</option>
+              {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
+                <option key={key} value={key}>
+                  {key}
+                </option>
+              ))}
+            </select>
           </Box>
-        </Flex>
-      </IdentityThemeProvider>
-    </TrustAgencyContext.Provider>
+
+          <Box width={10}>
+            {error && <Flash variant="danger">{error}</Flash>}
+            <IssueVcForm
+              key={schemaKey}
+              schema={ldContextPlus as SchemaDataResponse}
+              identifiers={IDENTIFIERS}
+              onSuccessResponse={() => {}}
+              onVcDataChange={setVcData}
+            />
+          </Box>
+        </div>
+        <Box flexGrow={1}>
+          <Box mb={1}>debug:</Box>
+          <HighlightedJson json={JSON.stringify(vcData, null, 2)} />
+        </Box>
+      </Flex>
+    </IdentityThemeProvider>
   );
 });

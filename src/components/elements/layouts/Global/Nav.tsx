@@ -1,9 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Link, generatePath } from "react-router-dom";
-import { routes } from "../../../../constants";
 import { Box, Flex, Text } from "rimble-ui";
-import { Code, People, SelectAll, Send, Settings } from "@rimble/icons";
 import { baseColors, colors } from "../../themes";
 
 const NavItemStyled = styled.div`
@@ -17,11 +15,11 @@ const NavItemStyled = styled.div`
   }
 `;
 
-interface NavItemProps {
-  currentUrl: string;
-  icon: any;
+export interface NavItemProps {
+  icon: React.FunctionComponent<any>;
   text: string;
   url: string;
+  currentUrl?: string;
 }
 
 const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
@@ -43,7 +41,7 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
 
   return (
     <NavItemStyled>
-      <Link to={generatePath(url)}>
+      <Link to={generatePath(url!)}>
         <Flex alignItems="center">
           <Icon color={colors.midGray} size="16px" mr="20px" />
           <Text.span color={colors.midGray} fontSize={1}>
@@ -56,19 +54,17 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
 };
 
 export interface NavProps {
-  url: string;
+  currentUrl: string;
+  navItems: NavItemProps[];
 }
 
 export const Nav: React.FunctionComponent<NavProps> = (props) => {
-  const { url } = props;
+  const { navItems, currentUrl } = props;
   return (
     <>
-      {/* <NavItem url={routes.FEEDS} text="Feeds" icon={Home} currentUrl={url} /> */}
-      <NavItem url={routes.CREDENTIALS} text="Credentials" icon={Send} currentUrl={url} />
-      <NavItem url={routes.SCHEMAS} text="Schemas" icon={SelectAll} currentUrl={url} />
-      <NavItem url={routes.IDENTITIES} text="Identities" icon={People} currentUrl={url} />
-      <NavItem url={routes.SETTINGS} text="Settings" icon={Settings} currentUrl={url} />
-      <NavItem url={routes.DEVELOPER} text="Developer" icon={Code} currentUrl={url} />
+      {navItems.map((navItemProps) => (
+        <NavItem {...navItemProps} currentUrl={currentUrl} key={navItemProps.url} />
+      ))}
     </>
   );
 };

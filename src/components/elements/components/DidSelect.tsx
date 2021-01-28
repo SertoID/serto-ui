@@ -1,11 +1,10 @@
 import React from "react";
-import useSWR from "swr";
 import { Box, Input, Loader } from "rimble-ui";
 import { DropDown } from "./DropDown/DropDown";
-import { TrustAgencyService } from "../../../services/TrustAgencyService";
-import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
+import { Identifier } from "../../../types";
 
 export interface DidSelectProps {
+  identifiers: Identifier[];
   ownDidsOnly?: boolean;
   value?: string;
   allowCustom?: boolean;
@@ -17,19 +16,7 @@ export interface DidSelectProps {
 const CUSTOM_DID = Symbol() as any;
 
 export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
-  const { value, onChange, defaultSelectedDid } = props;
-
-  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
-  const identifiersEndpoint = props.ownDidsOnly ? "/v1/tenant/agent/identityManagerGetIdentities" : "/v1/tenant/all";
-  const getIdentifiersFunc = () =>
-    props.ownDidsOnly ? TrustAgent.getTenantIdentifiers() : TrustAgent.getAllIdentifiers();
-  const { data: identifiers, error: getIdentifiersError } = useSWR(identifiersEndpoint, getIdentifiersFunc, {
-    revalidateOnFocus: false,
-  });
-
-  if (getIdentifiersError) {
-    console.error(`Failed to fetch identifiers from ${identifiersEndpoint}:`, getIdentifiersError);
-  }
+  const { identifiers, value, onChange, defaultSelectedDid } = props;
 
   const [showCustom, setShowCustom] = React.useState(false);
   const [selectedDid, setSelectedDid] = React.useState(props.defaultSelectedDid || "");
@@ -41,7 +28,7 @@ export const DidSelect: React.FunctionComponent<DidSelectProps> = (props) => {
     }
   }, [defaultSelectedDid, showCustom, onChange, selectedDid, value]);
 
-  if (!identifiers?.[0]?.did) {
+  if (!identifiers[0]?.did) {
     return (
       <Box width="100%" height="48px" border={1} borderRadius={1} p={3} mb={3}>
         <Loader />

@@ -1,23 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Box, Button, Checkbox, Field, Flash, Form, Input, Loader } from "rimble-ui";
 import { mutate } from "swr";
-import { TrustAgencyContext } from "../../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../../services/TrustAgencyService";
 import { ModalContent, ModalHeader } from "../../elements/components/Modals";
 import { SchemaDataResponse, VcSchema } from "../../elements/components/Schemas";
 import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 import { getSchemaUrl } from "../../elements/components/Schemas/utils";
-import { FeatureFlag } from "../../elements/components/FeatureFlag/FeatureFlag";
-import { featureFlags } from "../../../constants";
 import { Identifier } from "../../../types";
 import { DidSelect } from "../../elements/components/DidSelect";
 import { IssueVcFormInput } from "./IssueVcFormInput";
+import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
   identifiers: Identifier[];
   subjectIdentifier?: Identifier;
-  onSuccessResponse(response: any, publishedToFeed?: string): void;
+  onSuccessResponse(response: any): void;
   onVcDataChange?(vcData: any): void;
 }
 
@@ -37,15 +34,15 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     },
   };
 
-  const TrustAgent = useContext<TrustAgencyService>(TrustAgencyContext);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
   const [issuer, setIssuer] = useState<string>(props.identifiers[0].did);
-  const [publishToFeedSlug, setPublishToFeedSlug] = useState<string | undefined>();
   const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
+
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
   const schemaInstance = React.useMemo(() => {
     if (props.schema) {
@@ -94,7 +91,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
       // @TODO/tobek Actually validate VC according to schema instance
 
-      const vcResponse = await TrustAgent.issueVc({
+      const vcResponse = await context.issueVc({
         credential,
         revocable,
         keepCopy,
@@ -104,20 +101,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       console.log("issued VC, response:", vcResponse);
       mutate("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials");
 
-      if (publishToFeedSlug) {
-        try {
-          const feedResponse = await TrustAgent.getFeedBySlug(publishToFeedSlug);
-          const publishResponse = await TrustAgent.publishToFeed(vcResponse, feedResponse.id);
-          console.log("posted VC to global tweets feed, response:", publishResponse);
-        } catch (publishErr) {
-          console.error("failed to publish VC to feed:", publishErr);
-          setError("VC issued successfully but failed to publish VC to feed: " + publishErr.message);
-          setLoading(false);
-          return;
-        }
-      }
-
-      props.onSuccessResponse(vcResponse, publishToFeedSlug);
+      props.onSuccessResponse(vcResponse);
       setLoading(false);
     } catch (err) {
       console.error("failed to issue VC:", err);
@@ -154,6 +138,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 <DidSelect
                   onChange={setIssuer}
                   value={issuer}
+                  identifiers={props.identifiers}
                   defaultSelectedDid={props.identifiers[0].did}
                   required={true}
                   ownDidsOnly={true}
@@ -165,6 +150,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                   name={key}
                   node={node}
                   value={vcData[key]}
+                  identifiers={props.identifiers}
                   defaultSubjectDid={key === "id" && node.format === "uri" ? props.subjectIdentifier?.did : undefined}
                   required={credSchema?.required?.indexOf(key) !== -1}
                   onChange={(value) => setVcData({ ...vcData, [key]: value })}
@@ -173,21 +159,8 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
             </>
           )}
 
-          <FeatureFlag feature={featureFlags.VC_WIP}>
-            <hr />
-            <Field label={"Publish to Feed"} width="100%">
-              <Input
-                type="text"
-                width="100%"
-                required={false}
-                placeholder="Feed slug"
-                value={publishToFeedSlug}
-                onChange={(event: any) => setPublishToFeedSlug(event.target.value)}
-              />
-            </Field>
-            <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
-            <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
-          </FeatureFlag>
+          <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
+          <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
 
           {error && (
             <Flash my={3} variant="danger">

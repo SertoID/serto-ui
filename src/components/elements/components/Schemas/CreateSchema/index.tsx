@@ -2,8 +2,6 @@ import { Check } from "@rimble/icons";
 import * as React from "react";
 import { Box, Button, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
-import { TrustAgencyContext } from "../../../../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../../../../services/TrustAgencyService";
 import { CompletedSchema, initialWorkingSchema, SchemaMetadata, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
 import { LdContextPlus } from "../VcSchema";
@@ -13,6 +11,7 @@ import { InfoStep } from "./InfoStep";
 import { ModalBack } from "../../Modals";
 import { H3 } from "../../../layouts";
 import { colors } from "../../../themes";
+import { SertoUiContext, SertoUiContextInterface } from "../../../../../context/SertoUiContext";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -24,11 +23,12 @@ export interface CreateSchemaProps {
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
-  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const [schema, setSchema] = React.useState<WorkingSchema>(initialWorkingSchema);
+
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
   React.useEffect(() => {
     props.onSchemaUpdate?.(schema);
@@ -67,7 +67,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   async function createSchema() {
     const schemaInput = createSchemaInput(schema as CompletedSchema);
     props.onSchemaCreated?.(schemaInput.ldContextPlus);
-    await TrustAgent.createSchema(schemaInput);
+    await context.createSchema(schemaInput);
     mutate(["/v1/schemas", false]);
     if (schema.discoverable) {
       mutate(["/v1/schemas", true]);

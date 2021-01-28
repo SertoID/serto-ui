@@ -2,18 +2,20 @@ import React from "react";
 import { Box, Checkbox, Input, Field, Text } from "rimble-ui";
 import { JsonSchemaNode } from "../../elements/components/Schemas/VcSchema";
 import { DidSelect } from "../../elements/components/DidSelect";
+import { Identifier } from "../../../types";
 
 export interface IssueVcFormInputProps {
   name: string;
   value: any;
   node: JsonSchemaNode;
+  identifiers: Identifier[];
   required?: boolean;
   defaultSubjectDid?: string;
   onChange(value: any): void;
 }
 
 export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = (props) => {
-  const { name, node, value, onChange, required, defaultSubjectDid } = props;
+  const { name, node, value, onChange, required, identifiers, defaultSubjectDid } = props;
 
   // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
   const isDid = name === "id" && node.type === "string" && node.format === "uri";
@@ -29,6 +31,7 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
               node={nestedNode}
               value={value?.[nestedKey]}
               required={node.required?.includes(nestedKey)}
+              identifiers={identifiers}
               onChange={(updatedNestedValue) =>
                 onChange({
                   ...value,
@@ -49,6 +52,7 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
           allowCustom={true}
           value={value}
           required={required}
+          identifiers={identifiers}
           defaultSelectedDid={defaultSubjectDid}
         />
       );

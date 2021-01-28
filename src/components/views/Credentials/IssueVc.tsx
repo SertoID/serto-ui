@@ -18,7 +18,6 @@ export interface IssueVcProps {
 }
 
 export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
-  const [publishedToFeed, setPublishedToFeed] = useState<string | undefined>();
   const [response, setResponse] = useState<any>();
   const [schema, setSchema] = useState<SchemaDataResponse | null | undefined>();
   const [schemaTab, setSchemaTab] = useState("created");
@@ -42,7 +41,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           >
             <Check />
           </Text>
-          <H3>Credential Issued{publishedToFeed && " & Published"}</H3>
+          <H3>Credential Issued</H3>
         </Text>
         <Credential vc={response} viewType={CredentialViewTypes.COLLAPSIBLE} />
         <Box my={2}>
@@ -110,10 +109,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
         identifiers={props.identifiers}
         subjectIdentifier={props.subjectIdentifier}
         schema={schema}
-        onSuccessResponse={(response, feed) => {
-          setResponse(response);
-          setPublishedToFeed(feed);
-        }}
+        onSuccessResponse={setResponse}
       />
     </>
   );

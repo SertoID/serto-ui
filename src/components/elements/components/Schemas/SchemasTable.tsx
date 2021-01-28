@@ -1,15 +1,13 @@
 import * as React from "react";
-import { generatePath, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Flash, Flex, Loader, Table, Text } from "rimble-ui";
 import useSWR from "swr";
 import { SchemaDataResponse } from "..";
 import { colors } from "../../";
-import { routes } from "../../../../constants";
-import { TrustAgencyContext } from "../../../../context/TrustAgentProvider";
-import { TrustAgencyService } from "../../../../services/TrustAgencyService";
 import { TBody, TH, TR } from "../../layouts/LayoutComponents";
 import { ModalContent, ModalFooter, ModalWithX } from "../Modals";
 import { SchemaDetail } from "./SchemaDetail";
+import { SertoUiContext, SertoUiContextInterface } from "../../../../context/SertoUiContext";
 
 export interface SchemasTableProps {
   discover?: boolean;
@@ -19,10 +17,10 @@ export interface SchemasTableProps {
 
 export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) => {
   const [viewedSchema, setViewedSchema] = React.useState<SchemaDataResponse | undefined>();
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
-  const TrustAgent = React.useContext<TrustAgencyService>(TrustAgencyContext);
   const { data, error, isValidating } = useSWR(["/v1/schemas", props.discover], () =>
-    TrustAgent.getSchemas(props.discover),
+    context.getSchemas(props.discover),
   );
 
   const sortedData = React.useMemo(
@@ -108,8 +106,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
           <b style={{ display: "block", fontWeight: 600 }}>
             {props.discover ? "There are" : "You have"} no credential schemas yet.
           </b>
-          Please navigate to the <Link to={generatePath(routes.SCHEMAS)}>Schemas page</Link> in order to create a
-          credential schema to coordinate around verified data with your customers and partners.
+          Please first <Link to={context.createSchemaUrl}>create a credential schema</Link> in order to coordinate around verified data with your customers and partners.
         </Text.p>
       )
     );
