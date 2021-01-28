@@ -1,6 +1,6 @@
-## VC Explorer Demo
+## Serto UI
 
-[![CircleCI](https://circleci.com/gh/uport-project/vc-explorer-demo.svg?style=svg&circle-token=4b2bdce52128492cddb63e54b1f208887054c201)](https://circleci.com/gh/uport-project/vc-explorer-demo)
+[![CircleCI](https://circleci.com/gh/SertoID/serto-ui.svg?style=svg)](https://circleci.com/gh/SertoID/serto-ui)
 
 ### `yarn start`
 

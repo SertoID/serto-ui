@@ -41,12 +41,13 @@
     "build": "tsc --noEmit false",
     "watch": "tsc -w --noEmit false",
     "test": "react-scripts test",
+    "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
+    "prettier:lint": "prettier --config .prettierrc.yaml --list-different './**/*.{ts,tsx,json,md}'",
     "server:start": "react-scripts start",
     "server:build": "react-scripts build",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
     "prepublish": "npm run build"
   },
   "eslintConfig": {
