@@ -168,6 +168,10 @@ const identityTheme = {
   },
 };
 
-export const IdentityThemeProvider: React.FunctionComponent = (props) => {
-  return <ThemeProvider theme={identityTheme}>{props.children}</ThemeProvider>;
+export interface IdentityThemeProviderProps {
+  theme?: any;
+}
+
+export const IdentityThemeProvider: React.FunctionComponent<IdentityThemeProviderProps> = (props) => {
+  return <ThemeProvider theme={{ ...identityTheme, ...props.theme }}>{props.children}</ThemeProvider>;
 };

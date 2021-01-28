@@ -1,27 +1,10 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { createGlobalStyle } from "styled-components";
 
+import { SertoUiProvider } from "./context/SertoUiProvider";
+import { GlobalStyle } from "./components/layouts/Global/GlobalLayout";
 import { HomePage } from "./HomePage";
-import { fonts, IdentityThemeProvider } from "./themes";
-import { SertoUiContextProvider } from "./context/SertoUiContext";
 import { Home, Send, People } from "@rimble/icons";
-
-const GlobalStyle = createGlobalStyle`
-  html {
-    box-sizing: border-box;
-  }
-  body {
-    background-color: #F6F6FE;
-    font-family: ${fonts.sansSerif};
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    margin: 0;
-  }
-  *, :after, :before {
-    box-sizing: inherit;
-  }
-`;
 
 export const App = () => {
   const sertoUiContext = {
@@ -34,14 +17,12 @@ export const App = () => {
   return (
     <BrowserRouter>
       <React.Suspense fallback={<></>}>
-        <SertoUiContextProvider value={sertoUiContext}>
-          <IdentityThemeProvider>
-            <GlobalStyle />
-            <Switch>
-              <Route exact path={"/"} component={HomePage} />
-            </Switch>
-          </IdentityThemeProvider>
-        </SertoUiContextProvider>
+        <SertoUiProvider value={sertoUiContext}>
+          <GlobalStyle />
+          <Switch>
+            <Route exact path={"/"} component={HomePage} />
+          </Switch>
+        </SertoUiProvider>
       </React.Suspense>
     </BrowserRouter>
   );

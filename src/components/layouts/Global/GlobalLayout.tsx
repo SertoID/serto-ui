@@ -1,7 +1,25 @@
 import * as React from "react";
 import { Box, Flex } from "rimble-ui";
+import { createGlobalStyle } from "styled-components";
 import { Nav } from "./Nav";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
+import { fonts } from "../../../themes";
+
+export const GlobalStyle = createGlobalStyle`
+  html {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #F6F6FE;
+    font-family: ${fonts.sansSerif};
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+  }
+  *, :after, :before {
+    box-sizing: inherit;
+  }
+`;
 
 export interface GlobalLayoutProps {
   activeTenantID?: string;
