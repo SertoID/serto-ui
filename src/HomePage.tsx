@@ -1,7 +1,7 @@
 import * as React from "react";
-import { GlobalLayout, Header, HeaderBox } from "./components/elements/layouts";
+import { GlobalLayout, Header, HeaderBox } from "./components/layouts";
 import { Box } from "rimble-ui";
-import { baseColors } from "./components/elements/themes";
+import { baseColors } from "./themes";
 
 export const HomePage: React.FunctionComponent = (props) => {
   return (

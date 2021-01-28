@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Home, Send } from "@rimble/icons";
 
-import { SchemaDataInput, SchemaDataResponse } from "../components/elements/components/Schemas/types";
-import { NavItemProps } from "../components/elements/layouts/Global/Nav";
+import { SchemaDataInput, SchemaDataResponse } from "../components/views/Schemas";
+import { NavItemProps } from "../components/layouts/Global/Nav";
 
 export interface SertoUiContextInterface {
   navItems: NavItemProps[];

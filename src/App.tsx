@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
 import { HomePage } from "./HomePage";
-import { IdentityThemeProvider, fonts } from "./components/elements";
+import { fonts, IdentityThemeProvider } from "./themes";
 
 const GlobalStyle = createGlobalStyle`
   html {
