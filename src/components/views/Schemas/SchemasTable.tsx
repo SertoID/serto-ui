@@ -106,7 +106,8 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
           <b style={{ display: "block", fontWeight: 600 }}>
             {props.discover ? "There are" : "You have"} no credential schemas yet.
           </b>
-          Please first <Link to={context.createSchemaUrl}>create a credential schema</Link> in order to coordinate around verified data with your customers and partners.
+          Please first <Link to={context.createSchemaUrl}>create a credential schema</Link> in order to coordinate
+          around verified data with your customers and partners.
         </Text.p>
       )
     );

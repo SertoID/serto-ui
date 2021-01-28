@@ -18,7 +18,7 @@ const createMockApiRequest = (response?: any) => {
   }) as any;
 };
 
-const mockContext: SertoUiContextInterface = {
+const defaultContext: SertoUiContextInterface = {
   navItems: [
     { text: "Home", url: "/", icon: Home },
     { text: "Nowhere", url: "/nowhere", icon: Send },
@@ -29,4 +29,11 @@ const mockContext: SertoUiContextInterface = {
   issueVc: createMockApiRequest(),
 };
 
-export const SertoUiContext = React.createContext(mockContext);
+export const SertoUiContext = React.createContext(defaultContext);
+
+export interface SertoUiContextProviderProps {
+  value?: Partial<SertoUiContextInterface>;
+}
+export const SertoUiContextProvider: React.FunctionComponent<SertoUiContextProviderProps> = (props) => (
+  <SertoUiContext.Provider value={{ ...defaultContext, ...props.value }}>{props.children}</SertoUiContext.Provider>
+);
