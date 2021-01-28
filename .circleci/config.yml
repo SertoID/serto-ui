@@ -2,6 +2,10 @@ version: 2.1
 orbs:
   node: circleci/node@2.0.2
 
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.13.0
+
 jobs:
   build:
     <<: *defaults
@@ -128,12 +132,18 @@ workflows:
   build-test:
     jobs:
       - build
-      - build-server
+      - build-server:
+          requires:
+            - build
       - test:
           requires:
             - build
-      - lint
-      - prettier
+      - lint:
+          requires:
+            - build
+      - prettier:
+          requires:
+            - build
       - codecov:
           requires:
             - test
