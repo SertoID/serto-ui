@@ -4,7 +4,7 @@ orbs:
 
 defaults: &defaults
   docker:
-    - image: circleci/node:13.13.0
+    - image: circleci/node:14.15.4
 
 jobs:
   build:
@@ -135,7 +135,7 @@ jobs:
           key: node-modules-{{ checksum "yarn.lock" }}
 
 workflows:
-  build-test:
+  build-lint-test:
     jobs:
       - build
       - build-server:
