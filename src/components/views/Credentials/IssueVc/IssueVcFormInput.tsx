@@ -63,7 +63,6 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     }
 
     let type = "text";
-    let disabled = false;
     let placeholder = "";
     let width: string | undefined = "100%";
     if (node.type === "number" || node.type === "integer") {
@@ -79,7 +78,7 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     return (
       <Input
         type={type}
-        disabled={disabled}
+        disabled={false}
         value={value || ""}
         onChange={(event: any) => onChange(type === "number" ? parseInt(event.target.value, 10) : event.target.value)}
         required={required}

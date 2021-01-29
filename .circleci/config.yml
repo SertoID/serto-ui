@@ -37,6 +37,8 @@ jobs:
             - src
             - public
             - devops
+            - .eslintignore
+            - .eslintrc.js
             - .git
             - .prettierignore
             - .prettierrc.yaml
@@ -87,22 +89,6 @@ jobs:
       #     paths:
       #       - coverage
 
-  lint:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ./
-      - restore_cache:
-          name: Restore yarn cache
-          key: node-modules-{{ checksum "yarn.lock" }}
-      - run:
-          name: Running lint
-          # command: yarn lint
-          command: echo "No linting yet"
-      - restore_cache:
-          name: Restore yarn cache
-          key: node-modules-{{ checksum "yarn.lock" }}
-
   prettier:
     <<: *defaults
     steps:
@@ -114,6 +100,21 @@ jobs:
       - run:
           name: Running prettier
           command: yarn prettier:lint
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+
+  lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ./
+      - restore_cache:
+          name: Restore yarn cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Running lint
+          command: yarn lint
       - restore_cache:
           name: Restore yarn cache
           key: node-modules-{{ checksum "yarn.lock" }}

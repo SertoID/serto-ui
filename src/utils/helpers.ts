@@ -60,6 +60,7 @@ export function getAllUrlSearchParam(name: string): string[] {
     const regex = new RegExp("[\\?&]" + nameForRegex + "=([^&#]*)", "g");
     const output = [];
     let results: RegExpExecArray | null;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       results = regex.exec(window.location.search);
       if (!results) {

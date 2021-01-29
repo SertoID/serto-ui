@@ -23,6 +23,7 @@ export interface CreateSchemaProps {
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
+  const { onFinalStep, onComplete, onSchemaUpdate, onSchemaCreated } = props;
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -31,8 +32,8 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
   React.useEffect(() => {
-    props.onSchemaUpdate?.(schema);
-  }, [schema, props.onSchemaUpdate]);
+    onSchemaUpdate?.(schema);
+  }, [schema, onSchemaUpdate]);
 
   function updateSchema(updates: Partial<WorkingSchema>) {
     setSchema({
@@ -53,7 +54,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       try {
         await createSchema();
         setCurrentStep(nextStep);
-        props.onFinalStep?.();
+        onFinalStep?.();
       } catch (err) {
         console.error("Failed to create schema:", err);
         setError(err.toString());
@@ -66,7 +67,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   async function createSchema() {
     const schemaInput = createSchemaInput(schema as CompletedSchema);
-    props.onSchemaCreated?.(schemaInput.ldContextPlus);
+    onSchemaCreated?.(schemaInput.ldContextPlus);
     await context.createSchema(schemaInput);
     mutate(["/v1/schemas", false]);
     if (schema.discoverable) {
@@ -92,7 +93,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           <H3>Schema Published</H3>
         </Text>
         <Box mt={5}>
-          <Button width="100%" onClick={() => props.onComplete?.()}>
+          <Button width="100%" onClick={() => onComplete?.()}>
             Done
           </Button>
         </Box>
