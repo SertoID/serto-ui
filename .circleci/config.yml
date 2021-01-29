@@ -17,6 +17,9 @@ jobs:
       - run:
           name: Install modules
           command: yarn --frozen-lockfile install
+      - run:
+          name: Install peer dependencies
+          command: yarn run install-peer-deps
       - save_cache:
           name: Save yarn cache
           key: node-modules-{{ checksum "yarn.lock" }}
@@ -35,6 +38,8 @@ jobs:
             - public
             - devops
             - .git
+            - .prettierignore
+            - .prettierrc.yaml
             - node_modules
             - codecov.yml
             - yarn.lock
