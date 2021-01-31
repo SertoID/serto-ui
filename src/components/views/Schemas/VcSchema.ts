@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 import Ajv from "ajv";
 import { omitDeep, mapValuesDeep } from "deepdash-es/standalone";
 import slugify from "@sindresorhus/slugify";

@@ -102,7 +102,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
             <Editor
               value={inputSchema}
               onValueChange={setInputSchema}
-              highlight={(code) => Prism.highlight(inputSchema, Prism.languages.json, "json")}
+              highlight={() => Prism.highlight(inputSchema, Prism.languages.json, "json")}
               style={{ minHeight: "100%" }}
             />
           </PrismHighlightedCodeWrap>
@@ -119,7 +119,7 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
             <Editor
               value={inputVc}
               onValueChange={setInputVc}
-              highlight={(code) => Prism.highlight(inputVc, Prism.languages.json, "json")}
+              highlight={() => Prism.highlight(inputVc, Prism.languages.json, "json")}
               style={{ minHeight: "100%" }}
             />
           </PrismHighlightedCodeWrap>

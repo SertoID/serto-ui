@@ -18,14 +18,16 @@ export interface IssueVcFormProps {
 }
 
 export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) => {
+  const { schema, identifiers, subjectIdentifier, onSuccessResponse, onVcDataChange } = props;
+
   const initialCred = {
     "@context": ["https://www.w3.org/2018/credentials/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
-    issuer: { id: props.identifiers[0].did },
+    issuer: { id: identifiers[0].did },
     issuanceDate: new Date().toISOString(),
     credentialSubject: {
-      id: props.subjectIdentifier?.did || props.identifiers[0].did,
+      id: subjectIdentifier?.did || identifiers[0].did,
       exampleData: {
         foo: 123,
         bar: true,
@@ -37,27 +39,27 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
-  const [issuer, setIssuer] = useState<string>(props.identifiers[0].did);
+  const [issuer, setIssuer] = useState<string>(identifiers[0].did);
   const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
   const schemaInstance = React.useMemo(() => {
-    if (props.schema) {
+    if (schema) {
       try {
         setError("");
-        return new VcSchema(props.schema.ldContextPlus, props.schema.slug);
+        return new VcSchema(schema.ldContextPlus, schema.slug);
       } catch (err) {
         console.error("Failed to generate schema instance:", err);
         setError(err.toString());
       }
     }
-  }, [props.schema]);
+  }, [schema]);
 
   React.useEffect(() => {
-    props.onVcDataChange?.(vcData);
-  }, [props.onVcDataChange, vcData]);
+    onVcDataChange?.(vcData);
+  }, [onVcDataChange, vcData]);
 
   async function issueVc(e: Event) {
     e.preventDefault();
@@ -68,16 +70,16 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
     try {
       let credential: any;
-      if (props.schema) {
+      if (schema) {
         credential = {
           ...initialCred,
-          "@context": ["https://www.w3.org/2018/credentials/v1", getSchemaUrl(props.schema.slug, "ld-context")],
+          "@context": ["https://www.w3.org/2018/credentials/v1", getSchemaUrl(schema.slug, "ld-context")],
           type: credType ? [...initialCred.type, credType] : initialCred.type,
           issuer: {
             id: issuer,
           },
           credentialSchema: {
-            id: getSchemaUrl(props.schema.slug, "json-schema"),
+            id: getSchemaUrl(schema.slug, "json-schema"),
             type: "JsonSchemaValidator2018",
           },
           credentialSubject: vcData,
@@ -86,7 +88,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
         credential = JSON.parse(rawJsonVc);
       }
 
-      props.onVcDataChange?.(credential);
+      onVcDataChange?.(credential);
 
       // @TODO/tobek Actually validate VC according to schema instance
 
@@ -100,7 +102,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       console.log("issued VC, response:", vcResponse);
       mutate("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials");
 
-      props.onSuccessResponse(vcResponse);
+      onSuccessResponse(vcResponse);
       setLoading(false);
     } catch (err) {
       console.error("failed to issue VC:", err);
@@ -114,7 +116,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
   return (
     <>
-      <ModalHeader>Issue {props.schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
+      <ModalHeader>Issue {schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
       <ModalContent>
         <Form onSubmit={issueVc}>
           {!credSchema?.properties ? (
@@ -137,8 +139,8 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                 <DidSelect
                   onChange={setIssuer}
                   value={issuer}
-                  identifiers={props.identifiers}
-                  defaultSelectedDid={props.identifiers[0].did}
+                  identifiers={identifiers}
+                  defaultSelectedDid={identifiers[0].did}
                   required={true}
                   ownDidsOnly={true}
                 />
@@ -149,8 +151,8 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                   name={key}
                   node={node}
                   value={vcData[key]}
-                  identifiers={props.identifiers}
-                  defaultSubjectDid={key === "id" && node.format === "uri" ? props.subjectIdentifier?.did : undefined}
+                  identifiers={identifiers}
+                  defaultSubjectDid={key === "id" && node.format === "uri" ? subjectIdentifier?.did : undefined}
                   required={credSchema?.required?.indexOf(key) !== -1}
                   onChange={(value) => setVcData({ ...vcData, [key]: value })}
                 />

@@ -5,10 +5,6 @@ import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
 import { CreateSchema } from "./";
 import { HighlightedJson } from "../../../elements/HighlightedJson/HighlightedJson";
 
-const mockCreateSchema = async () => {
-  return new Promise((resolve) => setTimeout(resolve, 500));
-};
-
 storiesOf("Schemas", module).add("Create Schema", () => {
   const [schema, setSchema] = React.useState({});
   return (

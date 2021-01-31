@@ -41,7 +41,7 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
 
   return (
     <NavItemStyled>
-      <Link to={generatePath(url!)}>
+      <Link to={generatePath(url)}>
         <Flex alignItems="center">
           <Icon color={colors.midGray} size="16px" mr="20px" />
           <Text.span color={colors.midGray} fontSize={1}>

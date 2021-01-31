@@ -33,7 +33,7 @@ typeOptions[NESTED_TYPE_KEY] = {
 export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
   const schemaInstance = new VcSchema(createLdContextPlusSchema(schema), schema.slug);
   const schemaInput = { ...schema };
-  delete schemaInput.properties;
+  delete (schemaInput as any).properties;
   return {
     ...schemaInput,
     ldContextPlus: schemaInstance.getLdContextPlusString(),

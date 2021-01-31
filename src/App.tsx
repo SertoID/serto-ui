@@ -6,7 +6,7 @@ import { GlobalStyle } from "./components/layouts/Global/GlobalLayout";
 import { HomePage } from "./HomePage";
 import { Home, Send, People } from "@rimble/icons";
 
-export const App = () => {
+export const App = (): JSX.Element => {
   const sertoUiContext = {
     navItems: [
       { text: "Home", url: "/", icon: Home },
