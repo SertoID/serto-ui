@@ -1,5 +1,4 @@
 import React from "react";
-import { storiesOf } from "@storybook/react";
 import { Box, Flex, Text, Flash, Button, Tooltip } from "rimble-ui";
 import { H5 } from "../../layouts";
 import styled from "styled-components";
@@ -18,7 +17,7 @@ const Section = styled(Flex)`
   height: 48vh;
 `;
 
-storiesOf("Schemas", module).add("LD Context Plus playground", () => {
+export const SchemaPlayground: React.FunctionComponent = () => {
   const [inputSchema, setInputSchema] = React.useState<string>("");
   const [inputSchemaName, setInputSchemaName] = React.useState<string>("");
   const [debouncedSchema] = useDebounce(inputSchema, 500);
@@ -156,4 +155,4 @@ storiesOf("Schemas", module).add("LD Context Plus playground", () => {
       </Flex>
     </Box>
   );
-});
+};
