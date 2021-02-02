@@ -25,6 +25,7 @@ export interface GlobalLayoutProps {
   activeTenantID?: string;
   url: string;
   sidebarBottomContents?: React.ReactNode;
+  sidebarTopContents?: React.ReactNode;
 }
 
 export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
@@ -33,6 +34,7 @@ export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) 
     <Flex p={4} height="100vh">
       <Flex flexDirection="column" justifyContent="space-between" width={8} p={2} mr={2} minWidth={8}>
         <Box>
+          {props.sidebarTopContents}
           <Nav currentUrl={props.url} navItems={context.navItems} />
         </Box>
         <Box>{props.sidebarBottomContents}</Box>
