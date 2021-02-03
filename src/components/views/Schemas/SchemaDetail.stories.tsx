@@ -1,9 +1,9 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import { Box, Flash } from "rimble-ui";
+import { EXAMPLE_SCHEMAS } from "vc-schema-tools";
 import { SchemaDetail } from "./SchemaDetail";
 import { ldContextPlusToSchemaInput } from "./utils";
-import { EXAMPLE_SCHEMAS } from "./examples";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 

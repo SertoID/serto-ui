@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Box, Button, Flash, Form } from "rimble-ui";
+import { LdContextPlusNode } from "vc-schema-tools";
 import { colors } from "../../../../themes";
 import { WorkingSchema, newSchemaAttribute, requiredSchemaProperties } from "../types";
-import { LdContextPlusNode } from "../VcSchema";
 import { ModalContent, ModalHeader } from "../../../elements/Modals";
 import { SchemaAttribute } from "./SchemaAttribute";
+import { SchemaMetadata } from "../types";
 
 export interface AttributesStepProps {
   schema: WorkingSchema;
@@ -29,7 +30,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     });
   }
 
-  function updateAttribute(i: number, attribute: Partial<LdContextPlusNode>) {
+  function updateAttribute(i: number, attribute: Partial<LdContextPlusNode<SchemaMetadata>>) {
     updateSchema({
       properties: [...schema.properties.slice(0, i), attribute, ...schema.properties.slice(i + 1)],
     });

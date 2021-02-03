@@ -17,7 +17,7 @@ export const App = (): JSX.Element => {
   return (
     <BrowserRouter>
       <React.Suspense fallback={<></>}>
-        <SertoUiProvider value={sertoUiContext}>
+        <SertoUiProvider context={sertoUiContext}>
           <GlobalStyle />
           <Switch>
             <Route exact path={"/"} component={HomePage} />

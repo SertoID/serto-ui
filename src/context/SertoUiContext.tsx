@@ -6,6 +6,10 @@ import { NavItemProps } from "../components/layouts/Global/Nav";
 
 export interface SertoUiContextInterface {
   navItems: NavItemProps[];
+
+  /** Base URL on which schema JSON URLs will be built according to `getSchemaUrl` util. */
+  schemaHostBaseUrl: string;
+  /** URL or path to send user to in order for them to create a schema. */
   createSchemaUrl: string;
   createSchema(schema: SchemaDataInput): Promise<any>;
   getSchemas(global?: boolean): Promise<SchemaDataResponse[]>;
@@ -28,6 +32,7 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Home", url: "/", icon: Home },
     { text: "Nowhere", url: "/nowhere", icon: Send },
   ],
+  schemaHostBaseUrl: "https://alpha.consensysidentity.com",
   createSchemaUrl: "/schemas/",
   createSchema: createMockApiRequest(),
   getSchemas: createMockApiRequest([]),

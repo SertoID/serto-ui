@@ -4,11 +4,11 @@ import { SertoUiContext, SertoUiContextInterface, defaultSertoUiContext } from "
 
 export interface SertoUiContextProviderProps {
   theme?: any;
-  value?: Partial<SertoUiContextInterface>;
+  context?: Partial<SertoUiContextInterface>;
 }
 
 export const SertoUiProvider: React.FunctionComponent<SertoUiContextProviderProps> = (props) => (
-  <SertoUiContext.Provider value={{ ...defaultSertoUiContext, ...props.value }}>
+  <SertoUiContext.Provider value={{ ...defaultSertoUiContext, ...props.context }}>
     <IdentityThemeProvider theme={props.theme}>{props.children}</IdentityThemeProvider>
   </SertoUiContext.Provider>
 );

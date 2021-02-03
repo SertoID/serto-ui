@@ -1,14 +1,13 @@
 import React from "react";
 import { Box, Flex, Text, Flash, Button, Tooltip } from "rimble-ui";
-import { H5 } from "../../layouts";
+import { VcSchema, EXAMPLE_SCHEMAS, EXAMPLE_VCS } from "vc-schema-tools";
 import styled from "styled-components";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
 import { useDebounce } from "use-debounce";
 
-import { VcSchema } from "./VcSchema";
-import { EXAMPLE_SCHEMAS, EXAMPLE_VCS } from "./examples";
+import { H5 } from "../../layouts";
 import { HighlightedJson, PrismHighlightedCodeWrap } from "../../elements/HighlightedJson/HighlightedJson";
 
 const Section = styled(Flex)`
@@ -19,7 +18,6 @@ const Section = styled(Flex)`
 
 export const SchemaPlayground: React.FunctionComponent = () => {
   const [inputSchema, setInputSchema] = React.useState<string>("");
-  const [inputSchemaName, setInputSchemaName] = React.useState<string>("");
   const [debouncedSchema] = useDebounce(inputSchema, 500);
   const [inputSchemaError, setInputSchemaError] = React.useState<any>();
   const [vcSchema, setVcSchema] = React.useState<VcSchema | undefined>();
@@ -39,11 +37,11 @@ export const SchemaPlayground: React.FunctionComponent = () => {
       return;
     }
     try {
-      setVcSchema(new VcSchema(debouncedSchema, inputSchemaName || "example-schema", true));
+      setVcSchema(new VcSchema(debouncedSchema, true));
     } catch (err) {
       setInputSchemaError(err.message);
     }
-  }, [inputSchemaName, debouncedSchema]);
+  }, [debouncedSchema]);
 
   React.useEffect(() => {
     if (vcSchema) {
@@ -77,7 +75,6 @@ export const SchemaPlayground: React.FunctionComponent = () => {
             const name = event.target.value;
             if (name) {
               setInputSchema(EXAMPLE_SCHEMAS[name]);
-              setInputSchemaName(name);
             }
             if (EXAMPLE_VCS[name]) {
               setInputVc(EXAMPLE_VCS[name]);

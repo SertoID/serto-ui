@@ -1,11 +1,12 @@
+import * as React from "react";
 import { mapValuesDeep } from "deepdash-es/standalone";
 import { convertToPascalCase } from "../../../utils";
-import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "./VcSchema";
+import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "vc-schema-tools";
 import { CompletedSchema, SchemaMetadata, SchemaDataInput, newSchemaAttribute } from "./types";
-import { config } from "../../../config";
+import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
-type NamedLdContextPlusNode = Partial<LdContextPlusNode> & { niceName?: string };
+type NamedLdContextPlusNode = Partial<LdContextPlusNode<SchemaMetadata>> & { niceName?: string };
 
 export const NESTED_TYPE_KEY = "NESTED";
 
@@ -31,7 +32,7 @@ typeOptions[NESTED_TYPE_KEY] = {
 };
 
 export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
-  const schemaInstance = new VcSchema(createLdContextPlusSchema(schema), schema.slug);
+  const schemaInstance = new VcSchema(createLdContextPlusSchema(schema));
   const schemaInput = { ...schema };
   delete (schemaInput as any).properties;
   return {
@@ -47,7 +48,7 @@ export function createLdContextPlusSchema(schema: CompletedSchema): LdContextPlu
 
   // Prefix each `@id` value with "schema-id:" to make it a valid JSON-LD Context identifier:
   // @TODO/tobek In the edge case where a nested property has the same ID as another property elsewhere in the schema, the resulting `@id`s will be duplicates which would result in a technically incorrect JSON-LD Context.
-  const schemaProperties: { [key: string]: LdContextPlusNode } = {};
+  const schemaProperties: { [key: string]: LdContextPlusNode<SchemaMetadata> } = {};
   schema.properties.forEach((prop) => {
     schemaProperties[prop["@id"]] = mapValuesDeep({ ...prop }, (value, key) => {
       if (key === "@id") {
@@ -67,11 +68,16 @@ export function createLdContextPlusSchema(schema: CompletedSchema): LdContextPlu
         version: schema.version,
         icon: schema.icon,
         discoverable: schema.discoverable,
+        uris: {
+          jsonLdContextPlus: buildSchemaUrl(schema.slug, "ld-context-plus"),
+          jsonLdContext: buildSchemaUrl(schema.slug, "ld-context"),
+          jsonSchema: buildSchemaUrl(schema.slug, "json-schema"),
+        },
       },
       "@title": schema.name,
       "@description": schema.description,
       w3ccred: "https://www.w3.org/2018/credentials#",
-      "schema-id": getSchemaUrl(schema.slug, "ld-context-plus") + "#",
+      "schema-id": buildSchemaUrl(schema.slug, "ld-context") + "#",
       "@rootType": schemaTypeName,
       [schemaTypeName]: {
         "@id": "schema-id",
@@ -92,7 +98,7 @@ export function ldContextPlusToSchemaInput(ldContextPlus: LdContextPlus<SchemaMe
   if (!metadata) {
     throw Error("Missing schema metadata");
   }
-  const schemaInstance = new VcSchema(ldContextPlus, metadata.slug);
+  const schemaInstance = new VcSchema(ldContextPlus);
   return {
     ...metadata,
     name: ldContextPlus["@context"]["@title"] || ldContextPlus["@context"]["@rootType"],
@@ -103,6 +109,7 @@ export function ldContextPlusToSchemaInput(ldContextPlus: LdContextPlus<SchemaMe
   };
 }
 
-export function getSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema"): string {
-  return `${config.SCHEMA_HOST_URL}/v1/schemas/public/${slug}/${type}.json`;
+export function buildSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema"): string {
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
+  return `${context.schemaHostBaseUrl}/v1/schemas/public/${slug}/${type}.json`;
 }

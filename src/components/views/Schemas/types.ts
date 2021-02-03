@@ -1,4 +1,12 @@
-import { LdContextPlusNode } from "./VcSchema";
+import { LdContextPlusNode, DefaultSchemaMetadata } from "vc-schema-tools";
+
+/** Metadata fields specific to our use-case (i.e. not part of the LdContextPlus spec) intended to be passed in to the LdContextPlus generic types where it will be stored in the "@metadata" object. */
+export interface SchemaMetadata extends DefaultSchemaMetadata {
+  version: string;
+  slug: string;
+  icon?: string;
+  discoverable?: boolean;
+}
 
 /** In-progress schema interface during CreateSchema flow that will be transformed into final output. */
 export interface WorkingSchema extends SchemaMetadata {
@@ -10,14 +18,6 @@ export interface WorkingSchema extends SchemaMetadata {
 /** Completed schema data from CreateSchema flow. */
 export interface CompletedSchema extends WorkingSchema {
   properties: LdContextPlusNode<SchemaMetadata>[];
-}
-
-/** Metadata fields specific to our use-case (i.e. not part of the LdContextPlus spec) intended to be passed in to the LdContextPlus generic types where it will be stored in the "@metadata" object. */
-export interface SchemaMetadata {
-  version: string;
-  slug: string;
-  icon?: string;
-  discoverable?: boolean;
 }
 
 /** Data format expected by API. */

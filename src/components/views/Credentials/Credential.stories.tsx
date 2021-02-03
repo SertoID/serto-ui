@@ -1,8 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
+import { EXAMPLE_VCS } from "vc-schema-tools";
 import { Credential, CredentialViewTypes } from "./Credential";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
-import { EXAMPLE_VCS } from "../Schemas/examples";
 
 const diplomaVc = {
   ...JSON.parse(EXAMPLE_VCS.DiplomaCredential),
