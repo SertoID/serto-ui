@@ -18,7 +18,6 @@ const Section = styled(Flex)`
 
 export const SchemaPlayground: React.FunctionComponent = () => {
   const [inputSchema, setInputSchema] = React.useState<string>("");
-  const [inputSchemaName, setInputSchemaName] = React.useState<string>("");
   const [debouncedSchema] = useDebounce(inputSchema, 500);
   const [inputSchemaError, setInputSchemaError] = React.useState<any>();
   const [vcSchema, setVcSchema] = React.useState<VcSchema | undefined>();
@@ -42,7 +41,7 @@ export const SchemaPlayground: React.FunctionComponent = () => {
     } catch (err) {
       setInputSchemaError(err.message);
     }
-  }, [inputSchemaName, debouncedSchema]);
+  }, [debouncedSchema]);
 
   React.useEffect(() => {
     if (vcSchema) {
@@ -76,7 +75,6 @@ export const SchemaPlayground: React.FunctionComponent = () => {
             const name = event.target.value;
             if (name) {
               setInputSchema(EXAMPLE_SCHEMAS[name]);
-              setInputSchemaName(name);
             }
             if (EXAMPLE_VCS[name]) {
               setInputVc(EXAMPLE_VCS[name]);
