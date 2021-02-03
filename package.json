@@ -32,7 +32,6 @@
   "dependencies": {
     "@rimble/icons": "^1.1.0",
     "@sindresorhus/slugify": "^1.1.0",
-    "ajv": "^6.12.3",
     "deepdash-es": "^5.3.5",
     "prismjs": "^1.23.0",
     "react-scripts": "4.0.1",
