@@ -8,8 +8,9 @@
   "main": "dist/serto-ui.js",
   "types": "dist/serto-ui.d.ts",
   "scripts": {
-    "build": "tsc --noEmit false",
+    "build": "npm run clean && tsc --noEmit false",
     "watch": "tsc -w --noEmit false",
+    "clean": "rimraf dist/",
     "test": "react-scripts test",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
     "prettier:lint": "prettier --config .prettierrc.yaml --list-different './**/*.{ts,tsx,json,md}'",
@@ -63,7 +64,8 @@
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "install-peers-cli": "^2.2.0",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "rimraf": "^3.0.2"
   },
   "browserslist": {
     "production": [
