@@ -3,12 +3,12 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Box, Button, Checkbox, Flex, Input } from "rimble-ui";
+import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusNodeKey } from "vc-schema-tools";
 import { fonts, colors } from "../../../../themes";
 import { NESTED_TYPE_KEY, typeOptions } from "../utils";
-import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusNodeKey } from "../VcSchema";
 import { convertToCamelCase } from "../../../../utils";
-import { newSchemaAttribute } from "..";
 import { DropDown } from "../../../elements/DropDown/DropDown";
+import { newSchemaAttribute, SchemaMetadata } from "../types";
 
 const AttributeBox = styled(Box)`
   &:first-child {
@@ -26,14 +26,14 @@ const IconButton = styled(Button.Text)`
 `;
 
 export interface SchemaAttributeProps {
-  attr: Partial<LdContextPlusNode>;
+  attr: Partial<LdContextPlusNode<SchemaMetadata>>;
   readOnly?: boolean;
-  updateAttribute?(attribute: Partial<LdContextPlusNode>): void;
+  updateAttribute?(attribute: Partial<LdContextPlusNode<SchemaMetadata>>): void;
   removeAttribute?(): void;
 }
 
 export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (props) => {
-  const nestedAttr = props.attr as LdContextPlusInnerNode;
+  const nestedAttr = props.attr as LdContextPlusInnerNode<SchemaMetadata>;
 
   function updateAttrProperty(attrProperty: LdContextPlusNodeKey, value: any) {
     const updatedProperty = { ...props.attr, [attrProperty]: value };
@@ -83,8 +83,8 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
     });
   }
 
-  const updateNestedAttribute = (key: string, updatedAttr: Partial<LdContextPlusNode>) => {
-    let updatedContext: { [key: string]: Partial<LdContextPlusNode> } = {};
+  const updateNestedAttribute = (key: string, updatedAttr: Partial<LdContextPlusNode<SchemaMetadata>>) => {
+    let updatedContext: { [key: string]: Partial<LdContextPlusNode<SchemaMetadata>> } = {};
     if (updatedAttr["@id"] !== key) {
       // Since nested attributes are listed by iterating over object keys, if we rename object key by deleting and adding, React will reorder inputs while user is typing and lose focus. So here we re-create object key by key in order to rename the updated key while preserving order.
       Object.keys(nestedAttr["@context"]!).forEach((contextKey) => {

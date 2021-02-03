@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Box, Button, Checkbox, Field, Flash, Form, Input, Loader } from "rimble-ui";
 import { mutate } from "swr";
+import { JsonSchemaNode, VcSchema } from "vc-schema-tools";
 import { ModalContent, ModalHeader } from "../../../elements/Modals";
-import { JsonSchemaNode, SchemaDataResponse, VcSchema } from "../../Schemas";
-import { getSchemaUrl } from "../../Schemas/utils";
 import { Identifier } from "../../../../types";
 import { DidSelect } from "../../../elements/DidSelect";
 import { IssueVcFormInput } from "./IssueVcFormInput";
 import { SertoUiContext, SertoUiContextInterface } from "../../../../context/SertoUiContext";
+import { SchemaDataResponse } from "../../Schemas";
 
 export interface IssueVcFormProps {
   schema: SchemaDataResponse | null;
@@ -49,7 +49,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     if (schema) {
       try {
         setError("");
-        return new VcSchema(schema.ldContextPlus, schema.slug);
+        return new VcSchema(schema.ldContextPlus);
       } catch (err) {
         console.error("Failed to generate schema instance:", err);
         setError(err.toString());
@@ -63,23 +63,40 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
   async function issueVc(e: Event) {
     e.preventDefault();
+
+    if (!schemaInstance) {
+      console.error("Can't issue VC: schema instance is undefined. Schema data:", schema);
+      setError("Could not initialize schema instance");
+      return;
+    }
     setError(undefined);
     setLoading(true);
 
-    const credType = schemaInstance?.schema["@context"]["@rootType"];
+    const credType = schemaInstance.schema["@context"]["@rootType"];
+
+    let ldContext: string | any = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonLdContext;
+    if (!ldContext) {
+      console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
+      ldContext = schemaInstance.jsonLdContext;
+    }
+
+    const jsonSchemaUrl = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonSchema;
+    if (!jsonSchemaUrl) {
+      console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
+    }
 
     try {
       let credential: any;
       if (schema) {
         credential = {
           ...initialCred,
-          "@context": ["https://www.w3.org/2018/credentials/v1", getSchemaUrl(schema.slug, "ld-context")],
+          "@context": ["https://www.w3.org/2018/credentials/v1", ldContext],
           type: credType ? [...initialCred.type, credType] : initialCred.type,
           issuer: {
             id: issuer,
           },
-          credentialSchema: {
-            id: getSchemaUrl(schema.slug, "json-schema"),
+          credentialSchema: jsonSchemaUrl && {
+            id: jsonSchemaUrl,
             type: "JsonSchemaValidator2018",
           },
           credentialSubject: vcData,

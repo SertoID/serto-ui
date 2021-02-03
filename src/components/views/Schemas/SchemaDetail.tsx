@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Box, Flex, Text, Flash } from "rimble-ui";
+import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "vc-schema-tools";
 import { H3 } from "../../layouts";
 import { baseColors, colors, fonts } from "../../../themes";
 import { SchemaDataInput, SchemaDataResponse, requiredSchemaProperties } from "./types";
 import { typeOptions } from "./utils";
-import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "./VcSchema";
 import { Toggle } from "../../elements/Toggle/Toggle";
 import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson";
 import { DropDown } from "../../elements/DropDown/DropDown";
@@ -31,11 +31,15 @@ const PropertyName: React.FunctionComponent = (props) => <PropertyType fontWeigh
 
 const renderProperty = (
   key: string,
-  prop: LdContextPlusNode,
+  prop?: LdContextPlusNode,
   outerContext?: LdContextPlusRootNode,
 ): React.ReactNode => {
+  if (!prop) {
+    console.warn("Could not find prop for key:", key);
+    return <></>;
+  }
   if (outerContext && "@replaceWith" in prop && prop["@replaceWith"]) {
-    return renderProperty(key, outerContext[prop["@replaceWith"]], outerContext);
+    return renderProperty(key, outerContext[prop["@replaceWith"]] as any, outerContext);
   }
   let propType: string;
   if ("@type" in prop && prop["@type"]) {
@@ -79,7 +83,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
   const schemaInstance = React.useMemo(() => {
     try {
       setError("");
-      return new VcSchema(schema.ldContextPlus, schema.slug);
+      return new VcSchema(schema.ldContextPlus);
     } catch (err) {
       console.error("Failed to generate schema instance:", err);
       setError(err.message || JSON.stringify(err));
@@ -148,7 +152,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
             Object.entries(innerContext).map((entry) => renderProperty(entry[0], entry[1], outerContext))}
           {credContains?.map(
             (contained) =>
-              outerContext?.[contained] && renderProperty(contained, outerContext[contained], outerContext),
+              outerContext?.[contained] && renderProperty(contained, outerContext[contained] as any, outerContext),
           )}
 
           {error && <Flash variant="danger">Error: {error}</Flash>}

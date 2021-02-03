@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Checkbox, Input, Field, Text } from "rimble-ui";
-import { JsonSchemaNode } from "../../Schemas";
+import { JsonSchemaNode } from "vc-schema-tools";
 import { DidSelect } from "../../../elements/DidSelect";
 import { Identifier } from "../../../../types";
 

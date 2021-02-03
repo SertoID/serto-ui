@@ -1,14 +1,13 @@
 import React from "react";
 import { Box, Flex, Text, Flash, Button, Tooltip } from "rimble-ui";
-import { H5 } from "../../layouts";
+import { VcSchema, EXAMPLE_SCHEMAS, EXAMPLE_VCS } from "vc-schema-tools";
 import styled from "styled-components";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
 import { useDebounce } from "use-debounce";
 
-import { VcSchema } from "./VcSchema";
-import { EXAMPLE_SCHEMAS, EXAMPLE_VCS } from "./examples";
+import { H5 } from "../../layouts";
 import { HighlightedJson, PrismHighlightedCodeWrap } from "../../elements/HighlightedJson/HighlightedJson";
 
 const Section = styled(Flex)`
@@ -39,7 +38,7 @@ export const SchemaPlayground: React.FunctionComponent = () => {
       return;
     }
     try {
-      setVcSchema(new VcSchema(debouncedSchema, inputSchemaName || "example-schema", true));
+      setVcSchema(new VcSchema(debouncedSchema, true));
     } catch (err) {
       setInputSchemaError(err.message);
     }

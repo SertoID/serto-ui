@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import { Box, Flex, Flash } from "rimble-ui";
-import { EXAMPLE_SCHEMAS } from "../../Schemas/examples";
+import { EXAMPLE_SCHEMAS } from "vc-schema-tools";
 import { SchemaDataInput, SchemaDataResponse } from "../../Schemas";
 import { ldContextPlusToSchemaInput } from "../../Schemas/utils";
 import { IssueVcForm } from "./IssueVcForm";
