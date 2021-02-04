@@ -1,9 +1,8 @@
-import * as React from "react";
 import { mapValuesDeep } from "deepdash-es/standalone";
 import { convertToPascalCase } from "../../../utils";
 import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "vc-schema-tools";
 import { CompletedSchema, SchemaMetadata, SchemaDataInput, newSchemaAttribute } from "./types";
-import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
+import { SertoUiContextInterface } from "../../../context/SertoUiContext";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
 type NamedLdContextPlusNode = Partial<LdContextPlusNode<SchemaMetadata>> & { niceName?: string };
@@ -31,8 +30,11 @@ typeOptions[NESTED_TYPE_KEY] = {
   niceName: "[nest attributes]",
 };
 
-export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
-  const schemaInstance = new VcSchema(createLdContextPlusSchema(schema));
+export function createSchemaInput(
+  schema: CompletedSchema,
+  buildSchemaUrl: SertoUiContextInterface["buildSchemaUrl"],
+): SchemaDataInput {
+  const schemaInstance = new VcSchema(createLdContextPlusSchema(schema, buildSchemaUrl));
   const schemaInput = { ...schema };
   delete (schemaInput as any).properties;
   return {
@@ -43,7 +45,10 @@ export function createSchemaInput(schema: CompletedSchema): SchemaDataInput {
   };
 }
 
-export function createLdContextPlusSchema(schema: CompletedSchema): LdContextPlus<SchemaMetadata> {
+export function createLdContextPlusSchema(
+  schema: CompletedSchema,
+  buildSchemaUrl: SertoUiContextInterface["buildSchemaUrl"],
+): LdContextPlus<SchemaMetadata> {
   const schemaTypeName = convertToPascalCase(schema.name);
 
   // Prefix each `@id` value with "schema-id:" to make it a valid JSON-LD Context identifier:
@@ -107,9 +112,4 @@ export function ldContextPlusToSchemaInput(ldContextPlus: LdContextPlus<SchemaMe
     ldContext: schemaInstance.getJsonLdContextString(),
     jsonSchema: schemaInstance.getJsonSchemaString(),
   };
-}
-
-export function buildSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema"): string {
-  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
-  return `${context.schemaHostBaseUrl}/v1/schemas/public/${slug}/${type}.json`;
 }
