@@ -24,10 +24,10 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     "@context": ["https://www.w3.org/2018/credentials/v1"],
     // "id": "uuid:9110652b-3676-4720-8139-9163b244680d", // @TODO Should the API generate this?
     type: ["VerifiableCredential"],
-    issuer: { id: identifiers[0].did },
+    issuer: { id: identifiers[0]?.did },
     issuanceDate: new Date().toISOString(),
     credentialSubject: {
-      id: subjectIdentifier?.did || identifiers[0].did,
+      id: subjectIdentifier?.did || identifiers[0]?.did,
       exampleData: {
         foo: 123,
         bar: true,
@@ -39,7 +39,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
-  const [issuer, setIssuer] = useState<string>(identifiers[0].did);
+  const [issuer, setIssuer] = useState<string>(identifiers[0]?.did);
   const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
@@ -157,7 +157,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                   onChange={setIssuer}
                   value={issuer}
                   identifiers={identifiers}
-                  defaultSelectedDid={identifiers[0].did}
+                  defaultSelectedDid={identifiers[0]?.did}
                   required={true}
                   ownDidsOnly={true}
                 />
