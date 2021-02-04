@@ -77,7 +77,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     let ldContext: string | any = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonLdContext;
     if (!ldContext) {
       console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
-      ldContext = schemaInstance.jsonLdContext;
+      ldContext = schemaInstance.jsonLdContext["@context"];
     }
 
     const jsonSchemaUrl = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonSchema;
