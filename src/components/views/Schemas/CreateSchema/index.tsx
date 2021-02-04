@@ -66,7 +66,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   }
 
   async function createSchema() {
-    const schemaInput = createSchemaInput(schema as CompletedSchema);
+    const schemaInput = createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl);
     onSchemaCreated?.(schemaInput.ldContextPlus);
     await context.createSchema(schemaInput);
     mutate(["/v1/schemas", false]);

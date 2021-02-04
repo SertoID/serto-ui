@@ -7,20 +7,20 @@ import { NavItemProps } from "../components/layouts/Global/Nav";
 export interface SertoUiContextInterface {
   navItems: NavItemProps[];
 
-  /** Base URL on which schema JSON URLs will be built according to `getSchemaUrl` util. */
-  schemaHostBaseUrl: string;
   /** URL or path to send user to in order for them to create a schema. */
   createSchemaUrl: string;
+  /** Build URL at which a given schema will be hosted. */
+  buildSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema"): string;
   createSchema(schema: SchemaDataInput): Promise<any>;
   getSchemas(global?: boolean): Promise<SchemaDataResponse[]>;
   issueVc(body: any): Promise<any>;
 }
 
 const createMockApiRequest = (response?: any) => {
-  return (async () => {
+  return (async (...args: any[]) => {
     return new Promise((resolve) =>
       setTimeout(() => {
-        console.log("SertoUiContext mock API request resolving");
+        console.log("SertoUiContext mock API request resolving. Request args:", ...args);
         resolve(response);
       }, 500),
     );
@@ -32,7 +32,7 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Home", url: "/", icon: Home },
     { text: "Nowhere", url: "/nowhere", icon: Send },
   ],
-  schemaHostBaseUrl: "https://alpha.consensysidentity.com",
+  buildSchemaUrl: (slug, type) => `https://example.com/schemas/${slug}/${type}.json`,
   createSchemaUrl: "/schemas/",
   createSchema: createMockApiRequest(),
   getSchemas: createMockApiRequest([]),
