@@ -131,13 +131,23 @@ export function schemaResponseToWorkingSchema(schemaReponse: SchemaDataResponse)
     propertiesMap = {};
   }
 
-  const propertiesArray = Object.entries(propertiesMap).map(([key, value]) => ({
-    ...value,
-    "@id": key,
-  }));
+  // Coming from the completed schema, all of the `@id` values will be namespaced according in JSON-LD context, e.g. a "name" property might have `@id` "schema-id:name". If we leave these intact, when the schema is built again we'll end up with "schema-id:schema-id:name". So deep rename these `@id`s according to their keys, which aren't namespaced:
+  const renamedIds = mapValuesDeep(
+    { ...propertiesMap },
+    (value, key) => {
+      if (typeof value === "object" && "@id" in value) {
+        return {
+          ...value,
+          "@id": key,
+        };
+      }
+      return value;
+    },
+    { callbackAfterIterate: true },
+  );
 
   return {
     ...schemaReponse,
-    properties: propertiesArray,
+    properties: Object.values(renamedIds),
   };
 }

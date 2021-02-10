@@ -52,7 +52,7 @@ const schemaToUpdate = {
       "@description": "",
       "@context": {
         employerId: {
-          "@id": "schema-id:employerId",
+          "@id": "employerId",
           "@type": "@id",
           "@dataType": "string",
           "@title": "Employer ID",
@@ -60,14 +60,14 @@ const schemaToUpdate = {
           "@format": "uri",
         },
         name: {
-          "@id": "schema-id:name",
+          "@id": "name",
           "@type": "http://schema.org/Text",
           "@dataType": "string",
           "@title": "Name",
           "@description": "",
         },
         website: {
-          "@id": "schema-id:website",
+          "@id": "website",
           "@type": "http://schema.org/URL",
           "@dataType": "string",
           "@title": "Website",
