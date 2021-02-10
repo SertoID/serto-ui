@@ -105,4 +105,4 @@ const createSchemaStory = (schemaToUpdate?: WorkingSchema) => () => {
 
 storiesOf("Schemas", module)
   .add("Create Schema", createSchemaStory())
-  .add("UpdateSchema", createSchemaStory(schemaToUpdate));
+  .add("Update Schema", createSchemaStory(schemaToUpdate));
