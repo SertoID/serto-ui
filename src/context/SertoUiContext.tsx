@@ -10,8 +10,9 @@ export interface SertoUiContextInterface {
   /** URL or path to send user to in order for them to create a schema. */
   createSchemaUrl: string;
   /** Build URL at which a given schema will be hosted. */
-  buildSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema"): string;
+  buildSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema", version?: string): string;
   createSchema(schema: SchemaDataInput): Promise<any>;
+  updateSchema(schema: SchemaDataInput): Promise<any>;
   getSchemas(global?: boolean): Promise<SchemaDataResponse[]>;
   issueVc(body: any): Promise<any>;
 }
@@ -32,9 +33,11 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Home", url: "/", icon: Home },
     { text: "Nowhere", url: "/nowhere", icon: Send },
   ],
-  buildSchemaUrl: (slug, type) => `https://example.com/schemas/${slug}/${type}.json`,
+  buildSchemaUrl: (slug, type, version) =>
+    `https://example.com/schemas/${slug}${version && "/" + version}/${type}.json`,
   createSchemaUrl: "/schemas/",
   createSchema: createMockApiRequest(),
+  updateSchema: createMockApiRequest(),
   getSchemas: createMockApiRequest([]),
   issueVc: createMockApiRequest(),
 };

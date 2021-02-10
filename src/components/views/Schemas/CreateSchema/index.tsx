@@ -3,7 +3,7 @@ import * as React from "react";
 import { Box, Button, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { LdContextPlus } from "vc-schema-tools";
-import { CompletedSchema, initialWorkingSchema, SchemaMetadata, WorkingSchema } from "../types";
+import { CompletedSchema, baseWorkingSchema, SchemaMetadata, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
@@ -16,6 +16,8 @@ import { SertoUiContext, SertoUiContextInterface } from "../../../../context/Ser
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
 export interface CreateSchemaProps {
+  isUpdate?: boolean;
+  initialSchemaState?: WorkingSchema;
   onFinalStep?(): void;
   onComplete?(): void;
   onSchemaUpdate?(schema: WorkingSchema): void;
@@ -23,13 +25,21 @@ export interface CreateSchemaProps {
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
-  const { onFinalStep, onComplete, onSchemaUpdate, onSchemaCreated } = props;
+  const { isUpdate, initialSchemaState, onFinalStep, onComplete, onSchemaUpdate, onSchemaCreated } = props;
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [schema, setSchema] = React.useState<WorkingSchema>(initialWorkingSchema);
+  const [schema, setSchema] = React.useState<WorkingSchema>(baseWorkingSchema);
 
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
+
+  React.useEffect(() => {
+    if (initialSchemaState) {
+      setSchema(initialSchemaState);
+    } else {
+      setSchema(baseWorkingSchema);
+    }
+  }, [initialSchemaState]);
 
   React.useEffect(() => {
     onSchemaUpdate?.(schema);
@@ -52,11 +62,11 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     if (nextStep === "DONE") {
       setLoading(true);
       try {
-        await createSchema();
+        await publishSchema();
         setCurrentStep(nextStep);
         onFinalStep?.();
       } catch (err) {
-        console.error("Failed to create schema:", err);
+        console.error(`Failed to ${isUpdate ? "create" : "update"} schema:`, err);
         setError(err.toString());
       }
       setLoading(false);
@@ -65,10 +75,14 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     }
   }
 
-  async function createSchema() {
+  async function publishSchema() {
     const schemaInput = createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl);
     onSchemaCreated?.(schemaInput.ldContextPlus);
-    await context.createSchema(schemaInput);
+    if (isUpdate) {
+      await context.updateSchema(schemaInput);
+    } else {
+      await context.createSchema(schemaInput);
+    }
     mutate(["/v1/schemas", false]);
     if (schema.discoverable) {
       mutate(["/v1/schemas", true]);
@@ -90,7 +104,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           >
             <Check size="36px" />
           </Text>
-          <H3>Schema Published</H3>
+          <H3>Schema {isUpdate ? "Updated" : "Published"}</H3>
         </Text>
         <Box mt={5}>
           <Button width="100%" onClick={() => onComplete?.()}>
@@ -105,11 +119,17 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     <>
       {currentStep !== STEPS[0] && <ModalBack onClick={goBack} />}
       {currentStep === "INFO" ? (
-        <InfoStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
+        <InfoStep
+          isUpdate={isUpdate}
+          initialSchemaState={initialSchemaState}
+          schema={schema}
+          updateSchema={updateSchema}
+          onComplete={goForward}
+        />
       ) : currentStep === "ATTRIBUTES" ? (
         <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
       ) : (
-        <ConfirmStep schema={schema} onComplete={goForward} loading={loading} />
+        <ConfirmStep isUpdate={isUpdate} schema={schema} onComplete={goForward} loading={loading} />
       )}
       {error && (
         <Box px={4}>

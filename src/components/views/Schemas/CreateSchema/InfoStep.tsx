@@ -1,7 +1,7 @@
 import { Info } from "@rimble/icons";
 import slugify from "@sindresorhus/slugify";
 import * as React from "react";
-import { Box, Button, Checkbox, Field, Form, Input, Text, Tooltip, Flex } from "rimble-ui";
+import { Box, Button, Checkbox, Field, Form, Input, Text, Tooltip, Flex, Flash } from "rimble-ui";
 import styled from "styled-components";
 import { colors, fonts } from "../../../../themes/";
 import { ModalContent, ModalHeader } from "../../../elements/Modals";
@@ -21,13 +21,16 @@ const SchemaLabel = styled.label`
 
 export interface InfoStepProps {
   schema: WorkingSchema;
+  initialSchemaState?: WorkingSchema;
+  isUpdate?: boolean;
   updateSchema(updates: Partial<WorkingSchema>): void;
   onComplete(): void;
 }
 
 export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
-  const { schema, updateSchema } = props;
+  const { isUpdate, initialSchemaState, schema, updateSchema } = props;
   const [doValidation, setDoValidation] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   const defaultSchemaSlug = React.useMemo(() => slugify(schema.name), [schema.name]);
 
@@ -46,6 +49,11 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   function goNext(e: Event) {
     e.preventDefault();
+    setError("");
+    if (isUpdate && schema.version === initialSchemaState?.version) {
+      setError("You must update the version number when updating a schema.");
+      return;
+    }
     if (schema.name && (defaultSchemaSlug || schema.slug) && schema.version) {
       setDoValidation(false);
       updateSchema({
@@ -60,7 +68,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
 
   return (
     <>
-      <ModalHeader>Create New Schema</ModalHeader>
+      <ModalHeader>{isUpdate ? "Update" : "Create New"} Schema</ModalHeader>
       <ModalContent>
         <Form validated={doValidation} onSubmit={goNext}>
           <SchemaField label="Credential Schema Name">
@@ -141,6 +149,11 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
           <Button type="submit" width="100%">
             Next
           </Button>
+          {error && (
+            <Flash mt={3} variant="danger">
+              {error}
+            </Flash>
+          )}
         </Form>
       </ModalContent>
     </>

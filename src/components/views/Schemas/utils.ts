@@ -1,7 +1,14 @@
 import { mapValuesDeep } from "deepdash-es/standalone";
 import { convertToPascalCase } from "../../../utils";
 import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "vc-schema-tools";
-import { CompletedSchema, SchemaMetadata, SchemaDataInput, newSchemaAttribute } from "./types";
+import {
+  WorkingSchema,
+  CompletedSchema,
+  SchemaMetadata,
+  SchemaDataInput,
+  SchemaDataResponse,
+  newSchemaAttribute,
+} from "./types";
 import { SertoUiContextInterface } from "../../../context/SertoUiContext";
 
 /** Adding `niceName` so that we can know what type to show in type selection dropdown. */
@@ -74,15 +81,15 @@ export function createLdContextPlusSchema(
         icon: schema.icon,
         discoverable: schema.discoverable,
         uris: {
-          jsonLdContextPlus: buildSchemaUrl(schema.slug, "ld-context-plus"),
-          jsonLdContext: buildSchemaUrl(schema.slug, "ld-context"),
-          jsonSchema: buildSchemaUrl(schema.slug, "json-schema"),
+          jsonLdContextPlus: buildSchemaUrl(schema.slug, "ld-context-plus", schema.version),
+          jsonLdContext: buildSchemaUrl(schema.slug, "ld-context", schema.version),
+          jsonSchema: buildSchemaUrl(schema.slug, "json-schema", schema.version),
         },
       },
       "@title": schema.name,
       "@description": schema.description,
       w3ccred: "https://www.w3.org/2018/credentials#",
-      "schema-id": buildSchemaUrl(schema.slug, "ld-context") + "#",
+      "schema-id": buildSchemaUrl(schema.slug, "ld-context", schema.version) + "#",
       "@rootType": schemaTypeName,
       [schemaTypeName]: {
         "@id": "schema-id",
@@ -111,5 +118,36 @@ export function ldContextPlusToSchemaInput(ldContextPlus: LdContextPlus<SchemaMe
     ldContextPlus: schemaInstance.getLdContextPlusString(),
     ldContext: schemaInstance.getJsonLdContextString(),
     jsonSchema: schemaInstance.getJsonSchemaString(),
+  };
+}
+
+/* Convert API response into local format `WorkingSchema` for managing schema state during UI flow. */
+export function schemaResponseToWorkingSchema(schemaReponse: SchemaDataResponse): WorkingSchema {
+  let propertiesMap: { [key: string]: LdContextPlusNode<SchemaMetadata> };
+  try {
+    propertiesMap = JSON.parse(schemaReponse.ldContextPlus)["@context"].credentialSubject["@context"];
+  } catch (err) {
+    console.warn("Failed to parse JSON and identify credentialSubject properties from schema response:", schemaReponse);
+    propertiesMap = {};
+  }
+
+  // Coming from the completed schema, all of the `@id` values will be namespaced according in JSON-LD context, e.g. a "name" property might have `@id` "schema-id:name". If we leave these intact, when the schema is built again we'll end up with "schema-id:schema-id:name". So deep rename these `@id`s according to their keys, which aren't namespaced:
+  const renamedIds = mapValuesDeep(
+    { ...propertiesMap },
+    (value, key) => {
+      if (typeof value === "object" && "@id" in value) {
+        return {
+          ...value,
+          "@id": key,
+        };
+      }
+      return value;
+    },
+    { callbackAfterIterate: true },
+  );
+
+  return {
+    ...schemaReponse,
+    properties: Object.values(renamedIds),
   };
 }
