@@ -8,6 +8,7 @@ import { SertoUiContext, SertoUiContextInterface } from "../../../../context/Ser
 
 export interface ConfirmStepProps {
   schema: WorkingSchema;
+  isUpdate?: boolean;
   loading?: boolean;
   onComplete(): void;
 }
@@ -22,7 +23,7 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
       <ModalContent>
         <SchemaDetail schema={createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl)} />
         <Button mt={3} width="100%" onClick={props.onComplete} disabled={props.loading}>
-          {props.loading ? <Loader color="white" /> : "Publish"}
+          {props.loading ? <Loader color="white" /> : props.isUpdate ? "Update" : "Publish"}
         </Button>
       </ModalContent>
     </>

@@ -8,6 +8,9 @@ import { TBody, TH, TR } from "../../layouts/LayoutComponents";
 import { ModalContent, ModalFooter, ModalWithX } from "../../elements/Modals";
 import { SchemaDetail } from "./SchemaDetail";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
+import { CreateSchema } from "./CreateSchema";
+import { schemaResponseToWorkingSchema } from "./utils";
+import { WorkingSchema } from "./types";
 
 export interface SchemasTableProps {
   discover?: boolean;
@@ -16,6 +19,7 @@ export interface SchemasTableProps {
 }
 
 export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) => {
+  const [schemaToUpdate, setSchemaToUpdate] = React.useState<WorkingSchema | undefined>();
   const [viewedSchema, setViewedSchema] = React.useState<SchemaDataResponse | undefined>();
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
@@ -60,10 +64,19 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
                       </time>
                     )}
                   </td>
-                  <td>
+                  <td style={{ whiteSpace: "nowrap" }}>
                     <Button.Outline size="small" onClick={() => setViewedSchema(schema)}>
                       View
                     </Button.Outline>
+                    {!props.discover && !props.onSchemaSelect && (
+                      <Button.Outline
+                        ml={3}
+                        size="small"
+                        onClick={() => setSchemaToUpdate(schemaResponseToWorkingSchema(schema))}
+                      >
+                        Update
+                      </Button.Outline>
+                    )}
                   </td>
                   {props.onSchemaSelect && (
                     <td>
@@ -84,6 +97,13 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
               Close
             </Button>
           </ModalFooter>
+        </ModalWithX>
+        <ModalWithX isOpen={!!schemaToUpdate} close={() => setSchemaToUpdate(undefined)} width={9}>
+          <CreateSchema
+            isUpdate={true}
+            initialSchemaState={schemaToUpdate}
+            onComplete={() => setSchemaToUpdate(undefined)}
+          ></CreateSchema>
         </ModalWithX>
       </>
     );

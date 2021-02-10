@@ -67,7 +67,7 @@ export const newSchemaAttribute = {
   "@description": "",
 };
 
-export const initialWorkingSchema: WorkingSchema = {
+export const baseWorkingSchema: WorkingSchema = {
   name: "",
   description: "",
   slug: "",
