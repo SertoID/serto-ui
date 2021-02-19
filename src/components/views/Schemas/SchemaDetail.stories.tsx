@@ -6,10 +6,12 @@ import { SchemaDetail } from "./SchemaDetail";
 import { ldContextPlusToSchemaInput } from "./utils";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
+import { SertoUiProvider } from "../../../context/SertoUiProvider";
+import { createMockApiRequest } from "../../../context/SertoUiContext";
 
 const DEFAULT_SCHEMA = "ContentPublishCredential";
 
-storiesOf("Schemas", module).add("SchemaDetail", () => {
+const SchemaDetailStory = () => {
   const [schemaKey, setSchemaKey] = React.useState<string>(DEFAULT_SCHEMA);
 
   let ldContextPlus: SchemaDataInput | undefined;
@@ -39,4 +41,19 @@ storiesOf("Schemas", module).add("SchemaDetail", () => {
       </Box>
     </IdentityThemeProvider>
   );
-});
+};
+
+storiesOf("Schemas", module)
+  .add("SchemaDetail", SchemaDetailStory)
+  .add("SchemaDetail (saveable)", () => {
+    return (
+      <SertoUiProvider
+        context={{
+          saveSchema: createMockApiRequest(),
+          unsaveSchema: createMockApiRequest(),
+        }}
+      >
+        <SchemaDetailStory />
+      </SertoUiProvider>
+    );
+  });

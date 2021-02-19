@@ -13,11 +13,14 @@ export interface SertoUiContextInterface {
   buildSchemaUrl(slug: string, type: "ld-context-plus" | "ld-context" | "json-schema", version?: string): string;
   createSchema(schema: SchemaDataInput): Promise<any>;
   updateSchema(schema: SchemaDataInput): Promise<any>;
+  saveSchema?(schemaSlug: string): Promise<any>;
+  unsaveSchema?(schemaSlug: string): Promise<any>;
   getSchemas(global?: boolean): Promise<SchemaDataResponse[]>;
   issueVc(body: any): Promise<any>;
 }
 
-const createMockApiRequest = (response?: any) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const createMockApiRequest = (response?: any): ((...args: any[]) => Promise<any>) => {
   return (async (...args: any[]) => {
     return new Promise((resolve) =>
       setTimeout(() => {
