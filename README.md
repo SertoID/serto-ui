@@ -75,6 +75,7 @@ If you wish to work on the Serto UI library directly, you can do so without anot
 
 ```bash
 git clone https://github.com/SertoID/serto-ui.git
+cd serto-ui
 yarn install
 yarn run install-peer-deps
 ```
