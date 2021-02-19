@@ -36,6 +36,8 @@ export interface SchemaDataResponse extends SchemaDataInput {
   updated: string;
   tenant: any;
   deleted?: string;
+  saves?: number;
+  saved?: boolean;
 }
 
 export const requiredSchemaProperties = [

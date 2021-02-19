@@ -8,6 +8,7 @@ import { typeOptions } from "./utils";
 import { Toggle } from "../../elements/Toggle/Toggle";
 import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson";
 import { DropDown } from "../../elements/DropDown/DropDown";
+import { SchemaSaves } from "./SchemaSaves";
 
 const MetadataText: React.FunctionComponent<any> = (props) => (
   <Text color={colors.silver} my={2} {...props}>
@@ -134,9 +135,10 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
 
   return (
     <>
-      <Box mb={3}>
-        <Toggle options={modes} onChange={setMode} width="100%" />
-      </Box>
+      <Flex mb={3} justifyContent="space-between">
+        <Toggle options={modes} onChange={setMode} width="50%" />
+        <SchemaSaves schema={schema} />
+      </Flex>
       {mode === "Preview" ? (
         <Box p={4} pb={3} border={3} borderRadius={1} fontFamily={fonts.sansSerif}>
           <H3 mt={0}>
