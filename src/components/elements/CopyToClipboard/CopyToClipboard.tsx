@@ -1,8 +1,8 @@
 import * as React from "react";
-import { ContentCopy, Check } from "@rimble/icons";
 import { Button } from "rimble-ui";
 import { colors } from "../../../themes";
 import { copyToClipboard } from "../../../utils";
+import { ContentCopy, Check } from "../Icons";
 
 export interface CopyToClipboardProps {
   text: string;

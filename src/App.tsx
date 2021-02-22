@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { SertoUiProvider } from "./context/SertoUiProvider";
 import { GlobalStyle } from "./components/layouts/Global/GlobalLayout";
 import { HomePage } from "./HomePage";
-import { Home, Send, People } from "@rimble/icons";
+import { Home, Send, People } from "./components/elements/Icons";
 
 export const App = (): JSX.Element => {
   const sertoUiContext = {

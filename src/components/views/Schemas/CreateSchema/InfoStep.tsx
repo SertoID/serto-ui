@@ -1,10 +1,10 @@
-import { Info } from "@rimble/icons";
 import slugify from "@sindresorhus/slugify";
 import * as React from "react";
 import { Box, Button, Checkbox, Field, Form, Input, Text, Tooltip, Flex, Flash } from "rimble-ui";
 import styled from "styled-components";
 import { colors, fonts } from "../../../../themes/";
 import { ModalContent, ModalHeader } from "../../../elements/Modals";
+import { Info } from "../../../elements/Icons";
 import { WorkingSchema } from "../types";
 
 const SchemaField = styled(Field)`
