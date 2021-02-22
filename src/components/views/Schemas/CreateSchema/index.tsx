@@ -1,10 +1,10 @@
-import { Check } from "@rimble/icons";
 import * as React from "react";
 import { Box, Button, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { LdContextPlus } from "vc-schema-tools";
 import { CompletedSchema, baseWorkingSchema, SchemaMetadata, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
+import { Check } from "../../../elements/Icons";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";

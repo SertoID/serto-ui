@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Box, Flex, Pill, Table, Text, Tooltip } from "rimble-ui";
-import { Info, Person, VerifiedUser } from "@rimble/icons";
 import { CredentialBorder, CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
 import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard";
 import { Expand } from "../../elements/Expand/Expand";
+import { Info, Person, VerifiedUser } from "../../elements/Icons";
 import { baseColors, colors, fonts } from "../../../themes";
 import { dateTimeFormat, ellipsis, hexEllipsis } from "../../../utils";
 import { VC } from "../../../types";

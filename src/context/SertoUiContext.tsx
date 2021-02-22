@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Home, Send } from "@rimble/icons";
+import { Home, Send } from "../components/elements/Icons";
 
 import { SchemaDataInput, SchemaDataResponse } from "../components/views/Schemas";
 import { NavItemProps } from "../components/layouts/Global/Nav";
