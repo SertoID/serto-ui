@@ -61,7 +61,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
             <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={0} height={4} mr={2}>
               {vcType}
             </Pill>
-            <VerifiedUser size="24px" color={colors.primary.disabled[1]} />
+            <VerifiedUser color={colors.primary.disabled[1]} />
           </Flex>
         </Box>
       </Flex>
