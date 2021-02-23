@@ -4,5 +4,6 @@ export * from "./DropDown";
 export * from "./DidSelect";
 export * from "./Expand";
 export * from "./HighlightedJson";
+export * from "./Icons";
 export * from "./Toggle";
 export * from "./Modals";
