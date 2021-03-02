@@ -174,7 +174,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
               .
             </Text>
           )}
-          <HighlightedJson json={json || JSON.stringify(schema, undefined, 2)} />
+          <HighlightedJson json={json || schema} />
         </>
       )}
     </>

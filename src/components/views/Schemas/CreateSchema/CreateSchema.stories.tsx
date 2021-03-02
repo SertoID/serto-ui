@@ -96,7 +96,7 @@ const createSchemaStory = (schemaToUpdate?: WorkingSchema) => () => {
         </Card>
         <Box flexGrow={1}>
           <Box mb={1}>debug:</Box>
-          <HighlightedJson json={JSON.stringify(typeof schema === "string" ? JSON.parse(schema) : schema, null, 2)} />
+          <HighlightedJson json={schema} />
         </Box>
       </Flex>
     </IdentityThemeProvider>
