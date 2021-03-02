@@ -9,7 +9,7 @@
   "types": "dist/serto-ui.d.ts",
   "scripts": {
     "build": "npm run clean && tsc --noEmit false --module CommonJS",
-    "watch": "tsc -w --noEmit false",
+    "watch": "tsc -w --noEmit false --module CommonJS",
     "clean": "rimraf dist/",
     "test": "react-scripts test",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
