@@ -1646,6 +1646,10 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
+"@rimble/icons@ConsenSysMesh/rimble-icons":
+  version "1.2.0"
+  resolved "https://codeload.github.com/ConsenSysMesh/rimble-icons/tar.gz/faa8c0842e1c42f46b9e355cb65084fdf0ec1074"
+
 "@rimble/icons@^1.0.2":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rimble/icons/-/icons-1.1.0.tgz#e69bdff01190c304af95fae578a5d1b90f34e14d"
