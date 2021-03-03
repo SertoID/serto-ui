@@ -6,7 +6,13 @@ export interface CredentialCheckProps {
 
 export const CredentialCheck: React.FunctionComponent<CredentialCheckProps> = (props) => {
   return (
-    <svg width={props.size || "20"} height={props.size || "20"} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width={props.size || "20"}
+      height={props.size || "20"}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M8.81215 1.57442C9.57272 1.25938 10.4273 1.25938 11.1878 1.57442L15.1179 3.20228C15.8784 3.51731 16.4827 4.12158 16.7977 4.88215L18.4256 8.81215C18.7406 9.57272 18.7406 10.4273 18.4256 11.1878L16.7977 15.1179C16.4827 15.8784 15.8784 16.4827 15.1179 16.7977L11.1878 18.4256C10.4273 18.7406 9.57272 18.7406 8.81215 18.4256L4.88215 16.7977C4.12158 16.4827 3.51731 15.8784 3.20228 15.1179L1.57442 11.1878C1.25938 10.4273 1.25938 9.57272 1.57442 8.81215L3.20228 4.88215C3.51731 4.12158 4.12158 3.51731 4.88215 3.20228L8.81215 1.57442Z"
         stroke="#93DFC0"
