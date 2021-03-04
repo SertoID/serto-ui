@@ -53,7 +53,7 @@ export const HighlightedJson: React.FunctionComponent<HighlightedJsonProps> = (p
   } else {
     jsonString = JSON.stringify(props.json, null, 2);
   }
-  const jsonHtml = Prism.highlight(jsonString, Prism.languages.json, "json");
+  const jsonHtml = jsonString && Prism.highlight(jsonString, Prism.languages.json, "json");
   return (
     <PrismHighlightedCodeWrap style={props.style}>
       <pre>

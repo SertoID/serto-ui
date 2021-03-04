@@ -19,9 +19,10 @@ export interface ToggleProps {
   onChange(selected: string): void;
   style?: any;
   width?: string;
+  defaultSelected?: string;
 }
 export const Toggle: React.FunctionComponent<ToggleProps> = (props) => {
-  const [selected, setSelected] = React.useState(props.options[0]);
+  const [selected, setSelected] = React.useState(props.defaultSelected || props.options[0]);
   function onChange(selected: string) {
     props.onChange(selected);
     setSelected(selected);

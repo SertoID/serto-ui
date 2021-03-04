@@ -98,7 +98,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
             </Button>
           </ModalFooter>
         </ModalWithX>
-        <ModalWithX isOpen={!!schemaToUpdate} close={() => setSchemaToUpdate(undefined)} width={9}>
+        <ModalWithX isOpen={!!schemaToUpdate} close={() => setSchemaToUpdate(undefined)} minWidth={9} maxWidth={11}>
           <CreateSchema
             isUpdate={true}
             initialSchemaState={schemaToUpdate}

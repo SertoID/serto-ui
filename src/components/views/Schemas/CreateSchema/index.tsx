@@ -1,8 +1,7 @@
 import * as React from "react";
 import { Box, Button, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
-import { LdContextPlus } from "vc-schema-tools";
-import { CompletedSchema, baseWorkingSchema, SchemaMetadata, WorkingSchema } from "../types";
+import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
 import { Check } from "../../../elements/Icons";
 import { AttributesStep } from "./AttributesStep";
@@ -21,7 +20,7 @@ export interface CreateSchemaProps {
   onFinalStep?(): void;
   onComplete?(): void;
   onSchemaUpdate?(schema: WorkingSchema): void;
-  onSchemaCreated?(schema: LdContextPlus<SchemaMetadata> | string): void;
+  onSchemaCreated?(): void;
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
@@ -40,6 +39,16 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       setSchema(baseWorkingSchema);
     }
   }, [initialSchemaState]);
+
+  const builtSchema: SchemaDataInput = React.useMemo(() => {
+    // @TODO/tobek debounce this
+    try {
+      return createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl);
+    } catch (err) {
+      console.warn("Failed to build schema. Schema:", schema, "Error:", err);
+      return builtSchema;
+    }
+  }, [schema, context.buildSchemaUrl]);
 
   React.useEffect(() => {
     onSchemaUpdate?.(schema);
@@ -76,13 +85,13 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   }
 
   async function publishSchema() {
-    const schemaInput = createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl);
-    onSchemaCreated?.(schemaInput.ldContextPlus);
+    onSchemaUpdate?.(schema);
     if (isUpdate) {
-      await context.updateSchema(schemaInput);
+      await context.updateSchema(builtSchema);
     } else {
-      await context.createSchema(schemaInput);
+      await context.createSchema(builtSchema);
     }
+    onSchemaCreated?.();
     mutate(["/v1/schemas", false]);
     if (schema.discoverable) {
       mutate(["/v1/schemas", true]);
@@ -123,11 +132,12 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           isUpdate={isUpdate}
           initialSchemaState={initialSchemaState}
           schema={schema}
+          builtSchema={builtSchema}
           updateSchema={updateSchema}
           onComplete={goForward}
         />
       ) : currentStep === "ATTRIBUTES" ? (
-        <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
+        <AttributesStep schema={schema} builtSchema={builtSchema} updateSchema={updateSchema} onComplete={goForward} />
       ) : (
         <ConfirmStep isUpdate={isUpdate} schema={schema} onComplete={goForward} loading={loading} />
       )}
