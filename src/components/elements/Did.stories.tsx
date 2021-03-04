@@ -2,6 +2,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { Identifier } from "../../types";
 import { DidSelect } from "./DidSelect";
+import { DidView } from "./DidView";
 
 const identifiers: Identifier[] = [
   {
@@ -36,16 +37,16 @@ const identifiers: Identifier[] = [
   },
 ];
 
-storiesOf("DID Select", module)
-  .add("Default", () => {
+storiesOf("DID", module)
+  .add("DID Select: Default", () => {
     return <DidSelect identifiers={identifiers} onChange={(value) => console.log("changed to", value)} />;
   })
-  .add("Allow custom DID", () => {
+  .add("DID Select: Allow custom DID", () => {
     return (
       <DidSelect identifiers={identifiers} onChange={(value) => console.log("changed to", value)} allowCustom={true} />
     );
   })
-  .add("Allow custom w/ default selected DID", () => {
+  .add("DID Select: Allow custom w/ default selected DID", () => {
     return (
       <DidSelect
         identifiers={identifiers}
@@ -54,4 +55,7 @@ storiesOf("DID Select", module)
         allowCustom={true}
       />
     );
+  })
+  .add("DID View", () => {
+    return <DidView did="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" icon copy />;
   });

@@ -6,6 +6,8 @@ import {
   Check,
   Code,
   ContentCopy,
+  CredentialCheck,
+  EthrDidLogo,
   Home,
   Info,
   KeyboardArrowDown,
@@ -14,7 +16,10 @@ import {
   Person,
   SelectAll,
   Send,
+  SertoLogo,
+  SertoSearchLogo,
   Settings,
+  SovrinDidLogo,
   VerifiedUser,
 } from "./";
 
@@ -33,6 +38,12 @@ storiesOf("Icons", module)
   })
   .add("ContentCopy", () => {
     return <ContentCopy />;
+  })
+  .add("CredentialCheck", () => {
+    return <CredentialCheck />;
+  })
+  .add("EthrDidLogo", () => {
+    return <EthrDidLogo />;
   })
   .add("Home", () => {
     return <Home />;
@@ -58,8 +69,17 @@ storiesOf("Icons", module)
   .add("Send", () => {
     return <Send />;
   })
+  .add("SertoLogo", () => {
+    return <SertoLogo />;
+  })
+  .add("SertoSearchLogo", () => {
+    return <SertoSearchLogo />;
+  })
   .add("Settings", () => {
     return <Settings />;
+  })
+  .add("SovrinDidLogo", () => {
+    return <SovrinDidLogo />;
   })
   .add("VerifiedUser", () => {
     return <VerifiedUser />;
