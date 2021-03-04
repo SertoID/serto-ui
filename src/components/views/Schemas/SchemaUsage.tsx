@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box, Text, Button } from "rimble-ui";
-import { Send } from "@rimble/icons";
+import { Send, OpenInNew } from "@rimble/icons";
 import { SchemaDataResponse, SchemaDataInput } from "./types";
 import { H5 } from "../../layouts/LayoutComponents";
 import { fonts } from "../../../themes";
@@ -39,18 +39,31 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
   };
 
   return (
-    <Box p={3} border={1} borderRadius={1} fontFamily={fonts.sansSerif} style={props.style}>
+    <Box px={3} fontFamily={fonts.sansSerif} style={props.style}>
       <H5 mt={2} my={3}>
-        Schema Formats
+        Schema URLs
       </H5>
+
       <Text mt={3} mb={2}>
         JSON-LD Context
+        {schema.uris?.jsonLdContext && (
+          <a href={schema.uris.jsonLdContext} target="_blank">
+            <OpenInNew size="15px" ml={1} p={1} mb="-6px" />
+          </a>
+        )}
       </Text>
       <CopyableTruncatableText text={schema.uris?.jsonLdContext || "[none]"} />
+
       <Text mt={3} mb={2}>
         JSON Schema
+        {schema.uris?.jsonSchema && (
+          <a href={schema.uris.jsonSchema} target="_blank">
+            <OpenInNew size="15px" ml={1} p={1} mb="-6px" />
+          </a>
+        )}
       </Text>
       <CopyableTruncatableText text={schema.uris?.jsonSchema || "[none]"} />
+
       <Expand expandButtonText="Format info" contractButtonText="Hide format info">
         <Text my={3}>@TODO/tobek copy TBD</Text>
         <Text my={3}>
@@ -91,7 +104,7 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
       </Expand>
 
       <H5 mb={3}>Issue VC</H5>
-      {/*@TODO/tobek*/}
+      {/* @TODO/tobek Link this to Serto Agent eventually. */}
       <Button.Outline size="small" onClick={() => alert("what do?")}>
         <Send size="15px" mr={2} />
         Issue VC with Serto Agent

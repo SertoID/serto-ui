@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Box, Flex, Text, Flash } from "rimble-ui";
+import { Box, Button, Flex, Text, Flash } from "rimble-ui";
+import { Send } from "@rimble/icons";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "vc-schema-tools";
 import { H3 } from "../../layouts";
 import { baseColors, colors, fonts } from "../../../themes";
@@ -9,6 +10,8 @@ import { Toggle } from "../../elements/Toggle/Toggle";
 import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson";
 import { DropDown } from "../../elements/DropDown/DropDown";
 import { SchemaSaves } from "./SchemaSaves";
+import { ModalWithX } from "../../elements/Modals";
+import { SchemaUsage } from "./SchemaUsage";
 
 const MetadataText: React.FunctionComponent<any> = (props) => (
   <Text color={colors.silver} my={2} {...props}>
@@ -80,6 +83,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
   const modes: [string, string] = ["Preview", "View JSON"];
   const [mode, setMode] = React.useState(modes[0]);
   const [error, setError] = React.useState("");
+  const [isUseModalOpen, setIsUseModalOpen] = React.useState(false);
 
   const schemaInstance = React.useMemo(() => {
     try {
@@ -136,8 +140,13 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
   return (
     <>
       <Flex mb={3} justifyContent="space-between">
-        <Toggle options={modes} onChange={setMode} width="50%" />
-        <SchemaSaves schema={schema} />
+        <Toggle options={modes} onChange={setMode} />
+        <Box>
+          <SchemaSaves schema={schema} />
+          <Button size="small" ml={3} onClick={() => setIsUseModalOpen(true)}>
+            <Send size="15px" mr={2} /> Issue VC
+          </Button>
+        </Box>
       </Flex>
       {mode === "Preview" ? (
         <Box p={4} pb={3} border={3} borderRadius={1} fontFamily={fonts.sansSerif}>
@@ -177,6 +186,9 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           <HighlightedJson json={json || schema} />
         </>
       )}
+      <ModalWithX isOpen={isUseModalOpen} close={() => setIsUseModalOpen(false)} width={9}>
+        <SchemaUsage schema={schema} />
+      </ModalWithX>
     </>
   );
 };
