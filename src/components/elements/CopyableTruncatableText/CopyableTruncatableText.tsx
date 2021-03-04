@@ -1,23 +1,13 @@
 import * as React from "react";
-import styled from "styled-components";
-import { Box, Flex } from "rimble-ui";
+import { Box, Flex, Text } from "rimble-ui";
 import { CopyToClipboard } from "../CopyToClipboard";
 import { baseColors } from "../../../themes";
 
-const TruncatableText = styled.input`
-  border: none;
-  font-size: 16px;
-  line-height: 26px;
-  outline: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-`;
-
 export interface CopyableTruncatableTextProps {
   text: string;
+  fontSize?: string | number;
+  fontWeight?: string | number;
   size?: string;
-  textButton?: boolean;
 }
 
 export const CopyableTruncatableText: React.FunctionComponent<CopyableTruncatableTextProps> = (props) => {
@@ -25,16 +15,26 @@ export const CopyableTruncatableText: React.FunctionComponent<CopyableTruncatabl
     <Flex
       alignItems="center"
       bg={baseColors.white}
-      border={1}
+      border={2}
       borderRadius={1}
-      height="48px"
-      p={1}
       justifyContent="space-between"
+      pl={3}
+      pr={2}
+      py={2}
       width="100%"
     >
-      <TruncatableText type="text" value={props.text} readOnly />
-      <Box style={{ position: "relative", right: "2px" }}>
-        <CopyToClipboard {...props} />
+      <Text
+        color={baseColors.black}
+        fontSize={props.fontSize || 2}
+        fontWeight={props.fontWeight || 3}
+        lineHeight="solid"
+        style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+        width="100%"
+      >
+        {props.text}
+      </Text>
+      <Box bg={baseColors.white} pl={2}>
+        <CopyToClipboard size={props.size || "24px"} text={props.text} />
       </Box>
     </Flex>
   );
