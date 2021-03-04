@@ -5,17 +5,22 @@ import { colors } from "../../../themes";
 import { copyToClipboard } from "../../../utils";
 import { ContentCopy, Check } from "../Icons";
 
-export const ContentCopyStyled = styled.span`
+interface ContentCopyStyledProps {
+  hoverColor?: string;
+}
+
+const ContentCopyStyled = styled.span`
   cursor: pointer;
   &:hover svg {
+    fill: ${(props: ContentCopyStyledProps) => (props.hoverColor ? props.hoverColor : colors.primary.base)};
     transition: 250ms ease;
-    fill: #5952ff;
   }
 `;
 
 export interface CopyToClipboardProps {
   text: string;
   color?: string;
+  hoverColor?: string;
   hoverTitle?: string;
   size?: string;
   textButton?: boolean;
@@ -48,13 +53,12 @@ export const CopyToClipboard: React.FunctionComponent<CopyToClipboardProps> = (p
     );
   }
   return (
-    <ContentCopyStyled title={props.hoverTitle}>
-      <ContentCopy
-        color={props.color}
-        onClick={() => setCopied(copyToClipboard(props.text))}
-        size={props.size}
-        style={{ cursor: "pointer" }}
-      />
+    <ContentCopyStyled
+      hoverColor={props.hoverColor}
+      onClick={() => setCopied(copyToClipboard(props.text))}
+      title={props.hoverTitle}
+    >
+      <ContentCopy color={props.color} size={props.size} />
     </ContentCopyStyled>
   );
 };
