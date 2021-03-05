@@ -56,7 +56,7 @@ export const H6: React.FunctionComponent<HeadingProps> = (props) => {
 };
 
 export interface HeaderProps {
-  heading: string;
+  heading: string | JSX.Element;
 }
 
 export const Header: React.FunctionComponent<HeaderProps> = (props) => {

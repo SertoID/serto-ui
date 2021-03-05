@@ -21,7 +21,7 @@ export interface DropDownProps {
   optionsTextProps?: { [key: string]: any };
   disabled?: boolean;
   style?: { [key: string]: any };
-  onChange(value: string): void;
+  onChange(value: string, index: number): void;
 }
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
@@ -37,7 +37,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const onOptionClicked = (option: DropDownOption) => () => {
     setSelectedOption(option);
     setIsOpen(false);
-    props.onChange(option.value);
+    props.onChange(option.value, props.options.indexOf(option));
   };
 
   const onClickOutside = (e: any) => {

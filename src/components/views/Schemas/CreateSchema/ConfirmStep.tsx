@@ -21,7 +21,7 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
     <>
       <ModalHeader>Review Schema</ModalHeader>
       <ModalContent>
-        <SchemaDetail schema={createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl)} />
+        <SchemaDetail schema={createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl)} noTools={true} />
         <Button mt={3} width="100%" onClick={props.onComplete} disabled={props.loading}>
           {props.loading ? <Loader color="white" /> : props.isUpdate ? "Update" : "Publish"}
         </Button>

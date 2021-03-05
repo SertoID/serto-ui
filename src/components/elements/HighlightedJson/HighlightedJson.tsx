@@ -41,12 +41,19 @@ export const PrismHighlightedCodeWrap = styled(Card)`
 `;
 
 export interface HighlightedJsonProps {
-  json: string;
+  json: string | { [key: string]: any };
+  alreadyPrettified?: boolean;
   style?: any;
 }
 
 export const HighlightedJson: React.FunctionComponent<HighlightedJsonProps> = (props) => {
-  const jsonHtml = Prism.highlight(props.json, Prism.languages.json, "json");
+  let jsonString;
+  if (typeof props.json === "string") {
+    jsonString = props.alreadyPrettified ? props.json : JSON.stringify(JSON.parse(props.json), null, 2);
+  } else {
+    jsonString = JSON.stringify(props.json, null, 2);
+  }
+  const jsonHtml = jsonString && Prism.highlight(jsonString, Prism.languages.json, "json");
   return (
     <PrismHighlightedCodeWrap style={props.style}>
       <pre>
