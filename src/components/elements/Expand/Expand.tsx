@@ -2,7 +2,11 @@ import * as React from "react";
 import { Box, Pill, Text } from "rimble-ui";
 import { baseColors } from "../../../themes";
 
-export const Expand: React.FunctionComponent = (props) => {
+export interface ExpandProps {
+  expandButtonText?: string;
+  contractButtonText?: string;
+}
+export const Expand: React.FunctionComponent<ExpandProps> = (props) => {
   const [isOpen, setOpen] = React.useState(false);
 
   return (
@@ -30,7 +34,7 @@ export const Expand: React.FunctionComponent = (props) => {
               textTransform: "uppercase",
             }}
           >
-            {isOpen ? "Less" : "More"}
+            {isOpen ? props.contractButtonText || "Less" : props.expandButtonText || "More"}
           </Text.span>
         </Pill>
       </button>

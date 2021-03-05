@@ -142,11 +142,11 @@ export const SchemaPlayground: React.FunctionComponent = () => {
       <Flex>
         <Section>
           <H5 my={2}>JSON-LD @context output</H5>
-          <HighlightedJson json={outputContext} />
+          <HighlightedJson json={outputContext} alreadyPrettified={true} />
         </Section>
         <Section>
           <H5 my={2}>JSON Schema output</H5>
-          <HighlightedJson json={outputJsonSchema} />
+          <HighlightedJson json={outputJsonSchema} alreadyPrettified={true} />
           {vcSchema?.jsonSchemaMessage && <Flash variant="warning">{vcSchema.jsonSchemaMessage}</Flash>}
         </Section>
       </Flex>

@@ -84,19 +84,16 @@ const createSchemaStory = (schemaToUpdate?: WorkingSchema) => () => {
   return (
     <IdentityThemeProvider>
       <Flex>
-        <Card width={9} mr={4} p={0} pb={3} pt="48px">
+        <Card maxWidth={11} mr={4} p={0} pb={3} pt="48px">
           <Flex flexDirection="column" minHeight="0" maxHeight="calc(95vh - 48px)">
-            <CreateSchema
-              isUpdate={!!schemaToUpdate}
-              initialSchemaState={schemaToUpdate}
-              onSchemaUpdate={setSchema}
-              onSchemaCreated={setSchema}
-            />
+            <CreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} onSchemaUpdate={setSchema} />
           </Flex>
         </Card>
         <Box flexGrow={1}>
-          <Box mb={1}>debug:</Box>
-          <HighlightedJson json={JSON.stringify(typeof schema === "string" ? JSON.parse(schema) : schema, null, 2)} />
+          <Box mb={1}>
+            debug <code>schema</code> prop:
+          </Box>
+          <HighlightedJson json={schema} />
         </Box>
       </Flex>
     </IdentityThemeProvider>

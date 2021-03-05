@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Box, Flex, Text, Flash } from "rimble-ui";
+import { Box, Button, Flex, Text, Flash } from "rimble-ui";
+import { Send } from "@rimble/icons";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "vc-schema-tools";
 import { H3 } from "../../layouts";
 import { baseColors, colors, fonts } from "../../../themes";
@@ -9,6 +10,8 @@ import { Toggle } from "../../elements/Toggle/Toggle";
 import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson";
 import { DropDown } from "../../elements/DropDown/DropDown";
 import { SchemaSaves } from "./SchemaSaves";
+import { ModalWithX } from "../../elements/Modals";
+import { SchemaUsage } from "./SchemaUsage";
 
 const MetadataText: React.FunctionComponent<any> = (props) => (
   <Text color={colors.silver} my={2} {...props}>
@@ -73,13 +76,17 @@ const renderProperty = (
 
 export interface SchemaDetailProps {
   schema: SchemaDataInput | SchemaDataResponse;
+  initialView?: "Preview" | "View JSON";
+  /** Whether to show "save" and "issue VC" functionality. */
+  noTools?: boolean;
 }
 
 export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) => {
-  const { schema } = props;
+  const { schema, initialView, noTools } = props;
   const modes: [string, string] = ["Preview", "View JSON"];
-  const [mode, setMode] = React.useState(modes[0]);
+  const [mode, setMode] = React.useState(initialView || modes[0]);
   const [error, setError] = React.useState("");
+  const [isUseModalOpen, setIsUseModalOpen] = React.useState(false);
 
   const schemaInstance = React.useMemo(() => {
     try {
@@ -91,7 +98,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
     }
   }, [schema]);
 
-  const jsonTypes = React.useMemo(() => {
+  const jsons = React.useMemo(() => {
     if (!schemaInstance) {
       return [];
     }
@@ -110,7 +117,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
       },
     ];
   }, [schemaInstance]);
-  const [json, setJson] = React.useState(jsonTypes[0]?.value);
+  const [jsonIndex, setJsonIndex] = React.useState(0);
 
   let outerContext: LdContextPlusRootNode | undefined;
   let innerContext:
@@ -136,8 +143,15 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
   return (
     <>
       <Flex mb={3} justifyContent="space-between">
-        <Toggle options={modes} onChange={setMode} width="50%" />
-        <SchemaSaves schema={schema} />
+        <Toggle options={modes} onChange={setMode} defaultSelected={mode} width={noTools ? "100%" : undefined} />
+        {!noTools && (
+          <Box>
+            <SchemaSaves schema={schema} />
+            <Button size="small" ml={3} onClick={() => setIsUseModalOpen(true)}>
+              <Send size="15px" mr={2} /> Issue VC
+            </Button>
+          </Box>
+        )}
       </Flex>
       {mode === "Preview" ? (
         <Box p={4} pb={3} border={3} borderRadius={1} fontFamily={fonts.sansSerif}>
@@ -163,9 +177,14 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
         <>
           View as
           <Box ml={2} width={8} display="inline-block">
-            <DropDown onChange={setJson} options={jsonTypes} />
+            <DropDown
+              onChange={(value, index) => {
+                setJsonIndex(index);
+              }}
+              options={jsons}
+            />
           </Box>
-          {json === jsonTypes[1]?.value && (
+          {jsonIndex === 1 && (
             <Text mb={3}>
               To be used on top of{" "}
               <a href="https://www.w3.org/2018/credentials/v1" rel="noopener noreferrer" target="_blank">
@@ -174,9 +193,12 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
               .
             </Text>
           )}
-          <HighlightedJson json={json || JSON.stringify(schema, undefined, 2)} />
+          <HighlightedJson json={jsons[jsonIndex].value || schema} />
         </>
       )}
+      <ModalWithX isOpen={isUseModalOpen} close={() => setIsUseModalOpen(false)} width={9}>
+        <SchemaUsage schema={schema} />
+      </ModalWithX>
     </>
   );
 };

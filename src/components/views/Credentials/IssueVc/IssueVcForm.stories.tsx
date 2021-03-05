@@ -79,7 +79,7 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
         </div>
         <Box flexGrow={1}>
           <Box mb={1}>debug:</Box>
-          <HighlightedJson json={JSON.stringify(vcData, null, 2)} />
+          <HighlightedJson json={vcData} />
         </Box>
       </Flex>
     </IdentityThemeProvider>
