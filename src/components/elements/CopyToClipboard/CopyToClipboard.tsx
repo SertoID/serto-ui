@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Button, Flex } from "rimble-ui";
-import { colors } from "../../../themes";
+import { baseColors, colors } from "../../../themes";
 import { copyToClipboard } from "../../../utils";
 import { ContentCopy, Check } from "../Icons";
 
@@ -47,7 +47,12 @@ export const CopyToClipboard: React.FunctionComponent<CopyToClipboardProps> = (p
 
   if (props.textButton) {
     return (
-      <Button.Outline color={props.color} onClick={() => setCopied(copyToClipboard(props.text))} size="small">
+      <Button.Outline
+        color={props.color}
+        onClick={() => setCopied(copyToClipboard(props.text))}
+        size="small"
+        style={{ backgroundColor: baseColors.white }}
+      >
         <Flex alignItems="center" justifyCOntent="center">
           <ContentCopy size="16px" style={{ marginRight: "4px" }} />
           {props.textButtonTitle || "Copy"}
