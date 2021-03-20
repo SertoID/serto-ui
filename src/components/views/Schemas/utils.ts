@@ -39,7 +39,7 @@ typeOptions[NESTED_TYPE_KEY] = {
 
 export function createSchemaInput(
   schema: CompletedSchema,
-  buildSchemaUrl: SertoUiContextInterface["buildSchemaUrl"],
+  buildSchemaUrl: SertoUiContextInterface["schemasService"]["buildSchemaUrl"],
 ): SchemaDataInput {
   const schemaInstance = new VcSchema(createLdContextPlusSchema(schema, buildSchemaUrl));
   const schemaInput = { ...schema };
@@ -54,7 +54,7 @@ export function createSchemaInput(
 
 export function createLdContextPlusSchema(
   schema: CompletedSchema,
-  buildSchemaUrl: SertoUiContextInterface["buildSchemaUrl"],
+  buildSchemaUrl: SertoUiContextInterface["schemasService"]["buildSchemaUrl"],
 ): LdContextPlus<SchemaMetadata> {
   const schemaTypeName = convertToPascalCase(schema.name);
 

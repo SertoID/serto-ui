@@ -30,7 +30,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   const [error, setError] = React.useState("");
   const [schema, setSchema] = React.useState<WorkingSchema>(baseWorkingSchema);
 
-  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
+  const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
   React.useEffect(() => {
     if (initialSchemaState) {
@@ -43,12 +43,12 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   const builtSchema: SchemaDataInput = React.useMemo(() => {
     // @TODO/tobek debounce this
     try {
-      return createSchemaInput(schema as CompletedSchema, context.buildSchemaUrl);
+      return createSchemaInput(schema as CompletedSchema, schemasService.buildSchemaUrl);
     } catch (err) {
       console.warn("Failed to build schema. Schema:", schema, "Error:", err);
       return builtSchema;
     }
-  }, [schema, context.buildSchemaUrl]);
+  }, [schema, schemasService.buildSchemaUrl]);
 
   React.useEffect(() => {
     onSchemaUpdate?.(schema);
@@ -87,9 +87,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   async function publishSchema() {
     onSchemaUpdate?.(schema);
     if (isUpdate) {
-      await context.updateSchema(builtSchema);
+      await schemasService.updateSchema(builtSchema);
     } else {
-      await context.createSchema(builtSchema);
+      await schemasService.createSchema(builtSchema);
     }
     onSchemaCreated?.();
     mutate(["/v1/schemas", false]);

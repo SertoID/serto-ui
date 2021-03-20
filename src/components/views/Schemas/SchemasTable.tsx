@@ -21,10 +21,10 @@ export interface SchemasTableProps {
 export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) => {
   const [schemaToUpdate, setSchemaToUpdate] = React.useState<WorkingSchema | undefined>();
   const [viewedSchema, setViewedSchema] = React.useState<SchemaDataResponse | undefined>();
-  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
+  const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
   const { data, error, isValidating } = useSWR(["/v1/schemas", props.discover], () =>
-    context.getSchemas(props.discover),
+    schemasService.getSchemas(!props.discover),
   );
 
   const sortedData = React.useMemo(
@@ -126,8 +126,8 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
           <b style={{ display: "block", fontWeight: 600 }}>
             {props.discover ? "There are" : "You have"} no credential schemas yet.
           </b>
-          Please first <Link to={context.createSchemaUrl}>create a credential schema</Link> in order to coordinate
-          around verified data with your customers and partners.
+          Please first <Link to={schemasService.createSchemaPath}>create a credential schema</Link> in order to
+          coordinate around verified data with your customers and partners.
         </Text.p>
       )
     );
