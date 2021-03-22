@@ -16,6 +16,7 @@ import {
   Person,
   SelectAll,
   Send,
+  SertoAgentLogo,
   SertoLogo,
   SertoSearchLogo,
   Settings,
@@ -68,6 +69,9 @@ storiesOf("Icons", module)
   })
   .add("Send", () => {
     return <Send />;
+  })
+  .add("SertoAgentLogo", () => {
+    return <SertoAgentLogo />;
   })
   .add("SertoLogo", () => {
     return <SertoLogo />;

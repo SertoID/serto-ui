@@ -13,6 +13,7 @@ export * from "./People";
 export * from "./Person";
 export * from "./SelectAll";
 export * from "./Send";
+export * from "./SertoAgentLogo";
 export * from "./SertoLogo";
 export * from "./SertoSearchLogo";
 export * from "./Settings";
