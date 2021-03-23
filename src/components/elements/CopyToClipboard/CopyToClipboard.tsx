@@ -1,9 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
+import { ContentCopy, Check } from "@rimble/icons";
 import { Button, Flex } from "rimble-ui";
 import { baseColors, colors } from "../../../themes";
 import { copyToClipboard } from "../../../utils";
-import { ContentCopy, Check } from "../Icons";
 
 interface ContentCopyStyledProps {
   hoverColor?: string;

@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../../themes";
-import { KeyboardArrowDown, KeyboardArrowUp } from "../Icons";
 
 export const Option = styled(Box)`
   &:hover span {
