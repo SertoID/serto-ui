@@ -211,7 +211,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
             }}
           />
         ) : (
-          <SchemaUsage schema={schema} />
+          <SchemaUsage schema={schema} style={{ overflowY: "auto" }} />
         )}
       </ModalWithX>
     </>
