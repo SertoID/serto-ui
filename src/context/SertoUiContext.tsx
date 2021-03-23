@@ -3,12 +3,13 @@ import { Home, Send } from "@rimble/icons";
 
 import { SertoSchemasService, mockSertoSchemasService } from "../services/SertoSchemasService";
 import { NavItemProps } from "../components/layouts/Global/Nav";
-import { createMockApiRequest } from "../utils/helpers";
+import { Identifier } from "../types";
 
 export interface SertoUiContextInterface {
   navItems: NavItemProps[];
   schemasService: Omit<SertoSchemasService, "url" | "request" | "ensureAuthenticated">;
-  issueVc(body: any): Promise<any>;
+  userDids?: Identifier[];
+  issueVc?(body: any): Promise<any>;
 }
 
 export const defaultSertoUiContext: SertoUiContextInterface = {
@@ -17,7 +18,6 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Nowhere", url: "/nowhere", icon: Send },
   ],
   schemasService: mockSertoSchemasService,
-  issueVc: createMockApiRequest(),
 };
 
 export const SertoUiContext = React.createContext(defaultSertoUiContext);

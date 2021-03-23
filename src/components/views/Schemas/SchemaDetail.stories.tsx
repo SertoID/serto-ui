@@ -7,8 +7,22 @@ import { ldContextPlusToSchemaInput } from "./utils";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { SertoUiProvider } from "../../../context/SertoUiProvider";
+import { createMockApiRequest } from "../../../serto-ui";
+import { Identifier } from "../../../types";
 
 const DEFAULT_SCHEMA = "ContentPublishCredential";
+const IDENTIFIERS: Identifier[] = [
+  {
+    did: "did:ethr:rinkeby:0xcfa8829812f1b4fe09b27cacf7d36e4d1b5dce76",
+    provider: "did:ethr:rinkeby",
+    alias: "Admin",
+  },
+  {
+    did: "did:ethr:rinkeby:0x88298d36e4d1b5dce76cf9b27cacf7a12f1b4fe0",
+    provider: "did:ethr:rinkeby",
+    alias: "Another User",
+  },
+];
 
 const SchemaDetailStory = () => {
   const [schemaKey, setSchemaKey] = React.useState<string>(DEFAULT_SCHEMA);
@@ -51,6 +65,18 @@ storiesOf("Schemas", module)
           schemasService: {
             isAuthenticated: true,
           },
+        }}
+      >
+        <SchemaDetailStory />
+      </SertoUiProvider>
+    );
+  })
+  .add("SchemaDetail (VC issuable)", () => {
+    return (
+      <SertoUiProvider
+        context={{
+          userDids: IDENTIFIERS,
+          issueVc: createMockApiRequest(),
         }}
       >
         <SchemaDetailStory />
