@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { Check } from "@rimble/icons";
 import { Box, Button, Text } from "rimble-ui";
 import { Credential, CredentialViewTypes } from "../Credential";
 import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
-import { Check } from "../../../elements/Icons";
 import { SchemaDataResponse } from "../../Schemas";
 import { SchemasTable } from "../../Schemas/SchemasTable";
 import { H3, Tabs } from "../../../layouts";

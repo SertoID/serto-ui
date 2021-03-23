@@ -1,9 +1,9 @@
 import * as React from "react";
+import { Check } from "@rimble/icons";
 import { Box, Button, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
-import { Check } from "../../../elements/Icons";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
