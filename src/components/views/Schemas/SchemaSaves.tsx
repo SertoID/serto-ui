@@ -11,17 +11,16 @@ export const SchemaSaves: React.FunctionComponent<SchemaSavesProps> = (props) =>
   const { schema } = props;
   const [isSaved, setIsSaved] = React.useState(!!("saved" in schema && schema.saved));
   const [isLoading, setIsLoading] = React.useState(false);
-  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
-  const saveable = !!(context.saveSchema && context.unsaveSchema);
+  const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
-  if (!saveable) {
+  if (!schemasService.isAuthenticated) {
     return <></>;
   }
 
   async function onClick() {
     setIsLoading(true);
     try {
-      await (isSaved ? context.unsaveSchema?.(schema.slug) : context.saveSchema?.(schema.slug));
+      await schemasService.toggleSaveSchema?.(schema.slug);
       setIsSaved(!isSaved);
     } catch (err) {
       console.error("Failed to (un)save schema:", err);

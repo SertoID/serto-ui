@@ -71,3 +71,15 @@ export function getAllUrlSearchParam(name: string): string[] {
     return output;
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const createMockApiRequest = (response?: any): ((...args: any[]) => Promise<any>) => {
+  return (async (...args: any[]) => {
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        console.log("SertoUiContext mock API request resolving. Request args:", ...args);
+        resolve(response);
+      }, 500),
+    );
+  }) as any;
+};
