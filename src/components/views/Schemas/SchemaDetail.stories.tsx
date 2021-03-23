@@ -7,7 +7,6 @@ import { ldContextPlusToSchemaInput } from "./utils";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { SertoUiProvider } from "../../../context/SertoUiProvider";
-import { createMockApiRequest } from "../../../context/SertoUiContext";
 
 const DEFAULT_SCHEMA = "ContentPublishCredential";
 
@@ -49,8 +48,9 @@ storiesOf("Schemas", module)
     return (
       <SertoUiProvider
         context={{
-          saveSchema: createMockApiRequest(),
-          unsaveSchema: createMockApiRequest(),
+          schemasService: {
+            isAuthenticated: true,
+          },
         }}
       >
         <SchemaDetailStory />
