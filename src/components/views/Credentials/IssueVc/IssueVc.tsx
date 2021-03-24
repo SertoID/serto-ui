@@ -20,7 +20,7 @@ export interface IssueVcProps {
 export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   const [response, setResponse] = useState<any>();
   const [schema, setSchema] = useState<SchemaDataResponse | null | undefined>();
-  const [schemaTab, setSchemaTab] = useState("created");
+  const [schemaTab, setSchemaTab] = useState("discover");
 
   function goBack() {
     setSchema(undefined);

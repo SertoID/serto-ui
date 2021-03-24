@@ -10,7 +10,6 @@ export class SertoSchemasService {
   public createSchemaPath: string;
 
   constructor(url?: string, jwt?: string, createSchemaPath?: string) {
-    console.log("@TODO/tobek service constructor being called");
     this.url = url || config.DEFAULT_SCHEMA_API_URL;
     this.jwt = jwt;
     this.isAuthenticated = !!jwt;

@@ -12,6 +12,8 @@ import { DropDown } from "../../elements/DropDown/DropDown";
 import { SchemaSaves } from "./SchemaSaves";
 import { ModalWithX } from "../../elements/Modals";
 import { SchemaUsage } from "./SchemaUsage";
+import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
+import { IssueVcForm } from "../Credentials/IssueVc/IssueVcForm";
 
 const MetadataText: React.FunctionComponent<any> = (props) => (
   <Text color={colors.silver} my={2} {...props}>
@@ -87,6 +89,8 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
   const [mode, setMode] = React.useState(initialView || modes[0]);
   const [error, setError] = React.useState("");
   const [isUseModalOpen, setIsUseModalOpen] = React.useState(false);
+
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
   const schemaInstance = React.useMemo(() => {
     try {
@@ -193,11 +197,22 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
               .
             </Text>
           )}
-          <HighlightedJson json={jsons[jsonIndex].value || schema} />
+          <HighlightedJson json={jsons[jsonIndex]?.value || schema} />
         </>
       )}
       <ModalWithX isOpen={isUseModalOpen} close={() => setIsUseModalOpen(false)} width={9}>
-        <SchemaUsage schema={schema} />
+        {context.issueVc ? (
+          <IssueVcForm
+            schema={schema}
+            onSuccessResponse={() => {
+              // @TODO/tobek Implement success flow once we have designs.
+              alert("VC issued successfully.");
+              setIsUseModalOpen(false);
+            }}
+          />
+        ) : (
+          <SchemaUsage schema={schema} style={{ overflowY: "auto" }} />
+        )}
       </ModalWithX>
     </>
   );

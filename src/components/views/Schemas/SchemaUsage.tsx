@@ -16,16 +16,16 @@ export interface SchemaUsageProps {
 export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) => {
   const { schema } = props;
 
+  const ldContextPlus = JSON.parse(schema.ldContextPlus);
+  const uris = schema.uris || ldContextPlus?.["@context"]?.["@metadata"]?.uris;
+
   // @TODO/tobek Need a more elegant way to get root type. Probably VcSchema library should have a utility that creates an example VC that actually has all the fields filled in based on schema.
-  const rootType = JSON.parse(schema.ldContextPlus)?.["@context"]?.["@rootType"];
+  const rootType = ldContextPlus?.["@context"]?.["@rootType"];
   const exampleVc = {
-    "@context": [
-      "https://www.w3.org/2018/credentials/v1",
-      ...(schema.uris?.jsonLdContext ? [schema.uris.jsonLdContext] : []),
-    ],
-    ...(schema.uris?.jsonSchema && {
+    "@context": ["https://www.w3.org/2018/credentials/v1", ...(uris?.jsonLdContext ? [uris.jsonLdContext] : [])],
+    ...(uris?.jsonSchema && {
       credentialSchema: {
-        id: schema.uris.jsonSchema,
+        id: uris.jsonSchema,
         type: "JsonSchemaValidator2018",
       },
     }),
@@ -46,23 +46,23 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
 
       <Text mt={3} mb={2}>
         JSON-LD Context
-        {schema.uris?.jsonLdContext && (
-          <a href={schema.uris.jsonLdContext} target="_blank">
-            <OpenInNew size="15px" ml={1} p={1} mb="-6px" />
+        {uris?.jsonLdContext && (
+          <a href={uris.jsonLdContext} target="_blank">
+            <OpenInNew size="24px" ml={1} p={1} mb="-6px" />
           </a>
         )}
       </Text>
-      <CopyableTruncatableText text={schema.uris?.jsonLdContext || "[none]"} />
+      <CopyableTruncatableText text={uris?.jsonLdContext || "[none]"} />
 
       <Text mt={3} mb={2}>
         JSON Schema
-        {schema.uris?.jsonSchema && (
-          <a href={schema.uris.jsonSchema} target="_blank">
-            <OpenInNew size="15px" ml={1} p={1} mb="-6px" />
+        {uris?.jsonSchema && (
+          <a href={uris.jsonSchema} target="_blank">
+            <OpenInNew size="24px" ml={1} p={1} mb="-6px" />
           </a>
         )}
       </Text>
-      <CopyableTruncatableText text={schema.uris?.jsonSchema || "[none]"} />
+      <CopyableTruncatableText text={uris?.jsonSchema || "[none]"} />
 
       <Expand expandButtonText="Format info" contractButtonText="Hide format info">
         <Text my={3}>@TODO/tobek copy TBD</Text>

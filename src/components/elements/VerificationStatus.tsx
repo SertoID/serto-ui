@@ -1,8 +1,8 @@
 import React from "react";
 import { Flex, Text } from "rimble-ui";
-import { CredentialCheck } from "../elements";
+import { CredentialCheck } from "./Icons/CredentialCheck";
 import { H6 } from "../layouts";
-import { colors } from "../../themes";
+import { colors } from "../../themes/colors";
 
 export interface VerificationStatusProps {
   didConfig?: boolean;

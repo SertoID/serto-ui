@@ -7,18 +7,27 @@ import { Identifier } from "../../../../types";
 import { DidSelect } from "../../../elements/DidSelect";
 import { IssueVcFormInput } from "./IssueVcFormInput";
 import { SertoUiContext, SertoUiContextInterface } from "../../../../context/SertoUiContext";
-import { SchemaDataResponse } from "../../Schemas";
+import { SchemaDataInput } from "../../Schemas";
 
 export interface IssueVcFormProps {
-  schema: SchemaDataResponse | null;
-  identifiers: Identifier[];
+  schema: SchemaDataInput | null;
+  identifiers?: Identifier[];
   subjectIdentifier?: Identifier;
   onSuccessResponse(response: any): void;
   onVcDataChange?(vcData: any): void;
 }
 
 export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) => {
-  const { schema, identifiers, subjectIdentifier, onSuccessResponse, onVcDataChange } = props;
+  const { schema, subjectIdentifier, onSuccessResponse, onVcDataChange } = props;
+
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
+  let identifiers = props.identifiers || context.userDids;
+  if (!identifiers?.[0]) {
+    console.error(
+      "Could not get user DIDs: no `identifiers` prop supplied and no `userDids` property has been supplied to SertoUiContext via SertoUiProvider",
+    );
+    identifiers = [];
+  }
 
   const initialCred = {
     "@context": ["https://www.w3.org/2018/credentials/v1"],
@@ -43,8 +52,6 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [revocable, setRevocable] = useState<boolean>(true);
   const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
-  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
-
   const schemaInstance = React.useMemo(() => {
     if (schema) {
       try {
@@ -60,6 +67,17 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   React.useEffect(() => {
     onVcDataChange?.(vcData);
   }, [onVcDataChange, vcData]);
+
+  if (!context.issueVc) {
+    console.error(
+      "issueVc function not present in SertoUiContext. Make sure to supply this function to the context passed in to SertoUiProvider or else serto-ui library cannot issue a VC for you.",
+    );
+    return (
+      <Flash my={3} variant="danger">
+        Missing issue VC functionality
+      </Flash>
+    );
+  }
 
   async function issueVc(e: Event) {
     e.preventDefault();
@@ -109,7 +127,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
       // @TODO/tobek Actually validate VC according to schema instance
 
-      const vcResponse = await context.issueVc({
+      const vcResponse = await context.issueVc?.({
         credential,
         revocable,
         keepCopy,
@@ -168,7 +186,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                   name={key}
                   node={node}
                   value={vcData[key]}
-                  identifiers={identifiers}
+                  identifiers={identifiers || []}
                   defaultSubjectDid={key === "id" && node.format === "uri" ? subjectIdentifier?.did : undefined}
                   required={credSchema?.required?.indexOf(key) !== -1}
                   onChange={(value) => setVcData({ ...vcData, [key]: value })}

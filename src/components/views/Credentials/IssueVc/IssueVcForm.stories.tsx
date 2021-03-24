@@ -8,6 +8,8 @@ import { IssueVcForm } from "./IssueVcForm";
 import { HighlightedJson } from "../../../elements/HighlightedJson/HighlightedJson";
 import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
 import { Identifier } from "../../../../types";
+import { SertoUiProvider } from "../../../../context/SertoUiProvider";
+import { createMockApiRequest } from "../../../../utils/helpers";
 
 const DEFAULT_SCHEMA = "TestCredential";
 
@@ -45,43 +47,49 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
 
   return (
     <IdentityThemeProvider>
-      <Flex>
-        <div>
-          <Box mb={3}>
-            Schema:{" "}
-            <select
-              value={schemaKey}
-              onChange={(event: any) => {
-                setSchemaKey(event.target.value);
-                setVcData({});
-                setError("");
-              }}
-            >
-              <option value="">[Raw JSON input]</option>
-              {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
-                <option key={key} value={key}>
-                  {key}
-                </option>
-              ))}
-            </select>
-          </Box>
+      <SertoUiProvider
+        context={{
+          issueVc: createMockApiRequest(),
+        }}
+      >
+        <Flex>
+          <div>
+            <Box mb={3}>
+              Schema:{" "}
+              <select
+                value={schemaKey}
+                onChange={(event: any) => {
+                  setSchemaKey(event.target.value);
+                  setVcData({});
+                  setError("");
+                }}
+              >
+                <option value="">[Raw JSON input]</option>
+                {Object.keys(EXAMPLE_SCHEMAS).map((key) => (
+                  <option key={key} value={key}>
+                    {key}
+                  </option>
+                ))}
+              </select>
+            </Box>
 
-          <Box width={10}>
-            {error && <Flash variant="danger">{error}</Flash>}
-            <IssueVcForm
-              key={schemaKey}
-              schema={ldContextPlus as SchemaDataResponse}
-              identifiers={IDENTIFIERS}
-              onSuccessResponse={() => {}}
-              onVcDataChange={setVcData}
-            />
+            <Box width={10}>
+              {error && <Flash variant="danger">{error}</Flash>}
+              <IssueVcForm
+                key={schemaKey}
+                schema={ldContextPlus as SchemaDataResponse}
+                identifiers={IDENTIFIERS}
+                onSuccessResponse={() => {}}
+                onVcDataChange={setVcData}
+              />
+            </Box>
+          </div>
+          <Box flexGrow={1}>
+            <Box mb={1}>debug:</Box>
+            <HighlightedJson json={vcData} />
           </Box>
-        </div>
-        <Box flexGrow={1}>
-          <Box mb={1}>debug:</Box>
-          <HighlightedJson json={vcData} />
-        </Box>
-      </Flex>
+        </Flex>
+      </SertoUiProvider>
     </IdentityThemeProvider>
   );
 });
