@@ -77,8 +77,8 @@ jobs:
           key: node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Running tests
-           command: yarn test
-          command: echo "No tests yet"
+          command: yarn test-ci
+          
       - save_cache:
           name: Save yarn cache
           key: node-modules-{{ checksum "yarn.lock" }}

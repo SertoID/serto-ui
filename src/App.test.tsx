@@ -3,7 +3,7 @@ import { App } from "./App";
 import { render, waitFor, screen } from '@testing-library/react'
 
 it("renders without crashing", async () => {
-  //const div = document.createElement("div");
+  
  render(<App />);
  await waitFor(() => screen.getByRole('heading'));
  const Home = screen.getByText('Home');
