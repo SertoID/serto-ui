@@ -77,17 +77,17 @@ jobs:
           key: node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Running tests
-          # command: yarn test
+           command: yarn test
           command: echo "No tests yet"
       - save_cache:
           name: Save yarn cache
           key: node-modules-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-      # - persist_to_workspace:
-      #     root: ./
-      #     paths:
-      #       - coverage
+      - persist_to_workspace:
+           root: ./
+           paths:
+             - coverage
 
   prettier:
     <<: *defaults
@@ -129,7 +129,7 @@ jobs:
           key: node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Running code coverage
-          command: echo "No codecov yet"
+          command: yarn codecov
       - restore_cache:
           name: Restore yarn cache
           key: node-modules-{{ checksum "yarn.lock" }}
