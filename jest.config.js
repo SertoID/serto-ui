@@ -1,7 +1,3 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
-
-// eslint-disable-next-line node/exports-style
 module.exports = {
   clearMocks: true,
   collectCoverage: true,
@@ -19,8 +15,6 @@ module.exports = {
     'tsx',
     'node'
   ],
-
- 
   testEnvironment: 'node',
 
   // The glob patterns Jest uses to detect test files

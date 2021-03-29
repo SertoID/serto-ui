@@ -17,7 +17,7 @@
     "noFallthroughCasesInSwitch": true,
     "noEmit": true,
     "sourceMap": true,
-    "jsx": "react-jsx"
+    "jsx": "react"
   },
   "include": ["src"]
 }
