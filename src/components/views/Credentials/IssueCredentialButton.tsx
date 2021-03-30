@@ -7,6 +7,7 @@ import { Identifier } from "../../../types";
 export interface IssueCredentialButtonProps {
   issuerIdentifiers: Identifier[];
   subjectIdentifier?: Identifier;
+  onComplete?(): void;
 }
 
 export const IssueCredentialButton: React.FunctionComponent<IssueCredentialButtonProps> = (props) => {
@@ -21,7 +22,10 @@ export const IssueCredentialButton: React.FunctionComponent<IssueCredentialButto
         <IssueVc
           subjectIdentifier={props.subjectIdentifier}
           identifiers={props.issuerIdentifiers}
-          onComplete={() => setIsIssueModalOpen(false)}
+          onComplete={() => {
+            setIsIssueModalOpen(false);
+            props.onComplete && props.onComplete();
+          }}
         />
       </ModalWithX>
     </>
