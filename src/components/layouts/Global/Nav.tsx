@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link, generatePath } from "react-router-dom";
 import { Box, Flex, Text } from "rimble-ui";
+import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 import { baseColors, colors } from "../../../themes";
 
 const NavItemStyled = styled.div`
@@ -55,11 +56,13 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
 
 export interface NavProps {
   currentUrl: string;
-  navItems: NavItemProps[];
+  navItems?: NavItemProps[];
 }
 
 export const Nav: React.FunctionComponent<NavProps> = (props) => {
-  const { navItems, currentUrl } = props;
+  const { currentUrl } = props;
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
+  const navItems = props.navItems || context.navItems;
   return (
     <>
       {navItems.map((navItemProps) => (
