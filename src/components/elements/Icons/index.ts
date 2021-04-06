@@ -15,6 +15,7 @@ export * from "./SelectAll";
 export * from "./Send";
 export * from "./SertoAgentLogo";
 export * from "./SertoLogo";
+export * from "./SertoSchemasLogo";
 export * from "./SertoSearchLogo";
 export * from "./Settings";
 export * from "./SovrinDidLogo";

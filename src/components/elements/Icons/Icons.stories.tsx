@@ -18,6 +18,7 @@ import {
   Send,
   SertoAgentLogo,
   SertoLogo,
+  SertoSchemasLogo,
   SertoSearchLogo,
   Settings,
   SovrinDidLogo,
@@ -75,6 +76,9 @@ storiesOf("Icons", module)
   })
   .add("SertoLogo", () => {
     return <SertoLogo />;
+  })
+  .add("SertoSchemasLogo", () => {
+    return <SertoSchemasLogo />;
   })
   .add("SertoSearchLogo", () => {
     return <SertoSearchLogo />;
