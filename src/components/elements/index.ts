@@ -8,6 +8,7 @@ export * from "./Expand";
 export * from "./HighlightedJson";
 export * from "./Icons";
 export * from "./Modals";
+export * from "./Popup";
 export * from "./SearchBox";
 export * from "./Toggle";
 export * from "./VerificationStatus";
