@@ -12,7 +12,7 @@ export interface SchemaCardProps {
 export const SchemaCard: React.FunctionComponent<SchemaCardProps> = (props) => {
   const { schema } = props;
   return (
-    <Box p={4} pb={3} border={1} borderRadius={1} fontFamily={fonts.sansSerif} style={props.style}>
+    <Box p={4} pb={3} border={1} borderRadius={2} fontFamily={fonts.sansSerif} style={props.style}>
       <H3 mt={0}>
         {schema.icon} {schema.name}
       </H3>
