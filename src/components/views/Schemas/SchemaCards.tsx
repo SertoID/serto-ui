@@ -4,12 +4,14 @@ import { Box, Flash, Flex, Loader, Text } from "rimble-ui";
 import useSWR from "swr";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 import { SchemaCard } from "./SchemaCard";
+import { SchemaDataResponse } from "./types";
 
 export interface SchemaCardsProps {
   filter?: "ALL" | "CREATED" | "SAVED";
   noSchemasElement?: JSX.Element;
   firstCard?: JSX.Element;
   maxLength?: number;
+  onSchemaClick?(schema: SchemaDataResponse): void;
 }
 
 export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) => {
@@ -63,7 +65,12 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
           .concat(schemas)
           .slice(0, props.maxLength || undefined)
           .map((schema, i) => (
-            <SchemaCard schema={schema} key={i} style={{ width: "32%", minHeight: 300, marginBottom: "16px" }} />
+            <SchemaCard
+              schema={schema}
+              key={i}
+              style={{ width: "32%", minHeight: 300, marginBottom: "16px" }}
+              onClick={props.onSchemaClick && (() => props.onSchemaClick?.(schema))}
+            />
           ))
       )}
     </Flex>
