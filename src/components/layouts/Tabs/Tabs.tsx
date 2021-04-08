@@ -28,6 +28,7 @@ const TabTitle = styled.li<TabTitleProps>`
 export interface TabsProps {
   activeTabName: string;
   tabs: Tab[];
+  subHeader?: JSX.Element;
   onTabClicked(tabName: string): void;
 }
 
@@ -52,6 +53,7 @@ export const Tabs: React.FunctionComponent<React.PropsWithChildren<TabsProps>> =
           );
         })}
       </TabsHeader>
+      {props.subHeader}
       {props.tabs.map((tab: any, i: number) => {
         if (tab.tabName !== props.activeTabName) {
           return undefined;
