@@ -5,6 +5,7 @@ export * from "./Code";
 export * from "./ContentCopy";
 export * from "./CredentialCheck";
 export * from "./EthrDidLogo";
+export * from "./GitHub";
 export * from "./Home";
 export * from "./Info";
 export * from "./KeyboardArrowDown";

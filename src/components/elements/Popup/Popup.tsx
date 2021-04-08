@@ -71,15 +71,14 @@ export interface PopupProps {
   popupContents: JSX.Element;
   /** Default is trigger on hover. */
   triggerOnClick?: boolean;
-  /** Extra props to pass to Rimble Box that wraps this component*/
-  [prop: string]: any;
+  rimbleProps?: { [prop: string]: any };
 }
 
 export const Popup: React.FunctionComponent<PopupProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   // @TODO/tobek If triggerOnClick and isOpen, add listener on document to close when clicked elsewhere.
   return (
-    <PopupWrap {...props} onClick={() => setIsOpen(!isOpen)}>
+    <PopupWrap {...props.rimbleProps} onClick={() => setIsOpen(!isOpen)}>
       {props.children}
       <PopupBox className={!props.triggerOnClick ? "hoverable" : isOpen ? "open" : undefined}>
         {props.popupContents}

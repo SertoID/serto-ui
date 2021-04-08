@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { Flex, Box, Text } from "rimble-ui";
 import { StarBorder, CallSplit, Send } from "@rimble/icons";
 import { SchemaDataResponse, SchemaDataInput } from "./types";
-import { H4 } from "../../layouts/LayoutComponents";
 import { fonts, colors } from "../../../themes";
+import { SchemaHeader } from "./SchemaHeader";
 
 const Wrapper = styled(Flex)`
   ${(props) =>
@@ -51,28 +51,7 @@ export const SchemaCard: React.FunctionComponent<SchemaCardProps> = (props) => {
       onClick={onClick}
     >
       <Box px={3}>
-        <Flex>
-          <Box
-            border={1}
-            borderRadius="50%"
-            display="inline-block"
-            width="50px"
-            height="50px"
-            textAlign="center"
-            pt="5px"
-            fontSize={4}
-          >
-            {schema.icon}
-          </Box>
-          <Box ml={2}>
-            <H4 mt="12px" mb={1}>
-              {schema.name}
-            </H4>
-            <Text fontFamily={fonts.monospace} fontSize={1}>
-              {schema.slug}
-            </Text>
-          </Box>
-        </Flex>
+        <SchemaHeader schema={schema} />
         <IconWrap fontSize={1} mt={3} mb={4}>
           <StarBorder size="18px" /> 0
           <CallSplit size="18px" ml={3} /> 0
