@@ -25,9 +25,13 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
     },
   );
 
-  const schemas = React.useMemo(() => data?.sort((schema1, schema2) => (schema1.updated < schema2.updated ? 1 : -1)), [
-    data,
-  ]);
+  const schemas = React.useMemo(
+    () =>
+      data
+        ?.sort((schema1, schema2) => (schema1.updated < schema2.updated ? 1 : -1))
+        .slice(0, props.maxLength || undefined),
+    [data, props.maxLength],
+  );
 
   if (!error && !isValidating && !schemas?.length) {
     return (
@@ -59,19 +63,14 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
           Error loading schemas: {error.message}
         </Flash>
       ) : (
-        // @TODO/tobek Concatting schemas to get more for now
-        schemas
-          ?.concat(schemas)
-          .concat(schemas)
-          .slice(0, props.maxLength || undefined)
-          .map((schema, i) => (
-            <SchemaCard
-              schema={schema}
-              key={i}
-              style={{ width: "32%", minHeight: 300, marginBottom: "16px" }}
-              onClick={props.onSchemaClick && (() => props.onSchemaClick?.(schema))}
-            />
-          ))
+        schemas?.map((schema, i) => (
+          <SchemaCard
+            schema={schema}
+            key={i}
+            style={{ width: "32%", minHeight: 300, marginBottom: "16px" }}
+            onClick={props.onSchemaClick && (() => props.onSchemaClick?.(schema))}
+          />
+        ))
       )}
     </Flex>
   );

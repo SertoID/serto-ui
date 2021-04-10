@@ -109,7 +109,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
             </Box>
           </Form>
           <Box ml={4} width="50%">
-            <SchemaDetail schema={builtSchema} initialView="View JSON" noTools={true} />
+            <SchemaDetail schema={builtSchema} initialView="JSON source" noTools={true} paneView={true} />
           </Box>
         </Flex>
       </ModalContent>

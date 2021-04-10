@@ -165,7 +165,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             )}
           </Form>
           <Box ml={4} width="50%">
-            <SchemaDetail schema={builtSchema} initialView="View JSON" noTools={true} />
+            <SchemaDetail schema={builtSchema} initialView="JSON source" noTools={true} paneView={true} />
           </Box>
         </Flex>
       </ModalContent>

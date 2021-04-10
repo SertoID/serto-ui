@@ -7,7 +7,7 @@ import { baseColors, colors } from "../../../themes";
 import { SchemaDataInput, SchemaDataResponse } from "./types";
 import { SchemaSaves } from "./SchemaSaves";
 import { SchemaHeader } from "./SchemaHeader";
-import { SchemaPreview } from "./SchemaPreview";
+import { SchemaPreview, SchemaViewTypes, SCHEMA_VIEWS } from "./SchemaPreview";
 import { GitHub } from "../../elements/Icons/GitHub";
 
 const SidebarHeading = styled(H5)`
@@ -38,28 +38,35 @@ const UserLink = styled.a`
 
 export interface SchemaDetailProps {
   schema: SchemaDataInput | SchemaDataResponse;
-  initialView?: "Preview" | "View JSON";
+  initialView?: SchemaViewTypes;
   /** Whether to show "save" and "issue VC" functionality. */
   noTools?: boolean;
+  /** Some layout changes in pane view: the header is pushed inside <SchemaPreview> and below the view switcher dropdown, and only shown in non-JSON view. */
+  paneView?: boolean;
   fullPage?: boolean;
 }
 
 export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) => {
-  const { schema, initialView, noTools, fullPage } = props;
+  const { schema, initialView, noTools, fullPage, paneView } = props;
+  const [view, setView] = React.useState<SchemaViewTypes>(initialView || SCHEMA_VIEWS[0]);
 
   return (
     <>
-      <Flex mb={5} justifyContent="space-between">
-        <SchemaHeader schema={schema} />
-        {!noTools && <SchemaSaves schema={schema} />}
-      </Flex>
+      {!paneView && (
+        <Flex mb={5} justifyContent="space-between">
+          <SchemaHeader schema={schema} />
+          {!noTools && <SchemaSaves schema={schema} />}
+        </Flex>
+      )}
 
       <Flex justifyContent="space-between">
         <SchemaPreview
           schema={schema}
-          initialView={initialView}
+          view={view}
+          setView={setView}
           noTools={noTools}
           fullPage={fullPage}
+          paneView={paneView}
           rimbleProps={fullPage ? { flexGrow: 1, pr: 4, maxWidth: "640px" } : undefined}
         />
         {fullPage && (

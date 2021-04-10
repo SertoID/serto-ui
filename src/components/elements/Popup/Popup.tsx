@@ -20,9 +20,15 @@ const PopupBox = styled(Box)`
     text-decoration: none;
     cursor: pointer;
     color: ${baseColors.black};
-  }
-  a:hover {
-    color: ${baseColors.blurple};
+
+    &:hover {
+      color: ${baseColors.blurple};
+    }
+    &.selected {
+      cursor: default;
+      font-weight: bold;
+      color: ${baseColors.black};
+    }
   }
 
   &:before {
