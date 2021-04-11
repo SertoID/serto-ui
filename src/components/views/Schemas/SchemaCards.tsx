@@ -1,10 +1,19 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { Box, Flash, Flex, Loader, Text } from "rimble-ui";
 import useSWR from "swr";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 import { SchemaCard } from "./SchemaCard";
 import { SchemaDataResponse } from "./types";
+
+const StyledFlex = styled(Flex)`
+  // Fix for two alone on last row being spaced at beginning and end, instead of beginning and middle.
+  &:after {
+    content: "";
+    flex-basis: 32%;
+  }
+`;
 
 export interface SchemaCardsProps {
   filter?: "ALL" | "CREATED" | "SAVED";
@@ -50,7 +59,7 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
   const loaderPlaceholders = props.firstCard ? [1, 2, 3, 4, 5] : [1, 2, 3, 4, 5, 6];
 
   return (
-    <Flex justifyContent="space-between" flexWrap="wrap">
+    <StyledFlex justifyContent="space-between" flexWrap="wrap">
       {props.firstCard && <Box width="32%">{props.firstCard}</Box>}
       {isValidating && !schemas?.length ? (
         loaderPlaceholders.map((i) => (
@@ -72,6 +81,6 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
           />
         ))
       )}
-    </Flex>
+    </StyledFlex>
   );
 };
