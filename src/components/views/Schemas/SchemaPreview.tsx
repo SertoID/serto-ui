@@ -164,8 +164,15 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
             </Popup>
           )}
 
-          {!noTools && (
-            <Button.Outline icon="Edit" size="small" ml={3}>
+          {!noTools && context.schemasUiUrl && (
+            <Button.Outline
+              as="a"
+              href={`${context.schemasUiUrl}/editor/${schema.slug}`}
+              target={window.location.origin === context.schemasUiUrl ? undefined : "_blank"}
+              icon="Edit"
+              size="small"
+              ml={3}
+            >
               View in Schema Editor
             </Button.Outline>
           )}

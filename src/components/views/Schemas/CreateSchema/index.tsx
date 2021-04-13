@@ -126,7 +126,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   return (
     <Flex className={className}>
-      <Box px={5} py={3} width={9} maxHeight="100%" overflowY="auto">
+      <Box px={5} py={3} width={9} minWidth={9} maxHeight="100%" overflowY="auto">
         {currentStep !== STEPS[0] && <ModalBack onClick={goBack} />}
         {currentStep === "INFO" ? (
           <InfoStep

@@ -8,3 +8,4 @@ export * from "./SchemaPreview";
 export * from "./SchemaUsage";
 export * from "./SchemasTable";
 export * from "./types";
+export * from "./utils";

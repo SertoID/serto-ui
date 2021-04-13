@@ -76,7 +76,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           fullPage={fullPage}
           paneView={paneView}
           noSwitcher={noSwitcher}
-          rimbleProps={fullPage ? { flexGrow: 1, pr: 4, maxWidth: "640px" } : undefined}
+          rimbleProps={fullPage ? { flexGrow: 1, pr: 4, maxWidth: "640px" } : { maxWidth: "100%" }}
         />
         {fullPage && (
           <Box maxWidth="340px">
