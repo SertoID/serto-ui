@@ -38,17 +38,25 @@ const UserLink = styled.a`
 
 export interface SchemaDetailProps {
   schema: SchemaDataInput | SchemaDataResponse;
-  initialView?: SchemaViewTypes;
+  primaryView?: SchemaViewTypes;
   /** Whether to show "save" and "issue VC" functionality. */
   noTools?: boolean;
   /** Some layout changes in pane view: the header is pushed inside <SchemaPreview> and below the view switcher dropdown, and only shown in non-JSON view. */
   paneView?: boolean;
+  noSwitcher?: boolean;
   fullPage?: boolean;
 }
 
 export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) => {
-  const { schema, initialView, noTools, fullPage, paneView } = props;
-  const [view, setView] = React.useState<SchemaViewTypes>(initialView || SCHEMA_VIEWS[0]);
+  const { schema, primaryView, noTools, fullPage, paneView, noSwitcher } = props;
+  const [view, setView] = React.useState<SchemaViewTypes>(primaryView || SCHEMA_VIEWS[0]);
+
+  // If `primaryView` prop changes, set the view to that - but future calls to `setView` will still take effect.
+  React.useEffect(() => {
+    if (primaryView) {
+      setView(primaryView);
+    }
+  }, [primaryView]);
 
   return (
     <>
@@ -67,6 +75,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           noTools={noTools}
           fullPage={fullPage}
           paneView={paneView}
+          noSwitcher={noSwitcher}
           rimbleProps={fullPage ? { flexGrow: 1, pr: 4, maxWidth: "640px" } : undefined}
         />
         {fullPage && (

@@ -27,7 +27,7 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
   const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
   const { data, error, isValidating } = useSWR(
-    ["/v1/schemas", props.filter === "CREATED"],
+    ["getSchemas", props.filter === "CREATED"],
     () => schemasService.getSchemas(props.filter === "CREATED"),
     {
       revalidateOnFocus: false,

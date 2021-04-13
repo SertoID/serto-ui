@@ -23,7 +23,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
   const [viewedSchema, setViewedSchema] = React.useState<SchemaDataResponse | undefined>();
   const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
-  const { data, error, isValidating } = useSWR(["/v1/schemas", props.discover], () =>
+  const { data, error, isValidating } = useSWR(["getSchemas", !props.discover], () =>
     schemasService.getSchemas(!props.discover),
   );
 

@@ -1,22 +1,20 @@
 import * as React from "react";
-import { Flex, Box, Button, Flash, Form } from "rimble-ui";
+import { Text, Box, Button, Flash, Form } from "rimble-ui";
 import { LdContextPlusNode } from "vc-schema-tools";
 import { colors } from "../../../../themes";
 import { WorkingSchema, newSchemaAttribute, requiredSchemaProperties } from "../types";
-import { ModalContent, ModalHeader } from "../../../elements/Modals";
 import { SchemaAttribute } from "./SchemaAttribute";
-import { SchemaMetadata, SchemaDataInput } from "../types";
-import { SchemaDetail } from "../SchemaDetail";
+import { SchemaMetadata } from "../types";
 
 export interface AttributesStepProps {
   schema: WorkingSchema;
-  builtSchema: SchemaDataInput;
+  isUpdate?: boolean;
   updateSchema(updates: Partial<WorkingSchema>): void;
   onComplete(): void;
 }
 
 export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (props) => {
-  const { schema, updateSchema, builtSchema } = props;
+  const { schema, updateSchema, isUpdate } = props;
   const [doValidation, setDoValidation] = React.useState(false);
   const [error, setError] = React.useState("");
 
@@ -72,47 +70,44 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
 
   return (
     <>
-      <ModalHeader>Define Schema Attributes</ModalHeader>
-      <ModalContent width={11}>
-        <Flex>
-          <Form validated={doValidation} onSubmit={goNext} width="50%">
-            {requiredSchemaProperties.map((prop, i) => (
-              <SchemaAttribute key={i + "required"} attr={prop} readOnly={true} />
-            ))}
-            {schema.properties.map((prop, i) => (
-              <SchemaAttribute
-                key={i}
-                attr={prop}
-                updateAttribute={(attr) => updateAttribute(i, attr)}
-                removeAttribute={() => removeAttribute(i)}
-              />
-            ))}
-            <Box mt={3}>
-              <Button.Outline
-                mb={3}
-                mx="auto"
-                type="submit"
-                width="100%"
-                onClick={addAttribute}
-                style={{ borderColor: colors.primary.base }}
-              >
-                Add Another Attribute
-              </Button.Outline>
-              {error && (
-                <Flash mb={3} variant="danger">
-                  Error: {error}
-                </Flash>
-              )}
-              <Button type="submit" width="100%">
-                Review
-              </Button>
-            </Box>
-          </Form>
-          <Box ml={4} width="50%">
-            <SchemaDetail schema={builtSchema} initialView="JSON source" noTools={true} paneView={true} />
-          </Box>
-        </Flex>
-      </ModalContent>
+      <Text fontWeight={4} mb={2}>
+        {isUpdate ? "Edit" : "Define"} Schema Attributes
+      </Text>
+      <Text mb={5}>Edit and preview in the next panel</Text>
+
+      <Form validated={doValidation} onSubmit={goNext}>
+        {requiredSchemaProperties.map((prop, i) => (
+          <SchemaAttribute key={i + "required"} attr={prop} readOnly={true} />
+        ))}
+        {schema.properties.map((prop, i) => (
+          <SchemaAttribute
+            key={i}
+            attr={prop}
+            updateAttribute={(attr) => updateAttribute(i, attr)}
+            removeAttribute={() => removeAttribute(i)}
+          />
+        ))}
+        <Box mt={3}>
+          <Button.Outline
+            mb={3}
+            mx="auto"
+            type="submit"
+            width="100%"
+            onClick={addAttribute}
+            style={{ borderColor: colors.primary.base }}
+          >
+            Add Another Attribute
+          </Button.Outline>
+          {error && (
+            <Flash mb={3} variant="danger">
+              Error: {error}
+            </Flash>
+          )}
+          <Button type="submit" width="100%">
+            Review
+          </Button>
+        </Box>
+      </Form>
     </>
   );
 };

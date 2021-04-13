@@ -85,11 +85,12 @@ export interface SchemaPreviewProps {
   noTools?: boolean;
   fullPage?: boolean;
   paneView?: boolean;
+  noSwitcher?: boolean;
   rimbleProps?: { [prop: string]: any };
 }
 
 export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props) => {
-  const { schema, view, setView, noTools, fullPage, paneView, rimbleProps } = props;
+  const { schema, view, setView, noTools, fullPage, paneView, noSwitcher, rimbleProps } = props;
   const [error, setError] = React.useState("");
   const [isUseModalOpen, setIsUseModalOpen] = React.useState(false);
 
@@ -139,27 +140,30 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
 
   return (
     <Box {...rimbleProps}>
-      <Flex mb={3} justifyContent="space-between">
+      <Flex mb={noSwitcher && noTools ? 0 : 3} justifyContent="space-between">
         <Box>
-          <Popup
-            rimbleProps={{ display: "inline-block", verticalAlign: "text-bottom" }}
-            triggerOnClick={true}
-            popupContents={
-              <PopupGroup>
-                {SCHEMA_VIEWS.map((viewName) => (
-                  <a key={viewName} onClick={() => setView(viewName)} className={view === viewName ? "selected" : ""}>
-                    {viewName}
-                  </a>
-                ))}
-              </PopupGroup>
-            }
-          >
-            <>
-              <Button.Outline size="small">
-                {view} <KeyboardArrowDown ml={3} mr="-5px" size="16px" />
-              </Button.Outline>
-            </>
-          </Popup>
+          {!noSwitcher && (
+            <Popup
+              rimbleProps={{ display: "inline-block", verticalAlign: "text-bottom" }}
+              triggerOnClick={true}
+              popupContents={
+                <PopupGroup>
+                  {SCHEMA_VIEWS.map((viewName) => (
+                    <a key={viewName} onClick={() => setView(viewName)} className={view === viewName ? "selected" : ""}>
+                      {viewName}
+                    </a>
+                  ))}
+                </PopupGroup>
+              }
+            >
+              <>
+                <Button.Outline size="small">
+                  {view} <KeyboardArrowDown ml={3} mr="-5px" size="16px" />
+                </Button.Outline>
+              </>
+            </Popup>
+          )}
+
           {!noTools && (
             <Button.Outline icon="Edit" size="small" ml={3}>
               View in Schema Editor
@@ -173,11 +177,11 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
         )}
       </Flex>
       {view === "Formatted View" ? (
-        <Box px={4} py={3} border={1} borderRadius={1} fontFamily={fonts.sansSerif}>
+        <Box minWidth="450px" px={4} py={3} border={1} borderRadius={1} fontFamily={fonts.sansSerif}>
           {paneView && <SchemaHeader schema={schema} rimbleProps={{ mb: 4 }} />}
           {!fullPage && <MetadataText fontFamily={fonts.monospace}>{schema.slug}</MetadataText>}
           <MetadataText>Version {schema.version}</MetadataText>
-          <MetadataText>{!schema.discoverable && "Not "}Discoverable</MetadataText>
+          <MetadataText>{!schema.discoverable && "Not "}Searchable</MetadataText>
           {!fullPage && schema.description && <MetadataText>{schema.description}</MetadataText>}
 
           {requiredSchemaProperties.map((prop) => renderProperty(prop["@id"], prop))}
