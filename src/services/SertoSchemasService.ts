@@ -17,9 +17,9 @@ export class SertoSchemasService {
   }
 
   /** Build URL at which a given schema will be hosted. */
-  public buildSchemaUrl(slug: string, type: string, version?: string): string {
+  public buildSchemaUrl = (slug: string, type: string, version?: string): string => {
     return `${this.url}/v1/public/${slug}${version && "/" + version}/${type}.json`;
-  }
+  };
 
   public async getSchemas(userCreated?: boolean): Promise<SchemaDataResponse[]> {
     // @TODO/tobek Global vs. user-created API not implemented yet, update this when it is
