@@ -126,7 +126,7 @@ export class SertoSchemasService {
 
 export const mockSertoSchemasService = {
   createSchemaPath: "/schemas/",
-  buildSchemaUrl: (slug: string, type: string, version: string): string =>
+  buildSchemaUrl: (slug: string, type: string, version?: string): string =>
     `https://example.com/schemas/${slug}${version && "/" + version}/${type}.json`,
   createSchema: createMockApiRequest(),
   updateSchema: createMockApiRequest(),
