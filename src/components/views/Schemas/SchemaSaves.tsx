@@ -9,7 +9,7 @@ export interface SchemaSavesProps {
 
 export const SchemaSaves: React.FunctionComponent<SchemaSavesProps> = (props) => {
   const { schema } = props;
-  const [isSaved, setIsSaved] = React.useState(!!("saved" in schema && schema.saved));
+  const [isSaved, setIsSaved] = React.useState(!!("favorite" in schema && schema.favorite));
   const [isLoading, setIsLoading] = React.useState(false);
   const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
