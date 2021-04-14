@@ -142,11 +142,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           <ConfirmStep isUpdate={isUpdate} builtSchema={builtSchema} onComplete={goForward} loading={loading} />
         )}
         {error && (
-          <Box px={4}>
-            <Flash mt={3} variant="danger">
-              {error}
-            </Flash>
-          </Box>
+          <Flash mt={3} variant="danger">
+            {error}
+          </Flash>
         )}
       </Box>
       <Box minWidth={9} backgroundColor={colors.nearWhite} borderLeft={1} px={5} py={3} flexGrow="1">

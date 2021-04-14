@@ -85,11 +85,16 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
 
             <SidebarHeading>Schema Author</SidebarHeading>
             <Text>
-              <UserLink href="https://github.com/@TODO" target="_blank">
-                <GitHub style={{ width: 16, height: "auto" }} />
-                github_user
-                <OpenInNew size="16px" />
-              </UserLink>
+              {/*@TODO/tobek Update when users implemented in API*/}
+              {"user" in schema ? (
+                <UserLink href="https://github.com/@TODO" target="_blank">
+                  <GitHub style={{ width: 16, height: "auto" }} />
+                  github_user
+                  <OpenInNew size="16px" />
+                </UserLink>
+              ) : (
+                <i>Author details coming soon</i>
+              )}
             </Text>
 
             {"updated" in schema && (
@@ -98,7 +103,9 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
                 <Text>
                   Version {schema.version} on {new Date(schema.updated).toLocaleDateString()}
                 </Text>
-                <Text>Full version history coming soon.</Text>
+                <Text mt={2}>
+                  <i>Full version history coming soon</i>
+                </Text>
               </>
             )}
           </Box>
