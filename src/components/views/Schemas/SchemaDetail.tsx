@@ -61,7 +61,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
   return (
     <>
       {!paneView && (
-        <Flex mb={5} justifyContent="space-between">
+        <Flex mb={4} justifyContent="space-between">
           <SchemaHeader schema={schema} />
           {!noTools && <SchemaSaves schema={schema} />}
         </Flex>

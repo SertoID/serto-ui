@@ -1,13 +1,12 @@
 import * as React from "react";
-import { Check } from "@rimble/icons";
-import { Box, Button, Flex, Flash, Text } from "rimble-ui";
+import { Check, ArrowBack } from "@rimble/icons";
+import { Link, Box, Button, Flex, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
-import { ModalBack } from "../../../elements/Modals";
 import { H3 } from "../../../layouts";
 import { colors } from "../../../../themes";
 import { SertoUiContext, SertoUiContextInterface } from "../../../../context/SertoUiContext";
@@ -127,7 +126,31 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   return (
     <Flex className={className}>
       <Box px={5} py={3} width={9} minWidth={9} maxHeight="100%" overflowY="auto">
-        {currentStep !== STEPS[0] && <ModalBack onClick={goBack} />}
+        <Box pb={3} mb={4} borderBottom={1}>
+          <Text fontWeight={4} fontSize={3}>
+            {currentStep === "INFO"
+              ? (isUpdate ? "Update" : "Create New") + " Schema"
+              : currentStep === "ATTRIBUTES"
+              ? (isUpdate ? "Edit" : "Define") + " Schema Attributes"
+              : "Review Schema"}
+          </Text>
+
+          {currentStep !== "CONFIRM" && (
+            <Text mt={1} fontSize={1}>
+              Edit and preview in the next panel
+            </Text>
+          )}
+        </Box>
+
+        {currentStep !== STEPS[0] && (
+          <Link display="block" size="small" onClick={goBack} mt={-2} mb={4}>
+            <Box display="inline-block" verticalAlign="text-top" mr={2}>
+              <ArrowBack size="16px" />
+            </Box>{" "}
+            Back
+          </Link>
+        )}
+
         {currentStep === "INFO" ? (
           <InfoStep
             isUpdate={isUpdate}
@@ -139,7 +162,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
         ) : currentStep === "ATTRIBUTES" ? (
           <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
         ) : (
-          <ConfirmStep isUpdate={isUpdate} builtSchema={builtSchema} onComplete={goForward} loading={loading} />
+          <Box mt={4}>
+            <ConfirmStep builtSchema={builtSchema} onComplete={goForward} loading={loading} />
+          </Box>
         )}
         {error && (
           <Flash mt={3} variant="danger">
