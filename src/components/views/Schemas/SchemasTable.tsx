@@ -8,9 +8,6 @@ import { TBody, TH, TR } from "../../layouts/LayoutComponents";
 import { ModalContent, ModalFooter, ModalWithX } from "../../elements/Modals";
 import { SchemaDetail } from "./SchemaDetail";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
-import { CreateSchema } from "./CreateSchema";
-import { schemaResponseToWorkingSchema } from "./utils";
-import { WorkingSchema } from "./types";
 
 export interface SchemasTableProps {
   discover?: boolean;
@@ -19,12 +16,11 @@ export interface SchemasTableProps {
 }
 
 export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) => {
-  const [schemaToUpdate, setSchemaToUpdate] = React.useState<WorkingSchema | undefined>();
   const [viewedSchema, setViewedSchema] = React.useState<SchemaDataResponse | undefined>();
-  const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
+  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
-  const { data, error, isValidating } = useSWR(["/v1/schemas", props.discover], () =>
-    schemasService.getSchemas(!props.discover),
+  const { data, error, isValidating } = useSWR(["getSchemas", !props.discover], () =>
+    context.schemasService.getSchemas(!props.discover),
   );
 
   const sortedData = React.useMemo(
@@ -70,9 +66,11 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
                     </Button.Outline>
                     {!props.discover && !props.onSchemaSelect && (
                       <Button.Outline
+                        as="a"
+                        href={`${context.schemasUiUrl}/editor/${schema.slug}`}
+                        target={window.location.origin === context.schemasUiUrl ? undefined : "_blank"}
                         ml={3}
                         size="small"
-                        onClick={() => setSchemaToUpdate(schemaResponseToWorkingSchema(schema))}
                       >
                         Update
                       </Button.Outline>
@@ -98,13 +96,6 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
             </Button>
           </ModalFooter>
         </ModalWithX>
-        <ModalWithX isOpen={!!schemaToUpdate} close={() => setSchemaToUpdate(undefined)} minWidth={9} maxWidth={11}>
-          <CreateSchema
-            isUpdate={true}
-            initialSchemaState={schemaToUpdate}
-            onComplete={() => setSchemaToUpdate(undefined)}
-          ></CreateSchema>
-        </ModalWithX>
       </>
     );
   } else if (error) {
@@ -126,7 +117,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
           <b style={{ display: "block", fontWeight: 600 }}>
             {props.discover ? "There are" : "You have"} no credential schemas yet.
           </b>
-          Please first <Link to={schemasService.createSchemaPath}>create a credential schema</Link> in order to
+          Please first <Link to={context.schemasService.createSchemaPath}>create a credential schema</Link> in order to
           coordinate around verified data with your customers and partners.
         </Text.p>
       )

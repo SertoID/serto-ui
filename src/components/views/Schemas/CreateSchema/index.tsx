@@ -1,30 +1,30 @@
 import * as React from "react";
-import { Check } from "@rimble/icons";
-import { Box, Button, Flash, Text } from "rimble-ui";
+import { Check, ArrowBack } from "@rimble/icons";
+import { Link, Box, Button, Flex, Flash, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
-import { ModalBack } from "../../../elements/Modals";
 import { H3 } from "../../../layouts";
 import { colors } from "../../../../themes";
 import { SertoUiContext, SertoUiContextInterface } from "../../../../context/SertoUiContext";
+import { SchemaDetail } from "../SchemaDetail";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
 export interface CreateSchemaProps {
   isUpdate?: boolean;
   initialSchemaState?: WorkingSchema;
-  onFinalStep?(): void;
+  className?: string;
   onComplete?(): void;
   onSchemaUpdate?(schema: WorkingSchema): void;
-  onSchemaCreated?(): void;
+  onSchemaSaved?(schema: SchemaDataInput): void;
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
-  const { isUpdate, initialSchemaState, onFinalStep, onComplete, onSchemaUpdate, onSchemaCreated } = props;
+  const { className, isUpdate, initialSchemaState, onComplete, onSchemaUpdate, onSchemaSaved } = props;
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -73,7 +73,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       try {
         await publishSchema();
         setCurrentStep(nextStep);
-        onFinalStep?.();
+        onSchemaSaved?.(builtSchema);
       } catch (err) {
         console.error(`Failed to ${isUpdate ? "create" : "update"} schema:`, err);
         setError(err.toString());
@@ -91,10 +91,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     } else {
       await schemasService.createSchema(builtSchema);
     }
-    onSchemaCreated?.();
-    mutate(["/v1/schemas", false]);
+    mutate(["getSchemas", true]);
     if (schema.discoverable) {
-      mutate(["/v1/schemas", true]);
+      mutate(["getSchemas", false]);
     }
   }
 
@@ -125,29 +124,57 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   }
 
   return (
-    <>
-      {currentStep !== STEPS[0] && <ModalBack onClick={goBack} />}
-      {currentStep === "INFO" ? (
-        <InfoStep
-          isUpdate={isUpdate}
-          initialSchemaState={initialSchemaState}
-          schema={schema}
-          builtSchema={builtSchema}
-          updateSchema={updateSchema}
-          onComplete={goForward}
-        />
-      ) : currentStep === "ATTRIBUTES" ? (
-        <AttributesStep schema={schema} builtSchema={builtSchema} updateSchema={updateSchema} onComplete={goForward} />
-      ) : (
-        <ConfirmStep isUpdate={isUpdate} schema={schema} onComplete={goForward} loading={loading} />
-      )}
-      {error && (
-        <Box px={4}>
+    <Flex className={className}>
+      <Box px={5} py={3} width={9} minWidth={9} maxHeight="100%" overflowY="auto">
+        <Box pb={3} mb={4} borderBottom={1}>
+          <Text fontWeight={4} fontSize={3}>
+            {currentStep === "INFO"
+              ? (isUpdate ? "Update" : "Create New") + " Schema"
+              : currentStep === "ATTRIBUTES"
+              ? (isUpdate ? "Edit" : "Define") + " Schema Attributes"
+              : "Review Schema"}
+          </Text>
+
+          {currentStep !== "CONFIRM" && (
+            <Text mt={1} fontSize={1}>
+              Edit and preview in the next panel
+            </Text>
+          )}
+        </Box>
+
+        {currentStep !== STEPS[0] && (
+          <Link display="block" size="small" onClick={goBack} mt={-2} mb={4}>
+            <Box display="inline-block" verticalAlign="text-top" mr={2}>
+              <ArrowBack size="16px" />
+            </Box>{" "}
+            Back
+          </Link>
+        )}
+
+        {currentStep === "INFO" ? (
+          <InfoStep
+            isUpdate={isUpdate}
+            initialSchemaState={initialSchemaState}
+            schema={schema}
+            updateSchema={updateSchema}
+            onComplete={goForward}
+          />
+        ) : currentStep === "ATTRIBUTES" ? (
+          <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
+        ) : (
+          <Box mt={4}>
+            <ConfirmStep builtSchema={builtSchema} onComplete={goForward} loading={loading} />
+          </Box>
+        )}
+        {error && (
           <Flash mt={3} variant="danger">
             {error}
           </Flash>
-        </Box>
-      )}
-    </>
+        )}
+      </Box>
+      <Box minWidth={9} backgroundColor={colors.nearWhite} borderLeft={1} px={5} py={3} flexGrow="1">
+        <SchemaDetail schema={builtSchema} primaryView="JSON source" noTools={true} paneView={true} />
+      </Box>
+    </Flex>
   );
 };

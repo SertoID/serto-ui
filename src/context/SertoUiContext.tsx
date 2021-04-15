@@ -8,6 +8,7 @@ import { Identifier } from "../types";
 export interface SertoUiContextInterface {
   navItems: NavItemProps[];
   schemasService: Omit<SertoSchemasService, "url" | "request" | "ensureAuthenticated">;
+  schemasUiUrl?: string;
   userDids?: Identifier[];
   issueVc?(body: any): Promise<any>;
 }
@@ -18,6 +19,7 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Nowhere", url: "/nowhere", icon: Send },
   ],
   schemasService: mockSertoSchemasService,
+  schemasUiUrl: "https://schemas.serto.id", // @TODO/tobek Verify when we launch it
 };
 
 export const SertoUiContext = React.createContext(defaultSertoUiContext);

@@ -8,6 +8,7 @@ import {
   ContentCopy,
   CredentialCheck,
   EthrDidLogo,
+  GitHub,
   Home,
   Info,
   KeyboardArrowDown,
@@ -18,6 +19,7 @@ import {
   Send,
   SertoAgentLogo,
   SertoLogo,
+  SertoSchemasLogo,
   SertoSearchLogo,
   Settings,
   SovrinDidLogo,
@@ -45,6 +47,9 @@ storiesOf("Icons", module)
   })
   .add("EthrDidLogo", () => {
     return <EthrDidLogo />;
+  })
+  .add("GitHub", () => {
+    return <GitHub />;
   })
   .add("Home", () => {
     return <Home />;
@@ -75,6 +80,9 @@ storiesOf("Icons", module)
   })
   .add("SertoLogo", () => {
     return <SertoLogo />;
+  })
+  .add("SertoSchemasLogo", () => {
+    return <SertoSchemasLogo />;
   })
   .add("SertoSearchLogo", () => {
     return <SertoSearchLogo />;
