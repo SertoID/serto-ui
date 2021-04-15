@@ -119,7 +119,7 @@ export class SertoSchemasService {
 
   private ensureAuthenticated() {
     if (!this.jwt) {
-      throw new Error("not authenticated");
+      throw new Error("Not authenticated");
     }
   }
 }
