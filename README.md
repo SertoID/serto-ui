@@ -1,5 +1,7 @@
 ## Serto UI
 
+[![SertoID](https://circleci.com/gh/SertoID/serto-ui.svg?style=svg&circle-token=1c9f5796a3867357f99158ec5200124191b126eb)](https://circleci.com/gh/SertoID/serto-ui/tree/master)
+[![codecov](https://codecov.io/gh/SertoID/serto-ui/branch/main/graph/badge.svg?token=92Z92RQFWG)](https://codecov.io/gh/SertoID/serto-schemas-backend)
 [![CircleCI](https://circleci.com/gh/SertoID/serto-ui.svg?style=svg)](https://circleci.com/gh/SertoID/serto-ui)
 
 ### Install

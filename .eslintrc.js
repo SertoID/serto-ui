@@ -15,4 +15,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-empty-function": "off",
   },
+  env: {
+    node: true
+  }
 };
