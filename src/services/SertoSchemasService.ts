@@ -17,20 +17,27 @@ export class SertoSchemasService {
   }
 
   /** Build URL at which a given schema will be hosted. */
-  public buildSchemaUrl(slug: string, type: string, version?: string): string {
+  public buildSchemaUrl = (slug: string, type: string, version?: string): string => {
     return `${this.url}/v1/public/${slug}${version && "/" + version}/${type}.json`;
-  }
+  };
 
   public async getSchemas(userCreated?: boolean): Promise<SchemaDataResponse[]> {
-    // @TODO/tobek Global vs. user-created API not implemented yet, update this when it is
-    return this.request(`/v1/${userCreated ? "" : "?global=true"}`, "GET", undefined, userCreated);
+    const schemas = await this.request(`/v1/${userCreated ? "currentUser" : ""}`, "GET", undefined, userCreated);
+    // @TODO/tobek This handles API bug where sometimes there is a wrapper object with schema inside `schema` property - remove when fixed.
+    if (schemas?.[0].schema) {
+      return schemas.map((schema: any) => schema.schema);
+    } else {
+      return schemas;
+    }
   }
 
   public async getSchema(slug: string): Promise<SchemaDataResponse> {
     if (!slug) {
       throw new Error("API error: Must provide a schema ID");
     }
-    return this.request(`/v1/public/${slug}`, "GET");
+    const schema = await this.request(`/v1/public/${slug}`, "GET");
+    // @TODO/tobek This handles API bug where sometimes there is a wrapper object with schema inside `schema` property - remove when fixed.
+    return schema.schema || schema;
   }
 
   public async createSchema(schema: SchemaDataInput): Promise<any> {
@@ -112,14 +119,14 @@ export class SertoSchemasService {
 
   private ensureAuthenticated() {
     if (!this.jwt) {
-      throw new Error("not authenticated");
+      throw new Error("Not authenticated");
     }
   }
 }
 
 export const mockSertoSchemasService = {
   createSchemaPath: "/schemas/",
-  buildSchemaUrl: (slug: string, type: string, version: string): string =>
+  buildSchemaUrl: (slug: string, type: string, version?: string): string =>
     `https://example.com/schemas/${slug}${version && "/" + version}/${type}.json`,
   createSchema: createMockApiRequest(),
   updateSchema: createMockApiRequest(),

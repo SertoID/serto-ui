@@ -2,7 +2,6 @@ import * as React from "react";
 import { Box, Flex } from "rimble-ui";
 import { createGlobalStyle } from "styled-components";
 import { Nav } from "./Nav";
-import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 import { fonts } from "../../../themes";
 
 export const GlobalStyle = createGlobalStyle`
@@ -29,13 +28,12 @@ export interface GlobalLayoutProps {
 }
 
 export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
-  const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
   return (
     <Flex p={4} height="100vh">
       <Flex flexDirection="column" justifyContent="space-between" width={8} p={2} mr={2} minWidth={8}>
         <Box>
           {props.sidebarTopContents}
-          <Nav currentUrl={props.url} navItems={context.navItems} />
+          <Nav currentUrl={props.url} />
         </Box>
         <Box>{props.sidebarBottomContents}</Box>
       </Flex>

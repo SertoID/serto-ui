@@ -7,7 +7,7 @@ import { ldContextPlusToSchemaInput } from "./utils";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { SertoUiProvider } from "../../../context/SertoUiProvider";
-import { createMockApiRequest } from "../../../serto-ui";
+import { createMockApiRequest } from "../../../utils/helpers";
 import { Identifier } from "../../../types";
 
 const DEFAULT_SCHEMA = "ContentPublishCredential";

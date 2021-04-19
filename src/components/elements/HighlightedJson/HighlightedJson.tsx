@@ -14,6 +14,7 @@ export const PrismHighlightedCodeWrap = styled(Card)`
   font-size: 12px;
   font-family: ${fonts.monospace};
   border-radius: 4px;
+  box-shadow: none;
 
   pre {
     margin: 0;

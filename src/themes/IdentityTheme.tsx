@@ -149,6 +149,13 @@ const identityTheme = {
     },
   },
   buttonSizes: {
+    verySmall: {
+      fontSize: "0.75rem",
+      fontWeight: 400,
+      height: "2rem",
+      minWidth: "2rem",
+      padding: "0 1rem",
+    },
     small: {
       fontSize: "0.875rem",
       height: "2rem",
