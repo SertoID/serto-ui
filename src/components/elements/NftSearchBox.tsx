@@ -20,8 +20,27 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
     }
   }
 
+  function setSearch(val: string) {
+    
+  }
+
   return (
     <Box position="relative" width="100%">
+      <Input
+        onChange={(event: any) => setSearch(event.target.value)}
+        onKeyDown={(event: any) => onKeyDown(event)}
+        placeholder={props.placeholderText || "Search"}
+        required
+        type="text"
+        value={search}
+        width="100%"
+      />
+      <Button.Text
+        icononly
+        icon="Search"
+        onClick={() => props.onSearch(search)}
+        style={{ position: "absolute", top: 0, right: 0, zIndex: 9 }}
+      />
       <Flex flexDirection="column" px={4} py={1}>
         <Flex>
           <H6 my={2}>Ethereum NFT Contract Address</H6>
