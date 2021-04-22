@@ -3,7 +3,7 @@ import { H5, H6 } from "../../layouts/LayoutComponents";
 import { NftBorder } from "./NftComponents";
 import { Box, Flex, Text } from "rimble-ui";
 import { LinkedDomainsBorder } from "./NftComponents";
-import { baseColors, colors, fonts } from "../../../themes";
+import { baseColors, fonts } from "../../../themes";
 import { DomainImage } from "../../elements/DomainImage";
 import { Link } from "react-router-dom";
 import styled from "styled-components";

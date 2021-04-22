@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Input, Flex, Tooltip } from "rimble-ui";
 import { H6 } from "../layouts/LayoutComponents";
 import { Info } from "@rimble/icons";
+import { getNftIdentifiersFromUrl } from "../../utils";
 export interface NftSearchBoxProps {
   placeholderText?: string;
   onSearch(value: string, id: string): void;
@@ -23,35 +24,11 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
   }
 
   function onSearchChanged(val: string) {
-    if (!val)  {
-      setSearch(val);
-    } else {
-      const splitVal = val.split("?");
-      if (splitVal && splitVal.length > 0) {
-        val = splitVal[0];
-      }
-      setSearch(val);
-      setError("");
-      const splitURL = val.split("/");
-      const length = splitURL.length;
-      if (length < 2) {
-        setError("Contract Address or TokenID not found on URL");
-      } else {
-        const theorizedAddress =  splitURL[length - 2];
-        const addressMatch = theorizedAddress.startsWith("0x") && theorizedAddress.length == 42;
-        if (!addressMatch) {
-          setError("Unable to find Contract Address in provided URL");
-        } else {
-          setContractAddress(theorizedAddress);
-          const tokenIdMatch = splitURL[length - 1].match("[0-9]+");
-          if (!tokenIdMatch  || tokenIdMatch.length ==  0) {
-            setError("Unable to find Token ID in provided URL");
-          } else {
-            setToken(tokenIdMatch[0]);
-          }
-        }
-      }
-    }
+    setSearch(val);
+    const nftIdentifiers = getNftIdentifiersFromUrl(val);
+    setContractAddress(nftIdentifiers.contractAddress);
+    setToken(nftIdentifiers.tokenId);
+    setError(nftIdentifiers.error);
   }
 
   function onTrySearch() {
@@ -66,7 +43,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
         <Input
           onChange={(event: any) => onSearchChanged(event.target.value)}
           onKeyDown={(event: any) => onKeyDown(event)}
-          placeholder={props.placeholderText || "Search"}
+          placeholder={props.placeholderText || "Search by NFT URL"}
           required
           type="text"
           value={search}
@@ -76,7 +53,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
           icononly
           icon="Search"
           onClick={() => onTrySearch()}
-          style={{ position: "absolute", top: 6, right: 16, zIndex: 9 }}
+          style={{ position: "absolute", top: 6, right: 24, zIndex: 9 }}
         />
         <Flex>
           <H6 my={2}>Ethereum NFT Contract Address</H6>

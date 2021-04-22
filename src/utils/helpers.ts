@@ -83,3 +83,41 @@ export const createMockApiRequest = (response?: any): ((...args: any[]) => Promi
     );
   }) as any;
 };
+
+export interface NftIdentifierResult {
+  contractAddress: string;
+  tokenId: string;
+  error: string;
+};
+
+export function getNftIdentifiersFromUrl(url: string): NftIdentifierResult {
+  let contractAddress = "";
+  let tokenId = "";
+  let error = "";
+  if (url)  {
+    const splitVal = url.split("?");
+    if (splitVal && splitVal.length > 0) {
+      url = splitVal[0];
+    }
+    const splitURL = url.split("/");
+    const length = splitURL.length;
+    if (length < 2) {
+      error = "Contract Address or TokenID not found on URL";
+    } else {
+      const theorizedAddress =  splitURL[length - 2];
+      const addressMatch = theorizedAddress.startsWith("0x") && theorizedAddress.length == 42;
+      if (!addressMatch) {
+        error = "Unable to find Contract Address in provided URL";
+      } else {
+        contractAddress = theorizedAddress;
+        const tokenIdMatch = splitURL[length - 1].match("[0-9]+");
+        if (!tokenIdMatch  || tokenIdMatch.length ==  0) {
+          error = "Unable to find Token ID in provided URL";
+        } else {
+          tokenId = tokenIdMatch[0];
+        }
+      }
+    }
+  }
+  return { contractAddress, tokenId, error};
+}

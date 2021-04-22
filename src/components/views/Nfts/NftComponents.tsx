@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Box, Text } from "rimble-ui";
-import { baseColors, fonts, colors } from "../../../themes";
+import { Box } from "rimble-ui";
+import { baseColors } from "../../../themes";
 
 export const NftBorder: React.FunctionComponent = (props) => {
   return (
