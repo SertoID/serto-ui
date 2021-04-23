@@ -18,6 +18,7 @@ export * from "./SertoAgentLogo";
 export * from "./SertoLogo";
 export * from "./SertoSchemasLogo";
 export * from "./SertoSearchLogo";
+export * from "./SertoVerifiedCheckmark";
 export * from "./Settings";
 export * from "./SovrinDidLogo";
 export * from "./VerifiedUser";
