@@ -20,7 +20,6 @@ const DomainLink = styled(Link)`
 `;
 
 export const NftDetails: React.FunctionComponent<NftDetailsProps> = (props) => {
-  console.log("props: ", props);
   const { imgUrl, name, details, domains } = props;
   return (
     <NftBorder>
