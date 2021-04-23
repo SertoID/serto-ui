@@ -1,3 +1,4 @@
+export * from "./CombinedSearchBar";
 export * from "./CopyableTruncatableText";
 export * from "./CopyToClipboard";
 export * from "./DidSelect";

@@ -33,7 +33,7 @@ export const NftDetails: React.FunctionComponent<NftDetailsProps> = (props) => {
               <Text>{details}</Text>
               {(domains && domains.length > 0) ? (
                 <>
-  `               <H6 mb={1}>Domains linked to this creator</H6>
+                 <H6 mb={1}>Domains linked to this creator</H6>
                   <LinkedDomainsBorder>
                       {domains?.map((d) => {
                         return (
@@ -45,7 +45,7 @@ export const NftDetails: React.FunctionComponent<NftDetailsProps> = (props) => {
                           </DomainLink>
                         );
                       })}
-                  </LinkedDomainsBorder>`
+                  </LinkedDomainsBorder>
                 </>) : 
                 (<></>)
               }
