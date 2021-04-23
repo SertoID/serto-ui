@@ -11,4 +11,13 @@ Nose: Moon Rock, Radioactive Speckle Mouth: Missing Bust: Brushed Titanium Backd
 
 storiesOf("Nfts", module)
   .addDecorator((story) => <IdentityThemeProvider>{story()}</IdentityThemeProvider>)
-  .add("List view", () => <NftDetails name={"cosmic#boy"} imgUrl={"https://lh3.googleusercontent.com/jSLi5Y2BlATTysi3-21H6cNni1hzGWjihP1ZcN6NNyurud2JCGzKWooZioagDTdCvD1uekR8NRAT9_0YOa0kWQQP4zNbglgphPgW=s992"} details={details} domains={["supercool.com"]}/>);
+  .add("List view", () => (
+    <NftDetails
+      name={"cosmic#boy"}
+      imgUrl={
+        "https://lh3.googleusercontent.com/jSLi5Y2BlATTysi3-21H6cNni1hzGWjihP1ZcN6NNyurud2JCGzKWooZioagDTdCvD1uekR8NRAT9_0YOa0kWQQP4zNbglgphPgW=s992"
+      }
+      details={details}
+      domains={["supercool.com"]}
+    />
+  ));

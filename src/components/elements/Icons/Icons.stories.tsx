@@ -98,5 +98,5 @@ storiesOf("Icons", module)
     return <VerifiedUser />;
   })
   .add("SertoVerifiedCheckmark", () => {
-    return <SertoVerifiedCheckmark size="50px"/>;
+    return <SertoVerifiedCheckmark size="50px" />;
   });

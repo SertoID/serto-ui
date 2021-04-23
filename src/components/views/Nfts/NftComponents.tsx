@@ -15,5 +15,5 @@ export const LinkedDomainsBorder: React.FunctionComponent = (props) => {
     <Box bg={baseColors.white} border={2} borderRadius={2} padding={2}>
       {props.children}
     </Box>
-  )
-}
+  );
+};

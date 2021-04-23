@@ -58,7 +58,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
         <Flex>
           <H6 my={2}>Ethereum NFT Contract Address</H6>
           <Tooltip placement="top" message="The Ethereum ERC721 or ERC1155 Contract Address associated with the token">
-            <Info size="16px"/>
+            <Info size="16px" />
           </Tooltip>
         </Flex>
         <Input
@@ -73,7 +73,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
         <Flex>
           <H6 my={2}>Token ID</H6>
           <Tooltip placement="top" message="The Token ID associated with the NFT">
-            <Info size="16px"/>
+            <Info size="16px" />
           </Tooltip>
         </Flex>
         <Flex>
@@ -87,9 +87,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
             width="100%"
             mr={4}
           />
-          <Button
-            onClick={() => props.onSearch(contractAddress, token)}
-          >Search</Button>
+          <Button onClick={() => props.onSearch(contractAddress, token)}>Search</Button>
         </Flex>
       </Flex>
     </Box>
