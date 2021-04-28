@@ -36,7 +36,7 @@ export const NftDetails: React.FunctionComponent<NftDetailsProps> = (props) => {
               <LinkedDomainsBorder>
                 {domains?.map((d) => {
                   return (
-                    <DomainLink to={`search?filter${d}`} key={`domain-${d}`}>
+                    <DomainLink to={`search?filter=${d}`} key={`domain-${d}`}>
                       <Flex flexDirection="row" flexGrow={1}>
                         <DomainImage domain={d} />
                         <Text color={baseColors.blurple} fontFamily={fonts.sansSerif} fontWeight={2}>
