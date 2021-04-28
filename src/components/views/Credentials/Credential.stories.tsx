@@ -12,6 +12,12 @@ const diplomaVc = {
   },
 };
 
+const diplomaAdditionalDetails = { 
+  didListings : [
+    { did: "did:ethr:rinkeby:0x9fb04797cc0b1711c86b960105e0c3ed3f9cb749", domains: ["sertouniversity.id"]}
+  ]
+}
+
 const contentPubVc = {
   ...JSON.parse(EXAMPLE_VCS.ContentPublishCredential),
   proof: {
@@ -25,4 +31,5 @@ storiesOf("Credential", module)
   .add("List view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.LIST} />)
   .add("Collapsible view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.COLLAPSIBLE} />)
   .add("Full view", () => <Credential vc={diplomaVc} />)
+  .add("Full view with additional details", () => <Credential vc={diplomaVc} additionalVCData={diplomaAdditionalDetails}/>)
   .add("Full view (nested props)", () => <Credential vc={contentPubVc} />);

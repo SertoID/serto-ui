@@ -6,7 +6,8 @@ import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard"
 import { Expand } from "../../elements/Expand/Expand";
 import { baseColors, colors, fonts } from "../../../themes";
 import { dateTimeFormat, ellipsis, hexEllipsis } from "../../../utils";
-import { VC } from "../../../types";
+import { AdditionalVCData, VC } from "../../../types";
+import { DomainImage } from "../../elements";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
@@ -16,11 +17,12 @@ export enum CredentialViewTypes {
 
 export interface CredentialProps {
   vc: VC;
+  additionalVCData?: AdditionalVCData;
   viewType?: string;
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
-  const { vc } = props;
+  const { vc, additionalVCData } = props;
   const vcType = vc.type[vc.type.length - 1];
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
   const viewType = props.viewType || "default";
@@ -29,6 +31,8 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
       : dateTimeFormat(new Date(vc.issuanceDate));
   const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 6, 4);
+  const issuerDomains = additionalVCData ? (additionalVCData.didListings.find((listing) => listing.did === issuer))?.domains : [];
+  const subjectDomains = additionalVCData ? (additionalVCData.didListings.find((listing) => listing.did === vc.credentialSubject.id))?.domains : [];
 
   const VerifiedCredentialHeader = () => (
     <>
@@ -111,6 +115,25 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     );
   };
 
+  const VerifiedCredentialAdditionalDetails = () => (
+    <>
+      {additionalVCData && (
+        <>
+          <Box bg={colors.primary.disabled} borderTopLeftRadius={2} borderTopRightRadius={2}>
+            <Flex justifyContent="space-between" px={3} py={3}>
+              <Text>
+                Recipient
+              </Text>
+              <Flex flexDirection="column" justifyContent="flexEnd">
+                {(subjectDomains && subjectDomains.map((domain) => (<Flex><Text>{domain}</Text><DomainImage domain={domain}/></Flex>)))}
+              </Flex>
+            </Flex>
+          </Box>
+        </>
+      )}
+    </>
+  );
+
   const VerifiedCredentialBody = () => (
     <>
       <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
@@ -178,6 +201,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
 
   return (
     <CredentialBorder>
+      {VerifiedCredentialAdditionalDetails()}
       {VerifiedCredentialHeader()}
       {VerifiedCredentialBody()}
       {VerifiedCredentialFooter()}
