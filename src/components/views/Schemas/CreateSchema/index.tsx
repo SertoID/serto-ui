@@ -99,7 +99,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   if (currentStep === "DONE") {
     return (
-      <Box px={4} py={0}>
+      <Box px={4} py={0} className={className}>
         <Text mt={3} mb={6} textAlign="center" color={colors.success.base}>
           <Text
             bg={colors.success.light}
@@ -167,7 +167,15 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           </Box>
         )}
       </Box>
-      <Box minWidth={9} backgroundColor={colors.nearWhite} borderLeft={1} px={5} py={3} flexGrow="1">
+      <Box
+        className="right-pane"
+        minWidth={9}
+        backgroundColor={colors.nearWhite}
+        borderLeft={1}
+        px={5}
+        py={3}
+        flexGrow="1"
+      >
         <SchemaDetail schema={builtSchema} primaryView="JSON source" noTools={true} paneView={true} />
       </Box>
     </Flex>

@@ -178,13 +178,22 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
           )}
         </Box>
         {!noTools && (
-          <Button size="small" ml={3} onClick={() => setIsUseModalOpen(true)}>
+          <Button size="small" onClick={() => setIsUseModalOpen(true)}>
             <Send size="15px" mr={2} /> Issue VC
           </Button>
         )}
       </Flex>
       {view === "Formatted View" ? (
-        <Box minWidth="450px" px={4} py={3} border={1} borderRadius={1} fontFamily={fonts.sansSerif}>
+        <Box
+          className="schema-formatted-preview"
+          width={9}
+          maxWidth="100%"
+          px={4}
+          py={3}
+          border={1}
+          borderRadius={1}
+          fontFamily={fonts.sansSerif}
+        >
           {paneView && <SchemaHeader schema={schema} rimbleProps={{ mb: 4 }} />}
           {!fullPage && <MetadataText fontFamily={fonts.monospace}>{schema.slug}</MetadataText>}
           <MetadataText>Version {schema.version}</MetadataText>
