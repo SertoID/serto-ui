@@ -160,14 +160,14 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
         </Text>
       </Box>
 
-      <Button type="submit" width="100%">
-        Next
-      </Button>
       {error && (
-        <Flash mt={3} variant="danger">
+        <Flash mb={3} variant="danger">
           {error}
         </Flash>
       )}
+      <Button type="submit" width="100%">
+        Next
+      </Button>
     </Form>
   );
 };
