@@ -81,8 +81,10 @@ export interface SchemaPreviewProps {
   schema: SchemaDataInput | SchemaDataResponse;
   view: SchemaViewTypes;
   setView(view: SchemaViewTypes): void;
-  /** Whether to show "save" and "issue VC" functionality. */
-  noTools?: boolean;
+  /** Whether to show "view in editor" and "issue VC" functionality. */
+  hideTools?: boolean;
+  /** Whether to show "issue VC" functionality. */
+  hideIssueVc?: boolean;
   fullPage?: boolean;
   paneView?: boolean;
   noSwitcher?: boolean;
@@ -90,7 +92,7 @@ export interface SchemaPreviewProps {
 }
 
 export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props) => {
-  const { schema, view, setView, noTools, fullPage, paneView, noSwitcher, rimbleProps } = props;
+  const { schema, view, setView, hideTools, hideIssueVc, fullPage, paneView, noSwitcher, rimbleProps } = props;
   const [error, setError] = React.useState("");
   const [isUseModalOpen, setIsUseModalOpen] = React.useState(false);
 
@@ -140,7 +142,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
 
   return (
     <Box {...rimbleProps}>
-      <Flex mb={noSwitcher && noTools ? 0 : 3} justifyContent="space-between">
+      <Flex mb={noSwitcher && hideTools ? 0 : 3} justifyContent="space-between">
         <Box>
           {!noSwitcher && (
             <Popup
@@ -164,7 +166,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
             </Popup>
           )}
 
-          {!noTools && context.schemasUiUrl && (
+          {!hideTools && context.schemasUiUrl && (
             <Button.Outline
               as="a"
               href={`${context.schemasUiUrl}/editor/${schema.slug}`}
@@ -177,7 +179,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
             </Button.Outline>
           )}
         </Box>
-        {!noTools && (
+        {!hideTools && !hideIssueVc && (
           <Button size="small" onClick={() => setIsUseModalOpen(true)}>
             <Send size="15px" mr={2} /> Issue VC
           </Button>

@@ -87,12 +87,12 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
               {
                 tabName: "created",
                 title: "Created",
-                content: <SchemasTable discover={false} onSchemaSelect={setSchema} />,
+                content: <SchemasTable discover={false} onSchemaSelect={setSchema} hideIssueVcInDetail />,
               },
               {
                 tabName: "discover",
                 title: "Discover",
-                content: <SchemasTable discover={true} onSchemaSelect={setSchema} />,
+                content: <SchemasTable discover={true} onSchemaSelect={setSchema} hideIssueVcInDetail />,
               },
             ]}
             onTabClicked={setSchemaTab}
