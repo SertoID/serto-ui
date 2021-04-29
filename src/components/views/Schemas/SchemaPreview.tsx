@@ -188,7 +188,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
       {view === "Formatted View" ? (
         <Box
           className="schema-formatted-preview"
-          width={9}
+          width={hideTools || hideIssueVc ? 9 : "640px"}
           maxWidth="100%"
           px={4}
           py={3}
