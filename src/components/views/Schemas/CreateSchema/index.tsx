@@ -176,7 +176,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
         py={3}
         flexGrow="1"
       >
-        <SchemaDetail schema={builtSchema} primaryView="JSON source" noTools={true} paneView={true} />
+        <SchemaDetail schema={builtSchema} primaryView="JSON source" hideTools={true} paneView={true} />
       </Box>
     </Flex>
   );

@@ -16,7 +16,7 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
 
   return (
     <>
-      <SchemaDetail schema={builtSchema} noTools={true} noSwitcher={true} />
+      <SchemaDetail schema={builtSchema} hideTools={true} noSwitcher={true} />
       {error && (
         <Flash mt={3} variant="danger">
           {error}

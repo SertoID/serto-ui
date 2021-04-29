@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Card, Flex, Box } from "rimble-ui";
+import { Box } from "rimble-ui";
 import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
 import { CreateSchema } from "./";
 import { HighlightedJson } from "../../../elements/HighlightedJson/HighlightedJson";
@@ -83,19 +83,13 @@ const createSchemaStory = (schemaToUpdate?: WorkingSchema) => () => {
   const [schema, setSchema] = React.useState({});
   return (
     <IdentityThemeProvider>
-      <Flex>
-        <Card maxWidth={11} mr={4} p={0} pb={3} pt="48px">
-          <Flex flexDirection="column" minHeight="0" maxHeight="calc(95vh - 48px)">
-            <CreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} onSchemaUpdate={setSchema} />
-          </Flex>
-        </Card>
-        <Box flexGrow={1}>
-          <Box mb={1}>
-            debug <code>schema</code> prop:
-          </Box>
-          <HighlightedJson json={schema} />
+      <CreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} onSchemaUpdate={setSchema} />
+      <Box mt={3}>
+        <Box mb={1}>
+          debug <code>schema</code> prop:
         </Box>
-      </Flex>
+        <HighlightedJson json={schema} />
+      </Box>
     </IdentityThemeProvider>
   );
 };
