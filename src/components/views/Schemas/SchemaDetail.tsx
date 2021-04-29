@@ -39,8 +39,10 @@ const UserLink = styled.a`
 export interface SchemaDetailProps {
   schema: SchemaDataInput | SchemaDataResponse;
   primaryView?: SchemaViewTypes;
-  /** Whether to show "save" and "issue VC" functionality. */
-  noTools?: boolean;
+  /** Whether to show various tools including "save" and "issue VC" functionality. */
+  hideTools?: boolean;
+  /** Whether to show "issue VC" functionality. */
+  hideIssueVc?: boolean;
   /** Some layout changes in pane view: the header is pushed inside <SchemaPreview> and below the view switcher dropdown, and only shown in non-JSON view. */
   paneView?: boolean;
   noSwitcher?: boolean;
@@ -48,7 +50,7 @@ export interface SchemaDetailProps {
 }
 
 export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) => {
-  const { schema, primaryView, noTools, fullPage, paneView, noSwitcher } = props;
+  const { schema, primaryView, hideTools, hideIssueVc, fullPage, paneView, noSwitcher } = props;
   const [view, setView] = React.useState<SchemaViewTypes>(primaryView || SCHEMA_VIEWS[0]);
 
   // If `primaryView` prop changes, set the view to that - but future calls to `setView` will still take effect.
@@ -63,7 +65,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
       {!paneView && (
         <Flex mb={4} justifyContent="space-between">
           <SchemaHeader schema={schema} />
-          {!noTools && <SchemaSaves schema={schema} />}
+          {!hideTools && <SchemaSaves schema={schema} />}
         </Flex>
       )}
 
@@ -72,7 +74,8 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           schema={schema}
           view={view}
           setView={setView}
-          noTools={noTools}
+          hideTools={hideTools}
+          hideIssueVc={hideIssueVc}
           fullPage={fullPage}
           paneView={paneView}
           noSwitcher={noSwitcher}
