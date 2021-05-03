@@ -3,6 +3,10 @@ import { storiesOf } from "@storybook/react";
 import { EXAMPLE_VCS } from "vc-schema-tools";
 import { Credential, CredentialViewTypes } from "./Credential";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
+import { BrowserRouter } from "react-router-dom";
+
+const farFutureDate = new Date("05 October 2081 14:48 UTC");
+const pastDate = new Date("05 October 2020 14:48 UTC");
 
 const diplomaVc = {
   ...JSON.parse(EXAMPLE_VCS.DiplomaCredential),
@@ -15,8 +19,19 @@ const diplomaVc = {
 const diplomaAdditionalDetails = { 
   didListings : [
     { did: "did:ethr:rinkeby:0x9fb04797cc0b1711c86b960105e0c3ed3f9cb749", domains: ["sertouniversity.id"]}
-  ]
-}
+  ],
+  schemaVerified: true
+};
+
+const diplomaAdditionalDetailsSchemaMismatch = { 
+  didListings : [
+    { did: "did:ethr:rinkeby:0x9fb04797cc0b1711c86b960105e0c3ed3f9cb749", domains: ["sertouniversity.id"]}
+  ],
+  schemaVerified: false
+};
+
+const diplomaVcsWithFutureExpiration = {...diplomaVc, expirationDate: farFutureDate};
+const diplomaVcWithPastExpiration = {...diplomaVc, expirationDate: pastDate};
 
 const contentPubVc = {
   ...JSON.parse(EXAMPLE_VCS.ContentPublishCredential),
@@ -27,9 +42,13 @@ const contentPubVc = {
 };
 
 storiesOf("Credential", module)
-  .addDecorator((story) => <IdentityThemeProvider>{story()}</IdentityThemeProvider>)
+  .addDecorator((story) => 
+  <BrowserRouter><IdentityThemeProvider>{story()}</IdentityThemeProvider></BrowserRouter>)
   .add("List view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.LIST} />)
   .add("Collapsible view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.COLLAPSIBLE} />)
   .add("Full view", () => <Credential vc={diplomaVc} />)
   .add("Full view with additional details", () => <Credential vc={diplomaVc} additionalVCData={diplomaAdditionalDetails}/>)
+  .add("Full view with additional details and unexpired", () => <Credential vc={diplomaVcsWithFutureExpiration} additionalVCData={diplomaAdditionalDetails}/>)
+  .add("Full view with additional details and expired", () => <Credential vc={diplomaVcWithPastExpiration} additionalVCData={diplomaAdditionalDetails}/>)
+  .add("Full view with additional details schema mismatch", () => <Credential vc={diplomaVcsWithFutureExpiration} additionalVCData={diplomaAdditionalDetailsSchemaMismatch}/>)
   .add("Full view (nested props)", () => <Credential vc={contentPubVc} />);

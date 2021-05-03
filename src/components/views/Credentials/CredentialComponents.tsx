@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Box, Text } from "rimble-ui";
+import styled from "styled-components";
 import { baseColors, fonts, colors } from "../../../themes";
 
 export const CredentialBorder: React.FunctionComponent = (props) => {
@@ -9,6 +10,19 @@ export const CredentialBorder: React.FunctionComponent = (props) => {
     </Box>
   );
 };
+
+export const CredentialContainer: React.FunctionComponent = (props) => {
+  return (
+    <Box p={3}>{props.children}</Box>
+  );
+};
+
+export const Separator = styled.hr`
+  margin-left: 16px;
+  margin-right: 16px;
+  color: ${colors.lightGray};
+  border-style: solid;
+`;
 
 export const CredentialTR: React.FunctionComponent = (props) => {
   return (

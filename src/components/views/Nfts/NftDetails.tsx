@@ -7,6 +7,7 @@ import { baseColors, fonts } from "../../../themes";
 import { DomainImage } from "../../elements/DomainImage";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { DomainLink } from "../../elements/DomainLink";
 
 export interface NftDetailsProps {
   name: string;
@@ -14,10 +15,6 @@ export interface NftDetailsProps {
   details: string;
   domains: string[];
 }
-
-const DomainLink = styled(Link)`
-  text-decoration: none;
-`;
 
 export const NftDetails: React.FunctionComponent<NftDetailsProps> = (props) => {
   const { imgUrl, name, details, domains } = props;

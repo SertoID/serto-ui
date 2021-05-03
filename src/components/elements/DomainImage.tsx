@@ -7,7 +7,7 @@ export interface DomainImageProps {
 
 export const DomainImage: React.FunctionComponent<DomainImageProps> = (props) => {
   return (
-    <Flex alignItems="center" mr={2} width="16px">
+    <Flex alignItems="center" width="16px" {...props}>
       <img
         src={"https://www.google.com/s2/favicons?domain=" + props.domain}
         alt={props.domain}

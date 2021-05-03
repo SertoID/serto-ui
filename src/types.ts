@@ -12,6 +12,17 @@ export interface VC {
   type: string[];
   issuer: string | { id: string };
   issuanceDate: string;
+  expirationDate?: string;
   credentialSubject: { [key: string]: any };
   proof: { jwt: string };
+}
+
+export interface DidListing {
+  did: string;
+  domains: string[];
+}
+
+export interface AdditionalVCData {
+  didListings: DidListing[];
+  schemaVerified: boolean;
 }
