@@ -1,12 +1,21 @@
 import * as React from "react";
-import { Info, Person, VerifiedUser } from "@rimble/icons";
+import { Info, Person, VerifiedUser, Warning } from "@rimble/icons";
 import { Box, Flex, Pill, Table, Text, Tooltip } from "rimble-ui";
-import { CredentialBorder, CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
+import {
+  CredentialBorder,
+  CredentialContainer,
+  CredentialTDLeft,
+  CredentialTDRight,
+  CredentialTR,
+  Separator,
+} from "./CredentialComponents";
 import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard";
 import { Expand } from "../../elements/Expand/Expand";
 import { baseColors, colors, fonts } from "../../../themes";
 import { dateTimeFormat, ellipsis, hexEllipsis } from "../../../utils";
-import { VC } from "../../../types";
+import { AdditionalVCData, VC } from "../../../types";
+import { DomainImage } from "../../elements";
+import { DomainLink } from "../../elements/DomainLink";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
@@ -16,11 +25,12 @@ export enum CredentialViewTypes {
 
 export interface CredentialProps {
   vc: VC;
+  additionalVCData?: AdditionalVCData;
   viewType?: string;
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
-  const { vc } = props;
+  const { vc, additionalVCData } = props;
   const vcType = vc.type[vc.type.length - 1];
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
   const viewType = props.viewType || "default";
@@ -28,7 +38,18 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     typeof vc.issuanceDate === "number"
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
       : dateTimeFormat(new Date(vc.issuanceDate));
+  const expirationDate = vc.expirationDate && dateTimeFormat(new Date(vc.expirationDate));
   const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 6, 4);
+  const issuerDomains = additionalVCData
+    ? additionalVCData.didListings.find((listing) => listing.did === issuer)?.domains
+    : [];
+  const subjectDomains = additionalVCData
+    ? additionalVCData.didListings.find((listing) => listing.did === vc.credentialSubject.id)?.domains
+    : [];
+
+  const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
+  const schemaName = vc.type.length > 0 ? vc.type[vc.type.length - 1] : "";
+  const schemaMismatch = schemaName && additionalVCData && !additionalVCData.schemaVerified;
 
   const VerifiedCredentialHeader = () => (
     <>
@@ -111,6 +132,116 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     );
   };
 
+  const VerifiedCredentialAdditionalDetails = () => (
+    <>
+      {additionalVCData && (
+        <>
+          <Box
+            bg={expired || schemaMismatch ? colors.warning.light : colors.primary.disabled[1]}
+            borderTopLeftRadius={2}
+            borderTopRightRadius={2}
+          >
+            {schemaName && (
+              <Flex justifyContent="space-between" px={3} py={2}>
+                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+                  {schemaName}
+                </Text>
+                {schemaMismatch ? (
+                  <Flex>
+                    <Warning color={colors.warning.dark} />
+                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                      Schema does not match
+                    </Text>
+                  </Flex>
+                ) : (
+                  <Flex>
+                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                      Schema Verified
+                    </Text>
+                  </Flex>
+                )}
+              </Flex>
+            )}
+            <Flex justifyContent="space-between" px={3} py={2}>
+              <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+                Recipient
+              </Text>
+              <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
+                {subjectDomains &&
+                  subjectDomains.map((domain) => (
+                    <DomainLink to={`/search?filter=${domain}`}>
+                      <Flex>
+                        <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                          {domain}
+                        </Text>
+                        <DomainImage domain={domain} />
+                      </Flex>
+                    </DomainLink>
+                  ))}
+                <Text.span
+                  color={colors.midGray}
+                  fontFamily={fonts.sansSerifHeader}
+                  fontSize={0}
+                  mr={2}
+                  maxWidth={7}
+                  style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
+                  title={issuer}
+                >
+                  {vc.credentialSubject.id}
+                </Text.span>
+              </Flex>
+            </Flex>
+            <Separator />
+            <Flex justifyContent="space-between" px={3} py={2}>
+              <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+                Issued By
+              </Text>
+              <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
+                {issuerDomains &&
+                  issuerDomains.map((domain) => (
+                    <DomainLink to={`/search?filter=${domain}`}>
+                      <Flex>
+                        <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                          {domain}
+                        </Text>
+                        <DomainImage domain={domain} />
+                      </Flex>
+                    </DomainLink>
+                  ))}
+                <Text.span
+                  color={colors.midGray}
+                  fontFamily={fonts.sansSerifHeader}
+                  fontSize={0}
+                  mr={2}
+                  maxWidth={7}
+                  style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
+                  title={issuer}
+                >
+                  {vc.issuer}
+                </Text.span>
+              </Flex>
+            </Flex>
+            {expirationDate && (
+              <Flex justifyContent="space-between" px={3} py={2}>
+                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+                  Expires
+                </Text>
+                <Text.span
+                  fontFamily={fonts.sansSerif}
+                  fontWeight={2}
+                  fontSize={2}
+                  color={expired ? colors.danger.base : colors.blacks[0]}
+                >
+                  {expirationDate}
+                </Text.span>
+              </Flex>
+            )}
+          </Box>
+        </>
+      )}
+    </>
+  );
+
   const VerifiedCredentialBody = () => (
     <>
       <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
@@ -178,9 +309,12 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
 
   return (
     <CredentialBorder>
-      {VerifiedCredentialHeader()}
-      {VerifiedCredentialBody()}
-      {VerifiedCredentialFooter()}
+      {VerifiedCredentialAdditionalDetails()}
+      <CredentialContainer>
+        {VerifiedCredentialHeader()}
+        {VerifiedCredentialBody()}
+        {VerifiedCredentialFooter()}
+      </CredentialContainer>
     </CredentialBorder>
   );
 };
