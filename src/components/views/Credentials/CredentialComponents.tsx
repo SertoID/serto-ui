@@ -12,9 +12,7 @@ export const CredentialBorder: React.FunctionComponent = (props) => {
 };
 
 export const CredentialContainer: React.FunctionComponent = (props) => {
-  return (
-    <Box p={3}>{props.children}</Box>
-  );
+  return <Box p={3}>{props.children}</Box>;
 };
 
 export const Separator = styled.hr`
