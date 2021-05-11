@@ -161,7 +161,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                   </Flex>
                 )}
               </Flex>
-                )}
+            )}
             <Flex justifyContent="space-between" px={3} py={2}>
               <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
                 Recipient
