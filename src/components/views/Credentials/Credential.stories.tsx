@@ -18,8 +18,8 @@ const diplomaVc = {
 
 const emptyAdditionalDetails = {
   didListings: [],
-  schemaVerified: false
-}
+  schemaVerified: false,
+};
 
 const diplomaAdditionalDetails = {
   didListings: [
