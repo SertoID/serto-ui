@@ -16,6 +16,11 @@ const diplomaVc = {
   },
 };
 
+const emptyAdditionalDetails = {
+  didListings: [],
+  schemaVerified: false,
+};
+
 const diplomaAdditionalDetails = {
   didListings: [
     { did: "did:ethr:rinkeby:0x9fb04797cc0b1711c86b960105e0c3ed3f9cb749", domains: ["sertouniversity.id"] },
@@ -62,4 +67,7 @@ storiesOf("Credential", module)
   .add("Full view with additional details schema mismatch", () => (
     <Credential vc={diplomaVcsWithFutureExpiration} additionalVCData={diplomaAdditionalDetailsSchemaMismatch} />
   ))
-  .add("Full view (nested props)", () => <Credential vc={contentPubVc} />);
+  .add("Full view (nested props)", () => <Credential vc={contentPubVc} />)
+  .add("Full view with empty additional details", () => (
+    <Credential vc={diplomaVc} additionalVCData={emptyAdditionalDetails} />
+  ));

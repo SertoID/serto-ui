@@ -22,6 +22,7 @@ import {
   SertoSchemasLogo,
   SertoSearchLogo,
   SertoVerifiedCheckmark,
+  SertoVerificationError,
   Settings,
   SovrinDidLogo,
   VerifiedUser,
@@ -96,6 +97,9 @@ storiesOf("Icons", module)
   })
   .add("VerifiedUser", () => {
     return <VerifiedUser />;
+  })
+  .add("SertoVerificationError", () => {
+    return <SertoVerificationError size="50px" />;
   })
   .add("SertoVerifiedCheckmark", () => {
     return <SertoVerifiedCheckmark size="50px" />;

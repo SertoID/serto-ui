@@ -217,7 +217,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                   style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
                   title={issuer}
                 >
-                  {vc.issuer}
+                  {typeof vc.issuer == "string" ? vc.issuer : vc.issuer.id}
                 </Text.span>
               </Flex>
             </Flex>
