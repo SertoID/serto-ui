@@ -5,7 +5,7 @@ import { Credential, CredentialViewTypes } from "../Credential";
 import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
 import { SchemaDataResponse } from "../../Schemas";
 import { SchemasTable } from "../../Schemas/SchemasTable";
-import { H3, Tabs } from "../../../layouts";
+import { H3 } from "../../../layouts";
 import { colors } from "../../../../themes";
 import { IssueVcForm } from "./IssueVcForm";
 import { Identifier } from "../../../../types";
@@ -20,7 +20,6 @@ export interface IssueVcProps {
 export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   const [response, setResponse] = useState<any>();
   const [schema, setSchema] = useState<SchemaDataResponse | null | undefined>();
-  const [schemaTab, setSchemaTab] = useState("discover");
 
   function goBack() {
     setSchema(undefined);
@@ -81,6 +80,9 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
             </Button.Text>
             .
           </Text>
+
+          <SchemasTable discover={true} onSchemaSelect={setSchema} hideIssueVcInDetail />
+          {/* we'll use something like these tabs again when we have e.g. MRU schemas from agent
           <Tabs
             activeTabName={schemaTab}
             tabs={[
@@ -97,6 +99,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
             ]}
             onTabClicked={setSchemaTab}
           />
+          */}
         </ModalContent>
       </>
     );
