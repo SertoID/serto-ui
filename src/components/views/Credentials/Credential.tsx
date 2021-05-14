@@ -294,15 +294,21 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   );
 
   if (viewType === CredentialViewTypes.LIST) {
-    return <CredentialBorder>{VerifiedCredentialHeader()}</CredentialBorder>;
+    return (
+      <CredentialBorder>
+        <CredentialContainer>{VerifiedCredentialHeader()}</CredentialContainer>
+      </CredentialBorder>
+    );
   }
 
   if (viewType === CredentialViewTypes.COLLAPSIBLE) {
     return (
       <CredentialBorder>
-        {VerifiedCredentialHeader()}
-        <Expand>{VerifiedCredentialBody()}</Expand>
-        {VerifiedCredentialFooter()}
+        <CredentialContainer>
+          {VerifiedCredentialHeader()}
+          <Expand>{VerifiedCredentialBody()}</Expand>
+          {VerifiedCredentialFooter()}
+        </CredentialContainer>
       </CredentialBorder>
     );
   }
