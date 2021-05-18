@@ -10,6 +10,7 @@ import { dateTimeFormat, ellipsis } from "../../../utils";
 import { AdditionalVCData } from "../../../types";
 import { DomainImage } from "../../elements";
 import { DomainLink } from "../../elements/DomainLink";
+import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialProperty } from "./CredentialProperty";
 
 export enum CredentialViewTypes {
@@ -26,6 +27,8 @@ export interface CredentialProps {
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const { vc, additionalVCData } = props;
+  const { vcSchema } = useVcSchema(vc);
+  console.log("NICE WE HAVE SCHEMA", vcSchema);
   const vcType = vc.type[vc.type.length - 1];
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
   const viewType = props.viewType || "default";

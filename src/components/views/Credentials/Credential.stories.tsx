@@ -1,9 +1,22 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { EXAMPLE_VCS } from "vc-schema-tools";
+import { EXAMPLE_VCS, EXAMPLE_SCHEMAS } from "vc-schema-tools";
 import { Credential, CredentialViewTypes } from "./Credential";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { BrowserRouter } from "react-router-dom";
+import { SertoUiProvider } from "../../../context/SertoUiProvider";
+import { createMockApiRequest } from "../../../utils/helpers";
+import { ldContextPlusToSchemaInput } from "../Schemas/utils";
+
+const schemas = Object.values(EXAMPLE_SCHEMAS)
+  .map((schema) => {
+    try {
+      return ldContextPlusToSchemaInput(JSON.parse(schema));
+    } catch {
+      return undefined;
+    }
+  })
+  .filter((schema) => !!schema);
 
 const farFutureDate = new Date("05 October 2081 14:48 UTC");
 const pastDate = new Date("05 October 2020 14:48 UTC");
@@ -49,7 +62,17 @@ const contentPubVc = {
 storiesOf("Credential", module)
   .addDecorator((story) => (
     <BrowserRouter>
-      <IdentityThemeProvider>{story()}</IdentityThemeProvider>
+      <IdentityThemeProvider>
+        <SertoUiProvider
+          context={{
+            schemasService: {
+              getSchemas: createMockApiRequest(schemas),
+            },
+          }}
+        >
+          {story()}
+        </SertoUiProvider>
+      </IdentityThemeProvider>
     </BrowserRouter>
   ))
   .add("List view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.LIST} />)
