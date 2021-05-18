@@ -70,6 +70,8 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     if (node.type === "number" || node.type === "integer") {
       type = "number";
       width = undefined;
+    } else if (node.format === "date") {
+      type = "date";
     } else if (node.format === "date-time") {
       type = "datetime-local";
       inputValue = inputValue && isoToDatetimeLocal(inputValue);
