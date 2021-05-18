@@ -17,17 +17,6 @@ type NamedLdContextPlusNode = Partial<LdContextPlusNode<SchemaMetadata>> & { nic
 export const NESTED_TYPE_KEY = "NESTED";
 
 export const typeOptions: { [key: string]: NamedLdContextPlusNode } = {};
-Object.keys(jsonLdContextTypeMap).forEach((type) => {
-  if (type !== "@id" && type.indexOf("http://schema.org/") !== 0) {
-    return;
-  }
-  typeOptions[type] = {
-    "@format": jsonLdContextTypeMap[type].format,
-    "@dataType": jsonLdContextTypeMap[type].type,
-    "@type": type,
-    niceName: type === "@id" ? "Identifier" : type.replace("http://schema.org/", "").replace("URL", "URI"),
-  };
-});
 typeOptions[NESTED_TYPE_KEY] = {
   "@context": {
     "": {
@@ -36,6 +25,17 @@ typeOptions[NESTED_TYPE_KEY] = {
   },
   niceName: "[nest attributes]",
 };
+Object.keys(jsonLdContextTypeMap).forEach((type) => {
+  if (type !== "@id" && type.indexOf("http://schema.org/") !== 0) {
+    return;
+  }
+  typeOptions[type] = {
+    "@format": jsonLdContextTypeMap[type].format,
+    "@dataType": jsonLdContextTypeMap[type].type,
+    "@type": type,
+    niceName: type === "@id" ? "DID" : type.replace("http://schema.org/", "").replace("URL", "URI"),
+  };
+});
 
 export function createSchemaInput(
   schema: CompletedSchema,

@@ -40,11 +40,11 @@ const schemaToUpdate = {
     },
     {
       "@id": "hireDate",
-      "@type": "http://schema.org/DateTime",
+      "@type": "http://schema.org/Date",
       "@dataType": "string",
       "@title": "Hire Date",
       "@description": "",
-      "@format": "date-time",
+      "@format": "date",
     },
     {
       "@id": "employer",
