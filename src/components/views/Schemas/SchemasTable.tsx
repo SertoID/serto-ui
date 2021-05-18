@@ -12,6 +12,7 @@ import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoU
 export interface SchemasTableProps {
   discover?: boolean;
   noSchemasElement?: JSX.Element;
+  hideIssueVcInDetail?: boolean;
   onSchemaSelect?(schema: SchemaDataResponse): void;
 }
 
@@ -89,7 +90,9 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
           </TBody>
         </Table>
         <ModalWithX isOpen={!!viewedSchema} close={() => setViewedSchema(undefined)} minWidth={9}>
-          <ModalContent>{viewedSchema && <SchemaDetail schema={viewedSchema} />}</ModalContent>
+          <ModalContent>
+            {viewedSchema && <SchemaDetail schema={viewedSchema} hideIssueVc={props.hideIssueVcInDetail} />}
+          </ModalContent>
           <ModalFooter mt={3}>
             <Button width="100%" onClick={() => setViewedSchema(undefined)}>
               Close

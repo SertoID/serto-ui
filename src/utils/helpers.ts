@@ -43,6 +43,13 @@ export function dateTimeFormat(date: Date): string {
   return dateTimeFormated;
 }
 
+/** <input type="datetime-local"> element requires a nonstandard time format ("yyyy-MM-ddThh:mm"). This converts from ISO datetime string into that format.  */
+export function isoToDatetimeLocal(isoString: string): string {
+  const offset = new Date().getTimezoneOffset() * 1000 * 60;
+  const offsetDate = new Date(isoString).valueOf() - offset;
+  return new Date(offsetDate).toISOString().substring(0, 16);
+}
+
 export function convertToCamelCase(s: string): string {
   return slugify(s).replace(/-./g, (x) => x.replace("-", "").toUpperCase());
 }

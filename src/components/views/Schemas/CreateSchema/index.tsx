@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Check, ArrowBack } from "@rimble/icons";
-import { Link, Box, Button, Flex, Flash, Text } from "rimble-ui";
+import { Link, Box, Button, Flex, Text } from "rimble-ui";
 import { mutate } from "swr";
 import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
 import { createSchemaInput } from "../utils";
@@ -99,7 +99,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   if (currentStep === "DONE") {
     return (
-      <Box px={4} py={0}>
+      <Box px={4} py={0} className={className}>
         <Text mt={3} mb={6} textAlign="center" color={colors.success.base}>
           <Text
             bg={colors.success.light}
@@ -163,17 +163,20 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
           <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
         ) : (
           <Box mt={4}>
-            <ConfirmStep builtSchema={builtSchema} onComplete={goForward} loading={loading} />
+            <ConfirmStep builtSchema={builtSchema} onComplete={goForward} loading={loading} error={error} />
           </Box>
         )}
-        {error && (
-          <Flash mt={3} variant="danger">
-            {error}
-          </Flash>
-        )}
       </Box>
-      <Box minWidth={9} backgroundColor={colors.nearWhite} borderLeft={1} px={5} py={3} flexGrow="1">
-        <SchemaDetail schema={builtSchema} primaryView="JSON source" noTools={true} paneView={true} />
+      <Box
+        className="right-pane"
+        minWidth={9}
+        backgroundColor={colors.nearWhite}
+        borderLeft={1}
+        px={5}
+        py={3}
+        flexGrow="1"
+      >
+        <SchemaDetail schema={builtSchema} primaryView="JSON source" hideTools={true} paneView={true} />
       </Box>
     </Flex>
   );

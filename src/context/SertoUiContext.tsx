@@ -19,7 +19,7 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Nowhere", url: "/nowhere", icon: Send },
   ],
   schemasService: mockSertoSchemasService,
-  schemasUiUrl: "https://schemas.serto.id", // @TODO/tobek Verify when we launch it
+  schemasUiUrl: "https://staging.schemas.serto.id",
 };
 
 export const SertoUiContext = React.createContext(defaultSertoUiContext);

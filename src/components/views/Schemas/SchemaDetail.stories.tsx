@@ -48,7 +48,7 @@ const SchemaDetailStory = () => {
         </select>
       </Box>
 
-      <Box width={480} key={schemaKey}>
+      <Box key={schemaKey}>
         {ldContextPlus && <SchemaDetail schema={ldContextPlus} />}
         {error && <Flash variant="danger">Error: {error}</Flash>}
       </Box>

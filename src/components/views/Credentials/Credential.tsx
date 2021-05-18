@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Info, Person, VerifiedUser, Warning } from "@rimble/icons";
 import { Box, Flex, Pill, Table, Text, Tooltip } from "rimble-ui";
+import { VC } from "vc-schema-tools";
 import {
   CredentialBorder,
   CredentialContainer,
@@ -13,7 +14,7 @@ import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard"
 import { Expand } from "../../elements/Expand/Expand";
 import { baseColors, colors, fonts } from "../../../themes";
 import { dateTimeFormat, ellipsis, hexEllipsis } from "../../../utils";
-import { AdditionalVCData, VC } from "../../../types";
+import { AdditionalVCData } from "../../../types";
 import { DomainImage } from "../../elements";
 import { DomainLink } from "../../elements/DomainLink";
 
@@ -294,15 +295,21 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   );
 
   if (viewType === CredentialViewTypes.LIST) {
-    return <CredentialBorder>{VerifiedCredentialHeader()}</CredentialBorder>;
+    return (
+      <CredentialBorder>
+        <CredentialContainer>{VerifiedCredentialHeader()}</CredentialContainer>
+      </CredentialBorder>
+    );
   }
 
   if (viewType === CredentialViewTypes.COLLAPSIBLE) {
     return (
       <CredentialBorder>
-        {VerifiedCredentialHeader()}
-        <Expand>{VerifiedCredentialBody()}</Expand>
-        {VerifiedCredentialFooter()}
+        <CredentialContainer>
+          {VerifiedCredentialHeader()}
+          <Expand>{VerifiedCredentialBody()}</Expand>
+          {VerifiedCredentialFooter()}
+        </CredentialContainer>
       </CredentialBorder>
     );
   }
