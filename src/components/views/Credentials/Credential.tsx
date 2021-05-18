@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Info, Person, VerifiedUser, Warning } from "@rimble/icons";
 import { Box, Flex, Pill, Table, Text, Tooltip } from "rimble-ui";
+import { VC } from "vc-schema-tools";
 import {
   CredentialBorder,
   CredentialContainer,
@@ -13,7 +14,7 @@ import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard"
 import { Expand } from "../../elements/Expand/Expand";
 import { baseColors, colors, fonts } from "../../../themes";
 import { dateTimeFormat, ellipsis, hexEllipsis } from "../../../utils";
-import { AdditionalVCData, VC } from "../../../types";
+import { AdditionalVCData } from "../../../types";
 import { DomainImage } from "../../elements";
 import { DomainLink } from "../../elements/DomainLink";
 
