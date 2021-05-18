@@ -1,8 +1,19 @@
 import { useMemo, useContext } from "react";
 import useSWR from "swr";
-import { VC } from "vc-schema-tools";
+import { VC, JsonSchema } from "vc-schema-tools";
 import { SertoUiContext, SertoUiContextInterface } from "../context/SertoUiContext";
 import { SchemaDataResponse } from "../components/views/Schemas/types";
+
+export type SchemaDataResponseWithJsonSchema = SchemaDataResponse & {
+  jsonSchema: JsonSchema;
+};
+
+/** To improve lookup times and save computation on parsing JSON */
+const schemaCache: {
+  [contextUrl: string]: {
+    [type: string]: SchemaDataResponseWithJsonSchema;
+  };
+} = {};
 
 /**
  * Given a VC, returns the Serto Schemas representation of its schema.
@@ -16,7 +27,7 @@ export function useVcSchema(
 ): {
   loading?: boolean;
   error?: any;
-  vcSchema?: SchemaDataResponse;
+  vcSchema?: SchemaDataResponseWithJsonSchema;
 } {
   const schemasService = useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
@@ -32,12 +43,28 @@ export function useVcSchema(
       return;
     }
 
+    const cachedSchema = schemaCache[contextUrls[contextUrls.length - 1]]?.[types[types.length - 1]];
+    if (cachedSchema) {
+      return cachedSchema;
+    }
+
     for (let i = 0; i < data.length; ++i) {
       for (let j = 0; j < contextUrls.length; ++j) {
         if (data[i].ldContextPlus.includes(`"jsonLdContext":"${contextUrls[j]}"`)) {
           for (let k = 0; k < types.length; ++k) {
             if (data[i].ldContextPlus.includes(`"@rootType":"${types[k]}"`)) {
-              return data[i];
+              try {
+                const withJsonSchema = {
+                  ...data[i],
+                  jsonSchema: JSON.parse(data[i].jsonSchema),
+                };
+                schemaCache[contextUrls[j]] = schemaCache[contextUrls[j]] || {};
+                schemaCache[contextUrls[j]][types[k]] = withJsonSchema;
+                return withJsonSchema;
+              } catch (err) {
+                console.error("Failed to parse JSON Schema:", err);
+                return;
+              }
             }
           }
         }
