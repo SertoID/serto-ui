@@ -3,6 +3,7 @@ import { Box, Checkbox, Input, Field, Text } from "rimble-ui";
 import { JsonSchemaNode } from "vc-schema-tools";
 import { DidSelect } from "../../../elements/DidSelect";
 import { Identifier } from "../../../../types";
+import { isoToDatetimeLocal } from "../../../../utils/helpers";
 
 export interface IssueVcFormInputProps {
   name: string;
@@ -65,22 +66,35 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     let type = "text";
     let placeholder = "";
     let width: string | undefined = "100%";
+    let inputValue = value || "";
     if (node.type === "number" || node.type === "integer") {
       type = "number";
       width = undefined;
     } else if (node.format === "date-time") {
       type = "datetime-local";
+      inputValue = inputValue && isoToDatetimeLocal(inputValue);
     } else if (node.format === "uri") {
       type = "url";
       placeholder = "URL";
+    }
+
+    function changeHandler(event: any) {
+      const newValue = event.target.value;
+      if (type === "number") {
+        onChange(parseInt(newValue, 10));
+      } else if (type === "datetime-local") {
+        onChange(new Date(newValue).toISOString());
+      } else {
+        onChange(newValue);
+      }
     }
 
     return (
       <Input
         type={type}
         disabled={false}
-        value={value || ""}
-        onChange={(event: any) => onChange(type === "number" ? parseInt(event.target.value, 10) : event.target.value)}
+        value={inputValue}
+        onChange={changeHandler}
         required={required}
         width={width}
         placeholder={placeholder}
