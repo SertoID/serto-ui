@@ -132,7 +132,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
                 {subjectDomains &&
                   subjectDomains.map((domain) => (
-                    <DomainLink to={`/search?filter=${domain}`}>
+                    <DomainLink to={`/search?filter=${domain}`} key={domain}>
                       <Flex>
                         <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
                           {domain}
@@ -162,7 +162,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
                 {issuerDomains &&
                   issuerDomains.map((domain) => (
-                    <DomainLink to={`/search?filter=${domain}`}>
+                    <DomainLink to={`/search?filter=${domain}`} key={domain}>
                       <Flex>
                         <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
                           {domain}
@@ -210,7 +210,12 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
       <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
         <tbody>
           {Object.entries(vc.credentialSubject).map(([key, value]) => (
-            <CredentialProperty key={key} keyName={key} value={value} />
+            <CredentialProperty
+              key={key}
+              keyName={key}
+              value={value}
+              schema={vcSchema?.jsonSchema?.properties?.credentialSubject?.properties?.[key]}
+            />
           ))}
         </tbody>
       </Table>
