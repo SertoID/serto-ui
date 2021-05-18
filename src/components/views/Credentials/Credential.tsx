@@ -12,6 +12,7 @@ import { DomainImage } from "../../elements";
 import { DomainLink } from "../../elements/DomainLink";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialProperty } from "./CredentialProperty";
+import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
@@ -28,7 +29,6 @@ export interface CredentialProps {
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const { vc, additionalVCData } = props;
   const { vcSchema } = useVcSchema(vc);
-  console.log("NICE WE HAVE SCHEMA", vcSchema);
   const vcType = vc.type[vc.type.length - 1];
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
   const viewType = props.viewType || "default";
@@ -77,16 +77,19 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         </Box>
         <Box flexGrow="1">
           <Flex alignItems="center" justifyContent="flex-end">
-            <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={0} height={4} mr={2}>
-              {vcType}
-            </Pill>
+            <ViewSchemaButton schema={vcSchema}>
+              <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={0} height={4} mr={2}>
+                {vcType}
+                {vcSchema?.icon && ` ${vcSchema.icon}`}
+              </Pill>
+            </ViewSchemaButton>
             <VerifiedUser color={colors.primary.disabled[1]} />
           </Flex>
         </Box>
       </Flex>
       <Box>
         <Text color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3} mr={2}>
-          {vc.credentialSubject.title || vcType}
+          {vcSchema?.name || vc.credentialSubject.title || vcType}
         </Text>
       </Box>
     </>
