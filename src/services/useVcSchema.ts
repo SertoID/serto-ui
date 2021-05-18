@@ -4,6 +4,7 @@ import { VC, JsonSchema } from "vc-schema-tools";
 import { SertoUiContext, SertoUiContextInterface } from "../context/SertoUiContext";
 import { SchemaDataResponse } from "../components/views/Schemas/types";
 
+/** Same as SchemaDataResponse but the `jsonSchema` string property has been parsed into the actual JSON Schema object. */
 export type SchemaDataResponseWithJsonSchema = SchemaDataResponse & {
   jsonSchema: JsonSchema;
 };
@@ -63,7 +64,7 @@ export function useVcSchema(
                 return withJsonSchema;
               } catch (err) {
                 console.error("Failed to parse JSON Schema:", err);
-                return;
+                continue;
               }
             }
           }
