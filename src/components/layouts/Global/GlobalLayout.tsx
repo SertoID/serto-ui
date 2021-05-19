@@ -21,7 +21,6 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export interface GlobalLayoutProps {
-  activeTenantID?: string;
   url: string;
   sidebarBottomContents?: React.ReactNode;
   sidebarTopContents?: React.ReactNode;
@@ -29,17 +28,17 @@ export interface GlobalLayoutProps {
 
 export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
   return (
-    <Flex p={4} height="100vh">
-      <Flex flexDirection="column" justifyContent="space-between" width={8} p={2} mr={2} minWidth={8}>
+    <Box py={5} height="100vh">
+      <Flex flexDirection="column" justifyContent="space-between" position="fixed" width="232px">
         <Box>
           {props.sidebarTopContents}
           <Nav currentUrl={props.url} />
         </Box>
         <Box>{props.sidebarBottomContents}</Box>
       </Flex>
-      <Flex flexDirection="column" height="98vh" flexGrow="1" p={2}>
+      <Flex flexDirection="column" minHeight="calc(100vh - 64px)" flexGrow="1" ml={8}>
         {props.children}
       </Flex>
-    </Flex>
+    </Box>
   );
 };
