@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Input, Flex } from "rimble-ui";
 import { getNftIdentifiersFromUrl } from "../../utils";
+import { colors } from "../../themes";
 import { DropDown } from "./DropDown/DropDown";
 
 export interface CombinedSearchBarProps {
@@ -57,7 +58,7 @@ export const CombinedSearchBar: React.FunctionComponent<CombinedSearchBarProps> 
 
   return (
     <Box position="relative" width="100%">
-      <Flex flexDirection="row">
+      <Flex flexDirection="row" boxShadow={1}>
         <Box width="182px">
           <DropDown
             onChange={(value) => {
@@ -66,10 +67,17 @@ export const CombinedSearchBar: React.FunctionComponent<CombinedSearchBarProps> 
             }}
             options={options}
             defaultSelectedValue={startingState}
+            combinedLeft
+            arrowColor={colors.primary.base}
           />
         </Box>
         <Flex flexGrow="1">
           <Input
+            borderRadius={1}
+            borderBottomLeftRadius={0}
+            borderTopLeftRadius={0}
+            borderLeft={0}
+            boxShadow={0}
             onChange={(event: any) => setSearch(event.target.value)}
             onKeyDown={(event: any) => onKeyDown(event)}
             placeholder={
@@ -86,6 +94,7 @@ export const CombinedSearchBar: React.FunctionComponent<CombinedSearchBarProps> 
             width="100%"
           />
           <Button.Text
+            mainColor={colors.primary.base}
             icononly
             icon="Search"
             onClick={() => doSearch()}
