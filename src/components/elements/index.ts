@@ -6,6 +6,7 @@ export * from "./DidView";
 export * from "./DropDown";
 export * from "./DomainImage";
 export * from "./Expand";
+export * from "./FaqBox";
 export * from "./HighlightedJson";
 export * from "./Icons";
 export * from "./Modals";
