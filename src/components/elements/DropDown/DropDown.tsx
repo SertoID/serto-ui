@@ -17,6 +17,8 @@ interface DropDownOption {
 
 export interface DropDownProps {
   options: DropDownOption[];
+  arrowColor?: string;
+  combinedLeft?: boolean;
   defaultSelectedValue?: string;
   optionsTextProps?: { [key: string]: any };
   disabled?: boolean;
@@ -74,7 +76,9 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       ref={node}
       bg={baseColors.white}
       borderRadius={1}
-      boxShadow={1}
+      borderBottomRightRadius={props.combinedLeft && 0}
+      borderTopRightRadius={props.combinedLeft && 0}
+      boxShadow={props.combinedLeft ? 0 : 1}
       width="100%"
       mb={3}
       style={{
@@ -86,11 +90,14 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       <Flex
         onClick={toggle}
         alignItems="center"
+        border={1}
+        borderRight={props.combinedLeft && 0}
+        borderRadius={1}
+        borderBottomRightRadius={props.combinedLeft && 0}
+        borderTopRightRadius={props.combinedLeft && 0}
         height="48px"
         p={3}
         pr={4}
-        border={1}
-        borderRadius={1}
         width="100%"
         style={{
           cursor: props.disabled ? "default" : "pointer",
@@ -103,12 +110,12 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
         </Text.span>
         {isOpen ? (
           <KeyboardArrowUp
-            color={colors.moonGray}
+            color={props.arrowColor || colors.moonGray}
             style={{ position: "absolute", right: "8px", top: "calc(50% - 12px)" }}
           />
         ) : (
           <KeyboardArrowDown
-            color={colors.moonGray}
+            color={props.arrowColor || colors.moonGray}
             style={{ position: "absolute", right: "8px", top: "calc(50% - 12px)" }}
           />
         )}
