@@ -1,6 +1,6 @@
-import React from "react";
 import { storiesOf } from "@storybook/react";
 import { Identifier } from "../../types";
+import { DidSearch } from "./DidSearch";
 import { DidSelect } from "./DidSelect";
 import { DidView } from "./DidView";
 
@@ -58,4 +58,13 @@ storiesOf("DID", module)
   })
   .add("DID View", () => {
     return <DidView did="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" icon copy />;
+  })
+  .add("DID Search", () => {
+    return (
+      <DidSearch
+        identifiers={identifiers}
+        onSearch={(searchVal) => console.log(searchVal)}
+        onSelect={(selected) => console.log(selected)}
+      />
+    );
   });
