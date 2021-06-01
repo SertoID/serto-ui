@@ -26,13 +26,12 @@ export interface DidSearchResultTypes {
 export interface DidSearchProps {
   defaultSelectedDid?: string;
   identifiers?: Identifier[];
-  placeholderText?: string;
   required?: boolean;
   onChange(value: string): void;
 }
 
 export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (props) => {
-  const { defaultSelectedDid, identifiers, onChange, placeholderText, required } = props;
+  const { defaultSelectedDid, identifiers, onChange, required } = props;
   const node = useRef() as React.MutableRefObject<HTMLInputElement>;
   const SertoSearch = useContext<SertoSearchService>(SertoSearchContext);
 
@@ -71,7 +70,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
   });
 
   return (
-    <Box position="relative" ref={node} width="100%">
+    <Box mb={3} position="relative" ref={node} width="100%">
       <Search color={colors.primary.base} size="24" style={{ position: "absolute", left: "10px", top: "12px" }} />
       <Input
         borderRadius={isOpen ? "4px 4px 0 0" : 1}
@@ -85,7 +84,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
         borderColor={isOpen && colors.primary.base}
         borderBottomColor={isOpen && colors.midGray}
         p="16px 16px 16px 40px"
-        placeholder={placeholderText || "Search by domain or DID"}
+        placeholder="Search by domain or DID"
         required={required}
         type="text"
         value={value}
@@ -102,7 +101,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
           width="100%"
           style={{ zIndex: 9 }}
         >
-          <Box maxHeight="450px" style={{ overflow: "scroll" }}>
+          <Box maxHeight="250px" style={{ overflow: "scroll" }}>
             {internalResults && internalResults.length > 0 && (
               <Box>
                 {internalResults.map((did: any, i: number) => {
@@ -156,9 +155,8 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
       <DidSearchComponent
         defaultSelectedDid={props.defaultSelectedDid}
         identifiers={props.identifiers}
-        placeholderText={props.placeholderText}
-        required={props.required}
         onChange={props.onChange}
+        required={props.required}
       />
     </SertoSearchProvider>
   );
