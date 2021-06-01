@@ -31,8 +31,8 @@ const identifiers: Identifier[] = [
     userName: "Organization ABC",
   },
   {
-    did: "did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac",
-    provider: "did:ethr:rinkeby",
+    did: "did:sov:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac",
+    provider: "did:sov:rinkeby",
     userName: "Organization ABC",
   },
 ];
@@ -63,8 +63,7 @@ storiesOf("DID", module)
     return (
       <DidSearch
         identifiers={identifiers}
-        onSearch={(searchVal) => console.log(searchVal)}
-        onSelect={(selected) => console.log(selected)}
+        onChange={(value: any) => console.log(value)}
       />
     );
   });

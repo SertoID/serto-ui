@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import { Eth } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { colors } from "../../themes";
 import { hexEllipsis } from "../../utils";
 import { H5 } from "../layouts";
-import { EthrDidLogo, SovrinDidLogo } from "../elements";
+import { DomainImage, SovrinDidLogo } from "../elements";
 
 const DidSearchOptionStyled = styled(Box)`
   cursor: pointer;
@@ -28,11 +29,15 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
   return (
     <Box borderTop={2}>
       <Box position="relative" pb={2} pl="50px" pr={3} pt={3}>
-        {imageUrl && (
+        {imageUrl ? (
           <img
             src={imageUrl}
             style={{ height: "24px", left: "16px", position: "absolute", top: "16px", width: "24px" }}
           />
+        ) : (
+          <Box height="16px" width="16px" position="absolute" left="18px" top="18px">
+            <DomainImage domain={domain} />
+          </Box>
         )}
         <H5 m={0}>{domain}</H5>
         <Text color={colors.midGray} fontSize={0}>
@@ -56,7 +61,7 @@ export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps
     <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
       <Flex borderTop={2} pr={3} py={3}>
         <Box mr={1}>
-          {did.includes("did:ethr") && <EthrDidLogo />}
+          {did.includes("did:ethr") && <Eth size="16px" />}
           {did.includes("did:sov") && <SovrinDidLogo />}
         </Box>
         {alias ? (
