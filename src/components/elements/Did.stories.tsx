@@ -31,8 +31,8 @@ const identifiers: Identifier[] = [
     userName: "Organization ABC",
   },
   {
-    did: "did:sov:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac",
-    provider: "did:sov:rinkeby",
+    did: "did:ethr:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac",
+    provider: "did:ethr:rinkeby",
     userName: "Organization ABC",
   },
 ];
