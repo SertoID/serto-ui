@@ -1,3 +1,4 @@
+import React from "react";
 import { storiesOf } from "@storybook/react";
 import { Identifier } from "../../types";
 import { DidSearch } from "./DidSearch";
@@ -31,7 +32,7 @@ const identifiers: Identifier[] = [
     userName: "Organization ABC",
   },
   {
-    did: "did:ethr:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac",
+    did: "did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac",
     provider: "did:ethr:rinkeby",
     userName: "Organization ABC",
   },
