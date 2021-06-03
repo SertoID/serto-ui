@@ -5793,13 +5793,6 @@ deep-object-diff@^1.1.0:
   resolved "https://registry.yarnpkg.com/deep-object-diff/-/deep-object-diff-1.1.0.tgz#d6fabf476c2ed1751fc94d5ca693d2ed8c18bc5a"
   integrity sha512-b+QLs5vHgS+IoSNcUE4n9HP2NwcHj7aqnJWsjPtuG75Rh5TOaGt0OjAYInh77d5T16V5cRDC+Pw/6ZZZiETBGw==
 
-deepdash-es@^5.3.5:
-  version "5.3.5"
-  resolved "https://registry.yarnpkg.com/deepdash-es/-/deepdash-es-5.3.5.tgz#1217365f6508bb47f1f90def6b4f1c4b5f4ff6eb"
-  integrity sha512-bezxT+LqAu1Ly8I2LAEFle3fdEAc/bHld9cMAbgYzY+69+P9qTkGtNvC2ZQJEP4C1C2Fx9gVn/TCoQlAivWPDA==
-  dependencies:
-    lodash-es "^4.17.15"
-
 deepdash@^5.3.9:
   version "5.3.9"
   resolved "https://registry.yarnpkg.com/deepdash/-/deepdash-5.3.9.tgz#2aa92570d7b1787ed281e2fafe0be24df00ddfe4"
@@ -14542,14 +14535,14 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vc-schema-tools@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/vc-schema-tools/-/vc-schema-tools-0.2.2.tgz#713ba2180f7fcacc7702374f2257b49b2097b23d"
-  integrity sha512-HddjaWDzU20iIzhFHxHZ26ohPteuej+Vgg//1osWi995nhDsG3x3oIIasWayuAqSwFDEPpYfqQDXR6ECM6dlDA==
+vc-schema-tools@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/vc-schema-tools/-/vc-schema-tools-0.2.3.tgz#b75ef226fcd8eeeb21d8f04f0b60938064b3d5af"
+  integrity sha512-6NgLCsWxJTE2Veo1WEYvACbglDCKyjcl8N95gK5Z8P3qu2/TgA/hIJUw7ZRIhngXFz9z3J+LOsqhWZ9K2zcT6A==
   dependencies:
     ajv "^6.12.3"
     cross-fetch "^3.1.4"
-    deepdash-es "^5.3.5"
+    deepdash "^5.3.9"
     typescript "^4.1.3"
 
 vendors@^1.0.0:
