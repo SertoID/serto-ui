@@ -7,6 +7,7 @@ import { Launch, Search } from "@rimble/icons";
 import { Box, Flex, Input } from "rimble-ui";
 import { baseColors, colors } from "../../themes";
 import { DidSearchOption, DidSearchOptionDid } from "./DidSearchOption";
+import { config } from "../../config";
 
 const StyledLink = styled.a`
   color: ${colors.primary.base};
@@ -45,7 +46,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
       const results = await SertoSearch.getEntries(search);
       setExternalResults(results);
     } catch (err) {
-      console.error("failed to create identifier:", err);
+      console.error("failed to get identifiers:", err);
       return;
     }
   }
@@ -138,7 +139,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
             )}
           </Box>
           <Flex justifyContent="flex-end" p={3}>
-            <StyledLink href="" target="_blank">
+            <StyledLink href={config.SEARCH_API_URL} target="_blank">
               <Launch color={colors.primary.base} mr={1} size="16px" style={{ verticalAlign: "text-bottom" }} />
               Go to Serto Search
             </StyledLink>
@@ -152,12 +153,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
 export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
   return (
     <SertoSearchProvider>
-      <DidSearchComponent
-        defaultSelectedDid={props.defaultSelectedDid}
-        identifiers={props.identifiers}
-        onChange={props.onChange}
-        required={props.required}
-      />
+      <DidSearchComponent {...props} />
     </SertoSearchProvider>
   );
 };
