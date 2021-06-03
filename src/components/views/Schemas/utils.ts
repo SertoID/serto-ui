@@ -1,4 +1,4 @@
-import { mapValuesDeep } from "deepdash-es/standalone";
+import mapValuesDeep from "deepdash/mapValuesDeep";
 import { convertToPascalCase } from "../../../utils";
 import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "vc-schema-tools";
 import {
@@ -62,7 +62,7 @@ export function createLdContextPlusSchema(
   // @TODO/tobek In the edge case where a nested property has the same ID as another property elsewhere in the schema, the resulting `@id`s will be duplicates which would result in a technically incorrect JSON-LD Context.
   const schemaProperties: { [key: string]: LdContextPlusNode<SchemaMetadata> } = {};
   schema.properties.forEach((prop) => {
-    schemaProperties[prop["@id"]] = mapValuesDeep({ ...prop }, (value, key) => {
+    schemaProperties[prop["@id"]] = mapValuesDeep({ ...prop }, (value: any, key: string) => {
       if (key === "@id") {
         return `schema-id:${value}`;
       } else if (typeof value === "object") {
@@ -134,7 +134,7 @@ export function schemaResponseToWorkingSchema(schemaReponse: SchemaDataResponse)
   // Coming from the completed schema, all of the `@id` values will be namespaced according in JSON-LD context, e.g. a "name" property might have `@id` "schema-id:name". If we leave these intact, when the schema is built again we'll end up with "schema-id:schema-id:name". So deep rename these `@id`s according to their keys, which aren't namespaced:
   const renamedIds = mapValuesDeep(
     { ...propertiesMap },
-    (value, key) => {
+    (value: any, key: string) => {
       if (typeof value === "object" && "@id" in value) {
         return {
           ...value,
