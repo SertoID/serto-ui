@@ -81,10 +81,29 @@ export interface PopupProps {
 }
 
 export const Popup: React.FunctionComponent<PopupProps> = (props) => {
+  const node = React.useRef() as React.MutableRefObject<HTMLDivElement>;
   const [isOpen, setIsOpen] = React.useState(false);
-  // @TODO/tobek If triggerOnClick and isOpen, add listener on document to close when clicked elsewhere.
+
+  const onClickOutside = React.useMemo(
+    () => (e: any) => {
+      if (node.current.contains(e.target)) {
+        return;
+      }
+      setIsOpen(false);
+    },
+    [node],
+  );
+  React.useEffect(() => {
+    if (props.triggerOnClick) {
+      document.addEventListener("mousedown", onClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", onClickOutside);
+      };
+    }
+  }, [onClickOutside, props.triggerOnClick]);
+
   return (
-    <PopupWrap {...props.rimbleProps} onClick={() => setIsOpen(!isOpen)}>
+    <PopupWrap ref={node} {...props.rimbleProps} onClick={() => setIsOpen(!isOpen)}>
       {props.children}
       <PopupBox className={!props.triggerOnClick ? "hoverable" : isOpen ? "open" : undefined}>
         {props.popupContents}
