@@ -39,6 +39,10 @@ export const PrismHighlightedCodeWrap = styled(Card)`
   .token.comment {
     color: slategray;
   }
+
+  textarea {
+    outline: 0;
+  }
 `;
 
 export interface HighlightedJsonProps {
