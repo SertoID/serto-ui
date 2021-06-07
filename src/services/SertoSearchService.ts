@@ -1,15 +1,15 @@
 import { config } from "../config";
-
-export enum SertoSearchApiPath {
-  SEARCH = "/v1/search/",
-}
+import { createMockApiRequest } from "../utils/helpers";
 
 export class SertoSearchService {
-  public url = config.SEARCH_API_URL;
-  public api = SertoSearchApiPath;
+  public url;
+
+  constructor(url?: string) {
+    this.url = url || config.DEFAULT_SEARCH_API_URL;
+  }
 
   public async getEntries(domain?: string): Promise<any> {
-    return this.request(this.api.SEARCH, "POST", { domain });
+    return this.request("/v1/search/", "POST", { domain });
   }
 
   private async request(path: string, method: "GET" | "DELETE" | "POST" = "GET", body?: any): Promise<any> {
@@ -57,3 +57,7 @@ export class SertoSearchService {
     }
   }
 }
+
+export const mockSertoSearchService = {
+  getEntries: createMockApiRequest([]),
+};

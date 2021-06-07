@@ -1,13 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { SertoSearchService } from "../../services/SertoSearchService";
-import { SertoSearchContext, SertoSearchProvider } from "../../context/SertoSearchProvider";
+import { SertoUiContext, SertoUiContextInterface } from "../../context/SertoUiContext";
 import { Identifier } from "../../types";
 import { Launch, Search } from "@rimble/icons";
 import { Box, Flex, Input } from "rimble-ui";
 import { baseColors, colors } from "../../themes";
 import { DidSearchOption, DidSearchOptionDid } from "./DidSearchOption";
-import { config } from "../../config";
 
 const StyledLink = styled.a`
   color: ${colors.primary.base};
@@ -31,10 +29,10 @@ export interface DidSearchProps {
   onChange(value: string): void;
 }
 
-export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (props) => {
+export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
   const { defaultSelectedDid, identifiers, onChange, required } = props;
   const node = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const SertoSearch = useContext<SertoSearchService>(SertoSearchContext);
+  const searchService = useContext<SertoUiContextInterface>(SertoUiContext).searchService;
 
   const [value, setValue] = useState<string>(defaultSelectedDid || "");
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -43,7 +41,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
 
   async function searchExternalIdentifiers(search: string) {
     try {
-      const results = await SertoSearch.getEntries(search);
+      const results = await searchService.getEntries(search);
       setExternalResults(results);
     } catch (err) {
       console.error("failed to get identifiers:", err);
@@ -139,7 +137,7 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
             )}
           </Box>
           <Flex justifyContent="flex-end" p={3}>
-            <StyledLink href={config.SEARCH_API_URL} target="_blank">
+            <StyledLink href="http://beta.search.serto.id" target="_blank">
               <Launch color={colors.primary.base} mr={1} size="16px" style={{ verticalAlign: "text-bottom" }} />
               Go to Serto Search
             </StyledLink>
@@ -147,13 +145,5 @@ export const DidSearchComponent: React.FunctionComponent<DidSearchProps> = (prop
         </Box>
       )}
     </Box>
-  );
-};
-
-export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
-  return (
-    <SertoSearchProvider>
-      <DidSearchComponent {...props} />
-    </SertoSearchProvider>
   );
 };
