@@ -106,10 +106,19 @@ export function createLdContextPlusSchema(
 
 /** Convert raw LdContextPlus into data format used by API and some components. */
 export function ldContextPlusToSchemaInput(ldContextPlus: LdContextPlus<SchemaMetadata>): SchemaDataInput {
+  // @TODO/tobek VcSchema constructor should check that input conforms to schema for ldContextPlus but doesn't do that yet - here are some ultra basic checks for now so code doesn't break.
+  if (!ldContextPlus["@context"]) {
+    throw Error('Missing property "@context"');
+  }
+  if (!ldContextPlus["@context"].credentialSubject) {
+    throw Error('Missing property "credentialSubject" in "@context"');
+  }
+
   const metadata = ldContextPlus["@context"]["@metadata"];
   if (!metadata) {
-    throw Error("Missing schema metadata");
+    throw Error('Missing property "@metadata" in "@context"');
   }
+
   const schemaInstance = new VcSchema(ldContextPlus);
   return {
     ...metadata,
