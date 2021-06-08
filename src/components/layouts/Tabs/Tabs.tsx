@@ -14,9 +14,9 @@ const TabsHeader = styled.ul<TabsHeaderProps>`
   display: flex;
   list-style: none;
   justify-content: flex-start;
-  margin-bottom: 0;
+  margin: 0;
   padding: 0 8px;
-  width: 100%;
+  width: calc(100% - 16px);
 `;
 
 interface TabTitleProps {
@@ -32,7 +32,7 @@ const TabTitle = styled.li<TabTitleProps>`
 export interface TabsProps {
   activeTabName: string;
   tabs: Tab[];
-  bg?: string;
+  bg?: any;
   tabsBorderColor?: string;
   subHeader?: JSX.Element;
   onTabClicked(tabName: string): void;
