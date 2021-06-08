@@ -3,10 +3,14 @@ import styled from "styled-components";
 import { Box, Text } from "rimble-ui";
 import { baseColors, colors } from "../../../themes";
 
-const TabsHeader = styled.ul`
+export interface TabsHeaderProps {
+  tabsBorderColor?: string;
+}
+
+const TabsHeader = styled.ul<TabsHeaderProps>`
   align-items: center;
-  background-color: ${baseColors.white};
-  border-bottom: 2px solid ${colors.primary.border};
+  border-bottom: ${(props) =>
+    props.tabsBorderColor ? `2px solid ${props.tabsBorderColor}` : `2px solid ${colors.primary.border}`};
   display: flex;
   list-style: none;
   justify-content: flex-start;
@@ -28,6 +32,8 @@ const TabTitle = styled.li<TabTitleProps>`
 export interface TabsProps {
   activeTabName: string;
   tabs: Tab[];
+  bg?: string;
+  tabsBorderColor?: string;
   subHeader?: JSX.Element;
   onTabClicked(tabName: string): void;
 }
@@ -40,8 +46,8 @@ export interface Tab {
 
 export const Tabs: React.FunctionComponent<React.PropsWithChildren<TabsProps>> = (props) => {
   return (
-    <Box bg={baseColors.white} borderRadius={1} flexGrow="1">
-      <TabsHeader>
+    <Box bg={props.bg || baseColors.white} borderRadius={1} flexGrow="1">
+      <TabsHeader tabsBorderColor={props.tabsBorderColor}>
         {props.tabs.map((tab: any, i: number) => {
           const active = (!props.activeTabName && i === 0) || props.activeTabName === tab.tabName;
           return (

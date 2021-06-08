@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Info } from "@rimble/icons";
 import { Box, Button, Input, Flex, Tooltip } from "rimble-ui";
 import { H6 } from "../layouts/LayoutComponents";
-import { Info } from "@rimble/icons";
 import { getNftIdentifiersFromUrl } from "../../utils";
+
 export interface NftSearchBoxProps {
   placeholderText?: string;
   onSearch(value: string, id: string): void;
