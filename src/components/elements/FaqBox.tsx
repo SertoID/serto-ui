@@ -11,6 +11,8 @@ export const FaqBox: React.FunctionComponent<FaqBoxProps> = (props) => (
     <H4 borderBottom={1} color={colors.primary.base} my={0} pb={4}>
       {props.heading}
     </H4>
-    <Box maxWidth="850px">{props.children}</Box>
+    <Box maxWidth="850px" pt={4}>
+      {props.children}
+    </Box>
   </Box>
 );

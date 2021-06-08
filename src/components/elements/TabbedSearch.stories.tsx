@@ -31,5 +31,9 @@ const tabs: Tab[] = [
 ];
 
 storiesOf("Tabbed Search", module).add("Tabbed Search", () => {
-  return <IdentityThemeProvider><TabbedSearch activeTab="search" tabs={tabs} /></IdentityThemeProvider>;
+  return (
+    <IdentityThemeProvider>
+      <TabbedSearch activeTab="search" tabs={tabs} />
+    </IdentityThemeProvider>
+  );
 });

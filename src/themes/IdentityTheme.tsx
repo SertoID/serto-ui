@@ -36,6 +36,7 @@ const identityTheme = {
     "1px solid " + colors.moonGray,
     "1px solid " + colors.primary.border,
     "1px solid " + colors.primary.base,
+    "1px solid " + colors.lightGray,
   ],
   borderWidths: [0, 1, 2, 4],
   shadows: [

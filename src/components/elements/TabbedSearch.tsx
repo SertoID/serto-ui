@@ -8,7 +8,7 @@ import { Tabs } from "../layouts";
 export const StyledTabbedInput = styled(Input)`
   border-radius: 0 0 4px 4px !important;
   border: 0 !important;
-  padding: 34px 24px !important;
+  padding: 34px 50px 34px 24px !important;
   width: 100%;
 `;
 
@@ -38,7 +38,10 @@ export const TabbedSearchBox: React.FunctionComponent<TabbedSearchBoxProps> = (p
         type="text"
         value={search}
       />
-      <Button.Text onClick={() => props.onSearch(search)} style={{ position: "absolute", top: 10, right: 5, zIndex: 9 }}>
+      <Button.Text
+        onClick={() => props.onSearch(search)}
+        style={{ position: "absolute", top: 10, right: 5, zIndex: 9 }}
+      >
         <Search color={colors.primary.base} size="32px" />
       </Button.Text>
     </Box>
