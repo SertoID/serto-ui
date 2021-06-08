@@ -14,10 +14,10 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
   const urlParams = new URLSearchParams(window.location.search);
   const contract = urlParams.get("contract");
   const tokenId = urlParams.get("tokenId");
-  const [contractAddress, setContractAddress] = useState(contract || "");
-  const [token, setToken] = useState(tokenId || "");
-  const [search, setSearch] = useState("");
-  const [error, setError] = useState("");
+  const [contractAddress, setContractAddress] = useState<string>(contract || "");
+  const [token, setToken] = useState<string>(tokenId || "");
+  const [search, setSearch] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   function onKeyDown(event: any) {
     if (event.code === "Enter") {
@@ -26,6 +26,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
   }
 
   function onSearchChanged(val: string) {
+    setError("");
     setSearch(val);
     const nftIdentifiers = getNftIdentifiersFromUrl(val);
     setContractAddress(nftIdentifiers.contractAddress);
@@ -55,7 +56,11 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
         </Button.Text>
       </Box>
       <Box border={2} borderRadius={1} pb={5} pt={3} px={4} width="100%">
-        <Flash variant="warning">We are not supporting NFT ERC-1155 token at this time.</Flash>
+        {error ? (
+          <Flash variant="danger">{error}</Flash>
+        ) : (
+          <Flash variant="warning">We are not supporting NFT ERC-1155 token at this time.</Flash>
+        )}
         <H5 color="silver" mb={2}>
           Or search by
         </H5>
@@ -101,7 +106,9 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
               width="100%"
               mr={3}
             />
-            <Button onClick={() => props.onSearch(contractAddress, token)} width="125px">Search</Button>
+            <Button onClick={() => props.onSearch(contractAddress, token)} width="125px">
+              Search
+            </Button>
           </Flex>
         </Box>
       </Box>

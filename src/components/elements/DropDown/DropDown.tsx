@@ -18,7 +18,7 @@ interface DropDownOption {
 export interface DropDownProps {
   options: DropDownOption[];
   arrowColor?: string;
-  combinedLeft?: boolean;
+  combinedSearch?: boolean;
   defaultSelectedValue?: string;
   optionsTextProps?: { [key: string]: any };
   disabled?: boolean;
@@ -27,6 +27,7 @@ export interface DropDownProps {
 }
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
+  const { combinedSearch } = props;
   const node = React.useRef() as React.MutableRefObject<HTMLInputElement>;
   const [selectedOption, setSelectedOption] = React.useState(
     props.defaultSelectedValue
@@ -76,11 +77,10 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       ref={node}
       bg={baseColors.white}
       borderRadius={1}
-      borderBottomRightRadius={props.combinedLeft && 0}
-      borderTopRightRadius={props.combinedLeft && 0}
-      boxShadow={props.combinedLeft ? 0 : 1}
+      borderBottomRightRadius={combinedSearch && 0}
+      borderTopRightRadius={combinedSearch && 0}
+      boxShadow={combinedSearch ? 0 : 1}
       width="100%"
-      mb={3}
       style={{
         position: "relative",
         zIndex: isOpen ? 2 : 1,
@@ -90,11 +90,11 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       <Flex
         onClick={toggle}
         alignItems="center"
-        border={1}
-        borderRight={props.combinedLeft && 0}
+        border={combinedSearch ? 0 : 1}
+        borderRight={combinedSearch && 0}
         borderRadius={1}
-        borderBottomRightRadius={props.combinedLeft && 0}
-        borderTopRightRadius={props.combinedLeft && 0}
+        borderBottomRightRadius={combinedSearch && 0}
+        borderTopRightRadius={combinedSearch && 0}
         height="48px"
         p={3}
         pr={4}
