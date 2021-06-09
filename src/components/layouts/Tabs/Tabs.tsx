@@ -16,7 +16,6 @@ const TabsHeader = styled.ul<TabsHeaderProps>`
   justify-content: flex-start;
   margin: 0;
   padding: 8px 8px 0;
-  width: calc(100% - 16px);
 `;
 
 interface TabTitleProps {
