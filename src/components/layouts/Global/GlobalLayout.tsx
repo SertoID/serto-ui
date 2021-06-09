@@ -28,7 +28,7 @@ export interface GlobalLayoutProps {
 
 export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) => {
   return (
-    <Box py={5} height="100vh">
+    <Box p={5} height="100vh">
       <Flex flexDirection="column" justifyContent="space-between" position="fixed" width="232px">
         <Box>
           {props.sidebarTopContents}
