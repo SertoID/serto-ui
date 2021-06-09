@@ -3,7 +3,7 @@ import { Info, Search } from "@rimble/icons";
 import { Box, Button, Input, Flash, Flex, Tooltip } from "rimble-ui";
 import { H5, H6 } from "../layouts/LayoutComponents";
 import { getNftIdentifiersFromUrl } from "../../utils";
-import { colors } from "../../themes";
+import { baseColors, colors } from "../../themes";
 import { StyledTabbedInput } from "./";
 
 export interface NftSearchBoxProps {
@@ -55,7 +55,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
           <Search color={colors.primary.base} size="32px" />
         </Button.Text>
       </Box>
-      <Box border={2} borderRadius={1} pb={5} pt={3} px={4} width="100%">
+      <Box bg={baseColors.white} border={2} borderRadius={1} pb={5} pt={3} px={4} width="100%">
         {error ? (
           <Flash variant="danger">{error}</Flash>
         ) : (
