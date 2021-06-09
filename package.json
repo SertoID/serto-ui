@@ -4,7 +4,7 @@
   "author": "Serto",
   "homepage": "https://serto.id",
   "repository": "SertoID/serto-ui",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "main": "dist/serto-ui.js",
   "types": "dist/serto-ui.d.ts",
   "scripts": {
@@ -22,6 +22,7 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "install-peer-deps": "install-peers -f",
+    "publish-if-new-version": "if [ \"$(npm view serto-ui@$npm_package_version)\" ]; then echo \"Version $npm_package_version already published\"; else npm publish; fi",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {

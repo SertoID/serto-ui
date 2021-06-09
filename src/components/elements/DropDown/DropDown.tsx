@@ -17,6 +17,8 @@ interface DropDownOption {
 
 export interface DropDownProps {
   options: DropDownOption[];
+  arrowColor?: string;
+  combinedSearch?: boolean;
   defaultSelectedValue?: string;
   optionsTextProps?: { [key: string]: any };
   disabled?: boolean;
@@ -25,6 +27,7 @@ export interface DropDownProps {
 }
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
+  const { combinedSearch } = props;
   const node = React.useRef() as React.MutableRefObject<HTMLInputElement>;
   const [selectedOption, setSelectedOption] = React.useState(
     props.defaultSelectedValue
@@ -74,9 +77,10 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       ref={node}
       bg={baseColors.white}
       borderRadius={1}
-      boxShadow={1}
+      borderBottomRightRadius={combinedSearch && 0}
+      borderTopRightRadius={combinedSearch && 0}
+      boxShadow={combinedSearch ? 0 : 1}
       width="100%"
-      mb={3}
       style={{
         position: "relative",
         zIndex: isOpen ? 2 : 1,
@@ -86,11 +90,14 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       <Flex
         onClick={toggle}
         alignItems="center"
+        border={combinedSearch ? 0 : 1}
+        borderRight={combinedSearch && 0}
+        borderRadius={1}
+        borderBottomRightRadius={combinedSearch && 0}
+        borderTopRightRadius={combinedSearch && 0}
         height="48px"
         p={3}
         pr={4}
-        border={1}
-        borderRadius={1}
         width="100%"
         style={{
           cursor: props.disabled ? "default" : "pointer",
@@ -103,12 +110,12 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
         </Text.span>
         {isOpen ? (
           <KeyboardArrowUp
-            color={colors.moonGray}
+            color={props.arrowColor || colors.moonGray}
             style={{ position: "absolute", right: "8px", top: "calc(50% - 12px)" }}
           />
         ) : (
           <KeyboardArrowDown
-            color={colors.moonGray}
+            color={props.arrowColor || colors.moonGray}
             style={{ position: "absolute", right: "8px", top: "calc(50% - 12px)" }}
           />
         )}
