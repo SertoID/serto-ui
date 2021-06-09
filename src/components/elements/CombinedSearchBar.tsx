@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Box, Button, Input, Flex } from "rimble-ui";
 import { getNftIdentifiersFromUrl } from "../../utils";
-import { colors } from "../../themes";
+import { baseColors, colors } from "../../themes";
 import { DropDown } from "./DropDown/DropDown";
 
 const StyledWrap = styled(Flex)`
@@ -66,7 +66,7 @@ export const CombinedSearchBar: React.FunctionComponent<CombinedSearchBarProps> 
   }
 
   return (
-    <StyledWrap border={4} borderRadius={1} boxShadow={1} position="relative" width="100%">
+    <StyledWrap bg={baseColors.white} border={4} borderRadius={1} boxShadow={1} position="relative" width="100%">
       <Box width="182px">
         <DropDown
           onChange={(value) => {
