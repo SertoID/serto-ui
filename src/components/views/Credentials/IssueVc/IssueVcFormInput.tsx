@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Checkbox, Input, Field, Text } from "rimble-ui";
 import { JsonSchemaNode } from "vc-schema-tools";
-import { DidSelect } from "../../../elements/DidSelect";
+import { DidSearch } from "../../../elements/DidSearch";
 import { Identifier } from "../../../../types";
 import { isoToDatetimeLocal } from "../../../../utils/helpers";
 
@@ -47,11 +47,9 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
 
     if (isDid) {
       return (
-        <DidSelect
+        <DidSearch
           key={name}
           onChange={onChange}
-          allowCustom={true}
-          value={value}
           required={required}
           identifiers={identifiers}
           defaultSelectedDid={defaultSubjectDid}

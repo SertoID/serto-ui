@@ -57,9 +57,9 @@ export const TabbedSearch: React.FunctionComponent<TabbedSearchProps> = (props) 
   const [activeTabName, setActiveTabName] = useState(props.activeTab);
 
   return (
-    <Box bg={colors.primary.background} border={2} borderRadius={1} pt={2}>
+    <Box border={2} borderRadius={1}>
       <Tabs
-        bg="transparent"
+        bg={colors.primary.background}
         tabs={props.tabs}
         activeTabName={activeTabName}
         onTabClicked={(tabName) => setActiveTabName(tabName)}
