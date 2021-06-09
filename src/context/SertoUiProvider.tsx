@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IdentityThemeProvider } from "../themes/IdentityTheme";
 import { SertoUiContext, SertoUiContextInterface, defaultSertoUiContext } from "./SertoUiContext";
+import { SertoSearchService } from "../services/SertoSearchService";
 import { SertoSchemasService } from "../services/SertoSchemasService";
 
 type DeepPartial<T> = {
@@ -10,6 +11,7 @@ type DeepPartial<T> = {
 export interface SertoUiContextProviderProps {
   schemasApiUrl?: string;
   schemasApiJwt?: string;
+  searchApiUrl?: string;
   theme?: any;
   context?: DeepPartial<SertoUiContextInterface>;
 }
@@ -21,11 +23,16 @@ export const SertoUiProvider: React.FunctionComponent<SertoUiContextProviderProp
     // "as any" cause TypeScript doesn't like indexing a class instance with an arbitrary string, and `Object.keys` doesn't seem to preserve types.
     (schemasService as any)[key] = (props.context?.schemasService as any)[key];
   });
+  const searchService = new SertoSearchService(props.searchApiUrl);
+  Object.keys(props.context?.searchService || {}).forEach((key) => {
+    (searchService as any)[key] = (props.context?.searchService as any)[key];
+  });
 
   const context = {
     ...defaultSertoUiContext,
     ...props.context,
     schemasService,
+    searchService,
   } as SertoUiContextInterface;
 
   return (

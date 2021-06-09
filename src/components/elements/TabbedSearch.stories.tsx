@@ -1,5 +1,6 @@
 import { storiesOf } from "@storybook/react";
 import { IdentityThemeProvider } from "../../themes";
+import { NftSearchBox } from "./NftSearchBox";
 import { TabbedSearch, TabbedSearchBox } from "./TabbedSearch";
 import { Tab } from "../layouts";
 
@@ -24,9 +25,7 @@ const tabs: Tab[] = [
   {
     tabName: "nft",
     title: "NFT Lookup",
-    content: (
-      <TabbedSearchBox onSearch={(value) => console.log("NFT Lookup" + value)} placeholderText="Search NFT by URL" />
-    ),
+    content: <NftSearchBox onSearch={(value) => console.log("NFT Lookup" + value)} />,
   },
 ];
 
