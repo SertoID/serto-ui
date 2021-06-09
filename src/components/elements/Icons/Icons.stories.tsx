@@ -7,6 +7,7 @@ import {
   Code,
   ContentCopy,
   CredentialCheck,
+  CredentialCheckFilled,
   EthrDidLogo,
   GitHub,
   Home,
@@ -46,6 +47,9 @@ storiesOf("Icons", module)
   })
   .add("CredentialCheck", () => {
     return <CredentialCheck />;
+  })
+  .add("CredentialCheckFilled", () => {
+    return <CredentialCheckFilled />;
   })
   .add("EthrDidLogo", () => {
     return <EthrDidLogo />;
