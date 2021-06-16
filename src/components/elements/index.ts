@@ -15,6 +15,7 @@ export * from "./Modals";
 export * from "./NftSearchBox";
 export * from "./Popup";
 export * from "./SearchBox";
+export * from "./SplitButton";
 export * from "./TabbedSearch";
 export * from "./Toggle";
 export * from "./VerificationStatus";
