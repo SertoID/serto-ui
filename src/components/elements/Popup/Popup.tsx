@@ -3,38 +3,21 @@ import styled from "styled-components";
 import { Box } from "rimble-ui";
 import { baseColors, colors } from "../../../themes";
 
-// @TODO/tobek Fix spacing and triangle position so that they can be changed via props or automatically fits to parent, or use a library for this.
-
 const PopupBox = styled(Box)`
   display: none;
   position: absolute;
-  right: -12px;
+  right: ${(props) => props.popupRightPos}px;
+  top: ${(props) => props.popupTopPos};
   background: ${baseColors.white};
   border: 1px solid ${colors.lightGray};
   border-radius: 4px;
   min-width: 180px;
   font-size: 14px;
 
-  a {
-    display: block;
-    text-decoration: none;
-    cursor: pointer;
-    color: ${baseColors.black};
-
-    &:hover {
-      color: ${baseColors.blurple};
-    }
-    &.selected {
-      cursor: default;
-      font-weight: bold;
-      color: ${baseColors.black};
-    }
-  }
-
   &:before {
     content: "";
     position: absolute;
-    right: 11px;
+    right: ${(props) => props.arrowOffset - 1}px;
     top: -10px;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
@@ -43,7 +26,7 @@ const PopupBox = styled(Box)`
   &:after {
     content: "";
     position: absolute;
-    right: 12px;
+    right: ${(props) => props.arrowOffset}px;
     top: -9px;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
@@ -67,6 +50,18 @@ export const PopupGroup = styled.div`
   & > a {
     display: block;
     margin-bottom: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    color: ${baseColors.black};
+
+    &:hover {
+      color: ${baseColors.blurple};
+    }
+    &.selected {
+      cursor: default;
+      font-weight: bold;
+      color: ${baseColors.black};
+    }
   }
   & > a:last-child {
     margin-bottom: 0;
@@ -77,7 +72,15 @@ export interface PopupProps {
   popupContents: JSX.Element;
   /** Default is trigger on hover. */
   triggerOnClick?: boolean;
+  remainOpenOnClick?: boolean;
   rimbleProps?: { [prop: string]: any };
+  popupRimbleProps?: { [prop: string]: any };
+  /** CSS "top" property of popup, default "calc(100% + 10px)". **/
+  popupTopPos?: string;
+  /** CSS "right" property of popup in px, default 0. **/
+  popupRightPos?: number;
+  /** Offset of arrow from right edge of popup, in px. **/
+  arrowOffset?: number;
 }
 
 export const Popup: React.FunctionComponent<PopupProps> = (props) => {
@@ -86,12 +89,12 @@ export const Popup: React.FunctionComponent<PopupProps> = (props) => {
 
   const onClickOutside = React.useMemo(
     () => (e: any) => {
-      if (node.current.contains(e.target)) {
+      if (!isOpen || node.current.contains(e.target)) {
         return;
       }
       setIsOpen(false);
     },
-    [node],
+    [node, isOpen],
   );
   React.useEffect(() => {
     if (props.triggerOnClick) {
@@ -105,7 +108,14 @@ export const Popup: React.FunctionComponent<PopupProps> = (props) => {
   return (
     <PopupWrap ref={node} {...props.rimbleProps} onClick={() => setIsOpen(!isOpen)}>
       {props.children}
-      <PopupBox className={!props.triggerOnClick ? "hoverable" : isOpen ? "open" : undefined}>
+      <PopupBox
+        className={!props.triggerOnClick ? "hoverable" : isOpen ? "open" : undefined}
+        arrowOffset={props.arrowOffset || 10}
+        popupTopPos={props.popupTopPos || "calc(100% + 10px)"}
+        popupRightPos={props.popupRightPos || 0}
+        onClick={props.remainOpenOnClick && ((e: Event) => e.stopPropagation())}
+        {...props.popupRimbleProps}
+      >
         {props.popupContents}
       </PopupBox>
     </PopupWrap>

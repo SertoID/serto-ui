@@ -31,9 +31,11 @@ const TabTitle = styled.li<TabTitleProps>`
 export interface TabsProps {
   activeTabName: string;
   tabs: Tab[];
+  titleFontSize?: string | number;
   bg?: any;
   tabsBorderColor?: string;
   subHeader?: JSX.Element;
+  className?: string;
   onTabClicked(tabName: string): void;
 }
 
@@ -45,13 +47,17 @@ export interface Tab {
 
 export const Tabs: React.FunctionComponent<React.PropsWithChildren<TabsProps>> = (props) => {
   return (
-    <Box bg={props.bg || baseColors.white} borderRadius={1} flexGrow="1">
+    <Box bg={props.bg || baseColors.white} borderRadius={1} flexGrow="1" className={props.className}>
       <TabsHeader tabsBorderColor={props.tabsBorderColor}>
         {props.tabs.map((tab: any, i: number) => {
           const active = (!props.activeTabName && i === 0) || props.activeTabName === tab.tabName;
           return (
             <TabTitle key={i} onClick={() => props.onTabClicked(tab.tabName)} active={active}>
-              <Text mb={2} fontSize={2} fontWeight={3}>
+              <Text
+                mb={2}
+                fontSize={typeof props.titleFontSize === "undefined" ? 2 : props.titleFontSize}
+                fontWeight={3}
+              >
                 {tab.title}
               </Text>
             </TabTitle>
