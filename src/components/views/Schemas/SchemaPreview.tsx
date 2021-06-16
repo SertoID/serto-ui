@@ -179,11 +179,26 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
             </Button.Outline>
           )}
         </Box>
-        {!hideTools && !hideIssueVc && (
-          <Button size="small" onClick={() => setIsUseModalOpen(true)}>
-            <Send size="15px" mr={2} /> Issue VC
-          </Button>
-        )}
+        {!hideTools &&
+          !hideIssueVc &&
+          (context.issueVc ? (
+            <Button size="small" onClick={() => setIsUseModalOpen(true)}>
+              <Send size="15px" mr={2} /> Issue VC
+            </Button>
+          ) : (
+            <Popup
+              triggerOnClick
+              remainOpenOnClick
+              popupContents={<SchemaUsage schema={schema} />}
+              popupRimbleProps={{ width: "350px" }}
+              popupRightPos={-2}
+            >
+              <Button size="small">
+                Use this VC Schema
+                <KeyboardArrowDown ml={2} mr="-5px" size="16px" />
+              </Button>
+            </Popup>
+          ))}
       </Flex>
       {view === "Formatted View" ? (
         <Box
@@ -228,18 +243,14 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
       )}
 
       <ModalWithX isOpen={isUseModalOpen} close={() => setIsUseModalOpen(false)} width={9}>
-        {context.issueVc ? (
-          <IssueVcForm
-            schema={schema}
-            onSuccessResponse={() => {
-              // @TODO/tobek Implement success flow once we have designs.
-              alert("VC issued successfully.");
-              setIsUseModalOpen(false);
-            }}
-          />
-        ) : (
-          <SchemaUsage schema={schema} style={{ overflowY: "auto" }} />
-        )}
+        <IssueVcForm
+          schema={schema}
+          onSuccessResponse={() => {
+            // @TODO/tobek Implement success flow once we have designs.
+            alert("VC issued successfully.");
+            setIsUseModalOpen(false);
+          }}
+        />
       </ModalWithX>
     </Box>
   );

@@ -2,8 +2,8 @@ import { SchemaDataInput, SchemaDataResponse } from "../components/views/Schemas
 import { config } from "../config";
 import { createMockApiRequest } from "../utils/helpers";
 
-// @TODO/toby Temp for DIF demo, sorry
-const FAKE_SCHEMA_SAVES: { [key: string]: number } = {
+// @TODO/toby Temp dummy data for demoing, sorry
+const DUMMY_SCHEMA_SAVES: { [key: string]: number } = {
   "serto-organization-profile": 3,
   "serto-team-member": 5,
   "consen-sys-employee": 3,
@@ -44,7 +44,7 @@ export class SertoSchemasService {
     }
 
     schemas.forEach((schema: SchemaDataResponse) => {
-      schema.favoriteCount = (schema.favoriteCount || 0) + FAKE_SCHEMA_SAVES[schema.slug] || 0;
+      schema.favoriteCount = (schema.favoriteCount || 0) + DUMMY_SCHEMA_SAVES[schema.slug] || 0;
     });
 
     return schemas;
@@ -57,7 +57,7 @@ export class SertoSchemasService {
     let schema = await this.request(`/v1/public/${slug}`, "GET");
     // @TODO/tobek This handles API bug where sometimes there is a wrapper object with schema inside `schema` property - remove when fixed.
     schema = schema.schema || schema;
-    schema.favoriteCount = (schema.favoriteCount || 0) + FAKE_SCHEMA_SAVES[schema.slug] || 0;
+    schema.favoriteCount = (schema.favoriteCount || 0) + DUMMY_SCHEMA_SAVES[schema.slug] || 0;
     return schema;
   }
 
