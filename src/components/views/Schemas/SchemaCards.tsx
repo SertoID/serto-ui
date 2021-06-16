@@ -37,7 +37,10 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
   const schemas = React.useMemo(
     () =>
       data
-        ?.sort((schema1, schema2) => (schema1.updated < schema2.updated ? 1 : -1))
+        ?.sort((schema1, schema2) => {
+          const favDifference = (schema2.favoriteCount || 0) - (schema1.favoriteCount || 0);
+          return favDifference || (schema1.updated < schema2.updated ? 1 : -1);
+        })
         .slice(0, props.maxLength || undefined),
     [data, props.maxLength],
   );

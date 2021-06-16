@@ -36,8 +36,14 @@ export interface SchemaDataResponse extends SchemaDataInput {
   updated: string;
   tenant: any;
   deleted?: string;
-  favorites?: number;
   favorite?: boolean;
+  favoriteCount?: number;
+  creator?: {
+    name: string;
+    /** username */
+    nickName: string;
+    picture: string;
+  };
 }
 
 export const requiredSchemaProperties = [

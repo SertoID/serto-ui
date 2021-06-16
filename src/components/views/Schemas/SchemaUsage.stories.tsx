@@ -33,7 +33,7 @@ const SchemaUsageStory = () => {
         </select>
       </Box>
 
-      <Box width={480} key={schemaKey}>
+      <Box width={350} key={schemaKey} border={1}>
         {ldContextPlus && <SchemaUsage schema={ldContextPlus} />}
         {error && <Flash variant="danger">Error: {error}</Flash>}
       </Box>
