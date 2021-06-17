@@ -29,8 +29,8 @@ export function ellipsis(text: string, startLength: number, endLength: number): 
 
 /** Finds where "0x" hex value starts and takes start length from there. */
 export function hexEllipsis(text: string, startLength = 4, endLength = 4): string {
-  const addressIndex = text.indexOf("0x") === -1 ? text.lastIndexOf(":") : text.indexOf("0x");
-  return ellipsis(text, (addressIndex + 2) + startLength, endLength);
+  const addressIndex = text.indexOf("0x") === -1 ? text.lastIndexOf(":") + 1 : text.indexOf("0x") + 2;
+  return ellipsis(text, addressIndex + startLength, endLength);
 }
 
 export function dateTimeFormat(date: Date): string {
