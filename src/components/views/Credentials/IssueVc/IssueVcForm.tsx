@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Checkbox, Field, Flash, Form, Input, Loader } from "rimble-ui";
+import { Tooltip, Flex, Box, Button, Checkbox, Field, Flash, Form, Input, Loader } from "rimble-ui";
 import { mutate } from "swr";
 import { JsonSchemaNode, VcSchema } from "vc-schema-tools";
 import { ModalContent, ModalHeader } from "../../../elements/Modals";
@@ -45,6 +45,8 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   };
 
   const [loading, setLoading] = React.useState(false);
+  const [issueAndSend, setIssueAndSend] = React.useState(false);
+  const [subjectSupportsMessaging, setSubjectSupportsMessaging] = React.useState(false);
   const [error, setError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
@@ -127,17 +129,44 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
       // @TODO/tobek Actually validate VC according to schema instance
 
-      const vcResponse = await context.issueVc?.({
+      const issueResponse = await context.issueVc?.({
         credential,
         revocable,
         keepCopy,
         save: "true",
         proofFormat: "jwt",
       });
-      console.log("issued VC, response:", vcResponse);
-      mutate("/v1/tenant/agent/dataStoreORMGetVerifiableCredentials");
+      console.log("issued VC, response:", issueResponse);
+      mutate("/v1/agent/dataStoreORMGetVerifiableCredentials");
 
-      onSuccessResponse(vcResponse);
+      let sendResponse: any;
+      if (issueAndSend) {
+        const subject = issueResponse.credentialSubject?.id;
+        if (!subject) {
+          console.error("failed to send VC: VC has no credentialSubject.id", issueResponse);
+          // @TODO/tobek Should go to issue success screen, but with this error
+          setError(
+            'Credential successfully issued, but sending credential to subject failed: credential does not contain "credentialSubject.id" property to send to.',
+          );
+          setLoading(false);
+          return;
+        }
+        try {
+          sendResponse = await context.sendVc?.(issuer, subject, issueResponse);
+        } catch (err) {
+          console.error("failed to send VC:", err);
+          // @TODO/tobek Should go to issue success screen, but with this error
+          setError("Credential successfully issued, but sending credential to subject failed: " + err.message);
+          setLoading(false);
+          return;
+        }
+        console.log("sent VC, response:", sendResponse);
+      }
+
+      onSuccessResponse({
+        issueResponse,
+        sendResponse,
+      });
       setLoading(false);
     } catch (err) {
       console.error("failed to issue VC:", err);
@@ -170,7 +199,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
               <Field label="Issuance Date" width="100%">
                 <Input type="datetime" disabled={true} value={new Date().toISOString()} width="100%" required={true} />
               </Field>
-              <Field label="Issuer ID" width="100%" mb={0}>
+              <Field label="Issuer ID" width="100%">
                 <DidSelect
                   onChange={setIssuer}
                   value={issuer}
@@ -190,6 +219,8 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                   defaultSubjectDid={key === "id" && node.format === "uri" ? subjectIdentifier?.did : undefined}
                   required={credSchema?.required?.indexOf(key) !== -1}
                   onChange={(value) => setVcData({ ...vcData, [key]: value })}
+                  subjectSupportsMessaging={subjectSupportsMessaging}
+                  setSubjectSupportsMessaging={setSubjectSupportsMessaging}
                 />
               ))}
             </>
@@ -203,11 +234,32 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
               {error}
             </Flash>
           )}
-          <Box my={3}>
-            <Button type="submit" width="100%" disabled={loading}>
-              {loading ? <Loader color="white" /> : "Issue Credential"}
-            </Button>
-          </Box>
+          <Flex my={3} justifyContent="space-between">
+            <Button.Outline type="submit" width="49%" disabled={loading} onClick={() => setIssueAndSend(false)}>
+              {!issueAndSend && loading ? <Loader color="white" /> : "Issue & Save"}
+            </Button.Outline>
+            {context.sendVc && subjectSupportsMessaging ? (
+              <Button type="submit" width="49%" disabled={loading} onClick={() => setIssueAndSend(true)}>
+                {issueAndSend && loading ? <Loader color="white" /> : "Issue & Send"}
+              </Button>
+            ) : (
+              <Tooltip
+                placement="top"
+                message={
+                  context.sendVc
+                    ? "The subject DID you selected does not support DIDComm messaging."
+                    : "Missing send VC functionality"
+                }
+              >
+                {/*Need to wrap in a Box otherwise disabled button prevents cursor from triggering tooltip*/}
+                <Box width="49%">
+                  <Button type="submit" width="100%" disabled>
+                    Issue &amp; Send
+                  </Button>
+                </Box>
+              </Tooltip>
+            )}
+          </Flex>
         </Form>
       </ModalContent>
     </>
