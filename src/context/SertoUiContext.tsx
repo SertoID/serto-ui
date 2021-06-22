@@ -13,6 +13,7 @@ export interface SertoUiContextInterface {
   searchService: Omit<SertoSearchService, "url" | "request">;
   userDids?: Identifier[];
   issueVc?(body: any): Promise<any>;
+  sendVc?(from: string, to: string, vc: { [key: string]: any }): Promise<any>;
 }
 
 export const defaultSertoUiContext: SertoUiContextInterface = {
