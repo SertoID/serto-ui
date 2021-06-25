@@ -1,5 +1,6 @@
 import { config } from "../config";
 import { createMockApiRequest } from "../utils/helpers";
+import { DidSearchResult } from "../types";
 
 export class SertoSearchService {
   public url;
@@ -8,7 +9,7 @@ export class SertoSearchService {
     this.url = url || config.DEFAULT_SEARCH_API_URL;
   }
 
-  public async getEntries(domain?: string): Promise<any> {
+  public async getEntries(domain?: string): Promise<DidSearchResult[]> {
     return this.request("/v1/search/", "POST", { domain });
   }
 

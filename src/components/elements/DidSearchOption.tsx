@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Eth } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { colors } from "../../themes";
+import { SelectedDid } from "../../types";
 import { hexEllipsis } from "../../utils";
 import { H5 } from "../layouts";
 import { DomainImage, SovrinDidLogo } from "../elements";
@@ -17,11 +18,11 @@ const DidSearchOptionStyled = styled(Box)`
 
 export interface DidSearchOptionProps {
   alias?: string;
-  did: string;
+  did: SelectedDid;
   domain: string;
   imageUrl?: string;
   orgName?: string;
-  onSelect(did: string): void;
+  onSelect(did: SelectedDid): void;
 }
 
 export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (props) => {
@@ -51,8 +52,8 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
 
 export interface DidSearchOptionDidProps {
   alias?: string;
-  did: string;
-  onSelect(did: string): void;
+  did: SelectedDid;
+  onSelect(did: SelectedDid): void;
 }
 
 export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps> = (props) => {
@@ -61,21 +62,21 @@ export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps
     <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
       <Flex borderTop={2} pr={3} py={3}>
         <Box mr={1}>
-          {did.includes("did:ethr") && <Eth size="16px" />}
-          {did.includes("did:sov") && <SovrinDidLogo />}
+          {did.did.includes("did:ethr") && <Eth size="16px" />}
+          {did.did.includes("did:sov") && <SovrinDidLogo />}
         </Box>
         {alias ? (
           <Box>
             <Text color={colors.midGray} fontSize={1}>
               {alias}
             </Text>
-            <Text color={colors.silver} fontSize={0} title={did}>
-              {did.includes("did:web") ? did : hexEllipsis(did)}
+            <Text color={colors.silver} fontSize={0} title={did.did}>
+              {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
             </Text>
           </Box>
         ) : (
-          <Text color={colors.midGray} fontSize={1} title={did}>
-            {did.includes("did:web") ? did : hexEllipsis(did)}
+          <Text color={colors.midGray} fontSize={1} title={did.did}>
+            {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
           </Text>
         )}
       </Flex>

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { SertoUiContext, SertoUiContextInterface } from "../../context/SertoUiContext";
-import { Identifier } from "../../types";
+import { Identifier, DidSearchResult, SelectedDid } from "../../types";
 import { Launch, Search } from "@rimble/icons";
 import { Box, Flex, Input } from "rimble-ui";
 import { baseColors, colors } from "../../themes";
@@ -17,27 +17,23 @@ const StyledLink = styled.a`
   }
 `;
 
-export interface DidSearchResultTypes {
-  domain: string;
-  dids: any;
-}
-
 export interface DidSearchProps {
   defaultSelectedDid?: string;
   identifiers?: Identifier[];
   required?: boolean;
-  onChange(value: string): void;
+  onChange(value: SelectedDid): void;
+  onBlur?(): void;
 }
 
 export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
-  const { defaultSelectedDid, identifiers, onChange, required } = props;
+  const { defaultSelectedDid, identifiers, onChange, required, onBlur } = props;
   const node = useRef() as React.MutableRefObject<HTMLInputElement>;
   const searchService = useContext<SertoUiContextInterface>(SertoUiContext).searchService;
 
   const [value, setValue] = useState<string>(defaultSelectedDid || "");
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [internalResults, setInternalResults] = useState<any>();
-  const [externalResults, setExternalResults] = useState<DidSearchResultTypes[] | undefined>();
+  const [internalResults, setInternalResults] = useState<Identifier[] | undefined>();
+  const [externalResults, setExternalResults] = useState<DidSearchResult[] | undefined>();
 
   async function searchExternalIdentifiers(search: string) {
     try {
@@ -74,7 +70,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
       <Input
         borderRadius={isOpen ? "4px 4px 0 0" : 1}
         onChange={(event: any) => {
-          onChange(event.target.value);
+          onChange({ did: event.target.value });
           setValue(event.target.value);
           searchInternalIdentifiers(event.target.value);
           searchExternalIdentifiers(event.target.value);
@@ -88,6 +84,13 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
         type="text"
         value={value}
         width="100%"
+        onBlur={
+          onBlur &&
+          (() => {
+            // Dumb, but since blur happens on mousedown, and onclick selection of DID from dropdown happens on mouseup, blur can get called before the DID is selected. In IssueVcForm input, blur may cause "messaging unsupported" warning to show which changes position of DidSelect and so the selection from DID dropdown doesn't line up with mouse cursor any more. And anyway, conceptually, DidSearch shouldn't fire onBlur right before selection - should fire after.
+            setTimeout(onBlur, 500);
+          })
+        }
       />
       {((externalResults && externalResults.length > 0) || (internalResults && internalResults.length > 0)) && isOpen && (
         <Box
@@ -103,15 +106,20 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
           <Box maxHeight="250px" style={{ overflow: "scroll" }}>
             {internalResults && internalResults.length > 0 && (
               <Box>
-                {internalResults.map((did: any, i: number) => {
+                {internalResults.map((did, i: number) => {
                   return (
                     <DidSearchOptionDid
                       key={i}
-                      onSelect={(did: string) => {
-                        setValue(did);
+                      onSelect={(selectedDid) => {
+                        onChange(selectedDid);
+                        setValue(selectedDid.did);
                         setIsOpen(false);
                       }}
-                      did={did.did}
+                      did={{
+                        did: did.did,
+                        // @TODO/tobek Is this how we'll detect messaging support for now?
+                        messagingSupported: !!did.services?.length,
+                      }}
                       alias={did.alias}
                     />
                   );
@@ -120,15 +128,20 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
             )}
             {externalResults && externalResults.length > 0 && (
               <Box>
-                {externalResults.map((result: DidSearchResultTypes, i: number) => {
+                {externalResults.map((result: DidSearchResult, i: number) => {
                   return (
                     <DidSearchOption
                       key={i}
-                      onSelect={(did: string) => {
-                        setValue(did);
+                      onSelect={(selectedDid) => {
+                        onChange(selectedDid);
+                        setValue(selectedDid.did);
                         setIsOpen(false);
                       }}
-                      did={result.dids}
+                      did={{
+                        did: result.dids,
+                        // @TODO/tobek Is this how we'll detect messaging support for now?
+                        messagingSupported: (result.numVeramoEndpoints || 0) > 0,
+                      }}
                       domain={result.domain}
                     />
                   );

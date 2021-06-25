@@ -29,6 +29,7 @@ storiesOf("Credential", module).add("IssueVc flow", () => {
         <SertoUiProvider
           context={{
             issueVc: createMockApiRequest(),
+            sendVc: createMockApiRequest(),
           }}
         >
           <IssueVc identifiers={IDENTIFIERS} onComplete={() => {}} />
