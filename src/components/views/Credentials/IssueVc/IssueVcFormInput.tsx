@@ -1,8 +1,9 @@
-import React from "react";
-import { Box, Checkbox, Input, Field, Text } from "rimble-ui";
+import React, { useState } from "react";
+import { Flash, Box, Checkbox, Input, Field, Text } from "rimble-ui";
 import { JsonSchemaNode } from "vc-schema-tools";
-import { DidSelect } from "../../../elements/DidSelect";
+import { DidSearch } from "../../../elements/DidSearch";
 import { Identifier } from "../../../../types";
+import { isoToDatetimeLocal } from "../../../../utils/helpers";
 
 export interface IssueVcFormInputProps {
   name: string;
@@ -11,11 +12,25 @@ export interface IssueVcFormInputProps {
   identifiers: Identifier[];
   required?: boolean;
   defaultSubjectDid?: string;
+  subjectSupportsMessaging?: boolean;
   onChange(value: any): void;
+  setSubjectSupportsMessaging(supported: boolean): void;
 }
 
 export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = (props) => {
-  const { name, node, value, onChange, required, identifiers, defaultSubjectDid } = props;
+  const {
+    name,
+    node,
+    value,
+    onChange,
+    required,
+    identifiers,
+    defaultSubjectDid,
+    subjectSupportsMessaging,
+    setSubjectSupportsMessaging,
+  } = props;
+
+  const [didSearchBlurred, setDidSearchBlurred] = useState(false);
 
   // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
   const isDid = name === "id" && node.type === "string" && node.format === "uri";
@@ -38,6 +53,8 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
                   [nestedKey]: updatedNestedValue,
                 })
               }
+              subjectSupportsMessaging={subjectSupportsMessaging}
+              setSubjectSupportsMessaging={setSubjectSupportsMessaging}
             />
           ))}
         </Box>
@@ -46,15 +63,26 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
 
     if (isDid) {
       return (
-        <DidSelect
-          key={name}
-          onChange={onChange}
-          allowCustom={true}
-          value={value}
-          required={required}
-          identifiers={identifiers}
-          defaultSelectedDid={defaultSubjectDid}
-        />
+        <>
+          <DidSearch
+            key={name}
+            onChange={(val) => {
+              onChange(val.did);
+              setSubjectSupportsMessaging(!!val.messagingSupported);
+            }}
+            onBlur={() => setDidSearchBlurred(true)}
+            required={required}
+            identifiers={identifiers}
+            defaultSelectedDid={defaultSubjectDid}
+          />
+          {didSearchBlurred && value && !subjectSupportsMessaging && (
+            <Flash my={3} variant="warning">
+              The subject DID you selected does not support DIDComm messaging, so they cannot seamlessly receive the VC
+              you are issuing. You may still issue the VC here, and on the next screen can share it with the subject via
+              email or QR code.
+            </Flash>
+          )}
+        </>
       );
     }
 
@@ -65,22 +93,37 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     let type = "text";
     let placeholder = "";
     let width: string | undefined = "100%";
+    let inputValue = value || "";
     if (node.type === "number" || node.type === "integer") {
       type = "number";
       width = undefined;
+    } else if (node.format === "date") {
+      type = "date";
     } else if (node.format === "date-time") {
       type = "datetime-local";
+      inputValue = inputValue && isoToDatetimeLocal(inputValue);
     } else if (node.format === "uri") {
       type = "url";
       placeholder = "URL";
+    }
+
+    function changeHandler(event: any) {
+      const newValue = event.target.value;
+      if (type === "number") {
+        onChange(parseInt(newValue, 10));
+      } else if (type === "datetime-local") {
+        onChange(new Date(newValue).toISOString());
+      } else {
+        onChange(newValue);
+      }
     }
 
     return (
       <Input
         type={type}
         disabled={false}
-        value={value || ""}
-        onChange={(event: any) => onChange(type === "number" ? parseInt(event.target.value, 10) : event.target.value)}
+        value={inputValue}
+        onChange={changeHandler}
         required={required}
         width={width}
         placeholder={placeholder}

@@ -5,8 +5,6 @@ import { Box, Flex, Text } from "rimble-ui";
 import { LinkedDomainsBorder } from "./NftComponents";
 import { baseColors, fonts } from "../../../themes";
 import { DomainImage } from "../../elements/DomainImage";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { DomainLink } from "../../elements/DomainLink";
 
 export interface NftDetailsProps {

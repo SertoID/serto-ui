@@ -5,18 +5,17 @@ import useSWR from "swr";
 import { SchemaDataResponse } from "..";
 import { colors } from "../../../themes";
 import { TBody, TH, TR } from "../../layouts/LayoutComponents";
-import { ModalContent, ModalFooter, ModalWithX } from "../../elements/Modals";
-import { SchemaDetail } from "./SchemaDetail";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
+import { ViewSchemaButton } from "./ViewSchemaButton";
 
 export interface SchemasTableProps {
   discover?: boolean;
   noSchemasElement?: JSX.Element;
+  hideIssueVcInDetail?: boolean;
   onSchemaSelect?(schema: SchemaDataResponse): void;
 }
 
 export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) => {
-  const [viewedSchema, setViewedSchema] = React.useState<SchemaDataResponse | undefined>();
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
 
   const { data, error, isValidating } = useSWR(["getSchemas", !props.discover], () =>
@@ -61,9 +60,7 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
                     )}
                   </td>
                   <td style={{ whiteSpace: "nowrap" }}>
-                    <Button.Outline size="small" onClick={() => setViewedSchema(schema)}>
-                      View
-                    </Button.Outline>
+                    <ViewSchemaButton schema={schema} hideIssueVcInDetail={props.hideIssueVcInDetail} />
                     {!props.discover && !props.onSchemaSelect && (
                       <Button.Outline
                         as="a"
@@ -88,14 +85,6 @@ export const SchemasTable: React.FunctionComponent<SchemasTableProps> = (props) 
             })}
           </TBody>
         </Table>
-        <ModalWithX isOpen={!!viewedSchema} close={() => setViewedSchema(undefined)} minWidth={9}>
-          <ModalContent>{viewedSchema && <SchemaDetail schema={viewedSchema} />}</ModalContent>
-          <ModalFooter mt={3}>
-            <Button width="100%" onClick={() => setViewedSchema(undefined)}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalWithX>
       </>
     );
   } else if (error) {

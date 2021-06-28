@@ -2,6 +2,21 @@ import { SchemaDataInput, SchemaDataResponse } from "../components/views/Schemas
 import { config } from "../config";
 import { createMockApiRequest } from "../utils/helpers";
 
+// @TODO/toby Temp dummy data for demoing, sorry
+const DUMMY_SCHEMA_SAVES: { [key: string]: number } = {
+  "serto-organization-profile": 3,
+  "serto-team-member": 5,
+  "consen-sys-employee": 3,
+  "twitter-verify": 2,
+  "consen-sys-retreat-2021": 4,
+  "consen-sys-mesh-portfolio-company": 1,
+  "consen-sys-hackathon-2021-participant": 3,
+  "vaccination-certificate": 8,
+  "immunoglobulin-detection-test-card": 4,
+  "diploma-credential": 3,
+  "tachyon-portfolio-company": 1,
+};
+
 export class SertoSchemasService {
   private url;
   private jwt?: string;
@@ -22,22 +37,28 @@ export class SertoSchemasService {
   };
 
   public async getSchemas(userCreated?: boolean): Promise<SchemaDataResponse[]> {
-    const schemas = await this.request(`/v1/${userCreated ? "currentUser" : ""}`, "GET", undefined, userCreated);
+    let schemas = await this.request(`/v1/${userCreated ? "currentUser" : ""}`, "GET", undefined, userCreated);
     // @TODO/tobek This handles API bug where sometimes there is a wrapper object with schema inside `schema` property - remove when fixed.
     if (schemas?.[0].schema) {
-      return schemas.map((schema: any) => schema.schema);
-    } else {
-      return schemas;
+      schemas = schemas.map((schema: any) => schema.schema);
     }
+
+    schemas.forEach((schema: SchemaDataResponse) => {
+      schema.favoriteCount = (schema.favoriteCount || 0) + DUMMY_SCHEMA_SAVES[schema.slug] || 0;
+    });
+
+    return schemas;
   }
 
   public async getSchema(slug: string): Promise<SchemaDataResponse> {
     if (!slug) {
       throw new Error("API error: Must provide a schema ID");
     }
-    const schema = await this.request(`/v1/public/${slug}`, "GET");
+    let schema = await this.request(`/v1/public/${slug}`, "GET");
     // @TODO/tobek This handles API bug where sometimes there is a wrapper object with schema inside `schema` property - remove when fixed.
-    return schema.schema || schema;
+    schema = schema.schema || schema;
+    schema.favoriteCount = (schema.favoriteCount || 0) + DUMMY_SCHEMA_SAVES[schema.slug] || 0;
+    return schema;
   }
 
   public async createSchema(schema: SchemaDataInput): Promise<any> {

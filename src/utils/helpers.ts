@@ -29,8 +29,8 @@ export function ellipsis(text: string, startLength: number, endLength: number): 
 
 /** Finds where "0x" hex value starts and takes start length from there. */
 export function hexEllipsis(text: string, startLength = 4, endLength = 4): string {
-  const addressIndex = text.indexOf("0x");
-  return ellipsis(text, (addressIndex === -1 ? 0 : addressIndex + 2) + startLength, endLength);
+  const addressIndex = text.indexOf("0x") === -1 ? text.lastIndexOf(":") + 1 : text.indexOf("0x") + 2;
+  return ellipsis(text, addressIndex + startLength, endLength);
 }
 
 export function dateTimeFormat(date: Date): string {
@@ -41,6 +41,13 @@ export function dateTimeFormat(date: Date): string {
   const minute = new Intl.DateTimeFormat("en", { minute: "numeric" }).format(date);
   const dateTimeFormated = `${hour}:${minute} - ${month} ${day}, ${year}`;
   return dateTimeFormated;
+}
+
+/** <input type="datetime-local"> element requires a nonstandard time format ("yyyy-MM-ddThh:mm"). This converts from ISO datetime string into that format.  */
+export function isoToDatetimeLocal(isoString: string): string {
+  const offset = new Date().getTimezoneOffset() * 1000 * 60;
+  const offsetDate = new Date(isoString).valueOf() - offset;
+  return new Date(offsetDate).toISOString().substring(0, 16);
 }
 
 export function convertToCamelCase(s: string): string {

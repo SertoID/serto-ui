@@ -5,7 +5,7 @@ import { baseColors, fonts, colors } from "../../../themes";
 
 export const CredentialBorder: React.FunctionComponent = (props) => {
   return (
-    <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px">
+    <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px" mb={3}>
       {props.children}
     </Box>
   );

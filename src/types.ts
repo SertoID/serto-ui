@@ -1,20 +1,33 @@
+export interface DidService {
+  id: string;
+  serviceEndpoint: string;
+  type: string;
+  description?: string;
+}
+
+/** Used internally to represent DIDs returned from Agent. */
 export interface Identifier {
   did: string;
   provider: string;
   alias?: string;
+  services?: DidService[];
+  /** From TrustAgent - deprecated */
   userName?: string;
+  /** From TrustAgent - deprecated */
   userType?: string;
 }
 
-/** Quick n dirty VC type with properties we need, the full W3C VC spec has much much more. */
-export interface VC {
-  "@context": string | string[];
-  type: string[];
-  issuer: string | { id: string };
-  issuanceDate: string;
-  expirationDate?: string;
-  credentialSubject: { [key: string]: any };
-  proof: { jwt: string };
+export interface SelectedDid {
+  did: string;
+  messagingSupported?: boolean;
+}
+
+export interface DidSearchResult {
+  domain: string;
+  /** @TODO Multiple DIDs, if present, are comma-separated, but this whole API may change */
+  dids: string;
+  numBaselineEndpoints?: number;
+  numVeramoEndpoints?: number;
 }
 
 export interface DidListing {

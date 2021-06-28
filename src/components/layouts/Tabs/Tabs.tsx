@@ -3,16 +3,19 @@ import styled from "styled-components";
 import { Box, Text } from "rimble-ui";
 import { baseColors, colors } from "../../../themes";
 
-const TabsHeader = styled.ul`
+export interface TabsHeaderProps {
+  tabsBorderColor?: string;
+}
+
+const TabsHeader = styled.ul<TabsHeaderProps>`
   align-items: center;
-  background-color: ${baseColors.white};
-  border-bottom: 2px solid ${colors.primary.border};
+  border-bottom: ${(props) =>
+    props.tabsBorderColor ? `2px solid ${props.tabsBorderColor}` : `2px solid ${colors.primary.border}`};
   display: flex;
   list-style: none;
   justify-content: flex-start;
-  margin-bottom: 0;
-  padding: 0 8px;
-  width: 100%;
+  margin: 0;
+  padding: 8px 8px 0;
 `;
 
 interface TabTitleProps {
@@ -28,7 +31,11 @@ const TabTitle = styled.li<TabTitleProps>`
 export interface TabsProps {
   activeTabName: string;
   tabs: Tab[];
+  titleFontSize?: string | number;
+  bg?: any;
+  tabsBorderColor?: string;
   subHeader?: JSX.Element;
+  className?: string;
   onTabClicked(tabName: string): void;
 }
 
@@ -40,13 +47,17 @@ export interface Tab {
 
 export const Tabs: React.FunctionComponent<React.PropsWithChildren<TabsProps>> = (props) => {
   return (
-    <Box bg={baseColors.white} borderRadius={1} flexGrow="1">
-      <TabsHeader>
+    <Box bg={props.bg || baseColors.white} borderRadius={1} flexGrow="1" className={props.className}>
+      <TabsHeader tabsBorderColor={props.tabsBorderColor}>
         {props.tabs.map((tab: any, i: number) => {
           const active = (!props.activeTabName && i === 0) || props.activeTabName === tab.tabName;
           return (
             <TabTitle key={i} onClick={() => props.onTabClicked(tab.tabName)} active={active}>
-              <Text mb={2} fontSize={2} fontWeight={3}>
+              <Text
+                mb={2}
+                fontSize={typeof props.titleFontSize === "undefined" ? 2 : props.titleFontSize}
+                fontWeight={3}
+              >
                 {tab.title}
               </Text>
             </TabTitle>

@@ -52,11 +52,13 @@ export const SchemaCard: React.FunctionComponent<SchemaCardProps> = (props) => {
     >
       <Box px={3}>
         <SchemaHeader schema={schema} />
-        <IconWrap fontSize={1} mt={3} mb={4}>
-          <StarBorder size="18px" /> 0
-          <CallSplit size="18px" ml={3} /> 0
-          <Send size="18px" ml={3} /> 0
-        </IconWrap>
+        {"favoriteCount" in schema && (
+          <IconWrap fontSize={1} mt={3} mb={4}>
+            <StarBorder size="18px" /> {schema.favoriteCount}
+            <CallSplit size="18px" ml={3} /> 0
+            <Send size="18px" ml={3} /> 0
+          </IconWrap>
+        )}
         {schema.description && <Text my={2}>{schema.description}</Text>}
       </Box>
       <Flex px={3} borderTop={2} height="48px" fontSize={1} justifyContent="space-between" alignItems="center">

@@ -1,8 +1,9 @@
-import React from "react";
 import { storiesOf } from "@storybook/react";
 import { Identifier } from "../../types";
+import { IdentityThemeProvider } from "../../themes";
 import { DidSelect } from "./DidSelect";
 import { DidView } from "./DidView";
+import { DidByDomain } from "./DidByDomain";
 
 const identifiers: Identifier[] = [
   {
@@ -57,5 +58,17 @@ storiesOf("DID", module)
     );
   })
   .add("DID View", () => {
-    return <DidView did="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" icon copy />;
+    return <DidView did="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" copy />;
+  })
+  .add("DID View large variant", () => {
+    return (
+      <DidView did="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" copy maxCharCount={100} size="large" />
+    );
+  })
+  .add("DID by Domain", () => {
+    return (
+      <IdentityThemeProvider>
+        <DidByDomain did="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" domain="serto.id" didCopy />
+      </IdentityThemeProvider>
+    );
   });

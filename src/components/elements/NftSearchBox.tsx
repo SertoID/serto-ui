@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { Box, Button, Input, Flex, Tooltip } from "rimble-ui";
-import { H6 } from "../layouts/LayoutComponents";
-import { Info } from "@rimble/icons";
+import { useState } from "react";
+import { Info, Search } from "@rimble/icons";
+import { Box, Button, Input, Flash, Flex, Tooltip } from "rimble-ui";
+import { H5, H6 } from "../layouts/LayoutComponents";
 import { getNftIdentifiersFromUrl } from "../../utils";
+import { baseColors, colors } from "../../themes";
+import { StyledTabbedInput } from "./";
+
 export interface NftSearchBoxProps {
-  placeholderText?: string;
   onSearch(value: string, id: string): void;
 }
 
@@ -12,10 +14,10 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
   const urlParams = new URLSearchParams(window.location.search);
   const contract = urlParams.get("contract");
   const tokenId = urlParams.get("tokenId");
-  const [contractAddress, setContractAddress] = useState(contract || "");
-  const [token, setToken] = useState(tokenId || "");
-  const [search, setSearch] = useState("");
-  const [error, setError] = useState("");
+  const [contractAddress, setContractAddress] = useState<string>(contract || "");
+  const [token, setToken] = useState<string>(tokenId || "");
+  const [search, setSearch] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   function onKeyDown(event: any) {
     if (event.code === "Enter") {
@@ -24,6 +26,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
   }
 
   function onSearchChanged(val: string) {
+    setError("");
     setSearch(val);
     const nftIdentifiers = getNftIdentifiersFromUrl(val);
     setContractAddress(nftIdentifiers.contractAddress);
@@ -38,58 +41,77 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
   }
 
   return (
-    <Box position="relative" width="100%">
-      <Flex flexDirection="column" px={4} py={1}>
-        <Input
+    <>
+      <Box position="relative" mb="2" width="100%">
+        <StyledTabbedInput
           onChange={(event: any) => onSearchChanged(event.target.value)}
           onKeyDown={(event: any) => onKeyDown(event)}
-          placeholder={props.placeholderText || "Search by NFT URL"}
+          placeholder="Search NFT by URL"
           required
           type="text"
           value={search}
-          width="100%"
         />
-        <Button.Text
-          icononly
-          icon="Search"
-          onClick={() => onTrySearch()}
-          style={{ position: "absolute", top: 6, right: 24, zIndex: 9 }}
-        />
-        <Flex>
-          <H6 my={2}>Ethereum NFT Contract Address</H6>
-          <Tooltip placement="top" message="The Ethereum ERC721 or ERC1155 Contract Address associated with the token">
-            <Info size="16px" />
-          </Tooltip>
-        </Flex>
-        <Input
-          onChange={(event: any) => setContractAddress(event.target.value)}
-          onKeyDown={(event: any) => onKeyDown(event)}
-          placeholder={props.placeholderText || "Enter Ethereum NFT Contract Address"}
-          required
-          type="text"
-          value={contractAddress}
-          width="100%"
-        />
-        <Flex>
-          <H6 my={2}>Token ID</H6>
-          <Tooltip placement="top" message="The Token ID associated with the NFT">
-            <Info size="16px" />
-          </Tooltip>
-        </Flex>
-        <Flex>
+        <Button.Text onClick={() => onTrySearch()} style={{ position: "absolute", top: 10, right: 5, zIndex: 9 }}>
+          <Search color={colors.primary.base} size="32px" />
+        </Button.Text>
+      </Box>
+      <Box bg={baseColors.white} border={2} borderRadius={1} pb={5} pt={3} px={4} width="100%">
+        {error ? (
+          <Flash variant="danger">{error}</Flash>
+        ) : (
+          <Flash variant="warning">We are not supporting NFT ERC-1155 token at this time.</Flash>
+        )}
+        <H5 color="silver" mb={2}>
+          Or search by
+        </H5>
+        <Box mb={3}>
+          <Flex alignItems="center" mb={2}>
+            <H6 mr={1} my={0}>
+              NFT Contract Address
+            </H6>
+            <Tooltip
+              placement="top"
+              message="The Ethereum ERC721 or ERC1155 Contract Address associated with the token"
+            >
+              <Info color={colors.silver} size="16px" />
+            </Tooltip>
+          </Flex>
           <Input
-            onChange={(event: any) => setToken(event.target.value)}
+            onChange={(event: any) => setContractAddress(event.target.value)}
             onKeyDown={(event: any) => onKeyDown(event)}
-            placeholder={props.placeholderText || "Enter Token ID"}
+            placeholder="Enter NFT contract address"
             required
             type="text"
-            value={token}
+            value={contractAddress}
             width="100%"
-            mr={4}
           />
-          <Button onClick={() => props.onSearch(contractAddress, token)}>Search</Button>
-        </Flex>
-      </Flex>
-    </Box>
+        </Box>
+        <Box>
+          <Flex alignItems="center" mb={2}>
+            <H6 mr={1} my={0}>
+              NFT Token ID
+            </H6>
+            <Tooltip placement="top" message="The Token ID associated with the NFT">
+              <Info color={colors.silver} size="16px" />
+            </Tooltip>
+          </Flex>
+          <Flex>
+            <Input
+              onChange={(event: any) => setToken(event.target.value)}
+              onKeyDown={(event: any) => onKeyDown(event)}
+              placeholder="Enter NFT token ID"
+              required
+              type="text"
+              value={token}
+              width="100%"
+              mr={3}
+            />
+            <Button onClick={() => props.onSearch(contractAddress, token)} width="125px">
+              Search
+            </Button>
+          </Flex>
+        </Box>
+      </Box>
+    </>
   );
 };
