@@ -27,6 +27,11 @@ export function ellipsis(text: string, startLength: number, endLength: number): 
   return text.substr(0, startLength) + "..." + text.substr(text.length - endLength, text.length);
 }
 
+export function truncateDid(did: string, maxCharCount = 20): string {
+  const overMaxCount = did.length > maxCharCount;
+  return did.includes("did:web") ? did : overMaxCount ? hexEllipsis(did) : did;
+}
+
 /** Finds where "0x" hex value starts and takes start length from there. */
 export function hexEllipsis(text: string, startLength = 4, endLength = 4): string {
   const addressIndex = text.indexOf("0x") === -1 ? text.lastIndexOf(":") + 1 : text.indexOf("0x") + 2;
