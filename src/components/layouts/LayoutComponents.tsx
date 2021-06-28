@@ -113,9 +113,9 @@ export const THead = styled.thead`
   }
 `;
 
-export const TH: React.FunctionComponent = (props) => {
+export const TH: React.FunctionComponent<{ style?: { [key: string]: string } }> = (props) => {
   return (
-    <th style={{ borderTop: "none", padding: "16px", textTransform: "none" }}>
+    <th style={{ borderTop: "none", padding: "16px", textTransform: "none", ...props.style }}>
       <Text.span color={colors.lightSilver} fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3} lineHeight="title">
         {props.children}
       </Text.span>
