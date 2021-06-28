@@ -40,10 +40,8 @@ export const ModalBack: React.FunctionComponent<ModalBackProps> = (props) => {
   return <IconButton icononly icon="ArrowBack" position="absolute" top={2} left={2} onClick={props.onClick} />;
 };
 
-export const ModalHeader: React.FunctionComponent = (props) => (
-  <H3 px={4} mt={1} mb={3} color={baseColors.black}>
-    {props.children}
-  </H3>
+export const ModalHeader: React.FunctionComponent<any> = (props) => (
+  <H3 px={4} mt={1} mb={3} color={baseColors.black} {...props} />
 );
 
 export const ModalContent = styled(Box)`

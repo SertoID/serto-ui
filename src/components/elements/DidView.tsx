@@ -1,7 +1,7 @@
 import { Eth } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { colors } from "../../themes";
-import { hexEllipsis } from "../../utils";
+import { truncateDid } from "../../utils";
 import { CopyToClipboard } from "./CopyToClipboard";
 import { SovrinDidLogo } from "./Icons";
 import { H4 } from "../layouts";
@@ -15,9 +15,7 @@ export interface DidViewProps {
 
 export const DidView: React.FunctionComponent<DidViewProps> = (props) => {
   const { copy, did, size } = props;
-  const maxCharCount = props.maxCharCount || 20;
-  const overMaxCount = did.length > maxCharCount;
-  const didDisplayed = did.includes("did:web") ? did : overMaxCount ? hexEllipsis(did) : did;
+  const didDisplayed = truncateDid(did, props.maxCharCount);
   const iconSize = size === "large" ? "32px" : "24px";
   const iconAlign = size === "large" ? "flex-start" : "center";
   const copyIconSize = size === "large" ? "20px" : "16px";
