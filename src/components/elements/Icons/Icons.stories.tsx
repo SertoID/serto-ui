@@ -115,7 +115,7 @@ storiesOf("Icons", module)
     return <GreenCircleCheck />;
   })
   .add("OutlineOne", () => {
-    return <OutlineOne/>;
+    return <OutlineOne />;
   })
   .add("OutlineTwo", () => {
     return <OutlineTwo />;
