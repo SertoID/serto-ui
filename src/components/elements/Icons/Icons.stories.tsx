@@ -9,10 +9,13 @@ import {
   CredentialCheck,
   EthrDidLogo,
   GitHub,
+  GreenCircleCheck,
   Home,
   Info,
   KeyboardArrowDown,
   KeyboardArrowUp,
+  OutlineOne,
+  OutlineTwo,
   People,
   Person,
   SelectAll,
@@ -103,4 +106,13 @@ storiesOf("Icons", module)
   })
   .add("SertoVerifiedCheckmark", () => {
     return <SertoVerifiedCheckmark size="50px" />;
+  })
+  .add("GreenCircleCheck", () => {
+    return <GreenCircleCheck />;
+  })
+  .add("OutlineOne", () => {
+    return <OutlineOne/>;
+  })
+  .add("OutlineTwo", () => {
+    return <OutlineTwo />;
   });
