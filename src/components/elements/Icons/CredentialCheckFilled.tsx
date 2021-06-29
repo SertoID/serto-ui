@@ -1,9 +1,6 @@
-export interface CredentialCheckFilledProps {
-  color?: string;
-  size?: string;
-}
+import { SvgProps } from "./";
 
-export const CredentialCheckFilled: React.FunctionComponent<CredentialCheckFilledProps> = (props) => {
+export const CredentialCheckFilled: React.FunctionComponent<SvgProps> = (props) => {
   return (
     <svg
       width={props.size || "32"}

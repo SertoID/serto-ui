@@ -1,8 +1,6 @@
-export interface DidMethodIconsProps {
-  size?: string;
-}
+import { SvgProps } from "./";
 
-export const DidKeyIcon: React.FunctionComponent<DidMethodIconsProps> = (props) => {
+export const DidKeyIcon: React.FunctionComponent<SvgProps> = (props) => {
   return (
     <svg
       width={props.size || "16px"}
@@ -20,7 +18,7 @@ export const DidKeyIcon: React.FunctionComponent<DidMethodIconsProps> = (props) 
   );
 };
 
-export const DidSovIcon: React.FunctionComponent<DidMethodIconsProps> = (props) => {
+export const DidSovIcon: React.FunctionComponent<SvgProps> = (props) => {
   return (
     <svg
       width={props.size || "18px"}
@@ -37,7 +35,7 @@ export const DidSovIcon: React.FunctionComponent<DidMethodIconsProps> = (props) 
   );
 };
 
-export const DidWebIcon: React.FunctionComponent<DidMethodIconsProps> = (props) => {
+export const DidWebIcon: React.FunctionComponent<SvgProps> = (props) => {
   return (
     <svg
       width={props.size || "16px"}

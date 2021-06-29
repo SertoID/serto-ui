@@ -1,4 +1,3 @@
-import * as React from "react";
 import { SvgProps } from "./";
 
 export const SertoVerifiedCheckmark: React.FunctionComponent<SvgProps> = (props) => {
