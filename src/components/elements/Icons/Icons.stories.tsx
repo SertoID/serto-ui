@@ -1,4 +1,3 @@
-import React from "react";
 import { storiesOf } from "@storybook/react";
 import {
   AddCircle,
@@ -8,6 +7,9 @@ import {
   ContentCopy,
   CredentialCheck,
   CredentialCheckFilled,
+  DidKeyIcon,
+  DidSovIcon,
+  DidWebIcon,
   EthrDidLogo,
   GitHub,
   GreenCircleCheck,
@@ -28,7 +30,6 @@ import {
   SertoVerifiedCheckmark,
   SertoVerificationError,
   Settings,
-  SovrinDidLogo,
   VerifiedUser,
 } from "./";
 
@@ -53,6 +54,15 @@ storiesOf("Icons", module)
   })
   .add("CredentialCheckFilled", () => {
     return <CredentialCheckFilled />;
+  })
+  .add("DidKeyIcon", () => {
+    return <DidKeyIcon />;
+  })
+  .add("DidSovIcon", () => {
+    return <DidSovIcon />;
+  })
+  .add("DidWebIcon", () => {
+    return <DidWebIcon />;
   })
   .add("EthrDidLogo", () => {
     return <EthrDidLogo />;
@@ -98,9 +108,6 @@ storiesOf("Icons", module)
   })
   .add("Settings", () => {
     return <Settings />;
-  })
-  .add("SovrinDidLogo", () => {
-    return <SovrinDidLogo />;
   })
   .add("VerifiedUser", () => {
     return <VerifiedUser />;

@@ -1,9 +1,8 @@
-import { Eth } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { colors } from "../../themes";
 import { truncateDid } from "../../utils";
 import { CopyToClipboard } from "./CopyToClipboard";
-import { SovrinDidLogo } from "./Icons";
+import { DidMethodIcon } from "./DidMethodIcon";
 import { H4 } from "../layouts";
 
 export interface DidViewProps {
@@ -23,8 +22,7 @@ export const DidView: React.FunctionComponent<DidViewProps> = (props) => {
   return (
     <Flex alignItems="center">
       <Flex alignItems="center" justifyContent={iconAlign} width="40px">
-        {did.includes("did:ethr") && <Eth color="#637EEA" size={iconSize} />}
-        {did.includes("did:sov") && <SovrinDidLogo />}
+        <DidMethodIcon did={did} size={iconSize} />
       </Flex>
       {size === "large" ? (
         <H4 m={0} title={did}>
