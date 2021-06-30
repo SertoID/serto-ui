@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import { Eth } from "@rimble/icons";
 import { Box, Flex, Text } from "rimble-ui";
 import { colors } from "../../themes";
 import { SelectedDid } from "../../types";
 import { hexEllipsis } from "../../utils";
 import { H5 } from "../layouts";
-import { DomainImage, SovrinDidLogo } from "../elements";
+import { DidMethodIcon, DomainImage } from "../elements";
 
 const DidSearchOptionStyled = styled(Box)`
   cursor: pointer;
@@ -62,8 +61,7 @@ export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps
     <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
       <Flex borderTop={2} pr={3} py={3}>
         <Box mr={1}>
-          {did.did.includes("did:ethr") && <Eth size="16px" />}
-          {did.did.includes("did:sov") && <SovrinDidLogo />}
+          <DidMethodIcon did={did.did} size="16px" />
         </Box>
         {alias ? (
           <Box>
