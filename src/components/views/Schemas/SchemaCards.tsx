@@ -50,7 +50,7 @@ export const SchemaCards: React.FunctionComponent<SchemaCardsProps> = (props) =>
       props.noSchemasElement || (
         <Text.p display="block" fontSize={1} py={2} lineHeight="copy">
           <b style={{ display: "block", fontWeight: 600 }}>
-            {props.filter === "ALL" ? "There are" : "You have"} no credential schemas yet.
+            {props.filter === "CREATED" ? "You have" : "There are"} no credential schemas yet.
           </b>
           Please first <Link to={schemasService.createSchemaPath}>create a credential schema</Link> in order to
           coordinate around verified data with your customers and partners.

@@ -62,20 +62,20 @@ export const SchemaCard: React.FunctionComponent<SchemaCardProps> = (props) => {
         {schema.description && <Text my={2}>{schema.description}</Text>}
       </Box>
       <Flex px={3} borderTop={2} height="48px" fontSize={1} justifyContent="space-between" alignItems="center">
-        {"user" in schema ? (
+        {"creator" in schema && schema.creator ? (
           <GitHubLink
-            href="https://github.com/@TODO"
+            href={`https://github.com/${schema.creator.nickName}`}
             target="_blank"
             color={colors.silver}
             onClick={(event) => event.stopPropagation()}
           >
-            @github_user
+            {schema.creator.name || schema.creator.nickName}
           </GitHubLink>
         ) : (
           <span></span>
         )}
         {"updated" in schema && (
-          <Box title="Updated" color={colors.silver}>
+          <Box title="Last Updated" color={colors.silver}>
             {new Date(schema.updated).toLocaleDateString()}
           </Box>
         )}
