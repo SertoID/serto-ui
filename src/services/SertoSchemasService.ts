@@ -44,7 +44,7 @@ export class SertoSchemasService {
     }
 
     schemas.forEach((schema: SchemaDataResponse) => {
-      schema.favoriteCount = (schema.favoriteCount || 0) + DUMMY_SCHEMA_SAVES[schema.slug] || 0;
+      schema.favoriteCount = (schema.favoriteCount || 0) + (DUMMY_SCHEMA_SAVES[schema.slug] || 0);
     });
 
     return schemas;
@@ -57,7 +57,7 @@ export class SertoSchemasService {
     let schema = await this.request(`/v1/public/${slug}`, "GET");
     // @TODO/tobek This handles API bug where sometimes there is a wrapper object with schema inside `schema` property - remove when fixed.
     schema = schema.schema || schema;
-    schema.favoriteCount = (schema.favoriteCount || 0) + DUMMY_SCHEMA_SAVES[schema.slug] || 0;
+    schema.favoriteCount = (schema.favoriteCount || 0) + (DUMMY_SCHEMA_SAVES[schema.slug] || 0);
     return schema;
   }
 
