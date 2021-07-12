@@ -10,7 +10,7 @@ export interface SchemaSavesProps {
 export const SchemaSaves: React.FunctionComponent<SchemaSavesProps> = (props) => {
   const { schema } = props;
   const [isSaved, setIsSaved] = React.useState(!!("favorite" in schema && schema.favorite));
-  const [favoriteCount, setFavoriteCount] = React.useState(("favoriteCount" in schema && schema.favoriteCount) || 0);
+  const [saveCount, setSaveCount] = React.useState(("favoriteCount" in schema && schema.favoriteCount) || 0);
   const [isLoading, setIsLoading] = React.useState(false);
   const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
@@ -20,7 +20,7 @@ export const SchemaSaves: React.FunctionComponent<SchemaSavesProps> = (props) =>
       await schemasService.toggleSaveSchema?.(schema.slug);
       setIsSaved(!isSaved);
       // kinda dumb, but mutate isn't working for some reason. maybe toggle save endpoint should return new count. this is good enough.
-      setFavoriteCount(favoriteCount + (isSaved ? -1 : 1));
+      setSaveCount(saveCount + (isSaved ? -1 : 1));
     } catch (err) {
       console.error("Failed to (un)save schema:", err);
     }
@@ -32,7 +32,7 @@ export const SchemaSaves: React.FunctionComponent<SchemaSavesProps> = (props) =>
       onClick={onClick}
       icon={isSaved ? "Star" : "StarBorder"}
       isLoading={isLoading}
-      rightContent={favoriteCount}
+      rightContent={saveCount}
       leftWidth={45}
       disabled={!schemasService.isAuthenticated}
     >

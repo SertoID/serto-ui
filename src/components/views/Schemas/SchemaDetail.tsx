@@ -79,7 +79,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
           fullPage={fullPage}
           paneView={paneView}
           noSwitcher={noSwitcher}
-          rimbleProps={fullPage ? { flexGrow: 1, pr: 4, maxWidth: "640px" } : { maxWidth: "100%" }}
+          rimbleProps={fullPage ? { flexGrow: 1, pr: 4, maxWidth: "665px" } : { maxWidth: "100%" }}
         />
         {fullPage && (
           <Box maxWidth="340px">
@@ -88,13 +88,15 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
 
             <SidebarHeading>Schema Author</SidebarHeading>
             <Text>
-              {/*@TODO/tobek Update when users implemented in API*/}
-              {"user" in schema ? (
-                <UserLink href="https://github.com/@TODO" target="_blank">
-                  <GitHub style={{ width: 16, height: "auto" }} />
-                  github_user
-                  <OpenInNew size="16px" />
-                </UserLink>
+              {"creator" in schema && schema.creator ? (
+                <>
+                  {schema.creator.name && <Text>{schema.creator.name}</Text>}
+                  <UserLink href={`https://github.com/${schema.creator.nickName}`} target="_blank">
+                    <GitHub style={{ width: 16, height: "auto" }} />
+                    {schema.creator.nickName}
+                    <OpenInNew size="16px" />
+                  </UserLink>
+                </>
               ) : (
                 <i>Author details coming soon</i>
               )}
