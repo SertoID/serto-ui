@@ -4,7 +4,7 @@ import { Home, Send } from "@rimble/icons";
 import { SertoSchemasService, mockSertoSchemasService } from "../services/SertoSchemasService";
 import { SertoSearchService, mockSertoSearchService } from "../services/SertoSearchService";
 import { NavItemProps } from "../components/layouts/Global/Nav";
-import { Identifier } from "../types";
+import { Identifier, VeramoIssueVcOptions } from "../types";
 
 export interface SertoUiContextInterface {
   navItems: NavItemProps[];
@@ -12,7 +12,7 @@ export interface SertoUiContextInterface {
   schemasUiUrl?: string;
   searchService: Omit<SertoSearchService, "url" | "request">;
   userDids?: Identifier[];
-  issueVc?(body: any): Promise<any>;
+  issueVc?(vc: any, options: VeramoIssueVcOptions): Promise<any>;
   sendVc?(from: string, to: string, vc: { [key: string]: any }): Promise<any>;
 }
 

@@ -129,8 +129,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
       // @TODO/tobek Actually validate VC according to schema instance
 
-      const issueResponse = await context.issueVc?.({
-        credential,
+      const issueResponse = await context.issueVc?.(credential, {
         revocable,
         keepCopy,
         save: "true",

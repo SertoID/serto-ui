@@ -17,6 +17,13 @@ export interface Identifier {
   userType?: string;
 }
 
+export interface VeramoIssueVcOptions {
+  revocable?: boolean;
+  keepCopy?: boolean;
+  save?: string;
+  proofFormat?: string;
+}
+
 export interface SelectedDid {
   did: string;
   messagingSupported?: boolean;
