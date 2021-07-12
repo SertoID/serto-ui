@@ -4,7 +4,7 @@
   "author": "Serto",
   "homepage": "https://serto.id",
   "repository": "SertoID/serto-ui",
-  "version": "0.3.23",
+  "version": "0.3.24",
   "main": "dist/serto-ui.js",
   "types": "dist/serto-ui.d.ts",
   "scripts": {
