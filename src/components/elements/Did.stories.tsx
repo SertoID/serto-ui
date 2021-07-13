@@ -68,7 +68,11 @@ storiesOf("DID", module)
   .add("DID by Domain", () => {
     return (
       <IdentityThemeProvider>
-        <DidByDomain did="did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" domain="serto.id" didCopy />
+        <DidByDomain
+          didDocs={[{ id: "did:ethr:rinkeby:0xbd3fa1d36e4d1bf76cfa882b4fe09b27c5dce7ac" }]}
+          domain="serto.id"
+          didCopy
+        />
       </IdentityThemeProvider>
     );
   });
