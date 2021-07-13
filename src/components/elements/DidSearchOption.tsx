@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { Box, Flex, Text } from "rimble-ui";
-import { colors } from "../../themes";
+import { CheckCircle, Warning } from "@rimble/icons";
+import { Box, Flex, Text, Tooltip } from "rimble-ui";
+import { baseColors, colors, fonts } from "../../themes";
 import { SelectedDid } from "../../types";
 import { hexEllipsis } from "../../utils";
 import { H5 } from "../layouts";
@@ -59,24 +60,37 @@ export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps
   const { alias, did, onSelect } = props;
   return (
     <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
-      <Flex borderTop={2} pr={3} py={3}>
-        <Box mr={1}>
-          <DidMethodIcon did={did.did} size="16px" />
-        </Box>
-        {alias ? (
-          <Box>
-            <Text color={colors.midGray} fontSize={1}>
-              {alias}
-            </Text>
-            <Text color={colors.silver} fontSize={0} title={did.did}>
+      <Flex borderTop={2} justifyContent="space-between">
+        <Flex alignItems="center" fontFamily={fonts.sansSerif} pr={3} py={3}>
+          <Box mr={1}>
+            <DidMethodIcon did={did.did} size="16px" />
+          </Box>
+          {alias ? (
+            <>
+              <Text color={colors.midGray} fontSize={1} fontWeight={3} mr={3}>
+                {alias}
+              </Text>
+              <Text color={colors.midGray} fontSize={0} title={did.did}>
+                {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
+              </Text>
+            </>
+          ) : (
+            <Text color={colors.midGray} fontSize={0} title={did.did}>
               {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
             </Text>
-          </Box>
-        ) : (
-          <Text color={colors.midGray} fontSize={1} title={did.did}>
-            {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
-          </Text>
-        )}
+          )}
+        </Flex>
+        <Flex alignItems="center" background={baseColors.white} borderLeft={2} justifyContent="center" width="40px">
+          {did.messagingSupported ? (
+            <Tooltip placement="top" message="This DID can receive secure messages and credentials.">
+              <CheckCircle color={colors.success.base} />
+            </Tooltip>
+          ) : (
+            <Tooltip placement="top" message="This DID does not receive messages and credentials.">
+              <Warning color={colors.warning.base} />
+            </Tooltip>
+          )}
+        </Flex>
       </Flex>
     </DidSearchOptionStyled>
   );
