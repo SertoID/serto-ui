@@ -6,8 +6,8 @@ import { DidSearch } from "./DidSearch";
 
 const identifiers: Identifier[] = [
   {
-    did: "did:ethr:rinkeby:0xcfa8829812f1b4fe09b27cacf7d36e4d1b5dce76",
-    provider: "did:ethr:rinkeby",
+    did: "did:ethr:0xcfa8829812f1b4fe09b27cacf7d36e4d1b5dce76",
+    provider: "did:ethr",
     alias: "Admin",
   },
   {
@@ -16,13 +16,13 @@ const identifiers: Identifier[] = [
     alias: "Another User",
   },
   {
-    did: "did:ethr:rinkeby:0x1b5dce8826e4d76cf9b27cac12f1b4fe098d3f7a",
-    provider: "did:ethr:rinkeby",
+    did: "did:key:0x1b5dce8826e4d76cf9b27cac12f1b4fe098d3f7a",
+    provider: "did:key",
     alias: "Really really really really really really long alias",
   },
   {
-    did: "did:ethr:rinkeby:0x9812f1d36e4d1b5dce7acf76cfa882b4fe09b27c",
-    provider: "did:ethr:rinkeby",
+    did: "did:web:consensys.net",
+    provider: "did:web",
   },
   {
     did: "did:ethr:rinkeby:0x82b4fe09b27c5dce7acbd3fa1d36e4d1bf76cfa8",
@@ -42,25 +42,25 @@ const entries = [
     dids: "did:ethr:0x99dc16bff4fd8f6e33588daa4654e9ab5c5339f3",
     domain: "codefi.consensys.net",
     numBaselineEndpoints: "0",
-    numVeramoEndpoints: "0",
+    numVeramoEndpoints: "1",
   },
   {
     dids: "did:ethr:0xe32d444beed28c6c28ba1f84d2c8e07031b8a5d5",
     domain: "consensys.net",
     numBaselineEndpoints: "0",
-    numVeramoEndpoints: "0",
+    numVeramoEndpoints: "1",
   },
   {
     dids: "did:ethr:0xf570f773d825f5a30c3200962f59534d25a20018",
     domain: "diligence.consensys.net",
     numBaselineEndpoints: "0",
-    numVeramoEndpoints: "0",
+    numVeramoEndpoints: "1",
   },
   {
     dids: "did:ethr:0xc0b92f3f31a146e4422daf8eac9a047e3340051a",
     domain: "quorum.consensys.net",
     numBaselineEndpoints: "0",
-    numVeramoEndpoints: "0",
+    numVeramoEndpoints: "2",
   },
 ];
 

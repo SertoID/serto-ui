@@ -4,11 +4,12 @@ import { SertoUiContext, SertoUiContextInterface } from "../../context/SertoUiCo
 import { Identifier, DidSearchResult, SelectedDid } from "../../types";
 import { Launch, Search } from "@rimble/icons";
 import { Box, Flex, Input } from "rimble-ui";
-import { baseColors, colors } from "../../themes";
+import { baseColors, colors, fonts } from "../../themes";
 import { DidSearchOption, DidSearchOptionDid } from "./DidSearchOption";
 
 const StyledLink = styled.a`
   color: ${colors.primary.base};
+  font-family: ${fonts.sansSerif};
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
