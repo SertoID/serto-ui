@@ -17,14 +17,9 @@ export const CopyableTruncatableText: React.FunctionComponent<CopyableTruncatabl
   return (
     <Flex
       alignItems="center"
-      bg={baseColors.white}
-      border={2}
-      borderRadius={1}
-      justifyContent="space-between"
-      pl={3}
-      pr={2}
-      py={2}
+      justifyContent="start"
       width="100%"
+      p={1}
     >
       <Text
         color={baseColors.black}
@@ -34,11 +29,10 @@ export const CopyableTruncatableText: React.FunctionComponent<CopyableTruncatabl
         lineHeight="solid"
         minHeight="14px"
         style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-        width="100%"
       >
         {props.text}
       </Text>
-      <Box bg={baseColors.white} pl={2}>
+      <Box pl={2}>
         <CopyToClipboard size={props.size || "24px"} text={props.text} />
       </Box>
       {props.linkOutHref && (
