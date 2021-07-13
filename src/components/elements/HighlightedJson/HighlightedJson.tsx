@@ -7,10 +7,9 @@ import { fonts, colors } from "../../../themes/";
 
 export const PrismHighlightedCodeWrap = styled(Card)`
   background: ${colors.nearWhite};
+  border: ${colors.nearWhite};
   flex-grow: 1;
   overflow: auto;
-  padding: 16px;
-  margin: 0 8px 8px 0;
   font-size: 12px;
   font-family: ${fonts.monospace};
   border-radius: 4px;

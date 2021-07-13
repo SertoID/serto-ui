@@ -10,18 +10,19 @@ export interface DidViewProps {
   did: string;
   maxCharCount?: number;
   size?: string;
+  dontTruncate?: boolean;
 }
 
 export const DidView: React.FunctionComponent<DidViewProps> = (props) => {
-  const { copy, did, size } = props;
-  const didDisplayed = truncateDid(did, props.maxCharCount);
+  const { copy, did, size, dontTruncate } = props;
+  const didDisplayed = dontTruncate ? did : truncateDid(did, props.maxCharCount);
   const iconSize = size === "large" ? "32px" : "24px";
   const iconAlign = size === "large" ? "flex-start" : "center";
   const copyIconSize = size === "large" ? "20px" : "16px";
 
   return (
     <Flex alignItems="center">
-      <Flex alignItems="center" justifyContent={iconAlign} width="40px">
+      <Flex alignItems="center" justifyContent={iconAlign} width="40px" mr={2}>
         <DidMethodIcon did={did} size={iconSize} />
       </Flex>
       {size === "large" ? (

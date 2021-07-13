@@ -1,8 +1,11 @@
 export * from "./CredentialCheck";
 export * from "./CredentialCheckFilled";
 export * from "./DidMethodIcons";
+export * from "./Fingerprint";
 export * from "./GitHub";
 export * from "./GreenCircleCheck";
+export * from "./IcoWeb";
+export * from "./IndentedArrow";
 export * from "./OutlineOne";
 export * from "./OutlineTwo";
 export * from "./SertoAgentLogo";
@@ -12,3 +15,4 @@ export * from "./SertoSearchLogo";
 export * from "./SertoVerifiedCheckmark";
 export * from "./SertoVerificationError";
 export * from "./SvgProps";
+export * from "./Verified";
