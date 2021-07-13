@@ -5,8 +5,11 @@ import {
   DidKeyIcon,
   DidSovIcon,
   DidWebIcon,
+  Fingerprint,
   GitHub,
   GreenCircleCheck,
+  IcoWeb,
+  IndentedArrow,
   OutlineOne,
   OutlineTwo,
   SertoAgentLogo,
@@ -15,6 +18,7 @@ import {
   SertoSearchLogo,
   SertoVerifiedCheckmark,
   SertoVerificationError,
+  Verified,
 } from "./";
 
 storiesOf("Icons", module)
@@ -33,8 +37,17 @@ storiesOf("Icons", module)
   .add("DidWebIcon", () => {
     return <DidWebIcon />;
   })
+  .add("Fingerprint", () => {
+    return <Fingerprint />
+  })
   .add("GitHub", () => {
     return <GitHub />;
+  })
+  .add("IcoWeb", () => {
+    return <IcoWeb />;
+  })
+  .add("IndentedArrow", () => {
+    return <IndentedArrow />;
   })
   .add("SertoAgentLogo", () => {
     return <SertoAgentLogo />;
@@ -62,4 +75,7 @@ storiesOf("Icons", module)
   })
   .add("SertoVerifiedCheckmark", () => {
     return <SertoVerifiedCheckmark size="50px" />;
+  })
+  .add("Verified", () => {
+    return <Verified />;
   });
