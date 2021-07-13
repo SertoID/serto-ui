@@ -1,7 +1,6 @@
 export * from "./CombinedSearchBar";
 export * from "./CopyableTruncatableText";
 export * from "./CopyToClipboard";
-export * from "./DidsByDomain";
 export * from "./DidByDomain";
 export * from "./DidMethodIcon";
 export * from "./DidSearch";

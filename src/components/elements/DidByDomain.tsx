@@ -1,37 +1,46 @@
-import { Box } from "rimble-ui";
+import { Box, Text } from "rimble-ui";
 import { DidView, DomainImage } from "./";
 import { H5 } from "../layouts";
 import { colors } from "../../themes";
 
 export interface DidByDomainProps {
-  did: string;
+  didDocs: any[];
   didCopy?: boolean;
   domain: string;
   linkDomain?: string;
+  name?: string;
 }
 
 export const DidByDomain: React.FunctionComponent<DidByDomainProps> = (props) => {
-  const { did, didCopy, domain, linkDomain } = props;
+  const { didDocs, didCopy, domain, linkDomain, name } = props;
 
   return (
     <Box>
       <Box position="relative" pb={2} pl="50px" pr={3} pt={3}>
-        <Box height="16px" width="16px" position="absolute" left="18px" top="18px">
-          <DomainImage domain={domain} />
+        <Box height="32px" width="32px" position="absolute" left="12px" top="10px">
+          <DomainImage domain={domain} size="32px" />
         </Box>
-        {linkDomain ? (
-          <a href={linkDomain} style={{ textDecoration: "none" }}>
-            <H5 color={colors.primary.base} m={0}>
-              {domain}
-            </H5>
-          </a>
-        ) : (
-          <H5 m={0}>{domain}</H5>
-        )}
+        <Box>
+          {linkDomain ? (
+            <a href={linkDomain} style={{ textDecoration: "none" }}>
+              <H5 color={colors.primary.base} m={0}>
+                {domain}
+              </H5>
+            </a>
+          ) : (
+            <H5 m={0}>{domain}</H5>
+          )}
+          {name && <Text>{name}</Text>}
+        </Box>
       </Box>
-      <Box borderTop={2} ml="50px" pr={3} py={3}>
-        <DidView did={did} copy={didCopy} />
-      </Box>
+      {didDocs.map((didDoc) => {
+        const parsedDidDoc = JSON.parse(didDoc);
+        return (
+          <Box borderTop={2} ml="50px" pr={3} py={3}>
+            <DidView did={parsedDidDoc.id} copy={didCopy} dontTruncate={true} />
+          </Box>
+        );
+      })}
     </Box>
   );
 };
