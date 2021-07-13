@@ -15,12 +15,7 @@ export interface CopyableTruncatableTextProps {
 
 export const CopyableTruncatableText: React.FunctionComponent<CopyableTruncatableTextProps> = (props) => {
   return (
-    <Flex
-      alignItems="center"
-      justifyContent="start"
-      width="100%"
-      p={1}
-    >
+    <Flex alignItems="center" justifyContent="start" width="100%" p={1}>
       <Text
         color={baseColors.black}
         fontFamily={props.fontFamily}
