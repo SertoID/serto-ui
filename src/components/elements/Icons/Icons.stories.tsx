@@ -38,7 +38,7 @@ storiesOf("Icons", module)
     return <DidWebIcon />;
   })
   .add("Fingerprint", () => {
-    return <Fingerprint />
+    return <Fingerprint />;
   })
   .add("GitHub", () => {
     return <GitHub />;
