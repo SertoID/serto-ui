@@ -22,7 +22,7 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Nowhere", url: "/nowhere", icon: Send },
   ],
   schemasService: mockSertoSchemasService,
-  schemasUiUrl: "https://staging.schemas.serto.id",
+  schemasUiUrl: "https://beta.schemas.serto.id",
   searchService: mockSertoSearchService,
 };
 
