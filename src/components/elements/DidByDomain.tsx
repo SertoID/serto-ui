@@ -1,5 +1,5 @@
 import { OpenInNew, Sms } from "@rimble/icons";
-import { Box, Flex, Text } from "rimble-ui";
+import { Box, Flex, Text, Tooltip } from "rimble-ui";
 import { DidView, DomainImage } from "./";
 import { H5 } from "../layouts";
 import { colors } from "../../themes";
@@ -53,7 +53,11 @@ export const DidByDomain: React.FunctionComponent<DidByDomainProps> = (props) =>
         return (
           <Flex alignItems="center" borderTop={2} justifyContent="space-between" key={i} ml="50px" pr={3} py={3}>
             <DidView did={parsedDidDoc.id} copy={didCopy} dontTruncate={true} />
-            {parsedDidDoc.service?.length > 0 && <Sms color={colors.silver} size="18px" />}
+            {parsedDidDoc.service?.length > 0 && (
+              <Tooltip message="You can send and receive secure messages with this DID." placement="top">
+                <Sms color={colors.silver} size="18px" />
+              </Tooltip>
+            )}
           </Flex>
         );
       })}
