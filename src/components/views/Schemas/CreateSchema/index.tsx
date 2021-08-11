@@ -22,6 +22,7 @@ const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
 export interface CreateSchemaProps {
   isUpdate?: boolean;
+  userOwnsSchema?: boolean;
   initialSchemaState?: WorkingSchema;
   className?: string;
   onComplete?(): void;
@@ -30,7 +31,7 @@ export interface CreateSchemaProps {
 }
 
 export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) => {
-  const { className, isUpdate, initialSchemaState, onComplete, onSchemaUpdate, onSchemaSaved } = props;
+  const { className, isUpdate, userOwnsSchema, initialSchemaState, onComplete, onSchemaUpdate, onSchemaSaved } = props;
   const [currentStep, setCurrentStep] = React.useState(STEPS[0]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -111,7 +112,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
         setCurrentStep(nextStep);
         onSchemaSaved?.(builtSchema);
       } catch (err) {
-        console.error(`Failed to ${isUpdate ? "create" : "update"} schema:`, err);
+        console.error(`Failed to ${isUpdate && userOwnsSchema ? "update" : "create"} schema:`, err);
         setError(err.toString());
       }
       setLoading(false);
@@ -122,7 +123,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   async function publishSchema() {
     onSchemaUpdate?.(schema);
-    if (isUpdate) {
+    if (isUpdate && userOwnsSchema) {
       await schemasService.updateSchema(builtSchema);
     } else {
       await schemasService.createSchema(builtSchema);
@@ -167,7 +168,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
             <Box>
               <Text fontWeight={4} fontSize={3}>
                 {currentStep === "INFO"
-                  ? (isUpdate ? "Update" : "Create New") + " Schema"
+                  ? (isUpdate ? (userOwnsSchema ? "Update" : "Fork") : "Create New") + " Schema"
                   : currentStep === "ATTRIBUTES"
                   ? (isUpdate ? "Edit" : "Define") + " Schema Attributes"
                   : "Review Schema"}
@@ -267,6 +268,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
             {currentStep === "INFO" ? (
               <InfoStep
                 isUpdate={isUpdate}
+                userOwnsSchema={userOwnsSchema}
                 initialSchemaState={initialSchemaState}
                 schema={schema}
                 updateSchema={updateSchema}
@@ -276,7 +278,13 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
               <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
             ) : (
               <Box mt={4}>
-                <ConfirmStep builtSchema={builtSchema} onComplete={goForward} loading={loading} error={error} />
+                <ConfirmStep
+                  builtSchema={builtSchema}
+                  onComplete={goForward}
+                  loading={loading}
+                  isUpdate={isUpdate}
+                  error={error}
+                />
               </Box>
             )}
           </>

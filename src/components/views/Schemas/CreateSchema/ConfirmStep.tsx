@@ -7,12 +7,13 @@ export interface ConfirmStepProps {
   builtSchema: SchemaDataInput;
   error?: string;
   isUpdate?: boolean;
+  userOwnsSchema?: boolean;
   loading?: boolean;
   onComplete(): void;
 }
 
 export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) => {
-  const { builtSchema, error } = props;
+  const { builtSchema, error, isUpdate, userOwnsSchema } = props;
 
   return (
     <>
@@ -23,7 +24,7 @@ export const ConfirmStep: React.FunctionComponent<ConfirmStepProps> = (props) =>
         </Flash>
       )}
       <Button mt={3} width="100%" onClick={props.onComplete} disabled={props.loading}>
-        {props.loading ? <Loader color="white" /> : props.isUpdate ? "Update" : "Publish"}
+        {props.loading ? <Loader color="white" /> : isUpdate ? userOwnsSchema ? "Update" : "Fork" : "Publish"}
       </Button>
     </>
   );

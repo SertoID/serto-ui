@@ -34,12 +34,13 @@ export interface InfoStepProps {
   schema: WorkingSchema;
   initialSchemaState?: WorkingSchema;
   isUpdate?: boolean;
+  userOwnsSchema?: boolean;
   updateSchema(updates: Partial<WorkingSchema>): void;
   onComplete(): void;
 }
 
 export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
-  const { isUpdate, initialSchemaState, schema, updateSchema } = props;
+  const { isUpdate, userOwnsSchema, initialSchemaState, schema, updateSchema } = props;
   const [doValidation, setDoValidation] = React.useState(false);
   const [error, setError] = React.useState("");
   const [useDefaultSlug, setUseDefaultSlug] = React.useState(!schema.slug);
@@ -60,8 +61,12 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
   function goNext(e: Event) {
     e.preventDefault();
     setError("");
-    if (isUpdate && schema.version === initialSchemaState?.version) {
+    if (isUpdate && userOwnsSchema && schema.version === initialSchemaState?.version) {
       setError("You must update the version number when updating a schema.");
+      return;
+    }
+    if (isUpdate && !userOwnsSchema && schema.slug === initialSchemaState?.slug) {
+      setError("You must update the slug when forking a schema.");
       return;
     }
     if (schema.name && schema.slug && schema.version) {
