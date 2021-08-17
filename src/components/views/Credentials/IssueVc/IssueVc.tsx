@@ -42,7 +42,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           </Text>
           <H3>Credential Issued</H3>
         </Text>
-        <Credential vc={response} viewType={CredentialViewTypes.COLLAPSIBLE} />
+        <Credential vc={response.issueResponse} viewType={CredentialViewTypes.COLLAPSIBLE} />
         <Box my={2}>
           <Button width="100%" onClick={props.onComplete}>
             Done
