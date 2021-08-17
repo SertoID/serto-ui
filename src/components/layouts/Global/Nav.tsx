@@ -1,17 +1,24 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Link, generatePath } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 import { Box, Flex, Text } from "rimble-ui";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 import { baseColors, colors } from "../../../themes";
 
 const NavItemStyled = styled.div`
-  padding: 10px 0;
-
   a {
+    border-radius: 4px;
+    display: block;
+    padding: 16px;
     text-decoration: none;
-    &:hover svg {
-      fill: #5952ff;
+
+    &:hover {
+      background-color: ${baseColors.white};
+      text-decoration: none;
+
+      svg {
+        fill: ${colors.primary.base};
+      }
     }
   }
 `;
@@ -29,9 +36,9 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
 
   if (currentUrl === url) {
     return (
-      <Box py={2}>
+      <Box p={3}>
         <Flex alignItems="center">
-          <Icon color={colors.primary.base} size="16px" mr="20px" />
+          <Icon color={colors.primary.base} size="16px" mr={3} />
           <Text.span color={baseColors.black} fontSize={1} fontWeight={3}>
             {text}
           </Text.span>
@@ -44,8 +51,8 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
     <NavItemStyled>
       <Link to={generatePath(url)}>
         <Flex alignItems="center">
-          <Icon color={colors.midGray} size="16px" mr="20px" />
-          <Text.span color={colors.midGray} fontSize={1}>
+          <Icon color={colors.midGray} size="16px" mr={3} />
+          <Text.span color={colors.midGray} fontSize={1} fontWeight={3}>
             {text}
           </Text.span>
         </Flex>
