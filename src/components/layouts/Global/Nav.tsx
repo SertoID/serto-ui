@@ -28,21 +28,31 @@ export interface NavItemProps {
   text: string;
   url: string;
   currentUrl?: string;
+  subTabs?: any[];
 }
 
 const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
-  const { currentUrl, icon, text, url } = props;
+  const { currentUrl, icon, subTabs, text, url } = props;
   const Icon = icon;
 
   if (currentUrl === url) {
     return (
-      <Box p={3}>
+      <Box bg={baseColors.white} p={3}>
         <Flex alignItems="center">
           <Icon color={colors.primary.base} size="16px" mr={3} />
           <Text.span color={baseColors.black} fontSize={1} fontWeight={3}>
             {text}
           </Text.span>
         </Flex>
+        {subTabs?.map((tab: any, i: number) => {
+          return (
+            <Box key={i} pt={4}>
+              <Text.span color={baseColors.black} fontSize={1} fontWeight={3}>
+                {tab.text}
+              </Text.span>
+            </Box>
+          );
+        })}
       </Box>
     );
   }
