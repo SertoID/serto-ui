@@ -269,6 +269,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
               <InfoStep
                 isUpdate={isUpdate}
                 userOwnsSchema={userOwnsSchema}
+                isAuthenticated={schemasService.isAuthenticated}
                 initialSchemaState={initialSchemaState}
                 schema={schema}
                 updateSchema={updateSchema}
@@ -283,6 +284,8 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
                   onComplete={goForward}
                   loading={loading}
                   isUpdate={isUpdate}
+                  userOwnsSchema={userOwnsSchema}
+                  isAuthenticated={schemasService.isAuthenticated}
                   error={error}
                 />
               </Box>
