@@ -127,7 +127,6 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
             {externalResults && externalResults.length > 0 && (
               <Box>
                 {externalResults.map((result: DidSearchResult, i: number) => {
-                  console.log(result.dids);
                   return (
                     <DidSearchOption
                       key={i}
@@ -136,10 +135,8 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
                         setValue(selectedDid);
                         setIsOpen(false);
                       }}
-                      dids={result.dids}
+                      didDocs={result.didDocs}
                       domain={result.domain}
-                      // @TODO/tobek Is this how we'll detect messaging support for now?
-                      messagingSupported={(result.numVeramoEndpoints || 0) > 0}
                     />
                   );
                 })}

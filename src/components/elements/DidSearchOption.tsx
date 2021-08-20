@@ -17,17 +17,15 @@ const DidSearchOptionStyled = styled(Box)`
 
 export interface DidSearchOptionProps {
   alias?: string;
-  dids: any;
+  didDocs: any;
   domain: string;
   imageUrl?: string;
-  messagingSupported: boolean;
   orgName?: string;
   onSelect(did: string): void;
 }
 
 export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (props) => {
-  const { alias, dids, domain, imageUrl, messagingSupported, orgName, onSelect } = props;
-  console.log(dids);
+  const { alias, didDocs, domain, imageUrl, orgName, onSelect } = props;
   return (
     <Box borderTop={2}>
       <Box position="relative" pb={2} pl="50px" pr={3} pt={3}>
@@ -46,8 +44,17 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
           {orgName}
         </Text>
       </Box>
-      {dids.map((did: string, i: number) => {
-        return <DidSearchOptionDid alias={alias} did={did} key={i} messagingSupported={messagingSupported} onSelect={onSelect} />;
+      {didDocs.map((didDoc: any, i: number) => {
+        const parsedDidDoc = JSON.parse(didDoc);
+        return (
+          <DidSearchOptionDid
+            alias={alias}
+            did={parsedDidDoc.id}
+            key={i}
+            messagingSupported={parsedDidDoc.service?.length > 0}
+            onSelect={onSelect}
+          />
+        );
       })}
     </Box>
   );
