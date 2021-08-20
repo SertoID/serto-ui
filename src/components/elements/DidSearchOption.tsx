@@ -3,9 +3,9 @@ import { CheckCircle, Warning } from "@rimble/icons";
 import { Box, Flex, Text, Tooltip } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../themes";
 import { SelectedDid } from "../../types";
-import { hexEllipsis } from "../../utils";
 import { H5 } from "../layouts";
 import { DidMethodIcon, DomainImage } from "../elements";
+import { DidTruncate } from "./DidTruncate";
 
 const DidSearchOptionStyled = styled(Box)`
   cursor: pointer;
@@ -27,6 +27,7 @@ export interface DidSearchOptionProps {
 
 export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (props) => {
   const { alias, did, domain, imageUrl, orgName, onSelect } = props;
+  console.log(did);
   return (
     <Box borderTop={2}>
       <Box position="relative" pb={2} pl="50px" pr={3} pt={3}>
@@ -45,7 +46,7 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
           {orgName}
         </Text>
       </Box>
-      <DidSearchOptionDid alias={alias} did={did} onSelect={onSelect} />
+      <DidSearchOptionDid alias={alias} did={did} onSelect={onSelect} />;
     </Box>
   );
 };
@@ -59,24 +60,31 @@ export interface DidSearchOptionDidProps {
 export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps> = (props) => {
   const { alias, did, onSelect } = props;
   return (
-    <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
-      <Flex borderTop={2} justifyContent="space-between">
-        <Flex alignItems="center" fontFamily={fonts.sansSerif} pr={3} py={3}>
-          <Box mr={1}>
+    <DidSearchOptionStyled pl={3} onClick={() => onSelect(did)}>
+      <Flex borderTop={2} justifyContent="space-between" maxWidth="100%">
+        <Flex
+          alignItems="center"
+          fontFamily={fonts.sansSerif}
+          position="relative"
+          pl="36px"
+          py={3}
+          maxWidth="calc(100% - 40px)"
+        >
+          <Box left={0} position="absolute" top="22px">
             <DidMethodIcon did={did.did} size="16px" />
           </Box>
           {alias ? (
             <>
-              <Text color={colors.midGray} fontSize={1} fontWeight={3} mr={3}>
+              <Text color={colors.midGray} fontSize={1} fontWeight={3} mr={2}>
                 {alias}
               </Text>
-              <Text color={colors.midGray} fontSize={0} title={did.did}>
-                {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
+              <Text color={colors.midGray} fontSize={0} maxWidth="calc(100% - 50px)" title={did.did}>
+                <DidTruncate did={did.did} />
               </Text>
             </>
           ) : (
-            <Text color={colors.midGray} fontSize={0} title={did.did}>
-              {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
+            <Text color={colors.midGray} fontSize={0} maxWidth="100%" title={did.did}>
+              <DidTruncate did={did.did} />
             </Text>
           )}
         </Flex>

@@ -5,6 +5,7 @@ export * from "./DidByDomain";
 export * from "./DidMethodIcon";
 export * from "./DidSearch";
 export * from "./DidSelect";
+export * from "./DidTruncate";
 export * from "./DidView";
 export * from "./DropDown";
 export * from "./DomainImage";
