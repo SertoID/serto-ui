@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { CheckCircle, Warning } from "@rimble/icons";
 import { Box, Flex, Text, Tooltip } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../themes";
-import { SelectedDid } from "../../types";
 import { H5 } from "../layouts";
 import { DidMethodIcon, DomainImage } from "../elements";
 import { DidTruncate } from "./DidTruncate";
@@ -18,16 +17,17 @@ const DidSearchOptionStyled = styled(Box)`
 
 export interface DidSearchOptionProps {
   alias?: string;
-  did: SelectedDid;
+  dids: any;
   domain: string;
   imageUrl?: string;
+  messagingSupported: boolean;
   orgName?: string;
-  onSelect(did: SelectedDid): void;
+  onSelect(did: string): void;
 }
 
 export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (props) => {
-  const { alias, did, domain, imageUrl, orgName, onSelect } = props;
-  console.log(did);
+  const { alias, dids, domain, imageUrl, messagingSupported, orgName, onSelect } = props;
+  console.log(dids);
   return (
     <Box borderTop={2}>
       <Box position="relative" pb={2} pl="50px" pr={3} pt={3}>
@@ -46,50 +46,53 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
           {orgName}
         </Text>
       </Box>
-      <DidSearchOptionDid alias={alias} did={did} onSelect={onSelect} />;
+      {dids.map((did: string, i: number) => {
+        return <DidSearchOptionDid alias={alias} did={did} key={i} messagingSupported={messagingSupported} onSelect={onSelect} />;
+      })}
     </Box>
   );
 };
 
 export interface DidSearchOptionDidProps {
   alias?: string;
-  did: SelectedDid;
-  onSelect(did: SelectedDid): void;
+  did: string;
+  messagingSupported: boolean;
+  onSelect(did: string): void;
 }
 
 export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps> = (props) => {
-  const { alias, did, onSelect } = props;
+  const { alias, did, messagingSupported, onSelect } = props;
   return (
-    <DidSearchOptionStyled pl={3} onClick={() => onSelect(did)}>
+    <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
       <Flex borderTop={2} justifyContent="space-between" maxWidth="100%">
         <Flex
           alignItems="center"
           fontFamily={fonts.sansSerif}
           position="relative"
-          pl="36px"
+          pl="26px"
           py={3}
-          maxWidth="calc(100% - 40px)"
+          maxWidth="calc(100% - 50px)"
         >
-          <Box left={0} position="absolute" top="22px">
-            <DidMethodIcon did={did.did} size="16px" />
+          <Box left={0} position="absolute" top="21px">
+            <DidMethodIcon did={did} size="16px" />
           </Box>
           {alias ? (
             <>
               <Text color={colors.midGray} fontSize={1} fontWeight={3} mr={2}>
                 {alias}
               </Text>
-              <Text color={colors.midGray} fontSize={0} maxWidth="calc(100% - 50px)" title={did.did}>
-                <DidTruncate did={did.did} />
+              <Text color={colors.midGray} fontSize={0} maxWidth="calc(100% - 50px)" title={did}>
+                <DidTruncate did={did} />
               </Text>
             </>
           ) : (
-            <Text color={colors.midGray} fontSize={0} maxWidth="100%" title={did.did}>
-              <DidTruncate did={did.did} />
+            <Text color={colors.midGray} fontSize={0} maxWidth="100%" title={did}>
+              <DidTruncate did={did} />
             </Text>
           )}
         </Flex>
         <Flex alignItems="center" background={baseColors.white} borderLeft={2} justifyContent="center" width="40px">
-          {did.messagingSupported ? (
+          {messagingSupported ? (
             <Tooltip placement="top" message="This DID can receive secure messages and credentials.">
               <CheckCircle color={colors.success.base} />
             </Tooltip>

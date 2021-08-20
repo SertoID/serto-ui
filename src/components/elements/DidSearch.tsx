@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { SertoUiContext, SertoUiContextInterface } from "../../context/SertoUiContext";
-import { Identifier, DidSearchResult, SelectedDid } from "../../types";
+import { Identifier, DidSearchResult } from "../../types";
 import { Launch, Search } from "@rimble/icons";
 import { Box, Flex, Input } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../themes";
@@ -22,7 +22,7 @@ export interface DidSearchProps {
   defaultSelectedDid?: string;
   identifiers?: Identifier[];
   required?: boolean;
-  onChange(value: SelectedDid): void;
+  onChange(value: string): void;
   onBlur?(): void;
 }
 
@@ -71,7 +71,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
       <Input
         borderRadius={isOpen ? "4px 4px 0 0" : 1}
         onChange={(event: any) => {
-          onChange({ did: event.target.value });
+          onChange(event.target.value);
           setValue(event.target.value);
           searchInternalIdentifiers(event.target.value);
           searchExternalIdentifiers(event.target.value);
@@ -113,15 +113,12 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
                       key={i}
                       onSelect={(selectedDid) => {
                         onChange(selectedDid);
-                        setValue(selectedDid.did);
+                        setValue(selectedDid);
                         setIsOpen(false);
                       }}
-                      did={{
-                        did: did.did,
-                        // @TODO/tobek Is this how we'll detect messaging support for now?
-                        messagingSupported: !!did.services?.length,
-                      }}
+                      did={did.did}
                       alias={did.alias}
+                      messagingSupported={!!did.services?.length}
                     />
                   );
                 })}
@@ -130,20 +127,19 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
             {externalResults && externalResults.length > 0 && (
               <Box>
                 {externalResults.map((result: DidSearchResult, i: number) => {
+                  console.log(result.dids);
                   return (
                     <DidSearchOption
                       key={i}
                       onSelect={(selectedDid) => {
                         onChange(selectedDid);
-                        setValue(selectedDid.did);
+                        setValue(selectedDid);
                         setIsOpen(false);
                       }}
-                      did={{
-                        did: result.dids,
-                        // @TODO/tobek Is this how we'll detect messaging support for now?
-                        messagingSupported: (result.numVeramoEndpoints || 0) > 0,
-                      }}
+                      dids={result.dids}
                       domain={result.domain}
+                      // @TODO/tobek Is this how we'll detect messaging support for now?
+                      messagingSupported={(result.numVeramoEndpoints || 0) > 0}
                     />
                   );
                 })}
