@@ -43,6 +43,8 @@ export interface SchemaDataResponse extends SchemaDataInput {
     /** username */
     nickName: string;
     picture: string;
+    /** JWT subject */
+    identifier: string;
   };
 }
 
