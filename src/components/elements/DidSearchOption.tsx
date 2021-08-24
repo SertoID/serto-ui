@@ -22,7 +22,7 @@ export interface DidSearchOptionProps {
   domain: string;
   imageUrl?: string;
   orgName?: string;
-  onSelect(value: SelectedDid): void;
+  onSelect(did: SelectedDid): void;
 }
 
 export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (props) => {
@@ -50,9 +50,11 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
         return (
           <DidSearchOptionDid
             alias={alias}
-            did={parsedDidDoc.id}
+            did={{
+              did: parsedDidDoc.id,
+              messagingSupported: !!parsedDidDoc.service?.length,
+            }}
             key={i}
-            messagingSupported={parsedDidDoc.service?.length > 0}
             onSelect={onSelect}
           />
         );
@@ -63,15 +65,14 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
 
 export interface DidSearchOptionDidProps {
   alias?: string;
-  did: string;
-  messagingSupported: boolean;
-  onSelect(value: SelectedDid): void;
+  did: SelectedDid;
+  onSelect(did: SelectedDid): void;
 }
 
 export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps> = (props) => {
-  const { alias, did, messagingSupported, onSelect } = props;
+  const { alias, did, onSelect } = props;
   return (
-    <DidSearchOptionStyled pl="50px" onClick={() => onSelect({did, messagingSupported})}>
+    <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
       <Flex borderTop={2} justifyContent="space-between" maxWidth="100%">
         <Flex
           alignItems="center"
@@ -82,7 +83,7 @@ export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps
           py={3}
         >
           <Box left={0} position="absolute" top="21px">
-            <DidMethodIcon did={did} size="16px" />
+            <DidMethodIcon did={did.did} size="16px" />
           </Box>
           {alias ? (
             <>
@@ -90,17 +91,17 @@ export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps
                 {alias}
               </Text>
               <Text color={colors.midGray} fontSize={0} maxWidth="calc(100% - 50px)" title={did}>
-                <DidTruncate did={did} />
+                <DidTruncate did={did.did} />
               </Text>
             </>
           ) : (
             <Text color={colors.midGray} fontSize={0} maxWidth="100%" title={did}>
-              <DidTruncate did={did} />
+              <DidTruncate did={did.did} />
             </Text>
           )}
         </Flex>
         <Flex alignItems="center" background={baseColors.white} borderLeft={2} justifyContent="center" width="40px">
-          {messagingSupported ? (
+          {did.messagingSupported ? (
             <Tooltip placement="top" message="This DID can receive secure messages and credentials.">
               <CheckCircle color={colors.success.base} />
             </Tooltip>

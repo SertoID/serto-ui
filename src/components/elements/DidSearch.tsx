@@ -116,9 +116,11 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
                         setValue(selectedDid.did);
                         setIsOpen(false);
                       }}
-                      did={did.did}
+                      did={{
+                        did: did.did,
+                        messagingSupported: !!did.services?.length,
+                      }}
                       alias={did.alias}
-                      messagingSupported={!!did.services?.length}
                     />
                   );
                 })}
