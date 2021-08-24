@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { CheckCircle, Warning } from "@rimble/icons";
 import { Box, Flex, Text, Tooltip } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../themes";
+import { SelectedDid } from "../../types";
 import { H5 } from "../layouts";
 import { DidMethodIcon, DomainImage } from "../elements";
 import { DidTruncate } from "./DidTruncate";
@@ -21,7 +22,7 @@ export interface DidSearchOptionProps {
   domain: string;
   imageUrl?: string;
   orgName?: string;
-  onSelect(did: string): void;
+  onSelect(value: SelectedDid): void;
 }
 
 export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (props) => {
@@ -64,21 +65,21 @@ export interface DidSearchOptionDidProps {
   alias?: string;
   did: string;
   messagingSupported: boolean;
-  onSelect(did: string): void;
+  onSelect(value: SelectedDid): void;
 }
 
 export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps> = (props) => {
   const { alias, did, messagingSupported, onSelect } = props;
   return (
-    <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
+    <DidSearchOptionStyled pl="50px" onClick={() => onSelect({did, messagingSupported})}>
       <Flex borderTop={2} justifyContent="space-between" maxWidth="100%">
         <Flex
           alignItems="center"
           fontFamily={fonts.sansSerif}
-          position="relative"
-          pl="26px"
-          py={3}
           maxWidth="calc(100% - 50px)"
+          pl="26px"
+          position="relative"
+          py={3}
         >
           <Box left={0} position="absolute" top="21px">
             <DidMethodIcon did={did} size="16px" />

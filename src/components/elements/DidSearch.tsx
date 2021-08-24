@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { SertoUiContext, SertoUiContextInterface } from "../../context/SertoUiContext";
-import { Identifier, DidSearchResult } from "../../types";
+import { Identifier, DidSearchResult, SelectedDid } from "../../types";
 import { Launch, Search } from "@rimble/icons";
 import { Box, Flex, Input } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../themes";
@@ -22,7 +22,7 @@ export interface DidSearchProps {
   defaultSelectedDid?: string;
   identifiers?: Identifier[];
   required?: boolean;
-  onChange(value: string): void;
+  onChange(value: SelectedDid): void;
   onBlur?(): void;
 }
 
@@ -113,7 +113,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
                       key={i}
                       onSelect={(selectedDid) => {
                         onChange(selectedDid);
-                        setValue(selectedDid);
+                        setValue(selectedDid.did);
                         setIsOpen(false);
                       }}
                       did={did.did}
@@ -132,7 +132,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
                       key={i}
                       onSelect={(selectedDid) => {
                         onChange(selectedDid);
-                        setValue(selectedDid);
+                        setValue(selectedDid.did);
                         setIsOpen(false);
                       }}
                       didDocs={result.didDocs}
