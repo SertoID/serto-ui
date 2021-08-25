@@ -97,6 +97,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
   const [isUseModalOpen, setIsUseModalOpen] = React.useState(false);
 
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
+  const userOwnsSchema = "creator" in schema && context.schemasService.userData?.sub === schema.creator?.identifier;
 
   const schemaInstance = React.useMemo(() => {
     try {
@@ -175,7 +176,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
               size="small"
               ml={3}
             >
-              View in Schema Editor
+              {userOwnsSchema ? "Edit Schema" : "View in Schema Editor"}
             </Button.Outline>
           )}
         </Box>
