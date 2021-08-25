@@ -82,7 +82,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
         p="16px 16px 16px 40px"
         placeholder="Search by domain or DID"
         required={required}
-        type="text"
+        type="url"
         value={value}
         width="100%"
         onBlur={
