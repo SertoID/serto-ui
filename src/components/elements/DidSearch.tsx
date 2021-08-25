@@ -118,6 +118,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
                       }}
                       did={{
                         did: did.did,
+                        // @TODO/tobek Is this how we'll detect messaging support for now?
                         messagingSupported: !!did.services?.length,
                       }}
                       alias={did.alias}
