@@ -21,6 +21,7 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export interface GlobalLayoutProps {
+  hasPermissions: boolean;
   url: string;
   sidebarBottomContents?: React.ReactNode;
   sidebarTopContents?: React.ReactNode;
@@ -32,7 +33,7 @@ export const GlobalLayout: React.FunctionComponent<GlobalLayoutProps> = (props) 
       <Flex bottom={4} flexDirection="column" justifyContent="space-between" position="fixed" top={5} width="232px">
         <Box>
           {props.sidebarTopContents}
-          <Nav currentUrl={props.url} />
+          <Nav currentUrl={props.url} hasPermissions={props.hasPermissions} />
         </Box>
         <Box>{props.sidebarBottomContents}</Box>
       </Flex>

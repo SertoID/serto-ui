@@ -5,7 +5,7 @@ import { baseColors } from "./themes";
 
 export const HomePage: React.FunctionComponent = () => {
   return (
-    <GlobalLayout url={"/"}>
+    <GlobalLayout hasPermissions url={"/"}>
       <HeaderBox>
         <Header heading="Serto UI" />
       </HeaderBox>
