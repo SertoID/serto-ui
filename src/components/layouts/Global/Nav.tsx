@@ -27,6 +27,7 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
 
 export interface NavItemStyledProps {
   active: boolean;
+  subNavActive?: boolean;
   open?: boolean;
 }
 
@@ -52,6 +53,10 @@ const NavItemStyled = styled(Box)<NavItemStyledProps>`
 const NavItemTabsStyled = styled(Box)<NavItemStyledProps>`
   cursor: pointer;
 
+  svg {
+    fill: ${(props) => (props.active ? colors.primary.base : colors.midGray)};
+  }
+
   &:hover {
     background-color: ${baseColors.white};
     text-decoration: none;
@@ -60,9 +65,11 @@ const NavItemTabsStyled = styled(Box)<NavItemStyledProps>`
       fill: ${colors.primary.base};
     }
   }
+`;
 
+const SubNavItemStyled = styled(Box)<NavItemStyledProps>`
   a {
-    background-color: ${(props) => (props.active ? baseColors.white : "none")};
+    background-color: ${(props) => (props.active ? colors.primary.border : "none")};
     border-radius: 4px;
     display: block;
     padding: 8px 4px;
@@ -78,17 +85,17 @@ const NavItemTabsStyled = styled(Box)<NavItemStyledProps>`
 export interface NavItemProps {
   currentUrl?: string;
   icon: React.FunctionComponent<any>;
-  subTabs?: any[];
+  subNav?: any[];
   text: string;
   url: string;
 }
 
 const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
-  const { currentUrl, icon, subTabs, text, url } = props;
+  const { currentUrl, icon, subNav, text, url } = props;
   const active = currentUrl?.includes(url) || false;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(active);
 
-  if (subTabs) {
+  if (subNav) {
     return (
       <NavItemTabsStyled
         active={active}
@@ -109,8 +116,17 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
           {isOpen ? <KeyboardArrowUp color={colors.moonGray} /> : <KeyboardArrowDown color={colors.moonGray} />}
         </Flex>
         {isOpen &&
-          subTabs?.map((tab: any, i: number) => {
-            return <NavItemTab key={i} tab={tab} />;
+          subNav?.map((tab: any, i: number) => {
+            const subNavActive = currentUrl === tab.url;
+            return (
+              <SubNavItemStyled active={subNavActive} key={i}>
+                <Link to={generatePath(tab.url)}>
+                  <Text.span color={baseColors.black} fontSize={1} fontWeight={3} px={2}>
+                    {tab.text}
+                  </Text.span>
+                </Link>
+              </SubNavItemStyled>
+            );
           })}
       </NavItemTabsStyled>
     );
@@ -142,21 +158,5 @@ export const NavItemPrimary: React.FunctionComponent<NavItemPrimaryProps> = (pro
         {text}
       </Text.span>
     </Flex>
-  );
-};
-
-export interface NavItemTabProps {
-  tab: any;
-}
-
-export const NavItemTab: React.FunctionComponent<NavItemTabProps> = (props) => {
-  const { tab } = props;
-
-  return (
-    <Link to={generatePath(tab.url)}>
-      <Text.span color={baseColors.black} fontSize={1} fontWeight={3} px={2}>
-        {tab.text}
-      </Text.span>
-    </Link>
   );
 };
