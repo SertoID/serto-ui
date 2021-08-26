@@ -31,6 +31,7 @@ export interface SelectedDid {
 
 export interface DidSearchResult {
   domain: string;
+  didDocs: any;
   /** @TODO Multiple DIDs, if present, are comma-separated, but this whole API may change */
   dids: string;
   numBaselineEndpoints?: number;

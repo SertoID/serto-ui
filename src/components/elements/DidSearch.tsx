@@ -71,7 +71,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
       <Input
         borderRadius={isOpen ? "4px 4px 0 0" : 1}
         onChange={(event: any) => {
-          onChange({ did: event.target.value });
+          onChange(event.target.value);
           setValue(event.target.value);
           searchInternalIdentifiers(event.target.value);
           searchExternalIdentifiers(event.target.value);
@@ -138,11 +138,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
                         setValue(selectedDid.did);
                         setIsOpen(false);
                       }}
-                      did={{
-                        did: result.dids,
-                        // @TODO/tobek Is this how we'll detect messaging support for now?
-                        messagingSupported: (result.numVeramoEndpoints || 0) > 0,
-                      }}
+                      didDocs={result.didDocs}
                       domain={result.domain}
                     />
                   );
