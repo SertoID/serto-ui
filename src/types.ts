@@ -31,6 +31,7 @@ export interface SelectedDid {
 
 export interface DidSearchResult {
   domain: string;
+  didDocs: any;
   /** @TODO Multiple DIDs, if present, are comma-separated, but this whole API may change */
   dids: string;
   numBaselineEndpoints?: number;
@@ -45,4 +46,13 @@ export interface DidListing {
 export interface AdditionalVCData {
   didListings: DidListing[];
   schemaVerified: boolean;
+}
+
+export interface JwtUserData {
+  name?: string;
+  email?: string;
+  nickname?: string;
+  picture?: string;
+  /** JWT subject identifier */
+  sub?: string;
 }

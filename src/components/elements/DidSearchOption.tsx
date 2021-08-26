@@ -3,9 +3,9 @@ import { CheckCircle, Warning } from "@rimble/icons";
 import { Box, Flex, Text, Tooltip } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../themes";
 import { SelectedDid } from "../../types";
-import { hexEllipsis } from "../../utils";
 import { H5 } from "../layouts";
 import { DidMethodIcon, DomainImage } from "../elements";
+import { DidTruncate } from "./DidTruncate";
 
 const DidSearchOptionStyled = styled(Box)`
   cursor: pointer;
@@ -18,7 +18,7 @@ const DidSearchOptionStyled = styled(Box)`
 
 export interface DidSearchOptionProps {
   alias?: string;
-  did: SelectedDid;
+  didDocs: any;
   domain: string;
   imageUrl?: string;
   orgName?: string;
@@ -26,7 +26,7 @@ export interface DidSearchOptionProps {
 }
 
 export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (props) => {
-  const { alias, did, domain, imageUrl, orgName, onSelect } = props;
+  const { alias, didDocs, domain, imageUrl, orgName, onSelect } = props;
   return (
     <Box borderTop={2}>
       <Box position="relative" pb={2} pl="50px" pr={3} pt={3}>
@@ -45,7 +45,20 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
           {orgName}
         </Text>
       </Box>
-      <DidSearchOptionDid alias={alias} did={did} onSelect={onSelect} />
+      {didDocs.map((didDoc: any, i: number) => {
+        const parsedDidDoc = JSON.parse(didDoc);
+        return (
+          <DidSearchOptionDid
+            alias={alias}
+            did={{
+              did: parsedDidDoc.id,
+              messagingSupported: !!parsedDidDoc.service?.length,
+            }}
+            key={i}
+            onSelect={onSelect}
+          />
+        );
+      })}
     </Box>
   );
 };
@@ -60,23 +73,30 @@ export const DidSearchOptionDid: React.FunctionComponent<DidSearchOptionDidProps
   const { alias, did, onSelect } = props;
   return (
     <DidSearchOptionStyled pl="50px" onClick={() => onSelect(did)}>
-      <Flex borderTop={2} justifyContent="space-between">
-        <Flex alignItems="center" fontFamily={fonts.sansSerif} pr={3} py={3}>
-          <Box mr={1}>
+      <Flex borderTop={2} justifyContent="space-between" maxWidth="100%">
+        <Flex
+          alignItems="center"
+          fontFamily={fonts.sansSerif}
+          maxWidth="calc(100% - 50px)"
+          pl="26px"
+          position="relative"
+          py={3}
+        >
+          <Box left={0} position="absolute" top="21px">
             <DidMethodIcon did={did.did} size="16px" />
           </Box>
           {alias ? (
             <>
-              <Text color={colors.midGray} fontSize={1} fontWeight={3} mr={3}>
+              <Text color={colors.midGray} fontSize={1} fontWeight={3} mr={2}>
                 {alias}
               </Text>
-              <Text color={colors.midGray} fontSize={0} title={did.did}>
-                {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
+              <Text color={colors.midGray} fontSize={0} maxWidth="calc(100% - 50px)" title={did}>
+                <DidTruncate did={did.did} />
               </Text>
             </>
           ) : (
-            <Text color={colors.midGray} fontSize={0} title={did.did}>
-              {did.did.includes("did:web") ? did.did : hexEllipsis(did.did)}
+            <Text color={colors.midGray} fontSize={0} maxWidth="100%" title={did}>
+              <DidTruncate did={did.did} />
             </Text>
           )}
         </Flex>
