@@ -1,106 +1,63 @@
-import { useContext, useState } from "react";
-import styled from "styled-components";
+import { useContext, useState, Fragment } from "react";
 import { generatePath, Link } from "react-router-dom";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
-import { Box, Flex, Text } from "rimble-ui";
+import { Flex, Text } from "rimble-ui";
 import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 import { baseColors, colors } from "../../../themes";
+import { NavItemPrimary, NavItemStyled, NavItemTabsStyled, SubNavItemStyled } from "./NavComponents";
 
 export interface NavProps {
   currentUrl: string;
-  hasPermissions?: boolean;
+  hasPermissions: boolean;
   navItems?: NavItemProps[];
+  currentSection: string;
 }
 
 export const Nav: React.FunctionComponent<NavProps> = (props) => {
-  const { currentUrl } = props;
   const context = useContext<SertoUiContextInterface>(SertoUiContext);
   const navItems = props.navItems || context.navItems;
   return (
     <>
       {navItems.map((navItemProps) => (
-        <NavItem {...navItemProps} currentUrl={currentUrl} key={navItemProps.url} />
+        <NavItem
+          {...navItemProps}
+          currentUrl={props.currentUrl}
+          hasPermissions={props.hasPermissions}
+          key={navItemProps.url}
+          currentSection={props.currentSection}
+        />
       ))}
     </>
   );
 };
 
-export interface NavItemStyledProps {
-  active: boolean;
-  subNavActive?: boolean;
-  open?: boolean;
-}
-
-const NavItemStyled = styled(Box)<NavItemStyledProps>`
-  a {
-    background-color: ${(props) => (props.active ? baseColors.white : "none")};
-    border-radius: 4px;
-    display: block;
-    padding: 16px;
-    text-decoration: none;
-
-    &:hover {
-      background-color: ${baseColors.white};
-      text-decoration: none;
-
-      svg {
-        fill: ${colors.primary.base};
-      }
-    }
-  }
-`;
-
-const NavItemTabsStyled = styled(Box)<NavItemStyledProps>`
-  cursor: pointer;
-
-  svg {
-    fill: ${(props) => (props.active ? colors.primary.base : colors.midGray)};
-  }
-
-  &:hover {
-    background-color: ${baseColors.white};
-    text-decoration: none;
-
-    svg {
-      fill: ${colors.primary.base};
-    }
-  }
-`;
-
-const SubNavItemStyled = styled(Box)<NavItemStyledProps>`
-  a {
-    background-color: ${(props) => (props.active ? colors.primary.border : "none")};
-    border-radius: 4px;
-    display: block;
-    padding: 8px 4px;
-    text-decoration: none;
-
-    &:hover {
-      background-color: ${colors.primary.border};
-      text-decoration: none;
-    }
-  }
-`;
-
+// props from SertoUiWrapper navItem
 export interface NavItemProps {
-  currentUrl?: string;
   icon: React.FunctionComponent<any>;
+  section: string;
   subNav?: any[];
   text: string;
   url: string;
 }
 
-const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
-  const { currentUrl, icon, subNav, text, url } = props;
-  const active = currentUrl?.includes(url) || false;
-  const [isOpen, setIsOpen] = useState<boolean>(active);
+// props from Global Layout
+export interface NavItemGlobalProps {
+  currentSection: string;
+  currentUrl: string;
+  hasPermissions: boolean;
+}
+
+const NavItem: React.FunctionComponent<NavItemProps & NavItemGlobalProps> = (props) => {
+  const { currentSection, currentUrl, hasPermissions, icon, section, subNav, text, url } = props;
+  const sectionActive = section === currentSection;
+  const [isOpen, setIsOpen] = useState<boolean>(sectionActive);
 
   if (subNav) {
     return (
       <NavItemTabsStyled
-        active={active}
+        active={sectionActive}
         open={isOpen}
-        bg={active || isOpen ? baseColors.white : "none"}
+        bg={sectionActive || isOpen ? baseColors.white : "none"}
         borderRadius={1}
         mb={1}
         p={1}
@@ -112,12 +69,15 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
           p="12px"
           width="100%"
         >
-          <NavItemPrimary active={active} icon={icon} text={text} />
+          <NavItemPrimary active={sectionActive} icon={icon} text={text} />
           {isOpen ? <KeyboardArrowUp color={colors.moonGray} /> : <KeyboardArrowDown color={colors.moonGray} />}
         </Flex>
         {isOpen &&
           subNav?.map((tab: any, i: number) => {
             const subNavActive = currentUrl === tab.url;
+            if (tab.admin && !hasPermissions) {
+              return <Fragment key={i}></Fragment>;
+            }
             return (
               <SubNavItemStyled active={subNavActive} key={i}>
                 <Link to={generatePath(tab.url)}>
@@ -133,30 +93,10 @@ const NavItem: React.FunctionComponent<NavItemProps> = (props) => {
   }
 
   return (
-    <NavItemStyled active={active} mb={1}>
+    <NavItemStyled active={sectionActive} mb={1}>
       <Link to={generatePath(url)}>
-        <NavItemPrimary active={active} icon={icon} text={text} />
+        <NavItemPrimary active={sectionActive} icon={icon} text={text} />
       </Link>
     </NavItemStyled>
-  );
-};
-
-export interface NavItemPrimaryProps {
-  active: boolean;
-  icon: React.FunctionComponent<any>;
-  text: string;
-}
-
-export const NavItemPrimary: React.FunctionComponent<NavItemPrimaryProps> = (props) => {
-  const { active, icon, text } = props;
-  const Icon = icon;
-
-  return (
-    <Flex alignItems="center">
-      <Icon color={active ? colors.primary.base : colors.midGray} size="16px" mr={3} />
-      <Text.span color={active ? baseColors.black : colors.midGray} fontSize={1} fontWeight={3}>
-        {text}
-      </Text.span>
-    </Flex>
   );
 };
