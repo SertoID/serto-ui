@@ -66,7 +66,7 @@ const NavItem: React.FunctionComponent<NavItemProps & NavItemGlobalProps> = (pro
           alignItems="center"
           justifyContent="space-between"
           onClick={() => setIsOpen(!isOpen)}
-          p="12px"
+          p="8px"
           width="100%"
         >
           <NavItemPrimary active={sectionActive} icon={icon} text={text} />

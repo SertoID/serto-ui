@@ -13,7 +13,7 @@ export const NavItemStyled = styled(Box)<NavItemStyledProps>`
     background-color: ${(props) => (props.active ? baseColors.white : "none")};
     border-radius: 4px;
     display: block;
-    padding: 16px;
+    padding: 12px;
     text-decoration: none;
 
     &:hover {
@@ -48,6 +48,7 @@ export const SubNavItemStyled = styled(Box)<NavItemStyledProps>`
   a {
     background-color: ${(props) => (props.active ? colors.primary.border : "none")};
     border-radius: 4px;
+    color: ${colors.midGray};
     display: block;
     padding: 8px 4px;
     text-decoration: none;
