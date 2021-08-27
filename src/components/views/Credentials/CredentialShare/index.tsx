@@ -1,21 +1,14 @@
-import { useEffect, useState, useCallback } from "react";
-import styled from "styled-components";
+import { useState } from "react";
 import { Box, Button, Link, Text, Flex } from "rimble-ui";
-import { FileDownload, ContentCopy } from "@rimble/icons";
-import QRCode from "qrcode.react";
+import { ContentCopy } from "@rimble/icons";
 import { VC } from "vc-schema-tools";
 import { ModalContentFullWidth, ModalFooter, ModalWithX } from "../../../elements/Modals";
 import { H3, H6 } from "../../../layouts/LayoutComponents";
 import { colors, fonts } from "../../../../themes";
-import { downloadCanvasImage, copyImageSupported, copyCanvasImage } from "../../../../utils/helpers";
 import { config } from "../../../../config";
 import { CopyableTruncatableText } from "../../../elements/CopyableTruncatableText/CopyableTruncatableText";
 import { ShareViaDidComm } from "./ShareViaDidComm";
-
-const StyledQRCode = styled(QRCode)`
-  max-width: 100%;
-  height: auto !important;
-`;
+import { ShareViaQr } from "./ShareViaQr";
 
 export interface CredentialShareProps {
   vc: VC;
@@ -23,23 +16,9 @@ export interface CredentialShareProps {
 
 export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
   const { vc } = props;
-  const [canvas, setCanvas] = useState<HTMLCanvasElement | undefined>();
-  const [copied, setCopied] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
-
-  useEffect(() => {
-    if (copied) {
-      setTimeout(() => {
-        setCopied(false);
-      }, 2500);
-    }
-  }, [copied]);
-
-  const getCanvasNode = useCallback((node) => {
-    setCanvas(node?.querySelector("canvas"));
-  }, []);
 
   return (
     <>
@@ -84,25 +63,7 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
             <H6 mt={0} mb={3}>
               Share by QR code
             </H6>
-            <Flex>
-              <Box ref={getCanvasNode} p={3} border={4} backgroundColor={colors.nearWhite} maxWidth={8}>
-                <StyledQRCode value={vcUrl} renderAs="canvas" size={512} bgColor="transparent" />
-              </Box>
-              <Flex pl={4} flexDirection="column" justifyContent="center">
-                <Button
-                  size="small"
-                  mb={3}
-                  onClick={() => canvas && downloadCanvasImage(canvas, "credential-QR-code.png")}
-                >
-                  <FileDownload size="15px" mr={2} /> Download QR code
-                </Button>
-                {copyImageSupported && (
-                  <Button.Outline size="small" onClick={() => canvas && setCopied(copyCanvasImage(canvas))}>
-                    <ContentCopy size="15px" mr={2} /> {copied ? "Copied" : "Copy to clipboard"}
-                  </Button.Outline>
-                )}
-              </Flex>
-            </Flex>
+            <ShareViaQr url={vcUrl} />
           </Box>
         </ModalContentFullWidth>
         <ModalFooter mt={3}>
