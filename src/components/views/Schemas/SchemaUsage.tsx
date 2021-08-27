@@ -82,7 +82,7 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
                     size="20px"
                     fontWeight={2}
                     text={uris?.jsonLdContext || "[none]"}
-                    linkOutHref={uris?.jsonLdContext}
+                    linkOutHref={!!uris?.jsonLdContext}
                   />
                   <StyledLink display="inline-block" fontSize={0} mt={2} onClick={() => setInfoModalOpen(true)}>
                     Learn more about JSON-LD Context
@@ -101,7 +101,7 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
                     size="20px"
                     fontWeight={2}
                     text={uris?.jsonSchema || "[none]"}
-                    linkOutHref={uris?.jsonSchema}
+                    linkOutHref={!!uris?.jsonSchema}
                   />
                   <StyledLink display="inline-block" fontSize={0} mt={2} onClick={() => setInfoModalOpen(true)}>
                     Learn more about JSON Schema

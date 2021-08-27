@@ -3,6 +3,7 @@ import { Info, Person, VerifiedUser, Warning } from "@rimble/icons";
 import { Box, Flex, Pill, Table, Text } from "rimble-ui";
 import { VC } from "vc-schema-tools";
 import { CredentialBorder, CredentialContainer, Separator } from "./CredentialComponents";
+import { CredentialShare } from "./CredentialShare";
 import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard";
 import { Expand } from "../../elements/Expand/Expand";
 import { baseColors, colors, fonts } from "../../../themes";
@@ -241,6 +242,9 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
           </Text.span>
         </Box>
       </Box>
+      <Text mb={2} fontFamily={fonts.sansSerif} fontSize={0}>
+        <CredentialShare vc={vc} />
+      </Text>
     </>
   );
 
@@ -250,7 +254,6 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         color={colors.silver}
         fontFamily={fonts.sansSerif}
         fontSize={0}
-        pr={3}
         maxWidth="100%"
         style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
         title={issuer}

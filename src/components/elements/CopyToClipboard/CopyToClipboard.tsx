@@ -25,6 +25,7 @@ export interface CopyToClipboardProps {
   size?: string;
   textButton?: boolean;
   textButtonTitle?: string;
+  buttonOverride?(copied: boolean): JSX.Element;
 }
 
 export const CopyToClipboard: React.FunctionComponent<CopyToClipboardProps> = (props) => {
@@ -34,9 +35,13 @@ export const CopyToClipboard: React.FunctionComponent<CopyToClipboardProps> = (p
     if (copied) {
       setTimeout(() => {
         setCopied(false);
-      }, 1000);
+      }, 2500);
     }
   }, [copied]);
+
+  if (props.buttonOverride) {
+    return <span onClick={() => setCopied(copyToClipboard(props.text))}>{props.buttonOverride(copied)}</span>;
+  }
 
   if (copied) {
     if (props.textButton) {
@@ -53,7 +58,7 @@ export const CopyToClipboard: React.FunctionComponent<CopyToClipboardProps> = (p
         size="small"
         style={{ backgroundColor: baseColors.white }}
       >
-        <Flex alignItems="center" justifyCOntent="center">
+        <Flex alignItems="center" justifyContent="center">
           <ContentCopy size="16px" style={{ marginRight: "4px" }} />
           {props.textButtonTitle || "Copy"}
         </Flex>
