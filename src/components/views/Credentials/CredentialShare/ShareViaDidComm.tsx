@@ -29,7 +29,24 @@ export const ShareViaDidComm: React.FunctionComponent<ShareViaDidCommProps> = (p
     setSuccess(false);
 
     try {
-      await context.sendVc?.(typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id, recipientDid, vc);
+      let senderDid = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
+      const senderDidBelongsToUser = context.userDids?.some((did) => did.did === senderDid);
+      if (!senderDidBelongsToUser) {
+        if (!context.userDids?.[0]) {
+          throw Error(
+            `VC issuer DID ${senderDid} does not belong to user, and could not get any user DIDs to use as DIDComm sender`,
+          );
+        }
+
+        // @TODO/tobek Is this the right behavior in this case?
+        console.warn(
+          `VC issuer ${senderDid} does not belong to user, sending VC from user's first DID instead`,
+          context.userDids[0],
+        );
+        senderDid = context.userDids[0].did;
+      }
+
+      await context.sendVc?.(senderDid, recipientDid, vc);
     } catch (err) {
       console.error("failed to send VC:", err);
       setError("Failed to send credential to subject: " + err.message);
@@ -72,7 +89,7 @@ export const ShareViaDidComm: React.FunctionComponent<ShareViaDidCommProps> = (p
       )}
       {recipientDid && success && (
         <Flash mt={3} variant="success">
-          Credential sent!
+          Credential sent successfully.
         </Flash>
       )}
     </Form>
