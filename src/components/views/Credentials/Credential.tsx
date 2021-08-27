@@ -242,6 +242,9 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
           </Text.span>
         </Box>
       </Box>
+      <Text mb={2} fontFamily={fonts.sansSerif} fontSize={0}>
+        <CredentialShare vc={vc} />
+      </Text>
     </>
   );
 
@@ -256,9 +259,6 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         title={issuer}
       >
         Issuer: {issuerFormatted}
-      </Text.span>
-      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
-        <CredentialShare vc={vc} />
       </Text.span>
       <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
         {issuanceDate}

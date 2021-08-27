@@ -19,7 +19,7 @@ export function copyToClipboard(text: string): boolean {
   return true;
 }
 
-export function downloadCanvasImage(canvas: HTMLCanvasElement, filename: string) {
+export function downloadCanvasImage(canvas: HTMLCanvasElement, filename: string): void {
   const image = canvas.toDataURL();
   const link = document.createElement("a");
   link.download = filename;

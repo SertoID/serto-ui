@@ -1,16 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
-import { Box, Button, Link, Text, Input, Flex, Form } from "rimble-ui";
-import { Send, FileDownload, ContentCopy, OpenInNew } from "@rimble/icons";
+import { Box, Button, Link, Text, Flex } from "rimble-ui";
+import { FileDownload, ContentCopy } from "@rimble/icons";
 import QRCode from "qrcode.react";
 import { VC } from "vc-schema-tools";
-import { ModalContentFullWidth, ModalFooter, ModalWithX } from "../../elements/Modals";
-import { H3, H6 } from "../../layouts/LayoutComponents";
-import { colors, fonts } from "../../../themes";
-import { DidSearch } from "../../elements/DidSearch";
-import { downloadCanvasImage, copyImageSupported, copyCanvasImage } from "../../../utils/helpers";
-import { config } from "../../../config";
-import { CopyableTruncatableText } from "../../elements/CopyableTruncatableText/CopyableTruncatableText";
+import { ModalContentFullWidth, ModalFooter, ModalWithX } from "../../../elements/Modals";
+import { H3, H6 } from "../../../layouts/LayoutComponents";
+import { colors, fonts } from "../../../../themes";
+import { downloadCanvasImage, copyImageSupported, copyCanvasImage } from "../../../../utils/helpers";
+import { config } from "../../../../config";
+import { CopyableTruncatableText } from "../../../elements/CopyableTruncatableText/CopyableTruncatableText";
+import { ShareViaDidComm } from "./ShareViaDidComm";
 
 const StyledQRCode = styled(QRCode)`
   max-width: 100%;
@@ -26,8 +26,6 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | undefined>();
   const [copied, setCopied] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [recipientDid, setRecipientDid] = useState("");
-  const [recipientSupportsMessaging, setRecipientSupportsMessaging] = useState(false);
 
   const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
 
@@ -46,7 +44,8 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
   return (
     <>
       {props.children || <Link onClick={() => setModalOpen(true)}>Share</Link>}
-      <ModalWithX isOpen={modalOpen} close={() => setModalOpen(false)} minWidth={9} maxWidth={10}>
+
+      <ModalWithX isOpen={modalOpen} close={() => setModalOpen(false)} width={9}>
         <ModalContentFullWidth>
           <Box borderBottom={4} p={4} pt={0}>
             <H3 mt={0} mb={1}>
@@ -61,32 +60,11 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
             <H6 mt={0} mb={2}>
               Send by Identifier (DID)
             </H6>
-            {/*@TODO/tobek*/}
-            <Form
-              onSubmit={(e: any) => {
-                e.preventDefault();
-                alert("Coming soon!");
-              }}
-            >
-              <Flex>
-                <DidSearch
-                  required
-                  onChange={(val) => {
-                    setRecipientDid(val.did);
-                    setRecipientSupportsMessaging(!!val.messagingSupported);
-                  }}
-                />
-                <Button type="submit" ml={2}>
-                  <Flex alignItems="center">
-                    <Send size="24px" mr={2} /> Send
-                  </Flex>
-                </Button>
-              </Flex>
-            </Form>
+            <ShareViaDidComm vc={vc} />
           </Box>
 
           <Box borderBottom={4} p={4}>
-            <H6 mt={0} mb={3}>
+            <H6 mt={0} mb={2}>
               Share by link
             </H6>
             <CopyableTruncatableText
@@ -102,7 +80,7 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
             />
           </Box>
 
-          <Box borderBottom={4} p={4}>
+          <Box p={4} pb={0}>
             <H6 mt={0} mb={3}>
               Share by QR code
             </H6>
@@ -111,11 +89,15 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
                 <StyledQRCode value={vcUrl} renderAs="canvas" size={512} bgColor="transparent" />
               </Box>
               <Flex pl={4} flexDirection="column" justifyContent="center">
-                <Button size="small" mb={3} onClick={() => downloadCanvasImage(canvas!, "credential-QR-code.png")}>
+                <Button
+                  size="small"
+                  mb={3}
+                  onClick={() => canvas && downloadCanvasImage(canvas, "credential-QR-code.png")}
+                >
                   <FileDownload size="15px" mr={2} /> Download QR code
                 </Button>
                 {copyImageSupported && (
-                  <Button.Outline size="small" onClick={() => setCopied(copyCanvasImage(canvas!))}>
+                  <Button.Outline size="small" onClick={() => canvas && setCopied(copyCanvasImage(canvas))}>
                     <ContentCopy size="15px" mr={2} /> {copied ? "Copied" : "Copy to clipboard"}
                   </Button.Outline>
                 )}
