@@ -29,7 +29,8 @@ export interface DidSearchProps {
 export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
   const { defaultSelectedDid, identifiers, onChange, required, onBlur } = props;
   const node = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const searchService = useContext<SertoUiContextInterface>(SertoUiContext).searchService;
+  const context = useContext<SertoUiContextInterface>(SertoUiContext);
+  const searchService = context.searchService;
 
   const [value, setValue] = useState<string>(defaultSelectedDid || "");
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -47,7 +48,9 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
   }
 
   const searchInternalIdentifiers = (search: string) => {
-    const res = identifiers?.filter((obj) => Object.values(obj).some((val) => val.includes(search)));
+    const res = (identifiers || context.userDids)?.filter((obj) =>
+      Object.values(obj).some((val) => val.includes(search)),
+    );
     setInternalResults(res);
   };
 
@@ -66,7 +69,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
   });
 
   return (
-    <Box mb={3} position="relative" ref={node} width="100%">
+    <Box position="relative" ref={node} width="100%">
       <Search color={colors.primary.base} size="24" style={{ position: "absolute", left: "10px", top: "12px" }} />
       <Input
         borderRadius={isOpen ? "4px 4px 0 0" : 1}

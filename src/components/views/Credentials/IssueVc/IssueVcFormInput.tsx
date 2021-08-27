@@ -63,7 +63,7 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
 
     if (isDid) {
       return (
-        <>
+        <Box mb={3}>
           <DidSearch
             key={name}
             onChange={(val) => {
@@ -82,7 +82,7 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
               email or QR code.
             </Flash>
           )}
-        </>
+        </Box>
       );
     }
 

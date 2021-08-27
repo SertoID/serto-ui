@@ -19,6 +19,25 @@ export function copyToClipboard(text: string): boolean {
   return true;
 }
 
+export function downloadCanvasImage(canvas: HTMLCanvasElement, filename: string) {
+  const image = canvas.toDataURL();
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = image;
+  link.click();
+}
+
+export const copyImageSupported = "ClipboardItem" in window && navigator.clipboard && "write" in navigator.clipboard;
+export function copyCanvasImage(canvas: HTMLCanvasElement): boolean {
+  if (!copyImageSupported) {
+    throw Error("Copying images not supported on this browser");
+  }
+  canvas.toBlob((blob) =>
+    (navigator.clipboard as any).write([new (window as any).ClipboardItem({ "image/png": blob })]),
+  );
+  return true;
+}
+
 export function ellipsis(text: string, startLength: number, endLength: number): string {
   if (startLength + endLength + 2 >= text.length) {
     // +2 because there's reason to ellide something shorter than "..."
