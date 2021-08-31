@@ -6,8 +6,8 @@ import {
   CredentialFooter,
   CredentialHeader,
   CredentialIssuer,
-  CredentialSecondaryTDLeft,
-  CredentialSecondaryTDRight,
+  CredentialDetailsTDLeft,
+  CredentialDetailsTDRight,
   CredentialTR,
   CredentialVerified,
   CredentialViewToken,
@@ -16,7 +16,7 @@ import {
 import { baseColors, colors, fonts } from "../../../themes";
 import { dateTimeFormat, truncateDid } from "../../../utils";
 import { AdditionalVCData } from "../../../types";
-import { DomainImage } from "../../elements";
+import { CopyToClipboard, DomainImage } from "../../elements";
 import { DomainLink } from "../../elements/DomainLink";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialProperty } from "./CredentialProperty";
@@ -169,6 +169,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   );
 
   console.log(vc);
+  console.log(vcSchema);
 
   return (
     <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px" mb={3} overflow="hidden">
@@ -200,21 +201,35 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
             <Table border={0} boxShadow={0} mb={3} width="100%" style={{ tableLayout: "fixed" }}>
               <tbody>
                 <CredentialTR>
-                  <CredentialSecondaryTDLeft>Subject</CredentialSecondaryTDLeft>
-                  <CredentialSecondaryTDRight>{vc.credentialSubject.id}</CredentialSecondaryTDRight>
+                  <CredentialDetailsTDLeft>Subject</CredentialDetailsTDLeft>
+                  <CredentialDetailsTDRight>
+                    <Flex alignItem="center" justifyContent="flex-end">
+                      {truncateDid(vc.credentialSubject.id)}
+                      <Box ml={1}>
+                        <CopyToClipboard text={vc.credentialSubject.id} size="16px" />
+                      </Box>
+                    </Flex>
+                  </CredentialDetailsTDRight>
                 </CredentialTR>
                 <CredentialTR>
-                  <CredentialSecondaryTDLeft>Issuer</CredentialSecondaryTDLeft>
-                  <CredentialSecondaryTDRight>{issuerFormatted}</CredentialSecondaryTDRight>
+                  <CredentialDetailsTDLeft>Issuer</CredentialDetailsTDLeft>
+                  <CredentialDetailsTDRight>
+                    <Flex alignItem="center" justifyContent="flex-end">
+                      {issuerFormatted}
+                      <Box ml={1}>
+                        <CopyToClipboard text={issuer} size="16px" />
+                      </Box>
+                    </Flex>
+                  </CredentialDetailsTDRight>
                 </CredentialTR>
                 <CredentialTR>
-                  <CredentialSecondaryTDLeft>Date Issued</CredentialSecondaryTDLeft>
-                  <CredentialSecondaryTDRight>{issuanceDate}</CredentialSecondaryTDRight>
+                  <CredentialDetailsTDLeft>Date Issued</CredentialDetailsTDLeft>
+                  <CredentialDetailsTDRight>{issuanceDate}</CredentialDetailsTDRight>
                 </CredentialTR>
                 {vc.expirationDate && (
                   <CredentialTR>
-                    <CredentialSecondaryTDLeft>Expires</CredentialSecondaryTDLeft>
-                    <CredentialSecondaryTDRight>{vc.expirationDate}</CredentialSecondaryTDRight>
+                    <CredentialDetailsTDLeft>Expires</CredentialDetailsTDLeft>
+                    <CredentialDetailsTDRight>{vc.expirationDate}</CredentialDetailsTDRight>
                   </CredentialTR>
                 )}
               </tbody>

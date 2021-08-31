@@ -2,7 +2,7 @@ import styled from "styled-components";
 import QRCode from "qrcode.react";
 import { FileDownload, Info, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
 import { Box, Flex, Pill, Text } from "rimble-ui";
-import { CopyToClipboard, LockUnverified, LockVerified, Share } from "../../elements";
+import { CopyToClipboard, LockUnverified, LockVerified } from "../../elements";
 import { H4 } from "../../layouts";
 import { baseColors, fonts, colors } from "../../../themes";
 import { config } from "../../../config";
@@ -10,99 +10,6 @@ import { truncateDid } from "../../../utils";
 import { VC } from "vc-schema-tools";
 import { CredentialShare } from "./CredentialShare";
 // import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
-
-export const Separator = styled.hr`
-  margin-left: 16px;
-  margin-right: 16px;
-  color: ${colors.lightGray};
-  border-style: solid;
-`;
-
-export const CredentialTR: React.FunctionComponent = (props) => {
-  return (
-    <tr
-      style={{
-        height: "auto",
-      }}
-    >
-      {props.children}
-    </tr>
-  );
-};
-
-export const CredentialPrimaryTDRight: React.FunctionComponent = (props) => {
-  return (
-    <td
-      style={{
-        border: "none",
-        padding: "5px 0",
-        textAlign: "right",
-        wordBreak: "break-word",
-      }}
-    >
-      <Text.span color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={1} lineHeight="copy">
-        {props.children}
-      </Text.span>
-    </td>
-  );
-};
-
-export const CredentialPrimaryTDLeft: React.FunctionComponent = (props) => {
-  return (
-    <td
-      style={{
-        border: "none",
-        padding: "5px 0",
-      }}
-    >
-      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={1} lineHeight="copy">
-        {props.children}
-      </Text.span>
-    </td>
-  );
-};
-
-export const CredentialSecondaryTDRight: React.FunctionComponent = (props) => {
-  return (
-    <td
-      style={{
-        border: "none",
-        padding: "3px 0",
-        textAlign: "right",
-        wordBreak: "break-word",
-      }}
-    >
-      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0} lineHeight="copy">
-        {props.children}
-      </Text.span>
-    </td>
-  );
-};
-
-export const CredentialSecondaryTDLeft: React.FunctionComponent = (props) => {
-  return (
-    <td
-      style={{
-        border: "none",
-        padding: "3px 0",
-      }}
-    >
-      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0} lineHeight="copy">
-        {props.children}
-      </Text.span>
-    </td>
-  );
-};
-
-export const ExpiredPill: React.FunctionComponent = () => {
-  return (
-    <Pill color="danger" cursor="pointer" fontFamily={fonts.sansSerif} height={4} px={5}>
-      <Text.span fontSize={0} color={colors.danger.base}>
-        Expired
-      </Text.span>
-    </Pill>
-  );
-};
 
 export interface CredentialHeaderProps {
   vc: VC;
@@ -112,14 +19,28 @@ export interface CredentialHeaderProps {
 
 export const CredentialHeader: React.FunctionComponent<CredentialHeaderProps> = (props) => {
   return (
-    <Box>
-      <H4 color={baseColors.white} fontFamily={fonts.sansSerif} my={0}>
-        {props.vcSchema?.name || props.vc.credentialSubject.title || props.vcType}
-      </H4>
-      <Text color={baseColors.white} fontFamily={fonts.sansSerif} fontSize={1} fontWeight={3}>
-        {truncateDid(props.vc.credentialSubject.id)}
-      </Text>
-    </Box>
+    <Flex>
+      <Flex
+        alignItems="center"
+        bg={baseColors.white}
+        borderRadius="50%"
+        fontSize="24px"
+        height="40px"
+        justifyContent="center"
+        mr={2}
+        width="40px"
+      >
+        {props.vcSchema?.icon && props.vcSchema?.icon}
+      </Flex>
+      <Box flexGrow="1">
+        <H4 color={baseColors.white} fontFamily={fonts.sansSerif} my={0}>
+          {props.vcSchema?.name || props.vc.credentialSubject.title || props.vcType}
+        </H4>
+        <Text color={baseColors.white} fontFamily={fonts.sansSerif} fontSize={1} fontWeight={3}>
+          Subject: {truncateDid(props.vc.credentialSubject.id)}
+        </Text>
+      </Box>
+    </Flex>
   );
 };
 
@@ -227,5 +148,98 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
         )}
       </Flex>
     </Flex>
+  );
+};
+
+export const Separator = styled.hr`
+  margin-left: 16px;
+  margin-right: 16px;
+  color: ${colors.lightGray};
+  border-style: solid;
+`;
+
+export const CredentialTR: React.FunctionComponent = (props) => {
+  return (
+    <tr
+      style={{
+        height: "auto",
+      }}
+    >
+      {props.children}
+    </tr>
+  );
+};
+
+export const CredentialTDRight: React.FunctionComponent = (props) => {
+  return (
+    <td
+      style={{
+        border: "none",
+        padding: "5px 0",
+        textAlign: "right",
+        wordBreak: "break-word",
+      }}
+    >
+      <Text.span color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={1} lineHeight="copy">
+        {props.children}
+      </Text.span>
+    </td>
+  );
+};
+
+export const CredentialTDLeft: React.FunctionComponent = (props) => {
+  return (
+    <td
+      style={{
+        border: "none",
+        padding: "5px 0",
+      }}
+    >
+      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={1} lineHeight="copy">
+        {props.children}
+      </Text.span>
+    </td>
+  );
+};
+
+export const CredentialDetailsTDRight: React.FunctionComponent = (props) => {
+  return (
+    <td
+      style={{
+        border: "none",
+        padding: "3px 0",
+        textAlign: "right",
+        wordBreak: "break-word",
+      }}
+    >
+      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0} lineHeight="copy">
+        {props.children}
+      </Text.span>
+    </td>
+  );
+};
+
+export const CredentialDetailsTDLeft: React.FunctionComponent = (props) => {
+  return (
+    <td
+      style={{
+        border: "none",
+        padding: "3px 0",
+      }}
+    >
+      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0} lineHeight="copy">
+        {props.children}
+      </Text.span>
+    </td>
+  );
+};
+
+export const ExpiredPill: React.FunctionComponent = () => {
+  return (
+    <Pill color="danger" cursor="pointer" fontFamily={fonts.sansSerif} height={4} px={5}>
+      <Text.span fontSize={0} color={colors.danger.base}>
+        Expired
+      </Text.span>
+    </Pill>
   );
 };

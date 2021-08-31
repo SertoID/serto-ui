@@ -2,7 +2,7 @@ import { Box, Tooltip } from "rimble-ui";
 import { Info } from "@rimble/icons";
 import { JsonSchemaNode } from "vc-schema-tools";
 import { hexEllipsis } from "../../../utils/helpers";
-import { CredentialPrimaryTDLeft, CredentialPrimaryTDRight, CredentialTR } from "./CredentialComponents";
+import { CredentialTDLeft, CredentialTDRight, CredentialTR } from "./CredentialComponents";
 import { colors } from "../../../themes/colors";
 
 export interface CredentialPropertyProps {
@@ -35,7 +35,7 @@ export const CredentialProperty: React.FunctionComponent<CredentialPropertyProps
   return (
     <>
       <CredentialTR>
-        <CredentialPrimaryTDLeft>
+        <CredentialTDLeft>
           <Box pl={nestedLevel * 24}>
             {keyDisplay}
             {keyDescription && (
@@ -44,8 +44,8 @@ export const CredentialProperty: React.FunctionComponent<CredentialPropertyProps
               </Tooltip>
             )}
           </Box>
-        </CredentialPrimaryTDLeft>
-        <CredentialPrimaryTDRight>
+        </CredentialTDLeft>
+        <CredentialTDRight>
           {valueTooltip ? (
             <Tooltip message={valueTooltip} placement="top">
               <Box>{valueDisplay}</Box>
@@ -53,7 +53,7 @@ export const CredentialProperty: React.FunctionComponent<CredentialPropertyProps
           ) : (
             valueDisplay
           )}
-        </CredentialPrimaryTDRight>
+        </CredentialTDRight>
       </CredentialTR>
       {value &&
         typeof value === "object" &&
