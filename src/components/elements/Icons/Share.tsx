@@ -1,9 +1,6 @@
-export interface ShareProps {
-  color?: string;
-  size?: string;
-}
+import { SvgProps } from "./";
 
-export const Share: React.FunctionComponent<ShareProps> = (props) => {
+export const Share: React.FunctionComponent<SvgProps> = (props) => {
   return (
     <svg
       width={props.size || "16"}

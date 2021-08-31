@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import QRCode from "qrcode.react";
-import { FileDownload, Info, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
-import { Box, Flex, Pill, Text } from "rimble-ui";
-import { CopyToClipboard, LockUnverified, LockVerified } from "../../elements";
-import { H4 } from "../../layouts";
-import { baseColors, fonts, colors } from "../../../themes";
+import { VC } from "vc-schema-tools";
 import { config } from "../../../config";
 import { truncateDid } from "../../../utils";
-import { VC } from "vc-schema-tools";
+import { FileDownload, Info, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
+import { Box, Flex, Text } from "rimble-ui";
+import { CopyToClipboard, LockUnverified, LockVerified, ExpiredPill } from "../../elements";
+import { H4 } from "../../layouts";
+import { baseColors, fonts, colors } from "../../../themes";
 import { CredentialShare } from "./CredentialShare";
 // import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
@@ -231,15 +231,5 @@ export const CredentialDetailsTDLeft: React.FunctionComponent = (props) => {
         {props.children}
       </Text.span>
     </td>
-  );
-};
-
-export const ExpiredPill: React.FunctionComponent = () => {
-  return (
-    <Pill color="danger" cursor="pointer" fontFamily={fonts.sansSerif} height={4} px={5}>
-      <Text.span fontSize={0} color={colors.danger.base}>
-        Expired
-      </Text.span>
-    </Pill>
   );
 };

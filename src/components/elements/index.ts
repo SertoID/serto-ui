@@ -15,6 +15,7 @@ export * from "./HighlightedJson";
 export * from "./Icons";
 export * from "./Modals";
 export * from "./NftSearchBox";
+export * from "./Pills";
 export * from "./Popup";
 export * from "./SearchBox";
 export * from "./SplitButton";

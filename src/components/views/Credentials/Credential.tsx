@@ -31,7 +31,7 @@ export enum CredentialViewTypes {
 export interface CredentialProps {
   vc: VC;
   additionalVCData?: AdditionalVCData;
-  open?: boolean;
+  isOpen?: boolean;
   viewType?: string; // deprecated
 }
 
@@ -39,12 +39,15 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const { vc, additionalVCData } = props;
   const { vcSchema } = useVcSchema(vc);
   const vcType = vc.type[vc.type.length - 1];
-  const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
+  const schemaName = vc.type.length > 0 ? vc.type[vc.type.length - 1] : "";
+  const schemaMismatch = schemaName && additionalVCData && !additionalVCData.schemaVerified;
   const issuanceDate =
     typeof vc.issuanceDate === "number"
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
       : dateTimeFormat(new Date(vc.issuanceDate));
   const expirationDate = vc.expirationDate && dateTimeFormat(new Date(vc.expirationDate));
+  const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
+  const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
   const issuerFormatted = truncateDid(issuer);
   const issuerDomains = additionalVCData
     ? additionalVCData.didListings.find((listing) => listing.did === issuer)?.domains
@@ -52,11 +55,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const subjectDomains = additionalVCData
     ? additionalVCData.didListings.find((listing) => listing.did === vc.credentialSubject.id)?.domains
     : [];
-
-  const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
-  const schemaName = vc.type.length > 0 ? vc.type[vc.type.length - 1] : "";
-  const schemaMismatch = schemaName && additionalVCData && !additionalVCData.schemaVerified;
-  const [isOpen, setIsOpen] = useState<boolean>(props.open || false);
+  const [isOpen, setIsOpen] = useState<boolean>(props.isOpen || false);
 
   const VerifiedCredentialAdditionalDetails = () => (
     <>

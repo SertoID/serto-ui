@@ -1,8 +1,6 @@
-export interface LockVerifiedProps {
-  size?: string;
-}
+import { SvgProps } from "./";
 
-export const LockVerified: React.FunctionComponent<LockVerifiedProps> = (props) => {
+export const LockVerified: React.FunctionComponent<SvgProps> = (props) => {
   return (
     <svg
       width={props.size || "16"}
