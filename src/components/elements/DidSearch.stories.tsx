@@ -1,14 +1,23 @@
+import { useState } from "react";
 import { storiesOf } from "@storybook/react";
 import { SertoUiProvider } from "../../context/SertoUiProvider";
 import { createMockApiRequest } from "../../utils/helpers";
 import { Identifier } from "../../types";
 import { DidSearch } from "./DidSearch";
+import { DidSearchWithMessagingInfo } from "./DidSearchWithMessagingInfo";
 
 const identifiers: Identifier[] = [
   {
     did: "did:ethr:0xcfa8829812f1b4fe09b27cacf7d36e4d1b5dce76",
     provider: "did:ethr",
     alias: "Admin",
+    services: [
+      {
+        id: "foo",
+        serviceEndpoint: "https://foo",
+        type: "messaging",
+      },
+    ],
   },
   {
     did: "did:ethr:rinkeby:0x88298d36e4d1b5dce76cf9b27cacf7a12f1b4fe0",
@@ -64,16 +73,36 @@ const entries = [
   },
 ];
 
-storiesOf("DID Search", module).add("DID Search", () => {
-  return (
-    <SertoUiProvider
-      context={{
-        searchService: {
-          getEntries: createMockApiRequest(entries),
-        },
-      }}
-    >
-      <DidSearch identifiers={identifiers} onChange={(value: any) => console.log(value)} />
-    </SertoUiProvider>
-  );
-});
+storiesOf("DID Search", module)
+  .add("DID Search", () => {
+    return (
+      <SertoUiProvider
+        context={{
+          searchService: {
+            getEntries: createMockApiRequest(entries),
+          },
+        }}
+      >
+        <DidSearch identifiers={identifiers} onChange={(value: any) => console.log(value)} />
+      </SertoUiProvider>
+    );
+  })
+  .add("DID Search with messaging info", () => {
+    const [supportsMessaging, setSupportsMessaging] = useState(false);
+    return (
+      <SertoUiProvider
+        context={{
+          searchService: {
+            getEntries: createMockApiRequest(entries),
+          },
+        }}
+      >
+        <DidSearchWithMessagingInfo
+          supportsMessaging={supportsMessaging}
+          setSupportsMessaging={setSupportsMessaging}
+          identifiers={identifiers}
+          onChange={(value: any) => console.log(value)}
+        />
+      </SertoUiProvider>
+    );
+  });

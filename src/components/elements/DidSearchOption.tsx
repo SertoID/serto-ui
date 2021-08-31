@@ -45,20 +45,21 @@ export const DidSearchOption: React.FunctionComponent<DidSearchOptionProps> = (p
           {orgName}
         </Text>
       </Box>
-      {didDocs.map((didDoc: any, i: number) => {
-        const parsedDidDoc = JSON.parse(didDoc);
-        return (
-          <DidSearchOptionDid
-            alias={alias}
-            did={{
-              did: parsedDidDoc.id,
-              messagingSupported: !!parsedDidDoc.service?.length,
-            }}
-            key={i}
-            onSelect={onSelect}
-          />
-        );
-      })}
+      {didDocs?.length &&
+        didDocs.map((didDoc: any, i: number) => {
+          const parsedDidDoc = JSON.parse(didDoc);
+          return (
+            <DidSearchOptionDid
+              alias={alias}
+              did={{
+                did: parsedDidDoc.id,
+                messagingSupported: !!parsedDidDoc.service?.length,
+              }}
+              key={i}
+              onSelect={onSelect}
+            />
+          );
+        })}
     </Box>
   );
 };
