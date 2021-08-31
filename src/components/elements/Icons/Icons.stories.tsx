@@ -10,6 +10,8 @@ import {
   GreenCircleCheck,
   IcoWeb,
   IndentedArrow,
+  LockUnverified,
+  LockVerified,
   OutlineOne,
   OutlineTwo,
   SertoAgentLogo,
@@ -48,6 +50,12 @@ storiesOf("Icons", module)
   })
   .add("IndentedArrow", () => {
     return <IndentedArrow />;
+  })
+  .add("LockUnverified", () => {
+    return <LockUnverified />;
+  })
+  .add("LockVerified", () => {
+    return <LockVerified />;
   })
   .add("SertoAgentLogo", () => {
     return <SertoAgentLogo />;

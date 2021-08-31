@@ -1,19 +1,27 @@
-import * as React from "react";
-import { Info, Person, VerifiedUser, Warning } from "@rimble/icons";
-import { Box, Flex, Pill, Table, Text } from "rimble-ui";
+import { useState } from "react";
+import { Warning } from "@rimble/icons";
+import { Box, Flex, Table, Text } from "rimble-ui";
 import { VC } from "vc-schema-tools";
-import { CredentialBorder, CredentialContainer, Separator } from "./CredentialComponents";
-import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard";
-import { Expand } from "../../elements/Expand/Expand";
+import {
+  CredentialFooter,
+  CredentialHeader,
+  CredentialIssuer,
+  CredentialSecondaryTDLeft,
+  CredentialSecondaryTDRight,
+  CredentialTR,
+  CredentialVerified,
+  CredentialViewToken,
+  Separator,
+} from "./CredentialComponents";
 import { baseColors, colors, fonts } from "../../../themes";
-import { dateTimeFormat, ellipsis } from "../../../utils";
+import { dateTimeFormat, truncateDid } from "../../../utils";
 import { AdditionalVCData } from "../../../types";
 import { DomainImage } from "../../elements";
 import { DomainLink } from "../../elements/DomainLink";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialProperty } from "./CredentialProperty";
-import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
+/* CredentialViewTypes: deprecated */
 export enum CredentialViewTypes {
   COLLAPSIBLE = "COLLAPSIBLE",
   LIST = "LIST",
@@ -23,7 +31,8 @@ export enum CredentialViewTypes {
 export interface CredentialProps {
   vc: VC;
   additionalVCData?: AdditionalVCData;
-  viewType?: string;
+  open?: boolean;
+  viewType?: string; // deprecated
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
@@ -31,13 +40,12 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const { vcSchema } = useVcSchema(vc);
   const vcType = vc.type[vc.type.length - 1];
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
-  const viewType = props.viewType || "default";
   const issuanceDate =
     typeof vc.issuanceDate === "number"
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
       : dateTimeFormat(new Date(vc.issuanceDate));
   const expirationDate = vc.expirationDate && dateTimeFormat(new Date(vc.expirationDate));
-  const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 6, 4);
+  const issuerFormatted = truncateDid(issuer);
   const issuerDomains = additionalVCData
     ? additionalVCData.didListings.find((listing) => listing.did === issuer)?.domains
     : [];
@@ -48,52 +56,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
   const schemaName = vc.type.length > 0 ? vc.type[vc.type.length - 1] : "";
   const schemaMismatch = schemaName && additionalVCData && !additionalVCData.schemaVerified;
-
-  const VerifiedCredentialHeader = () => (
-    <>
-      <Flex alignItems="center">
-        <Box>
-          <Flex alignItems="center">
-            <Box bg={colors.primary.disabled[1]} borderRadius="50%" height={3} mr={1} p="1px" width={3}>
-              <Person size="14" color={baseColors.white} />
-            </Box>
-            <Text.span
-              color={baseColors.black}
-              fontFamily={fonts.sansSerif}
-              fontSize={0}
-              mr={2}
-              maxWidth={7}
-              style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-              title={issuer}
-            >
-              {issuerFormatted}
-            </Text.span>
-            {viewType === CredentialViewTypes.LIST && (
-              <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
-                {issuanceDate}
-              </Text.span>
-            )}
-          </Flex>
-        </Box>
-        <Box flexGrow="1">
-          <Flex alignItems="center" justifyContent="flex-end">
-            <ViewSchemaButton schema={vcSchema}>
-              <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={0} height={4} mr={2}>
-                {vcType}
-                {vcSchema?.icon && ` ${vcSchema.icon}`}
-              </Pill>
-            </ViewSchemaButton>
-            <VerifiedUser color={colors.primary.disabled[1]} />
-          </Flex>
-        </Box>
-      </Flex>
-      <Box>
-        <Text color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3} mr={2}>
-          {vcSchema?.name || vc.credentialSubject.title || vcType}
-        </Text>
-      </Box>
-    </>
-  );
+  const [isOpen, setIsOpen] = useState<boolean>(props.open || false);
 
   const VerifiedCredentialAdditionalDetails = () => (
     <>
@@ -205,92 +168,64 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     </>
   );
 
-  const VerifiedCredentialBody = () => (
-    <>
-      <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
-        <tbody>
-          {Object.entries(vc.credentialSubject).map(([key, value]) => (
-            <CredentialProperty
-              key={key}
-              keyName={key}
-              value={value}
-              schema={vcSchema?.jsonSchema?.properties?.credentialSubject?.properties?.[key]}
-            />
-          ))}
-        </tbody>
-      </Table>
-      <Box my={2}>
-        <Box bg={colors.nearWhite} borderRadius={1} p={2}>
-          <Flex justifyContent="space-between" mb={1}>
-            <Flex alignItems="center">
-              <Text.span color={colors.midGray} fontFamily={fonts.sansSerif} fontSize={0}>
-                Token
-              </Text.span>
-              <Info size="14px" ml={1} />
-            </Flex>
-            <CopyToClipboard text={vc.proof.jwt} size="16px" />
-          </Flex>
-          <Text.span
-            color={colors.midGray}
-            fontFamily={fonts.monospace}
-            fontSize={0}
-            lineHeight="copy"
-            style={{ wordWrap: "break-word" }}
-          >
-            {vc.proof.jwt}
-          </Text.span>
-        </Box>
-      </Box>
-    </>
-  );
-
-  const VerifiedCredentialFooter = () => (
-    <Flex justifyContent="space-between">
-      <Text.span
-        color={colors.silver}
-        fontFamily={fonts.sansSerif}
-        fontSize={0}
-        pr={3}
-        maxWidth="100%"
-        style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-        title={issuer}
-      >
-        Issuer: {issuerFormatted}
-      </Text.span>
-      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
-        {issuanceDate}
-      </Text.span>
-    </Flex>
-  );
-
-  if (viewType === CredentialViewTypes.LIST) {
-    return (
-      <CredentialBorder>
-        <CredentialContainer>{VerifiedCredentialHeader()}</CredentialContainer>
-      </CredentialBorder>
-    );
-  }
-
-  if (viewType === CredentialViewTypes.COLLAPSIBLE) {
-    return (
-      <CredentialBorder>
-        <CredentialContainer>
-          {VerifiedCredentialHeader()}
-          <Expand>{VerifiedCredentialBody()}</Expand>
-          {VerifiedCredentialFooter()}
-        </CredentialContainer>
-      </CredentialBorder>
-    );
-  }
+  console.log(vc);
 
   return (
-    <CredentialBorder>
+    <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px" mb={3} overflow="hidden">
       {VerifiedCredentialAdditionalDetails()}
-      <CredentialContainer>
-        {VerifiedCredentialHeader()}
-        {VerifiedCredentialBody()}
-        {VerifiedCredentialFooter()}
-      </CredentialContainer>
-    </CredentialBorder>
+      <Box bg="#2C56DD" px={3} py={2}>
+        <Flex alignItems="center" justifyContent="space-between" mb={2}>
+          <CredentialIssuer issuer={issuer} issuerFormatted={issuerFormatted} />
+          <CredentialVerified isVerified={true} />
+        </Flex>
+        <CredentialHeader vc={vc} vcType={vcType} vcSchema={vcSchema} />
+      </Box>
+      {isOpen && (
+        <>
+          <Box borderBottom={2} mb={3} pb={1} pt={2} px={3}>
+            <Table border={0} boxShadow={0} mb={2} width="100%" style={{ tableLayout: "fixed" }}>
+              <tbody>
+                {Object.entries(vc.credentialSubject).map(([key, value]) => (
+                  <CredentialProperty
+                    key={key}
+                    keyName={key}
+                    value={value}
+                    schema={vcSchema?.jsonSchema?.properties?.credentialSubject?.properties?.[key]}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </Box>
+          <Box mb={1} px={3}>
+            <Table border={0} boxShadow={0} mb={3} width="100%" style={{ tableLayout: "fixed" }}>
+              <tbody>
+                <CredentialTR>
+                  <CredentialSecondaryTDLeft>Subject</CredentialSecondaryTDLeft>
+                  <CredentialSecondaryTDRight>{vc.credentialSubject.id}</CredentialSecondaryTDRight>
+                </CredentialTR>
+                <CredentialTR>
+                  <CredentialSecondaryTDLeft>Issuer</CredentialSecondaryTDLeft>
+                  <CredentialSecondaryTDRight>{issuerFormatted}</CredentialSecondaryTDRight>
+                </CredentialTR>
+                <CredentialTR>
+                  <CredentialSecondaryTDLeft>Date Issued</CredentialSecondaryTDLeft>
+                  <CredentialSecondaryTDRight>{issuanceDate}</CredentialSecondaryTDRight>
+                </CredentialTR>
+                {vc.expirationDate && (
+                  <CredentialTR>
+                    <CredentialSecondaryTDLeft>Expires</CredentialSecondaryTDLeft>
+                    <CredentialSecondaryTDRight>{vc.expirationDate}</CredentialSecondaryTDRight>
+                  </CredentialTR>
+                )}
+              </tbody>
+            </Table>
+            <CredentialViewToken jwt={vc.proof.jwt} />
+          </Box>
+        </>
+      )}
+      <Box pb={2} px={3} pt={3}>
+        <CredentialFooter expired={expired} isOpen={isOpen} setIsOpen={(isOpen) => setIsOpen(isOpen)} />
+      </Box>
+    </Box>
   );
 };

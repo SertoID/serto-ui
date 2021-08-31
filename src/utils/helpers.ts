@@ -42,9 +42,8 @@ export function dateTimeFormat(date: Date): string {
   const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(date);
   const month = new Intl.DateTimeFormat("en", { month: "short" }).format(date);
   const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(date);
-  const hour = new Intl.DateTimeFormat("en-GB", { hour: "numeric" }).format(date);
-  const minute = new Intl.DateTimeFormat("en", { minute: "numeric" }).format(date);
-  const dateTimeFormated = `${hour}:${minute} - ${month} ${day}, ${year}`;
+  const time = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "numeric" }).format(date);
+  const dateTimeFormated = ` ${month} ${day}, ${year} at ${time}`;
   return dateTimeFormated;
 }
 

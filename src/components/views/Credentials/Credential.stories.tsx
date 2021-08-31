@@ -1,7 +1,6 @@
-import React from "react";
 import { storiesOf } from "@storybook/react";
 import { EXAMPLE_VCS, EXAMPLE_SCHEMAS } from "vc-schema-tools";
-import { Credential, CredentialViewTypes } from "./Credential";
+import { Credential } from "./Credential";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { BrowserRouter } from "react-router-dom";
 import { SertoUiProvider } from "../../../context/SertoUiProvider";
@@ -75,8 +74,6 @@ storiesOf("Credential", module)
       </IdentityThemeProvider>
     </BrowserRouter>
   ))
-  .add("List view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.LIST} />)
-  .add("Collapsible view", () => <Credential vc={diplomaVc} viewType={CredentialViewTypes.COLLAPSIBLE} />)
   .add("Full view", () => <Credential vc={diplomaVc} />)
   .add("Full view with additional details", () => (
     <Credential vc={diplomaVc} additionalVCData={diplomaAdditionalDetails} />

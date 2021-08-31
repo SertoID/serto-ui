@@ -6,6 +6,8 @@ export * from "./GitHub";
 export * from "./GreenCircleCheck";
 export * from "./IcoWeb";
 export * from "./IndentedArrow";
+export * from "./LockUnverified";
+export * from "./LockVerified";
 export * from "./OutlineOne";
 export * from "./OutlineTwo";
 export * from "./SertoAgentLogo";
