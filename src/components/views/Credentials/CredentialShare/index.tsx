@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, Button, Link, Text, Flex } from "rimble-ui";
 import { ContentCopy } from "@rimble/icons";
 import { VC } from "vc-schema-tools";
+import { Share } from "../../../elements";
 import { ModalContentFullWidth, ModalFooter, ModalWithX } from "../../../elements/Modals";
 import { H3, H6 } from "../../../layouts/LayoutComponents";
 import { colors, fonts } from "../../../../themes";
@@ -22,7 +23,11 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
 
   return (
     <>
-      {props.children || <Link onClick={() => setModalOpen(true)}>Share</Link>}
+      {props.children || (
+        <Link onClick={() => setModalOpen(true)}>
+          <Share />
+        </Link>
+      )}
 
       <ModalWithX isOpen={modalOpen} close={() => setModalOpen(false)} width={9}>
         <ModalContentFullWidth>

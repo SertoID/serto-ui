@@ -20,6 +20,7 @@ import {
   SertoSearchLogo,
   SertoVerifiedCheckmark,
   SertoVerificationError,
+  Share,
   Verified,
 } from "./";
 
@@ -83,6 +84,9 @@ storiesOf("Icons", module)
   })
   .add("SertoVerifiedCheckmark", () => {
     return <SertoVerifiedCheckmark size="50px" />;
+  })
+  .add("Share", () => {
+    return <Share size="50px" />;
   })
   .add("Verified", () => {
     return <Verified />;

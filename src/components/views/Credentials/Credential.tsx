@@ -13,7 +13,6 @@ import {
   CredentialViewToken,
   Separator,
 } from "./CredentialComponents";
-import { CredentialShare } from "./CredentialShare";
 import { baseColors, colors, fonts } from "../../../themes";
 import { dateTimeFormat, truncateDid } from "../../../utils";
 import { AdditionalVCData } from "../../../types";
@@ -225,8 +224,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         </>
       )}
       <Box pb={2} px={3} pt={3}>
-        <CredentialFooter expired={expired} isOpen={isOpen} setIsOpen={(isOpen) => setIsOpen(isOpen)} />
-        <CredentialShare vc={vc} />
+        <CredentialFooter expired={expired} isOpen={isOpen} setIsOpen={(isOpen) => setIsOpen(isOpen)} vc={vc} />
       </Box>
     </Box>
   );

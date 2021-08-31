@@ -1,10 +1,14 @@
 import styled from "styled-components";
-import { FileDownload, Info, KeyboardArrowDown, KeyboardArrowUp, Share } from "@rimble/icons";
+import QRCode from "qrcode.react";
+import { FileDownload, Info, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
 import { Box, Flex, Pill, Text } from "rimble-ui";
-import { CopyToClipboard, LockUnverified, LockVerified } from "../../elements";
+import { CopyToClipboard, LockUnverified, LockVerified, Share } from "../../elements";
 import { H4 } from "../../layouts";
 import { baseColors, fonts, colors } from "../../../themes";
+import { config } from "../../../config";
+import { truncateDid } from "../../../utils";
 import { VC } from "vc-schema-tools";
+import { CredentialShare } from "./CredentialShare";
 // import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
 export const Separator = styled.hr`
@@ -113,7 +117,7 @@ export const CredentialHeader: React.FunctionComponent<CredentialHeaderProps> = 
         {props.vcSchema?.name || props.vc.credentialSubject.title || props.vcType}
       </H4>
       <Text color={baseColors.white} fontFamily={fonts.sansSerif} fontSize={1} fontWeight={3}>
-        {props.vc?.credentialSubject?.id}
+        {truncateDid(props.vc.credentialSubject.id)}
       </Text>
     </Box>
   );
@@ -147,36 +151,48 @@ export const CredentialVerified: React.FunctionComponent<CredentialVerifiedProps
   return <>{props.isVerified ? <LockVerified /> : <LockUnverified />}</>;
 };
 
+const StyledQRCode = styled(QRCode)`
+  max-width: 100%;
+  height: auto !important;
+`;
+
 export interface CredentialViewTokenProps {
   jwt: any;
 }
 
 export const CredentialViewToken: React.FunctionComponent<CredentialViewTokenProps> = (props) => {
+  const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${props.jwt}`;
   return (
-    <Box bg={colors.nearWhite} borderRadius={1} p={2}>
-      <Flex justifyContent="space-between" mb={1}>
-        <Flex alignItems="center">
-          <Text.span color={colors.midGray} fontFamily={fonts.monospace} fontSize={0}>
-            Token
-          </Text.span>
-          <Info color={colors.silver} size="14px" ml={1} />
+    <Flex bg={colors.nearWhite} borderRadius={1} p={2}>
+      <Box mr={3} width="calc(100% - 135px)">
+        <Flex justifyContent="space-between" mb={1}>
+          <Flex alignItems="center">
+            <Text.span color={colors.midGray} fontFamily={fonts.monospace} fontSize={0}>
+              Token
+            </Text.span>
+            <Info color={colors.silver} size="14px" ml={1} />
+          </Flex>
+          <CopyToClipboard text={props.jwt} size="16px" />
         </Flex>
-        <CopyToClipboard text={props.jwt} size="16px" />
-      </Flex>
-      <Text.span
-        color={colors.midGray}
-        fontFamily={fonts.monospace}
-        fontSize={0}
-        lineHeight="copy"
-        style={{ wordWrap: "break-word" }}
-      >
-        {props.jwt}
-      </Text.span>
-    </Box>
+        <Text.span
+          color={colors.midGray}
+          fontFamily={fonts.monospace}
+          fontSize={0}
+          lineHeight="copy"
+          style={{ wordWrap: "break-word" }}
+        >
+          {props.jwt}
+        </Text.span>
+      </Box>
+      <Box width="125px">
+        <StyledQRCode value={vcUrl} renderAs="canvas" size={512} bgColor="transparent" />
+      </Box>
+    </Flex>
   );
 };
 
 export interface CredentialFooterProps {
+  vc: VC;
   expired: any;
   isOpen: boolean;
   setIsOpen(isOpen: boolean): void;
@@ -185,10 +201,10 @@ export interface CredentialFooterProps {
 export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = (props) => {
   return (
     <Flex alignItems="center" justifyContent="space-between">
-      <Box>
+      <Flex>
         <FileDownload color={colors.midGray} mr={3} size="18px" />
-        <Share color={colors.midGray} size="18px" />
-      </Box>
+        <CredentialShare vc={props.vc} />
+      </Flex>
       {props.expired && <ExpiredPill />}
       <Flex
         alignItems="center"

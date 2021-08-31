@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Box, Tooltip } from "rimble-ui";
 import { Info } from "@rimble/icons";
 import { JsonSchemaNode } from "vc-schema-tools";
