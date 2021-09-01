@@ -1,5 +1,5 @@
 import { Pill, Text } from "rimble-ui";
-import { fonts, colors } from "../../../themes";
+import { fonts, colors } from "../../themes";
 
 export const ExpiredPill: React.FunctionComponent = () => {
   return (

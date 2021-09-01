@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { ExpiredPill } from ".";
+import { ExpiredPill } from "./Pills";
 
 storiesOf("Pills", module).add("Expired", () => {
   return <ExpiredPill />;
