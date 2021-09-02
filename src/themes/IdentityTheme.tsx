@@ -44,6 +44,7 @@ const identityTheme = {
     "0 2px 4px rgba(50, 50, 63, 0.1)",
     "0 8px 16px rgba(50, 50, 63, 0.1)",
     "0 7px 14px rgba(50, 50, 63, 0.1)",
+    "0 2px 6px rgba(0, 0, 0, .3)"
   ],
   opacity: {
     disabled: 0.4,
