@@ -18,11 +18,11 @@ export interface SertoUiContextInterface {
 
 export const defaultSertoUiContext: SertoUiContextInterface = {
   navItems: [
-    { text: "Home", url: "/", icon: Home },
-    { text: "Nowhere", url: "/nowhere", icon: Send },
+    { text: "Home", url: "/", icon: Home, section: "home" },
+    { text: "Nowhere", url: "/nowhere", icon: Send, section: "nowhere" },
   ],
   schemasService: mockSertoSchemasService,
-  schemasUiUrl: "https://staging.schemas.serto.id",
+  schemasUiUrl: "https://beta.schemas.serto.id",
   searchService: mockSertoSearchService,
 };
 

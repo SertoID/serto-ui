@@ -1,6 +1,7 @@
 import { SchemaDataInput, SchemaDataResponse } from "../components/views/Schemas/types";
 import { config } from "../config";
 import { createMockApiRequest } from "../utils/helpers";
+import { JwtUserData } from "../types";
 
 // @TODO/toby Temp dummy data for demoing, sorry
 const DUMMY_SCHEMA_SAVES: { [key: string]: number } = {
@@ -20,14 +21,16 @@ const DUMMY_SCHEMA_SAVES: { [key: string]: number } = {
 export class SertoSchemasService {
   private url;
   private jwt?: string;
+  public userData?: JwtUserData;
   public isAuthenticated?: boolean;
   /** Path (or URL) to send user to in order for them to create a schema. */
   public createSchemaPath: string;
 
-  constructor(url?: string, jwt?: string, createSchemaPath?: string) {
+  constructor(url?: string, jwt?: string, userData?: JwtUserData, createSchemaPath?: string) {
     this.url = url || config.DEFAULT_SCHEMA_API_URL;
     this.jwt = jwt;
-    this.isAuthenticated = !!jwt;
+    this.userData = userData;
+    this.isAuthenticated = !!(jwt && userData);
     this.createSchemaPath = createSchemaPath || config.DEFAULT_CREATE_SCHEMA_PATH;
   }
 

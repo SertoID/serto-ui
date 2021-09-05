@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Flash, Box, Checkbox, Input, Field, Text } from "rimble-ui";
+import React from "react";
+import { Box, Checkbox, Input, Field, Text } from "rimble-ui";
 import { JsonSchemaNode } from "vc-schema-tools";
-import { DidSearch } from "../../../elements/DidSearch";
+import { DidSearchWithMessagingInfo } from "../../../elements/DidSearchWithMessagingInfo";
 import { Identifier } from "../../../../types";
 import { isoToDatetimeLocal } from "../../../../utils/helpers";
 
@@ -29,8 +29,6 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     subjectSupportsMessaging,
     setSubjectSupportsMessaging,
   } = props;
-
-  const [didSearchBlurred, setDidSearchBlurred] = useState(false);
 
   // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
   const isDid = name === "id" && node.type === "string" && node.format === "uri";
@@ -63,26 +61,17 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
 
     if (isDid) {
       return (
-        <>
-          <DidSearch
+        <Box mb={3}>
+          <DidSearchWithMessagingInfo
             key={name}
-            onChange={(val) => {
-              onChange(val.did);
-              setSubjectSupportsMessaging(!!val.messagingSupported);
-            }}
-            onBlur={() => setDidSearchBlurred(true)}
+            onChange={(val) => onChange(val.did)}
             required={required}
             identifiers={identifiers}
             defaultSelectedDid={defaultSubjectDid}
+            supportsMessaging={subjectSupportsMessaging}
+            setSupportsMessaging={setSubjectSupportsMessaging}
           />
-          {didSearchBlurred && value && !subjectSupportsMessaging && (
-            <Flash my={3} variant="warning">
-              The subject DID you selected does not support DIDComm messaging, so they cannot seamlessly receive the VC
-              you are issuing. You may still issue the VC here, and on the next screen can share it with the subject via
-              email or QR code.
-            </Flash>
-          )}
-        </>
+        </Box>
       );
     }
 

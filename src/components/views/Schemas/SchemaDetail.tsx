@@ -9,6 +9,7 @@ import { SchemaSaves } from "./SchemaSaves";
 import { SchemaHeader } from "./SchemaHeader";
 import { SchemaPreview, SchemaViewTypes, SCHEMA_VIEWS } from "./SchemaPreview";
 import { GitHub } from "../../elements/Icons/GitHub";
+import { SertoUiContext, SertoUiContextInterface } from "../../../context/SertoUiContext";
 
 const SidebarHeading = styled(H5)`
   margin-bottom: 12px;
@@ -51,7 +52,10 @@ export interface SchemaDetailProps {
 
 export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) => {
   const { schema, primaryView, hideTools, hideIssueVc, fullPage, paneView, noSwitcher } = props;
+  const schemasService = React.useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
   const [view, setView] = React.useState<SchemaViewTypes>(primaryView || SCHEMA_VIEWS[0]);
+
+  const userOwnsSchema = "creator" in schema && schemasService.userData?.sub === schema.creator?.identifier;
 
   // If `primaryView` prop changes, set the view to that - but future calls to `setView` will still take effect.
   React.useEffect(() => {
@@ -90,7 +94,12 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
             <Text>
               {"creator" in schema && schema.creator ? (
                 <>
-                  {schema.creator.name && <Text>{schema.creator.name}</Text>}
+                  {schema.creator.name && (
+                    <Text>
+                      {schema.creator.name}
+                      {userOwnsSchema && " (you)"}
+                    </Text>
+                  )}
                   <UserLink href={`https://github.com/${schema.creator.nickName}`} target="_blank">
                     <GitHub style={{ width: 16, height: "auto" }} />
                     {schema.creator.nickName}

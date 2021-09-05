@@ -2853,6 +2853,13 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
+"@types/qrcode.react@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/qrcode.react/-/qrcode.react-1.0.2.tgz#f892432cc41b5dac52e3ca8873b717c8bfea6002"
+  integrity sha512-I9Oq5Cjlkgy3Tw7krCnCXLw2/zMhizkTere49OOcta23tkvH0xBTP0yInimTh0gstLRtb8Ki9NZVujE5UI6ffQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/qs@^6.9.0":
   version "6.9.5"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.5.tgz#434711bdd49eb5ee69d90c1d67c354a9a8ecb18b"
@@ -6533,6 +6540,18 @@ eslint-plugin-testing-library@^3.9.2:
   integrity sha512-nQIFe2muIFv2oR2zIuXE4vTbcFNx8hZKRzgHZqJg8rfopIWwoTwtlbCCNELT/jXzVe1uZF68ALGYoDXjLczKiQ==
   dependencies:
     "@typescript-eslint/experimental-utils" "^3.10.1"
+
+eslint-plugin-unused-imports@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-1.1.4.tgz#f43a5ba9ebbb5b6325923523ee7c29e9b33d2b6e"
+  integrity sha512-6M9iqqZbnsLdcpYm8ZAyjHHxw1Gmv/pK8yK9Za/cfrKKkOyxaXmiw5/EtBXPcp/JJ6Ge9ur+OROSAcYho45smA==
+  dependencies:
+    eslint-rule-composer "^0.3.0"
+
+eslint-rule-composer@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-rule-composer/-/eslint-rule-composer-0.3.0.tgz#79320c927b0c5c0d3d3d2b76c8b4a488f25bbaf9"
+  integrity sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==
 
 eslint-scope@^4.0.3:
   version "4.0.3"
@@ -11915,6 +11934,15 @@ qrcode.react@^0.9.3:
     prop-types "^15.6.0"
     qr.js "0.0.0"
 
+qrcode.react@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/qrcode.react/-/qrcode.react-1.0.1.tgz#2834bb50e5e275ffe5af6906eff15391fe9e38a5"
+  integrity sha512-8d3Tackk8IRLXTo67Y+c1rpaiXjoz/Dd2HpcMdW//62/x8J1Nbho14Kh8x974t9prsLHN6XqVgcnRiBGFptQmg==
+  dependencies:
+    loose-envify "^1.4.0"
+    prop-types "^15.6.0"
+    qr.js "0.0.0"
+
 qs@6.7.0:
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
@@ -14535,10 +14563,10 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vc-schema-tools@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/vc-schema-tools/-/vc-schema-tools-0.2.3.tgz#b75ef226fcd8eeeb21d8f04f0b60938064b3d5af"
-  integrity sha512-6NgLCsWxJTE2Veo1WEYvACbglDCKyjcl8N95gK5Z8P3qu2/TgA/hIJUw7ZRIhngXFz9z3J+LOsqhWZ9K2zcT6A==
+vc-schema-tools@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/vc-schema-tools/-/vc-schema-tools-0.2.4.tgz#60de8d61df6bc460ad617c6335bed93c13d8fbb4"
+  integrity sha512-kbjyc/P5TPFfWHc/J3elzOQA9p8VkS7gIE0D70M4zgPjAnmJ3WIdpQEMBKAxO9ysa/KkEgSM7szwqzIVh/eZzA==
   dependencies:
     ajv "^6.12.3"
     cross-fetch "^3.1.4"
