@@ -56,9 +56,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
         </Button.Text>
       </Box>
       <Box bg={baseColors.white} border={2} borderRadius={1} pb={5} pt={3} px={4} width="100%">
-        {error && (
-          <Flash variant="danger">{error}</Flash>
-        )}
+        {error && <Flash variant="danger">{error}</Flash>}
         <H5 color="silver" mb={2}>
           Or search by
         </H5>
