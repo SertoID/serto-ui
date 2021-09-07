@@ -101,63 +101,65 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
       {additionalVCData && (
         <>
           <Box
-            bg={expired || schemaMismatch ? colors.warning.light : colors.primary.disabled[1]}
+            bg={expired || schemaMismatch ? colors.warning.light : baseColors.blue}
             borderTopLeftRadius={2}
             borderTopRightRadius={2}
           >
             {schemaName && (
               <Flex justifyContent="space-between" px={3} py={2}>
-                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} color={baseColors.white}>
                   {schemaName}
                 </Text>
                 {schemaMismatch ? (
                   <Flex>
                     <Warning color={colors.warning.dark} />
-                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2} color={baseColors.white}>
                       Schema does not match
                     </Text>
                   </Flex>
                 ) : (
                   <Flex>
-                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2} color={baseColors.white}>
                       Schema Verified
                     </Text>
                   </Flex>
                 )}
               </Flex>
             )}
-            <Flex justifyContent="space-between" px={3} py={2}>
-              <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
-                Recipient
-              </Text>
-              <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
-                {subjectDomains &&
-                  subjectDomains.map((domain) => (
-                    <DomainLink to={`/search?filter=${domain}`} key={domain}>
-                      <Flex>
-                        <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
-                          {domain}
-                        </Text>
-                        <DomainImage domain={domain} />
-                      </Flex>
-                    </DomainLink>
-                  ))}
-                <Text.span
-                  color={colors.midGray}
-                  fontFamily={fonts.sansSerifHeader}
-                  fontSize={0}
-                  mr={2}
-                  maxWidth={7}
-                  style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-                  title={issuer}
-                >
-                  {vc.credentialSubject.id}
-                </Text.span>
+            {vc.credentialSubject.id && (
+              <Flex justifyContent="space-between" px={3} py={2}>
+                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} color={baseColors.white}>
+                  Subject
+                </Text>
+                <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
+                  {subjectDomains &&
+                    subjectDomains.map((domain) => (
+                      <DomainLink to={`/search?filter=${domain}`} key={domain}>
+                        <Flex>
+                          <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2} color={baseColors.white}>
+                            {domain}
+                          </Text>
+                          <DomainImage domain={domain} />
+                        </Flex>
+                      </DomainLink>
+                    ))}
+                  <Text.span
+                    color={baseColors.white}
+                    fontFamily={fonts.sansSerifHeader}
+                    fontSize={0}
+                    mr={2}
+                    maxWidth={7}
+                    style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
+                    title={issuer}
+                  >
+                    {vc.credentialSubject.id}
+                  </Text.span>
+                </Flex>
               </Flex>
-            </Flex>
+            )}
             <Separator />
             <Flex justifyContent="space-between" px={3} py={2}>
-              <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+              <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} color={baseColors.white}>
                 Issued By
               </Text>
               <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
@@ -165,7 +167,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                   issuerDomains.map((domain) => (
                     <DomainLink to={`/search?filter=${domain}`} key={domain}>
                       <Flex>
-                        <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                        <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2} color={baseColors.white}>
                           {domain}
                         </Text>
                         <DomainImage domain={domain} />
@@ -173,7 +175,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                     </DomainLink>
                   ))}
                 <Text.span
-                  color={colors.midGray}
+                  color={baseColors.white}
                   fontFamily={fonts.sansSerifHeader}
                   fontSize={0}
                   mr={2}
@@ -187,14 +189,14 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
             </Flex>
             {expirationDate && (
               <Flex justifyContent="space-between" px={3} py={2}>
-                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} color={baseColors.white}>
                   Expires
                 </Text>
                 <Text.span
                   fontFamily={fonts.sansSerif}
                   fontWeight={2}
                   fontSize={2}
-                  color={expired ? colors.danger.base : colors.blacks[0]}
+                  color={baseColors.white}
                 >
                   {expirationDate}
                 </Text.span>
@@ -227,7 +229,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               <Text.span color={colors.midGray} fontFamily={fonts.sansSerif} fontSize={0}>
                 Token
               </Text.span>
-              <Info size="14px" ml={1} />
+              <Info size="14px" ml={1} color={colors.silver}/>
             </Flex>
             <CopyToClipboard text={vc.proof.jwt} size="16px" />
           </Flex>

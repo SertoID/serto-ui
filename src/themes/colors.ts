@@ -9,6 +9,7 @@ export const baseColors = {
   danger: "#E9403A",
   blurple: "#5952FF",
   consensysblue: "#3259D6",
+  blue: "#2C56DD",
 };
 
 export const colors = {
