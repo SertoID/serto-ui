@@ -126,35 +126,37 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                 )}
               </Flex>
             )}
-            <Flex justifyContent="space-between" px={3} py={2}>
-              <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
-                Recipient
-              </Text>
-              <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
-                {subjectDomains &&
-                  subjectDomains.map((domain) => (
-                    <DomainLink to={`/search?filter=${domain}`} key={domain}>
-                      <Flex>
-                        <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
-                          {domain}
-                        </Text>
-                        <DomainImage domain={domain} />
-                      </Flex>
-                    </DomainLink>
-                  ))}
-                <Text.span
-                  color={colors.midGray}
-                  fontFamily={fonts.sansSerifHeader}
-                  fontSize={0}
-                  mr={2}
-                  maxWidth={7}
-                  style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-                  title={issuer}
-                >
-                  {vc.credentialSubject.id}
-                </Text.span>
+            {vc.credentialSubject.id && (
+              <Flex justifyContent="space-between" px={3} py={2}>
+                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
+                  Subject
+                </Text>
+                <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
+                  {subjectDomains &&
+                    subjectDomains.map((domain) => (
+                      <DomainLink to={`/search?filter=${domain}`} key={domain}>
+                        <Flex>
+                          <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
+                            {domain}
+                          </Text>
+                          <DomainImage domain={domain} />
+                        </Flex>
+                      </DomainLink>
+                    ))}
+                  <Text.span
+                    color={colors.midGray}
+                    fontFamily={fonts.sansSerifHeader}
+                    fontSize={0}
+                    mr={2}
+                    maxWidth={7}
+                    style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
+                    title={issuer}
+                  >
+                    {vc.credentialSubject.id}
+                  </Text.span>
+                </Flex>
               </Flex>
-            </Flex>
+            )}
             <Separator />
             <Flex justifyContent="space-between" px={3} py={2}>
               <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>

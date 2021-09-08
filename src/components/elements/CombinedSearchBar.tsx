@@ -80,18 +80,17 @@ export const CombinedSearchBar: React.FunctionComponent<CombinedSearchBarProps> 
         />
       </Box>
       <Box bg={colors.lightGray} my={2} width="1px" />
-      <Flex flexGrow="1">
+      <Flex>
         <StyledInput
-          boxShadow={0}
           onChange={(event: any) => setSearch(event.target.value)}
           onKeyDown={(event: any) => onKeyDown(event)}
           placeholder={
             props.placeholderText ||
             (dropDownState === "1"
-              ? "Search by Domain or DID"
+              ? "Domains & DIDs"
               : dropDownState === "2"
               ? "Search by NFT URL"
-              : "Enter Verifiable Credential as JWT or JSON")
+              : "Enter Verifiable Credential as JWT")
           }
           required
           type="text"
