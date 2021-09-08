@@ -39,9 +39,7 @@ export interface ButtonsProps {
 export const UnstyledButton: React.FunctionComponent<ButtonsProps> = (props) => {
   return (
     <Box {...props}>
-      <UnstyledButtonStyled onClick={props.onClick}>
-        {props.children}
-      </UnstyledButtonStyled>
+      <UnstyledButtonStyled onClick={props.onClick}>{props.children}</UnstyledButtonStyled>
     </Box>
   );
 };
