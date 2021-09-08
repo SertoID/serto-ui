@@ -20,19 +20,13 @@ export interface CredentialHeaderProps {
 export const CredentialHeader: React.FunctionComponent<CredentialHeaderProps> = (props) => {
   const { issuer, issuerDomain, vc, vcSchema, vcType } = props;
   const [isValid, setIsValid] = useState<boolean | undefined>();
-  let backgroundColor = colors.primary.base;
-  let textColor = baseColors.white;
-
-  if (issuerDomain) {
-    let logoUrl = "https://www.google.com/s2/favicons?sz=64&domain=" + issuerDomain;
-    let googleProxyURL =
-      "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=";
-    logoUrl = googleProxyURL + encodeURIComponent(logoUrl);
-
-    const { data, loading, error } = usePalette(logoUrl);
-    backgroundColor = loading ? "transparent" : error ? colors.primary.base : data.vibrant;
-    textColor = loading ? "transparent" : error ? baseColors.white : readableColor(data.vibrant);
-  }
+  let logoUrl = "https://www.google.com/s2/favicons?sz=64&domain=" + issuerDomain;
+  const googleProxyURL =
+    "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=";
+  logoUrl = googleProxyURL + encodeURIComponent(logoUrl);
+  const { data, loading, error } = usePalette(logoUrl);
+  const backgroundColor = loading ? "transparent" : error ? colors.primary.base : data.vibrant;
+  const textColor = loading ? "transparent" : error ? baseColors.white : readableColor(data.vibrant);
 
   useEffect(() => {
     return void (async function validate() {
@@ -100,9 +94,11 @@ export const CredentialHeader: React.FunctionComponent<CredentialHeaderProps> = 
           <H4 color={textColor} fontFamily={fonts.sansSerif} my={0}>
             {vcSchema?.name || vc.credentialSubject.title || vcType}
           </H4>
-          <Text color={textColor} fontFamily={fonts.sansSerif} fontSize={1} fontWeight={3}>
-            Subject: {truncateDid(vc.credentialSubject.id)}
-          </Text>
+          {vc.credentialSubject.id && (
+            <Text color={textColor} fontFamily={fonts.sansSerif} fontSize={1} fontWeight={3}>
+              Subject: {truncateDid(vc.credentialSubject.id)}
+            </Text>
+          )}
         </Box>
       </Flex>
     </Box>

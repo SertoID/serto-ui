@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Flex, Table } from "rimble-ui";
+import { Box, Flex, Table, Text } from "rimble-ui";
 import { VC } from "vc-schema-tools";
 import {
   CredentialFooter,
@@ -15,6 +15,7 @@ import { CopyToClipboard } from "../../elements";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialHeader } from "./CredentialHeader";
 import { CredentialProperty } from "./CredentialProperty";
+import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
 /* CredentialViewTypes: deprecated */
 export enum CredentialViewTypes {
@@ -57,19 +58,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
 
   return (
     <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px" mb={3} overflow="hidden">
-      <CredentialHeader
-        issuer={issuer}
-        // issuerDomain={"serto.id"}
-        // issuerDomain={"beta.search.serto.id"}
-        // issuerDomain={"consensys.net"}
-        // issuerDomain={"americanexpress.com"}
-        issuerDomain={"cryptoconsortium.org"}
-        // issuerDomain={"nytimes.com"}
-        // issuerDomain={"digg.com"}
-        vc={vc}
-        vcType={vcType}
-        vcSchema={vcSchema}
-      />
+      <CredentialHeader issuer={issuer} issuerDomain={"consensys.net"} vc={vc} vcType={vcType} vcSchema={vcSchema} />
       {isOpen && (
         <>
           <Box borderBottom={2} mb={3} pb={1} pt={2} px={3}>
@@ -86,20 +75,22 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               </tbody>
             </Table>
           </Box>
-          <Box mb={1} px={3}>
+          <Box mb={3} px={3}>
             <Table border={0} boxShadow={0} mb={3} width="100%" style={{ tableLayout: "fixed" }}>
               <tbody>
-                <CredentialTR>
-                  <CredentialDetailsTDLeft>Subject</CredentialDetailsTDLeft>
-                  <CredentialDetailsTDRight>
-                    <Flex alignItem="center" justifyContent="flex-end">
-                      {truncateDid(vc.credentialSubject.id)}
-                      <Box ml={1}>
-                        <CopyToClipboard text={vc.credentialSubject.id} size="16px" />
-                      </Box>
-                    </Flex>
-                  </CredentialDetailsTDRight>
-                </CredentialTR>
+                {vc.credentialSubject.id && (
+                  <CredentialTR>
+                    <CredentialDetailsTDLeft>Subject</CredentialDetailsTDLeft>
+                    <CredentialDetailsTDRight>
+                      <Flex alignItem="center" justifyContent="flex-end">
+                        {truncateDid(vc.credentialSubject.id)}
+                        <Box ml={1}>
+                          <CopyToClipboard text={vc.credentialSubject.id} size="16px" />
+                        </Box>
+                      </Flex>
+                    </CredentialDetailsTDRight>
+                  </CredentialTR>
+                )}
                 <CredentialTR>
                   <CredentialDetailsTDLeft>Issuer</CredentialDetailsTDLeft>
                   <CredentialDetailsTDRight>
@@ -123,6 +114,24 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                 )}
               </tbody>
             </Table>
+          </Box>
+          {vcSchema?.slug && (
+            <Box borderTop={2} mb={3} px={3} pt={3}>
+              <Table border={0} boxShadow={0} mb={3} width="100%" style={{ tableLayout: "fixed" }}>
+                <tbody>
+                  <CredentialTR>
+                    <CredentialDetailsTDLeft>Schema</CredentialDetailsTDLeft>
+                    <CredentialDetailsTDRight>
+                      <ViewSchemaButton schema={vcSchema}>
+                        <u>{vcSchema.slug}</u>
+                      </ViewSchemaButton>
+                    </CredentialDetailsTDRight>
+                  </CredentialTR>
+                </tbody>
+              </Table>
+            </Box>
+          )}
+          <Box mb={1} px={3}>
             <CredentialViewToken jwt={vc.proof.jwt} />
           </Box>
         </>

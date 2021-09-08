@@ -7,7 +7,6 @@ import { Box, Flex, Text } from "rimble-ui";
 import { CopyToClipboard, ExpiredPill } from "../../elements";
 import { baseColors, fonts, colors } from "../../../themes";
 import { CredentialShare } from "./CredentialShare";
-// import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
 const StyledQRCode = styled(QRCode)`
   max-width: 100%;
