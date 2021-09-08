@@ -46,7 +46,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
         <StyledTabbedInput
           onChange={(event: any) => onSearchChanged(event.target.value)}
           onKeyDown={(event: any) => onKeyDown(event)}
-          placeholder="Search NFT by URL"
+          placeholder="Enter NFT URL"
           required
           type="text"
           value={search}
@@ -56,11 +56,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
         </Button.Text>
       </Box>
       <Box bg={baseColors.white} border={2} borderRadius={1} pb={5} pt={3} px={4} width="100%">
-        {error ? (
-          <Flash variant="danger">{error}</Flash>
-        ) : (
-          <Flash variant="warning">We are not supporting NFT ERC-1155 token at this time.</Flash>
-        )}
+        {error && <Flash variant="danger">{error}</Flash>}
         <H5 color="silver" mb={2}>
           Or search by
         </H5>
