@@ -1,55 +1,22 @@
+import { useState } from "react";
 import styled from "styled-components";
 import QRCode from "qrcode.react";
 import { VC } from "vc-schema-tools";
-import { config } from "../../../config";
-import { FileDownload, Info, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
-import { Box, Flex, Text } from "rimble-ui";
-import { CopyToClipboard, ExpiredPill } from "../../elements";
+import { FileDownload, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
+import { Box, Button, Flex, Link, Modal, Text } from "rimble-ui";
+import { CopyToClipboard, ExpiredPill, HoverPathStroke, HoverSvgFill, QrCode, UnstyledButton } from "../../elements";
 import { baseColors, fonts, colors } from "../../../themes";
 import { CredentialShare } from "./CredentialShare";
 
 const StyledQRCode = styled(QRCode)`
   max-width: 100%;
   height: auto !important;
+  width: 100%;
 `;
-
-export interface CredentialViewTokenProps {
-  jwt: any;
-}
-
-export const CredentialViewToken: React.FunctionComponent<CredentialViewTokenProps> = (props) => {
-  const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${props.jwt}`;
-  return (
-    <Flex bg={colors.nearWhite} borderRadius={1} p={2}>
-      <Box mr={3} width="calc(100% - 135px)">
-        <Flex justifyContent="space-between" mb={1}>
-          <Flex alignItems="center">
-            <Text.span color={colors.midGray} fontFamily={fonts.monospace} fontSize={0}>
-              Token
-            </Text.span>
-            <Info color={colors.silver} size="14px" ml={1} />
-          </Flex>
-          <CopyToClipboard text={props.jwt} size="16px" />
-        </Flex>
-        <Text.span
-          color={colors.midGray}
-          fontFamily={fonts.monospace}
-          fontSize={0}
-          lineHeight="copy"
-          style={{ wordWrap: "break-word" }}
-        >
-          {props.jwt}
-        </Text.span>
-      </Box>
-      <Box width="125px">
-        <StyledQRCode value={vcUrl} renderAs="canvas" size={512} bgColor="transparent" />
-      </Box>
-    </Flex>
-  );
-};
 
 export interface CredentialFooterProps {
   vc: VC;
+  vcUrl: string;
   expired: any;
   isOpen: boolean;
   setIsOpen(isOpen: boolean): void;
@@ -59,8 +26,18 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
   return (
     <Flex alignItems="center" justifyContent="space-between">
       <Flex>
-        <FileDownload color={colors.midGray} mr={3} size="18px" />
-        <CredentialShare vc={props.vc} />
+        <CredentialJsonDownload vc={props.vc} />
+        <Box mr={2}>
+          <CredentialShare vc={props.vc} />
+        </Box>
+        <QRCodeExpand vcUrl={props.vcUrl} />
+        <CopyToClipboard
+          color={colors.midGray}
+          iconPadding={1}
+          hoverTitle="Copy Token"
+          size="15px"
+          text={props.vc.proof.jwt}
+        />
       </Flex>
       {props.expired && <ExpiredPill />}
       <Flex
@@ -84,6 +61,48 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
         )}
       </Flex>
     </Flex>
+  );
+};
+
+export interface QRCodeExpandProps {
+  vcUrl: string;
+}
+
+export const QRCodeExpand: React.FunctionComponent<QRCodeExpandProps> = (props) => {
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  return (
+    <>
+      <UnstyledButton onClick={() => setIsQrModalOpen(true)} mr={2}>
+        <Box p={1} title="View QR Code">
+          <HoverPathStroke>
+            <QrCode color={colors.midGray} size="18px" />
+          </HoverPathStroke>
+        </Box>
+      </UnstyledButton>
+      <Modal isOpen={isQrModalOpen}>
+        <Box bg={baseColors.white} borderRadius={2} maxWidth="450px" p={4}>
+          <StyledQRCode value={props.vcUrl} renderAs="canvas" size={512} bgColor="transparent" />
+          <Button.Outline mt={2} onClick={() => setIsQrModalOpen(false)} width="100%">
+            Close
+          </Button.Outline>
+        </Box>
+      </Modal>
+    </>
+  );
+};
+
+export interface DownloadCredentialJsonProps {
+  vc: VC;
+}
+
+export const CredentialJsonDownload: React.FunctionComponent<DownloadCredentialJsonProps> = (props) => {
+  const credential = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(props.vc));
+  return (
+    <Link href={"data:" + credential} download="credential.json" mr={2} p={1} title="Download Credential JSON">
+      <HoverSvgFill>
+        <FileDownload color={colors.midGray} size="18px" />
+      </HoverSvgFill>
+    </Link>
   );
 };
 
@@ -151,7 +170,11 @@ export const CredentialDetailsTDRight: React.FunctionComponent = (props) => {
   );
 };
 
-export const CredentialDetailsTDLeft: React.FunctionComponent = (props) => {
+export interface CredentialDetailsTDLeftProps {
+  color?: string;
+}
+
+export const CredentialDetailsTDLeft: React.FunctionComponent<CredentialDetailsTDLeftProps> = (props) => {
   return (
     <td
       style={{
@@ -160,7 +183,7 @@ export const CredentialDetailsTDLeft: React.FunctionComponent = (props) => {
         verticalAlign: "top",
       }}
     >
-      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0} lineHeight="copy">
+      <Text.span color={props.color || colors.silver} fontFamily={fonts.sansSerif} fontSize={0} lineHeight="copy">
         {props.children}
       </Text.span>
     </td>

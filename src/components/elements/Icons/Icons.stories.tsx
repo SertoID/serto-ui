@@ -14,6 +14,7 @@ import {
   LockVerified,
   OutlineOne,
   OutlineTwo,
+  QrCode,
   SertoAgentLogo,
   SertoLogo,
   SertoSchemasLogo,
@@ -46,6 +47,9 @@ storiesOf("Icons", module)
   .add("GitHub", () => {
     return <GitHub />;
   })
+  .add("GreenCircleCheck", () => {
+    return <GreenCircleCheck />;
+  })
   .add("IcoWeb", () => {
     return <IcoWeb />;
   })
@@ -58,17 +62,17 @@ storiesOf("Icons", module)
   .add("LockVerified", () => {
     return <LockVerified />;
   })
-  .add("SertoAgentLogo", () => {
-    return <SertoAgentLogo />;
-  })
-  .add("GreenCircleCheck", () => {
-    return <GreenCircleCheck />;
-  })
   .add("OutlineOne", () => {
     return <OutlineOne />;
   })
   .add("OutlineTwo", () => {
     return <OutlineTwo />;
+  })
+  .add("QrCode", () => {
+    return <QrCode />;
+  })
+  .add("SertoAgentLogo", () => {
+    return <SertoAgentLogo />;
   })
   .add("SertoLogo", () => {
     return <SertoLogo />;

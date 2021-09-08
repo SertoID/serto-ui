@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { ContentCopy, Check } from "@rimble/icons";
-import { Button, Flex } from "rimble-ui";
+import { Box, Button, Flex } from "rimble-ui";
 import { baseColors, colors } from "../../../themes";
 import { copyToClipboard } from "../../../utils";
 
@@ -20,6 +20,7 @@ const ContentCopyStyled = styled.span`
 export interface CopyToClipboardProps {
   text: string;
   color?: string;
+  iconPadding?: string | number;
   hoverColor?: string;
   hoverTitle?: string;
   size?: string;
@@ -71,7 +72,9 @@ export const CopyToClipboard: React.FunctionComponent<CopyToClipboardProps> = (p
       onClick={() => setCopied(copyToClipboard(props.text))}
       title={props.hoverTitle}
     >
-      <ContentCopy color={props.color} size={props.size} />
+      <Box p={props.iconPadding}>
+        <ContentCopy color={props.color} size={props.size} />
+      </Box>
     </ContentCopyStyled>
   );
 };

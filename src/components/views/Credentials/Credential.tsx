@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Box, Flex, Table, Text } from "rimble-ui";
+import { Box, Button, Flex, Table } from "rimble-ui";
 import { VC } from "vc-schema-tools";
 import {
   CredentialFooter,
   CredentialDetailsTDLeft,
   CredentialDetailsTDRight,
   CredentialTR,
-  CredentialViewToken,
 } from "./CredentialComponents";
-import { baseColors } from "../../../themes";
+import { config } from "../../../config";
+import { baseColors, colors } from "../../../themes";
 import { dateTimeFormat, truncateDid } from "../../../utils";
 import { AdditionalVCData } from "../../../types";
 import { CopyToClipboard } from "../../elements";
@@ -35,8 +35,6 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const { vc } = props;
   const { vcSchema } = useVcSchema(vc);
   const vcType = vc.type[vc.type.length - 1];
-  const schemaName = vc.type.length > 0 ? vc.type[vc.type.length - 1] : "";
-  // const schemaMismatch = schemaName && additionalVCData && !additionalVCData.schemaVerified;
   const issuanceDate =
     typeof vc.issuanceDate === "number"
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
@@ -44,17 +42,16 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
   const expirationDate = vc.expirationDate && dateTimeFormat(new Date(vc.expirationDate));
   const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
-  const issuerFormatted = truncateDid(issuer);
   /*const issuerDomains = additionalVCData
     ? additionalVCData.didListings.find((listing) => listing.did === issuer)?.domains
     : [];
   const subjectDomains = additionalVCData
     ? additionalVCData.didListings.find((listing) => listing.did === vc.credentialSubject.id)?.domains
     : [];*/
+  const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
   const [isOpen, setIsOpen] = useState<boolean>(props.isOpen || false);
 
   console.log(vc);
-  console.log(vcSchema);
 
   return (
     <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px" mb={3} overflow="hidden">
@@ -95,7 +92,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                   <CredentialDetailsTDLeft>Issuer</CredentialDetailsTDLeft>
                   <CredentialDetailsTDRight>
                     <Flex alignItem="center" justifyContent="flex-end">
-                      {issuerFormatted}
+                      {truncateDid(issuer)}
                       <Box ml={1}>
                         <CopyToClipboard text={issuer} size="16px" />
                       </Box>
@@ -108,7 +105,9 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                 </CredentialTR>
                 {expirationDate && (
                   <CredentialTR>
-                    <CredentialDetailsTDLeft>Expires</CredentialDetailsTDLeft>
+                    <CredentialDetailsTDLeft color={expired ? colors.danger.base : colors.silver}>
+                      Expires
+                    </CredentialDetailsTDLeft>
                     <CredentialDetailsTDRight>{expirationDate}</CredentialDetailsTDRight>
                   </CredentialTR>
                 )}
@@ -131,13 +130,21 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               </Table>
             </Box>
           )}
-          <Box mb={1} px={3}>
-            <CredentialViewToken jwt={vc.proof.jwt} />
+          <Box my={4} px={3}>
+            <Button.Outline as="a" href={vcUrl} size="small" target="_blank" width="100%">
+              Verify on Serto Search
+            </Button.Outline>
           </Box>
         </>
       )}
-      <Box pb={2} px={3} pt={2}>
-        <CredentialFooter expired={expired} isOpen={isOpen} setIsOpen={(isOpen) => setIsOpen(isOpen)} vc={vc} />
+      <Box pb={1} px={2} pt={2}>
+        <CredentialFooter
+          expired={expired}
+          isOpen={isOpen}
+          setIsOpen={(isOpen) => setIsOpen(isOpen)}
+          vc={vc}
+          vcUrl={vcUrl}
+        />
       </Box>
     </Box>
   );
