@@ -8,9 +8,9 @@ import { NavItemPrimary, NavItemStyled, NavItemTabsStyled, SubNavItemStyled } fr
 
 export interface NavProps {
   currentUrl: string;
-  hasPermissions: boolean;
+  hasPermissions?: boolean;
   navItems?: NavItemProps[];
-  currentSection: string;
+  currentSection?: string;
 }
 
 export const Nav: React.FunctionComponent<NavProps> = (props) => {
@@ -34,7 +34,7 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
 // props from SertoUiWrapper navItem
 export interface NavItemProps {
   icon: React.FunctionComponent<any>;
-  section: string;
+  section?: string;
   subNav?: any[];
   text: string;
   url: string;
@@ -42,14 +42,14 @@ export interface NavItemProps {
 
 // props from Global Layout
 export interface NavItemGlobalProps {
-  currentSection: string;
+  currentSection?: string;
   currentUrl: string;
-  hasPermissions: boolean;
+  hasPermissions?: boolean;
 }
 
 const NavItem: React.FunctionComponent<NavItemProps & NavItemGlobalProps> = (props) => {
   const { currentSection, currentUrl, hasPermissions, icon, section, subNav, text, url } = props;
-  const sectionActive = section === currentSection;
+  const sectionActive = section ? section === currentSection : url === currentUrl;
   const [isOpen, setIsOpen] = useState<boolean>(sectionActive);
 
   if (subNav) {
@@ -93,7 +93,7 @@ const NavItem: React.FunctionComponent<NavItemProps & NavItemGlobalProps> = (pro
   }
 
   return (
-    <NavItemStyled active={sectionActive} mb={1}>
+    <NavItemStyled className={sectionActive ? "active" : ""} active={sectionActive} mb={1}>
       <Link to={generatePath(url)}>
         <NavItemPrimary active={sectionActive} icon={icon} text={text} />
       </Link>
