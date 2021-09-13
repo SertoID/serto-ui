@@ -84,30 +84,32 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   async function issueVc(e: Event) {
     e.preventDefault();
 
-    if (!schemaInstance) {
-      console.error("Can't issue VC: schema instance is undefined. Schema data:", schema);
-      setError("Could not initialize schema instance");
-      return;
-    }
     setError(undefined);
     setLoading(true);
-
-    const credType = schemaInstance.schema["@context"]["@rootType"];
-
-    let ldContext: string | any = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonLdContext;
-    if (!ldContext) {
-      console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
-      ldContext = schemaInstance.jsonLdContext["@context"];
-    }
-
-    const jsonSchemaUrl = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonSchema;
-    if (!jsonSchemaUrl) {
-      console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
-    }
 
     try {
       let credential: any;
       if (schema) {
+        if (!schemaInstance) {
+          console.error("Can't issue VC: schema instance is undefined. Schema data:", schema);
+          setError("Could not initialize schema instance");
+          setLoading(false);
+          return;
+        }
+
+        const credType = schemaInstance.schema["@context"]["@rootType"];
+
+        let ldContext: string | any = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonLdContext;
+        if (!ldContext) {
+          console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
+          ldContext = schemaInstance.jsonLdContext["@context"];
+        }
+
+        const jsonSchemaUrl = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonSchema;
+        if (!jsonSchemaUrl) {
+          console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
+        }
+
         credential = {
           ...initialCred,
           "@context": ["https://www.w3.org/2018/credentials/v1", ldContext],
