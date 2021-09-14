@@ -31,7 +31,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
       : dateTimeFormat(new Date(vc.issuanceDate));
   const issuanceDateFormatted = `${issuanceDate.dateFormatted} at ${issuanceDate.timeFormatted}`;
   const expirationDate = vc.expirationDate && dateTimeFormat(new Date(vc.expirationDate));
-  const expirationDateFormatted = expirationDate && `${expirationDate[0]} at ${expirationDate[1]}`;
+  const expirationDateFormatted = expirationDate && `${expirationDate.dateFormatted} at ${expirationDate.timeFormatted}`;
   const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
   const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
