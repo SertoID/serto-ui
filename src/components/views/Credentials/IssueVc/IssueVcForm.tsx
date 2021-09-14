@@ -52,8 +52,6 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
   const [issuer, setIssuer] = useState<string>(identifiers[0]?.did);
-  const [revocable, setRevocable] = useState<boolean>(true);
-  const [keepCopy, setKeepCopy] = useState<boolean>(true);
 
   const schemaInstance = React.useMemo(() => {
     if (schema) {
@@ -133,8 +131,8 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       // @TODO/tobek Actually validate VC according to schema instance
 
       const issueResponse = await context.issueVc?.(credential, {
-        revocable,
-        keepCopy,
+        revocable: false,
+        keepCopy: true,
         save: "true",
         proofFormat: "jwt",
       });
@@ -228,9 +226,6 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
               ))}
             </>
           )}
-
-          <Checkbox label="Revocable" checked={revocable} onChange={() => setRevocable(!revocable)} />
-          <Checkbox label="Keep Copy" checked={keepCopy} onChange={() => setKeepCopy(!keepCopy)} />
 
           {error && (
             <Flash my={3} variant="danger">
