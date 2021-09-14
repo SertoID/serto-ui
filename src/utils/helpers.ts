@@ -57,13 +57,13 @@ export function hexEllipsis(text: string, startLength = 4, endLength = 4): strin
   return ellipsis(text, addressIndex + startLength, endLength);
 }
 
-export function dateTimeFormat(date: Date): string {
+export function dateTimeFormat(date: Date): any {
   const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(date);
   const month = new Intl.DateTimeFormat("en", { month: "short" }).format(date);
   const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(date);
-  const time = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "numeric" }).format(date);
-  const dateTimeFormated = ` ${month} ${day}, ${year} at ${time}`;
-  return dateTimeFormated;
+  const dateFormatted = ` ${month} ${day}, ${year}`;
+  const timeFormatted = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "numeric" }).format(date);
+  return { dateFormatted, timeFormatted };
 }
 
 /** <input type="datetime-local"> element requires a nonstandard time format ("yyyy-MM-ddThh:mm"). This converts from ISO datetime string into that format.  */

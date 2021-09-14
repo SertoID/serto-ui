@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { VC } from "vc-schema-tools";
-import { usePalette } from "react-palette";
-import { readableColor } from "polished";
+// import { usePalette } from "react-palette";
+// import { readableColor } from "polished";
 import { truncateDid } from "../../../utils";
 import { Box, Flex, Text } from "rimble-ui";
 import { DomainImage, LockUnverified, LockVerified } from "../../elements";
@@ -20,13 +20,16 @@ export interface CredentialHeaderProps {
 export const CredentialHeader: React.FunctionComponent<CredentialHeaderProps> = (props) => {
   const { issuer, issuerDomain, vc, vcSchema, vcType } = props;
   const [isValid, setIsValid] = useState<boolean | undefined>();
-  let logoUrl = "https://www.google.com/s2/favicons?sz=64&domain=" + issuerDomain;
+  // TODO add org profile data
+  /*let logoUrl = "https://www.google.com/s2/favicons?sz=64&domain=" + issuerDomain;
   const googleProxyURL =
     "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=";
   logoUrl = googleProxyURL + encodeURIComponent(logoUrl);
   const { data, loading, error } = usePalette(logoUrl);
   const backgroundColor = loading ? "transparent" : error ? colors.primary.base : data.vibrant;
-  const textColor = loading ? "transparent" : error ? baseColors.white : readableColor(data.vibrant);
+  const textColor = loading ? "transparent" : error ? baseColors.white : readableColor(data.vibrant);*/
+  const backgroundColor = colors.primary.base;
+  const textColor = baseColors.white;
 
   useEffect(() => {
     return void (async function validate() {

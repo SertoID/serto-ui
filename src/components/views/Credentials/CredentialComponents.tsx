@@ -3,9 +3,18 @@ import styled from "styled-components";
 import QRCode from "qrcode.react";
 import { VC } from "vc-schema-tools";
 import { FileDownload, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
-import { Box, Button, Flex, Link, Modal, Text } from "rimble-ui";
-import { CopyToClipboard, ExpiredPill, HoverPathStroke, HoverSvgFill, QrCode, UnstyledButton } from "../../elements";
+import { Box, Flex, Link, Text } from "rimble-ui";
+import {
+  CopyToClipboard,
+  ExpiredPill,
+  HoverPathStroke,
+  HoverSvgFill,
+  ModalWithX,
+  QrCode,
+  UnstyledButton,
+} from "../../elements";
 import { baseColors, fonts, colors } from "../../../themes";
+import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialShare } from "./CredentialShare";
 
 const StyledQRCode = styled(QRCode)`
@@ -79,14 +88,14 @@ export const QRCodeExpand: React.FunctionComponent<QRCodeExpandProps> = (props) 
           </HoverPathStroke>
         </Box>
       </UnstyledButton>
-      <Modal isOpen={isQrModalOpen}>
-        <Box bg={baseColors.white} borderRadius={2} maxWidth="450px" p={4}>
+      <ModalWithX borderRadius={2} isOpen={isQrModalOpen} close={() => setIsQrModalOpen(false)}>
+        <Box bg={baseColors.white} borderRadius={2} maxWidth="450px" pb={5} px={6}>
+          <Text color={colors.midGray} my={3} textAlign="center">
+            Scan to Verify
+          </Text>
           <StyledQRCode value={props.vcUrl} renderAs="canvas" size={512} bgColor="transparent" />
-          <Button.Outline mt={2} onClick={() => setIsQrModalOpen(false)} width="100%">
-            Close
-          </Button.Outline>
         </Box>
-      </Modal>
+      </ModalWithX>
     </>
   );
 };
@@ -96,9 +105,11 @@ export interface DownloadCredentialJsonProps {
 }
 
 export const CredentialJsonDownload: React.FunctionComponent<DownloadCredentialJsonProps> = (props) => {
+  const { vcSchema } = useVcSchema(props.vc);
+  const fileName = vcSchema?.slug ? vcSchema.slug + ".json" : "credential.json";
   const credential = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(props.vc));
   return (
-    <Link href={"data:" + credential} download="credential.json" mr={2} p={1} title="Download Credential JSON">
+    <Link href={"data:" + credential} download={fileName} mr={2} p={1} title="Download Credential JSON">
       <HoverSvgFill>
         <FileDownload color={colors.midGray} size="18px" />
       </HoverSvgFill>

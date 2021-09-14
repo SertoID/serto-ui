@@ -13,6 +13,7 @@ const DidPart2 = styled(Text.span)`
 
 export interface DidTruncateProps {
   did: string;
+  alignRight?: boolean;
   endLength?: number;
 }
 
@@ -23,7 +24,7 @@ export const DidTruncate: React.FunctionComponent<DidTruncateProps> = (props) =>
   const didPart2 = props.did.slice(slice);
 
   return (
-    <Flex minWidth={0} flexShrink={0}>
+    <Flex justifyContent={props.alignRight ? "flex-end" : "flex-start"} minWidth={0} flexShrink={0} width="100%">
       <DidPart1>{didPart1}</DidPart1>
       <DidPart2>{didPart2}</DidPart2>
     </Flex>

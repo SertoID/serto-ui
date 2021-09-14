@@ -10,25 +10,15 @@ import {
 import { config } from "../../../config";
 import { baseColors, colors } from "../../../themes";
 import { dateTimeFormat, truncateDid } from "../../../utils";
-import { AdditionalVCData } from "../../../types";
 import { CopyToClipboard } from "../../elements";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialHeader } from "./CredentialHeader";
 import { CredentialProperty } from "./CredentialProperty";
 import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
-/* CredentialViewTypes: deprecated */
-export enum CredentialViewTypes {
-  COLLAPSIBLE = "COLLAPSIBLE",
-  LIST = "LIST",
-  DEFAULT = "DEFAULT",
-}
-
 export interface CredentialProps {
   vc: VC;
-  additionalVCData?: AdditionalVCData; // deprecated
   isOpen?: boolean;
-  viewType?: string; // deprecated
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
@@ -39,23 +29,26 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     typeof vc.issuanceDate === "number"
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
       : dateTimeFormat(new Date(vc.issuanceDate));
+  const issuanceDateFormatted = `${issuanceDate.dateFormatted} and ${issuanceDate.timeFormatted}`;
   const expirationDate = vc.expirationDate && dateTimeFormat(new Date(vc.expirationDate));
+  const expirationDateFormatted = expirationDate && `${expirationDate[0]} and ${expirationDate[1]}`;
   const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
-  /*const issuerDomains = additionalVCData
-    ? additionalVCData.didListings.find((listing) => listing.did === issuer)?.domains
-    : [];
-  const subjectDomains = additionalVCData
-    ? additionalVCData.didListings.find((listing) => listing.did === vc.credentialSubject.id)?.domains
-    : [];*/
   const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
   const [isOpen, setIsOpen] = useState<boolean>(props.isOpen || false);
 
-  console.log(vc);
-
   return (
-    <Box bg={baseColors.white} border={2} borderRadius={2} boxShadow={1} maxWidth="480px" mb={3} overflow="hidden">
-      <CredentialHeader issuer={issuer} issuerDomain={"consensys.net"} vc={vc} vcType={vcType} vcSchema={vcSchema} />
+    <Box
+      bg={baseColors.white}
+      border={2}
+      borderRadius={2}
+      boxShadow={1}
+      maxWidth="480px"
+      mb={3}
+      overflow="hidden"
+      width="100%"
+    >
+      <CredentialHeader issuer={issuer} vc={vc} vcType={vcType} vcSchema={vcSchema} />
       {isOpen && (
         <>
           <Box borderBottom={2} mb={3} pb={1} pt={2} px={3}>
@@ -101,14 +94,14 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                 </CredentialTR>
                 <CredentialTR>
                   <CredentialDetailsTDLeft>Date Issued</CredentialDetailsTDLeft>
-                  <CredentialDetailsTDRight>{issuanceDate}</CredentialDetailsTDRight>
+                  <CredentialDetailsTDRight>{issuanceDateFormatted}</CredentialDetailsTDRight>
                 </CredentialTR>
                 {expirationDate && (
                   <CredentialTR>
                     <CredentialDetailsTDLeft color={expired ? colors.danger.base : colors.silver}>
                       Expires
                     </CredentialDetailsTDLeft>
-                    <CredentialDetailsTDRight>{expirationDate}</CredentialDetailsTDRight>
+                    <CredentialDetailsTDRight>{expirationDateFormatted}</CredentialDetailsTDRight>
                   </CredentialTR>
                 )}
               </tbody>

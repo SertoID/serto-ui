@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Check } from "@rimble/icons";
 import { Box, Button, Text } from "rimble-ui";
-import { Credential, CredentialViewTypes } from "../Credential";
+import { Credential } from "../Credential";
 import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
 import { SchemaDataResponse } from "../../Schemas";
 import { SchemasTable } from "../../Schemas/SchemasTable";
@@ -42,7 +42,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
           </Text>
           <H3>Credential Issued</H3>
         </Text>
-        <Credential vc={response.issueResponse} viewType={CredentialViewTypes.COLLAPSIBLE} />
+        <Credential vc={response.issueResponse} />
         <Box my={2}>
           <Button width="100%" onClick={props.onComplete}>
             Done
