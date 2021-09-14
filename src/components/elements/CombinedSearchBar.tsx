@@ -80,7 +80,7 @@ export const CombinedSearchBar: React.FunctionComponent<CombinedSearchBarProps> 
         />
       </Box>
       <Box bg={colors.lightGray} my={2} width="1px" />
-      <Flex>
+      <Flex flexGrow="1">
         <StyledInput
           onChange={(event: any) => setSearch(event.target.value)}
           onKeyDown={(event: any) => onKeyDown(event)}
