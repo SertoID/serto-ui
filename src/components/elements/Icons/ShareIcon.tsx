@@ -1,6 +1,6 @@
-import { SvgProps } from "./";
+import { SvgProps } from ".";
 
-export const Share: React.FunctionComponent<SvgProps> = (props) => {
+export const ShareIcon: React.FunctionComponent<SvgProps> = (props) => {
   return (
     <svg
       width={props.size || "16"}

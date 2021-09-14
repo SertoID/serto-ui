@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Button, Text, Flex } from "rimble-ui";
 import { ContentCopy } from "@rimble/icons";
 import { VC } from "vc-schema-tools";
-import { HoverPathFill, Share, UnstyledButton } from "../../../elements";
+import { HoverPathFill, ShareIcon, UnstyledButton } from "../../../elements";
 import { ModalContentFullWidth, ModalFooter, ModalWithX } from "../../../elements/Modals";
 import { H3, H6 } from "../../../layouts/LayoutComponents";
 import { colors, fonts } from "../../../../themes";
@@ -27,7 +27,7 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
         <UnstyledButton onClick={() => setModalOpen(true)}>
           <HoverPathFill>
             <Box p={1}>
-              <Share />
+              <ShareIcon />
             </Box>
           </HoverPathFill>
         </UnstyledButton>

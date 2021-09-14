@@ -17,6 +17,6 @@ export * from "./SertoSchemasLogo";
 export * from "./SertoSearchLogo";
 export * from "./SertoVerifiedCheckmark";
 export * from "./SertoVerificationError";
-export * from "./Share";
+export * from "./ShareIcon";
 export * from "./SvgProps";
 export * from "./Verified";
