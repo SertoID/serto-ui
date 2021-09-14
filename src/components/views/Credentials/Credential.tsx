@@ -1,301 +1,144 @@
-import * as React from "react";
-import { Info, Person, VerifiedUser, Warning } from "@rimble/icons";
-import { Box, Flex, Pill, Table, Text } from "rimble-ui";
+import { useState } from "react";
+import { Box, Button, Flex, Table } from "rimble-ui";
 import { VC } from "vc-schema-tools";
-import { CredentialBorder, CredentialContainer, Separator } from "./CredentialComponents";
-import { CredentialShare } from "./CredentialShare";
-import { CopyToClipboard } from "../../elements/CopyToClipboard/CopyToClipboard";
-import { Expand } from "../../elements/Expand/Expand";
-import { baseColors, colors, fonts } from "../../../themes";
-import { dateTimeFormat, ellipsis } from "../../../utils";
-import { AdditionalVCData } from "../../../types";
-import { DomainImage } from "../../elements";
-import { DomainLink } from "../../elements/DomainLink";
+import {
+  CredentialFooter,
+  CredentialDetailsTDLeft,
+  CredentialDetailsTDRight,
+  CredentialTR,
+} from "./CredentialComponents";
+import { config } from "../../../config";
+import { baseColors, colors } from "../../../themes";
+import { dateTimeFormat, truncateDid } from "../../../utils";
+import { CopyToClipboard } from "../../elements";
 import { useVcSchema } from "../../../services/useVcSchema";
+import { CredentialHeader } from "./CredentialHeader";
 import { CredentialProperty } from "./CredentialProperty";
 import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
 
-export enum CredentialViewTypes {
-  COLLAPSIBLE = "COLLAPSIBLE",
-  LIST = "LIST",
-  DEFAULT = "DEFAULT",
-}
-
 export interface CredentialProps {
   vc: VC;
-  additionalVCData?: AdditionalVCData;
-  viewType?: string;
+  isOpen?: boolean;
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
-  const { vc, additionalVCData } = props;
+  const { vc } = props;
   const { vcSchema } = useVcSchema(vc);
   const vcType = vc.type[vc.type.length - 1];
-  const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
-  const viewType = props.viewType || "default";
   const issuanceDate =
     typeof vc.issuanceDate === "number"
       ? dateTimeFormat(new Date(vc.issuanceDate * 1000))
       : dateTimeFormat(new Date(vc.issuanceDate));
+  const issuanceDateFormatted = `${issuanceDate.dateFormatted} at ${issuanceDate.timeFormatted}`;
   const expirationDate = vc.expirationDate && dateTimeFormat(new Date(vc.expirationDate));
-  const issuerFormatted = ellipsis("0x" + issuer.split("0x").pop(), 6, 4);
-  const issuerDomains = additionalVCData
-    ? additionalVCData.didListings.find((listing) => listing.did === issuer)?.domains
-    : [];
-  const subjectDomains = additionalVCData
-    ? additionalVCData.didListings.find((listing) => listing.did === vc.credentialSubject.id)?.domains
-    : [];
-
+  const expirationDateFormatted = expirationDate && `${expirationDate[0]} at ${expirationDate[1]}`;
   const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
-  const schemaName = vc.type.length > 0 ? vc.type[vc.type.length - 1] : "";
-  const schemaMismatch = schemaName && additionalVCData && !additionalVCData.schemaVerified;
+  const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
+  const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
+  const [isOpen, setIsOpen] = useState<boolean>(props.isOpen || false);
 
-  const VerifiedCredentialHeader = () => (
-    <>
-      <Flex alignItems="center">
-        <Box>
-          <Flex alignItems="center">
-            <Box bg={colors.primary.disabled[1]} borderRadius="50%" height={3} mr={1} p="1px" width={3}>
-              <Person size="14" color={baseColors.white} />
-            </Box>
-            <Text.span
-              color={baseColors.black}
-              fontFamily={fonts.sansSerif}
-              fontSize={0}
-              mr={2}
-              maxWidth={7}
-              style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-              title={issuer}
-            >
-              {issuerFormatted}
-            </Text.span>
-            {viewType === CredentialViewTypes.LIST && (
-              <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
-                {issuanceDate}
-              </Text.span>
-            )}
-          </Flex>
-        </Box>
-        <Box flexGrow="1">
-          <Flex alignItems="center" justifyContent="flex-end">
-            <ViewSchemaButton schema={vcSchema}>
-              <Pill color={colors.info.base} fontFamily={fonts.sansSerif} fontSize={0} height={4} mr={2}>
-                {vcType}
-                {vcSchema?.icon && ` ${vcSchema.icon}`}
-              </Pill>
-            </ViewSchemaButton>
-            <VerifiedUser color={colors.primary.disabled[1]} />
-          </Flex>
-        </Box>
-      </Flex>
-      <Box>
-        <Text color={baseColors.black} fontFamily={fonts.sansSerif} fontSize={2} fontWeight={3} mr={2}>
-          {vcSchema?.name || vc.credentialSubject.title || vcType}
-        </Text>
-      </Box>
-    </>
-  );
-
-  const VerifiedCredentialAdditionalDetails = () => (
-    <>
-      {additionalVCData && (
+  return (
+    <Box
+      bg={baseColors.white}
+      border={2}
+      borderRadius={2}
+      boxShadow={1}
+      maxWidth="480px"
+      mb={3}
+      overflow="hidden"
+      width="100%"
+    >
+      <CredentialHeader issuer={issuer} vc={vc} vcType={vcType} vcSchema={vcSchema} />
+      {isOpen && (
         <>
-          <Box
-            bg={expired || schemaMismatch ? colors.warning.light : colors.primary.disabled[1]}
-            borderTopLeftRadius={2}
-            borderTopRightRadius={2}
-          >
-            {schemaName && (
-              <Flex justifyContent="space-between" px={3} py={2}>
-                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
-                  {schemaName}
-                </Text>
-                {schemaMismatch ? (
-                  <Flex>
-                    <Warning color={colors.warning.dark} />
-                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
-                      Schema does not match
-                    </Text>
-                  </Flex>
-                ) : (
-                  <Flex>
-                    <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
-                      Schema Verified
-                    </Text>
-                  </Flex>
-                )}
-              </Flex>
-            )}
-            {vc.credentialSubject.id && (
-              <Flex justifyContent="space-between" px={3} py={2}>
-                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
-                  Subject
-                </Text>
-                <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
-                  {subjectDomains &&
-                    subjectDomains.map((domain) => (
-                      <DomainLink to={`/search?filter=${domain}`} key={domain}>
-                        <Flex>
-                          <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
-                            {domain}
-                          </Text>
-                          <DomainImage domain={domain} />
-                        </Flex>
-                      </DomainLink>
-                    ))}
-                  <Text.span
-                    color={colors.midGray}
-                    fontFamily={fonts.sansSerifHeader}
-                    fontSize={0}
-                    mr={2}
-                    maxWidth={7}
-                    style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-                    title={issuer}
-                  >
-                    {vc.credentialSubject.id}
-                  </Text.span>
-                </Flex>
-              </Flex>
-            )}
-            <Separator />
-            <Flex justifyContent="space-between" px={3} py={2}>
-              <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
-                Issued By
-              </Text>
-              <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end">
-                {issuerDomains &&
-                  issuerDomains.map((domain) => (
-                    <DomainLink to={`/search?filter=${domain}`} key={domain}>
-                      <Flex>
-                        <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2} mr={2}>
-                          {domain}
-                        </Text>
-                        <DomainImage domain={domain} />
+          <Box borderBottom={2} mb={3} pb={1} pt={2} px={3}>
+            <Table border={0} boxShadow={0} mb={2} width="100%" style={{ tableLayout: "fixed" }}>
+              <tbody>
+                {Object.entries(vc.credentialSubject).map(([key, value]) => (
+                  <CredentialProperty
+                    key={key}
+                    keyName={key}
+                    value={value}
+                    schema={vcSchema?.jsonSchema?.properties?.credentialSubject?.properties?.[key]}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </Box>
+          <Box mb={3} px={3}>
+            <Table border={0} boxShadow={0} mb={3} width="100%" style={{ tableLayout: "fixed" }}>
+              <tbody>
+                {vc.credentialSubject.id && (
+                  <CredentialTR>
+                    <CredentialDetailsTDLeft>Subject</CredentialDetailsTDLeft>
+                    <CredentialDetailsTDRight>
+                      <Flex alignItem="center" justifyContent="flex-end">
+                        {truncateDid(vc.credentialSubject.id)}
+                        <Box ml={1}>
+                          <CopyToClipboard text={vc.credentialSubject.id} size="16px" />
+                        </Box>
                       </Flex>
-                    </DomainLink>
-                  ))}
-                <Text.span
-                  color={colors.midGray}
-                  fontFamily={fonts.sansSerifHeader}
-                  fontSize={0}
-                  mr={2}
-                  maxWidth={7}
-                  style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-                  title={issuer}
-                >
-                  {typeof vc.issuer == "string" ? vc.issuer : vc.issuer.id}
-                </Text.span>
-              </Flex>
-            </Flex>
-            {expirationDate && (
-              <Flex justifyContent="space-between" px={3} py={2}>
-                <Text fontFamily={fonts.sansSerif} fontWeight={2} fontSize={2}>
-                  Expires
-                </Text>
-                <Text.span
-                  fontFamily={fonts.sansSerif}
-                  fontWeight={2}
-                  fontSize={2}
-                  color={expired ? colors.danger.base : colors.blacks[0]}
-                >
-                  {expirationDate}
-                </Text.span>
-              </Flex>
-            )}
+                    </CredentialDetailsTDRight>
+                  </CredentialTR>
+                )}
+                <CredentialTR>
+                  <CredentialDetailsTDLeft>Issuer</CredentialDetailsTDLeft>
+                  <CredentialDetailsTDRight>
+                    <Flex alignItem="center" justifyContent="flex-end">
+                      {truncateDid(issuer)}
+                      <Box ml={1}>
+                        <CopyToClipboard text={issuer} size="16px" />
+                      </Box>
+                    </Flex>
+                  </CredentialDetailsTDRight>
+                </CredentialTR>
+                <CredentialTR>
+                  <CredentialDetailsTDLeft>Date Issued</CredentialDetailsTDLeft>
+                  <CredentialDetailsTDRight>{issuanceDateFormatted}</CredentialDetailsTDRight>
+                </CredentialTR>
+                {expirationDate && (
+                  <CredentialTR>
+                    <CredentialDetailsTDLeft color={expired ? colors.danger.base : colors.silver}>
+                      Expires
+                    </CredentialDetailsTDLeft>
+                    <CredentialDetailsTDRight>{expirationDateFormatted}</CredentialDetailsTDRight>
+                  </CredentialTR>
+                )}
+              </tbody>
+            </Table>
+          </Box>
+          {vcSchema?.slug && (
+            <Box borderTop={2} mb={3} px={3} pt={3}>
+              <Table border={0} boxShadow={0} mb={3} width="100%" style={{ tableLayout: "fixed" }}>
+                <tbody>
+                  <CredentialTR>
+                    <CredentialDetailsTDLeft>Schema</CredentialDetailsTDLeft>
+                    <CredentialDetailsTDRight>
+                      <ViewSchemaButton schema={vcSchema}>
+                        <u>{vcSchema.slug}</u>
+                      </ViewSchemaButton>
+                    </CredentialDetailsTDRight>
+                  </CredentialTR>
+                </tbody>
+              </Table>
+            </Box>
+          )}
+          <Box my={4} px={3}>
+            <Button.Outline as="a" href={vcUrl} size="small" target="_blank" width="100%">
+              Verify on Serto Search
+            </Button.Outline>
           </Box>
         </>
       )}
-    </>
-  );
-
-  const VerifiedCredentialBody = () => (
-    <>
-      <Table border={0} boxShadow={0} width="100%" style={{ tableLayout: "fixed" }}>
-        <tbody>
-          {Object.entries(vc.credentialSubject).map(([key, value]) => (
-            <CredentialProperty
-              key={key}
-              keyName={key}
-              value={value}
-              schema={vcSchema?.jsonSchema?.properties?.credentialSubject?.properties?.[key]}
-            />
-          ))}
-        </tbody>
-      </Table>
-      <Box my={2}>
-        <Box bg={colors.nearWhite} borderRadius={1} p={2}>
-          <Flex justifyContent="space-between" mb={1}>
-            <Flex alignItems="center">
-              <Text.span color={colors.midGray} fontFamily={fonts.sansSerif} fontSize={0}>
-                Token
-              </Text.span>
-              <Info size="14px" ml={1} />
-            </Flex>
-            <CopyToClipboard text={vc.proof.jwt} size="16px" />
-          </Flex>
-          <Text.span
-            color={colors.midGray}
-            fontFamily={fonts.monospace}
-            fontSize={0}
-            lineHeight="copy"
-            style={{ wordWrap: "break-word" }}
-          >
-            {vc.proof.jwt}
-          </Text.span>
-        </Box>
+      <Box pb={1} px={2} pt={2}>
+        <CredentialFooter
+          expired={expired}
+          isOpen={isOpen}
+          setIsOpen={(isOpen) => setIsOpen(isOpen)}
+          vc={vc}
+          vcUrl={vcUrl}
+        />
       </Box>
-      <Text mb={2} fontFamily={fonts.sansSerif} fontSize={0}>
-        <CredentialShare vc={vc} />
-      </Text>
-    </>
-  );
-
-  const VerifiedCredentialFooter = () => (
-    <Flex justifyContent="space-between">
-      <Text.span
-        color={colors.silver}
-        fontFamily={fonts.sansSerif}
-        fontSize={0}
-        maxWidth="100%"
-        style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
-        title={issuer}
-      >
-        Issuer: {issuerFormatted}
-      </Text.span>
-      <Text.span color={colors.silver} fontFamily={fonts.sansSerif} fontSize={0}>
-        {issuanceDate}
-      </Text.span>
-    </Flex>
-  );
-
-  if (viewType === CredentialViewTypes.LIST) {
-    return (
-      <CredentialBorder>
-        <CredentialContainer>{VerifiedCredentialHeader()}</CredentialContainer>
-      </CredentialBorder>
-    );
-  }
-
-  if (viewType === CredentialViewTypes.COLLAPSIBLE) {
-    return (
-      <CredentialBorder>
-        <CredentialContainer>
-          {VerifiedCredentialHeader()}
-          <Expand>{VerifiedCredentialBody()}</Expand>
-          {VerifiedCredentialFooter()}
-        </CredentialContainer>
-      </CredentialBorder>
-    );
-  }
-
-  return (
-    <CredentialBorder>
-      {VerifiedCredentialAdditionalDetails()}
-      <CredentialContainer>
-        {VerifiedCredentialHeader()}
-        {VerifiedCredentialBody()}
-        {VerifiedCredentialFooter()}
-      </CredentialContainer>
-    </CredentialBorder>
+    </Box>
   );
 };

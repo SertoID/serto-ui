@@ -43,11 +43,6 @@ export interface DidListing {
   domains: string[];
 }
 
-export interface AdditionalVCData {
-  didListings: DidListing[];
-  schemaVerified: boolean;
-}
-
 export interface JwtUserData {
   name?: string;
   email?: string;
