@@ -4,7 +4,6 @@ import { ModalContent, ModalHeader } from "../../../elements/Modals";
 import { SchemaDataResponse } from "../../Schemas";
 import { SchemasTable } from "../../Schemas/SchemasTable";
 import { IssueVcForm } from "./IssueVcForm";
-import { IssueVcSuccess } from "./IssueVcSuccess";
 import { Identifier } from "../../../../types";
 import { hexEllipsis } from "../../../../utils";
 
@@ -15,19 +14,10 @@ export interface IssueVcProps {
 }
 
 export const IssueVcFlow: React.FunctionComponent<IssueVcProps> = (props) => {
-  const [response, setResponse] = useState<any>();
   const [schema, setSchema] = useState<SchemaDataResponse | null | undefined>();
 
   function goBack() {
     setSchema(undefined);
-  }
-
-  if (response && typeof schema !== "undefined") {
-    return (
-      <ModalContent>
-        <IssueVcSuccess vc={response.issueResponse} onComplete={props.onComplete} />
-      </ModalContent>
-    );
   }
 
   if (typeof schema === "undefined") {
@@ -88,7 +78,7 @@ export const IssueVcFlow: React.FunctionComponent<IssueVcProps> = (props) => {
       identifiers={props.identifiers}
       subjectIdentifier={props.subjectIdentifier}
       schema={schema}
-      onSuccessResponse={setResponse}
+      onComplete={props.onComplete}
       goBack={goBack}
     />
   );

@@ -1,4 +1,4 @@
 export * from "./Credential";
 export * from "./CredentialShare";
 export * from "./IssueCredentialButton";
-export * from "./IssueVc/IssueVc";
+export * from "./IssueVc/IssueVcFlow";

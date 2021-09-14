@@ -1,23 +1,24 @@
 import * as React from "react";
 import { Box, Button, Text } from "rimble-ui";
-import { Check } from "@rimble/icons";
+import { Check, Warning } from "@rimble/icons";
 import { VC } from "vc-schema-tools";
-import { Credential, CredentialViewTypes } from "../Credential";
 import { colors } from "../../../../themes";
 import { H3 } from "../../../layouts/LayoutComponents";
+import { CredentialShare } from "../CredentialShare";
 
 export interface IssueVcSuccessProps {
   vc: VC;
+  messagingError?: string;
   onComplete(): void;
 }
 
 export const IssueVcSuccess: React.FunctionComponent<IssueVcSuccessProps> = (props) => {
-  const { onComplete, vc } = props;
+  const { onComplete, vc, messagingError } = props;
   return (
     <>
       <Text textAlign="center" color={colors.success.base}>
         <Text
-          bg={colors.success.light}
+          bg={messagingError ? colors.warning.dark : colors.success.light}
           borderRadius="50%"
           p={2}
           width="50px"
@@ -25,15 +26,24 @@ export const IssueVcSuccess: React.FunctionComponent<IssueVcSuccessProps> = (pro
           fontSize={4}
           style={{ display: "inline-block" }}
         >
-          <Check />
+          {messagingError ? <Warning /> : <Check />}
         </Text>
-        <H3>Credential Issued</H3>
+        <H3>{messagingError ? "Failed to Send Credential" : "Credential Issued"}</H3>
+        {messagingError && (
+          <>
+            <p>
+              Your credential has been created, but we were unable to send it to {vc.credentialSubject.id}:{" "}
+              {messagingError}.
+            </p>
+            <p>Please try a different sending via method.</p>
+          </>
+        )}
       </Text>
-      <Credential vc={vc} viewType={CredentialViewTypes.COLLAPSIBLE} />
+      <CredentialShare vc={vc} />
       <Box my={2}>
-        <Button width="100%" onClick={onComplete}>
-          Done
-        </Button>
+        <Button.Text width="100%" onClick={onComplete}>
+          Skip for now
+        </Button.Text>
       </Box>
     </>
   );

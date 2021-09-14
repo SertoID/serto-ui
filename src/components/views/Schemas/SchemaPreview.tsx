@@ -244,14 +244,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
       )}
 
       <ModalWithX isOpen={isUseModalOpen} close={() => setIsUseModalOpen(false)} width={9}>
-        <IssueVcForm
-          schema={schema}
-          onSuccessResponse={() => {
-            // @TODO/tobek Implement success flow once we have designs.
-            alert("VC issued successfully.");
-            setIsUseModalOpen(false);
-          }}
-        />
+        <IssueVcForm schema={schema} onComplete={() => setIsUseModalOpen(false)} />
       </ModalWithX>
     </Box>
   );

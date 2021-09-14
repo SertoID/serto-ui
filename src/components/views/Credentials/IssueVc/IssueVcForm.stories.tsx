@@ -79,7 +79,7 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
                 key={schemaKey}
                 schema={ldContextPlus as SchemaDataResponse}
                 identifiers={IDENTIFIERS}
-                onSuccessResponse={() => {}}
+                onComplete={() => {}}
                 onVcDataChange={setVcData}
               />
             </Box>

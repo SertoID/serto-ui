@@ -1,25 +1,66 @@
 import React, { useState } from "react";
-import { Tooltip, Flex, Box, Button, Checkbox, Field, Flash, Form, Input, Loader } from "rimble-ui";
+import { Flex, Button, Field, Flash, Form, Input, Loader, Checkbox } from "rimble-ui";
 import { mutate } from "swr";
-import { JsonSchemaNode, VcSchema } from "vc-schema-tools";
+import { JsonSchemaNode, VcSchema, VC } from "vc-schema-tools";
 import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
 import { Identifier } from "../../../../types";
 import { DidSelect } from "../../../elements/DidSelect";
 import { IssueVcFormInput } from "./IssueVcFormInput";
 import { SertoUiContext, SertoUiContextInterface } from "../../../../context/SertoUiContext";
 import { SchemaDataInput } from "../../Schemas";
+import { IssueVcSuccess } from "./IssueVcSuccess";
+import { Credential } from "../Credential";
+import { H4 } from "../../../layouts/LayoutComponents";
+
+const STEPS = ["FORM", "REVIEW", "ISSUED"];
+
+function buildCredential(
+  schemaInstance: VcSchema,
+  initialCred: Partial<VC>,
+  issuer: string,
+  vcData: { [key: string]: any },
+): Partial<VC> {
+  const credType = schemaInstance.schema["@context"]["@rootType"];
+
+  let ldContext: string | any = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonLdContext;
+  if (!ldContext) {
+    console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
+    ldContext = schemaInstance.jsonLdContext["@context"];
+  }
+
+  const jsonSchemaUrl = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonSchema;
+  if (!jsonSchemaUrl) {
+    console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
+  }
+
+  return {
+    ...initialCred,
+    "@context": ["https://www.w3.org/2018/credentials/v1", ldContext],
+    type: credType ? [...(initialCred.type || []), credType] : initialCred.type,
+    issuer: {
+      id: issuer,
+    },
+    credentialSchema: jsonSchemaUrl
+      ? {
+          id: jsonSchemaUrl,
+          type: "JsonSchemaValidator2018",
+        }
+      : undefined,
+    credentialSubject: vcData,
+  };
+}
 
 export interface IssueVcFormProps {
   schema: SchemaDataInput | null;
   identifiers?: Identifier[];
   subjectIdentifier?: Identifier;
-  onSuccessResponse(response: any): void;
+  onComplete(): void;
   onVcDataChange?(vcData: any): void;
   goBack?(): void;
 }
 
 export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) => {
-  const { schema, subjectIdentifier, onSuccessResponse, onVcDataChange, goBack } = props;
+  const { schema, subjectIdentifier, onComplete, onVcDataChange } = props;
 
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
   let identifiers = props.identifiers || context.userDids;
@@ -45,10 +86,14 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     },
   };
 
+  const [step, setStep] = React.useState(STEPS[0]);
   const [loading, setLoading] = React.useState(false);
+  const [vcToIssue, setVcToIssue] = useState<VC | undefined>();
+  const [issuedVc, setIssuedVc] = useState<VC | undefined>();
   const [issueAndSend, setIssueAndSend] = React.useState(false);
   const [subjectSupportsMessaging, setSubjectSupportsMessaging] = React.useState(false);
   const [error, setError] = useState<string | undefined>();
+  const [messagingError, setMessagingError] = useState<string | undefined>();
   const [vcData, setVcData] = useState<{ [key: string]: any }>({});
   const [rawJsonVc, setRawJsonVc] = useState(JSON.stringify(initialCred, null, 2));
   const [issuer, setIssuer] = useState<string>(identifiers[0]?.did);
@@ -64,6 +109,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       }
     }
   }, [schema]);
+  const credSchema = schemaInstance?.jsonSchema?.properties?.credentialSubject;
 
   React.useEffect(() => {
     onVcDataChange?.(vcData);
@@ -80,6 +126,34 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     );
   }
 
+  function createVc(e: Event) {
+    e.preventDefault();
+    setError(undefined);
+    try {
+      let credential: any;
+      if (schema) {
+        if (!schemaInstance) {
+          console.error("Can't issue VC: schema instance is undefined. Schema data:", schema);
+          setError("Could not initialize schema instance");
+          return;
+        }
+        credential = buildCredential(schemaInstance, initialCred, issuer, vcData);
+      } else {
+        credential = JSON.parse(rawJsonVc);
+      }
+
+      // @TODO/tobek Actually validate VC according to schema instance
+
+      onVcDataChange?.(credential);
+      setVcToIssue(credential);
+      setStep(STEPS[1]);
+    } catch (err) {
+      console.error("failed to create VC:", err);
+      setError("Failed to create VC: " + err.message);
+      return;
+    }
+  }
+
   async function issueVc(e: Event) {
     e.preventDefault();
 
@@ -87,50 +161,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     setLoading(true);
 
     try {
-      let credential: any;
-      if (schema) {
-        if (!schemaInstance) {
-          console.error("Can't issue VC: schema instance is undefined. Schema data:", schema);
-          setError("Could not initialize schema instance");
-          setLoading(false);
-          return;
-        }
-
-        const credType = schemaInstance.schema["@context"]["@rootType"];
-
-        let ldContext: string | any = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonLdContext;
-        if (!ldContext) {
-          console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
-          ldContext = schemaInstance.jsonLdContext["@context"];
-        }
-
-        const jsonSchemaUrl = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonSchema;
-        if (!jsonSchemaUrl) {
-          console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
-        }
-
-        credential = {
-          ...initialCred,
-          "@context": ["https://www.w3.org/2018/credentials/v1", ldContext],
-          type: credType ? [...initialCred.type, credType] : initialCred.type,
-          issuer: {
-            id: issuer,
-          },
-          credentialSchema: jsonSchemaUrl && {
-            id: jsonSchemaUrl,
-            type: "JsonSchemaValidator2018",
-          },
-          credentialSubject: vcData,
-        };
-      } else {
-        credential = JSON.parse(rawJsonVc);
-      }
-
-      onVcDataChange?.(credential);
-
-      // @TODO/tobek Actually validate VC according to schema instance
-
-      const issueResponse = await context.issueVc?.(credential, {
+      const issueResponse = await context.issueVc?.(vcToIssue, {
         revocable: false,
         keepCopy: true,
         save: "true",
@@ -138,36 +169,32 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       });
       console.log("issued VC, response:", issueResponse);
       mutate("/v1/agent/dataStoreORMGetVerifiableCredentials");
+      setIssuedVc(issueResponse);
 
       let sendResponse: any;
       if (issueAndSend) {
         const subject = issueResponse.credentialSubject?.id;
         if (!subject) {
           console.error("failed to send VC: VC has no credentialSubject.id", issueResponse);
-          // @TODO/tobek Should go to issue success screen, but with this error
-          setError(
-            'Credential successfully issued, but sending credential to subject failed: credential does not contain "credentialSubject.id" property to send to.',
+          setMessagingError(
+            'Sending credential to subject failed: credential does not contain "credentialSubject.id" property to send to.',
           );
-          setLoading(false);
-          return;
         }
         try {
           sendResponse = await context.sendVc?.(issuer, subject, issueResponse);
         } catch (err) {
           console.error("failed to send VC:", err);
-          // @TODO/tobek Should go to issue success screen, but with this error
-          setError("Credential successfully issued, but sending credential to subject failed: " + err.message);
-          setLoading(false);
-          return;
+          setMessagingError("Sending credential to subject failed: " + err.message);
         }
         console.log("sent VC, response:", sendResponse);
+        // We're done - no need to show final share step.
+        // @TODO/tobek Show success toaster
+        onComplete();
+        return;
       }
 
-      onSuccessResponse({
-        issueResponse,
-        sendResponse,
-      });
       setLoading(false);
+      setStep(STEPS[2]);
     } catch (err) {
       console.error("failed to issue VC:", err);
       setError("Failed to issue VC: " + err.message);
@@ -176,14 +203,57 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     }
   }
 
-  const credSchema = schemaInstance?.jsonSchema?.properties?.credentialSubject;
+  const showBackButton = !!props.goBack || step !== STEPS[0];
+  function goBack() {
+    if (step === STEPS[0] && props.goBack) {
+      props.goBack();
+    } else if (step !== STEPS[0]) {
+      setStep(STEPS[STEPS.indexOf(step) - 1]);
+    }
+  }
+
+  if (step === STEPS[2] && issuedVc) {
+    return (
+      <ModalContent>
+        <IssueVcSuccess vc={issuedVc} onComplete={onComplete} messagingError={messagingError} />
+      </ModalContent>
+    );
+  }
+
+  if (step === STEPS[1] && vcToIssue) {
+    return (
+      <>
+        {showBackButton && <ModalBack onClick={goBack} />}
+        <ModalHeader>Issue {schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
+        <ModalContent>
+          <Credential vc={vcToIssue} isOpen={true} />
+
+          <H4 mb={3}>Recipient Information</H4>
+          <Checkbox
+            label="Recipient same as credential subject"
+            checked={issueAndSend}
+            onChange={() => setIssueAndSend(!issueAndSend)}
+          />
+
+          {error && (
+            <Flash my={3} variant="danger">
+              {error}
+            </Flash>
+          )}
+          <Button mt={5} type="submit" width="100%" disabled={loading} onClick={issueVc}>
+            {loading ? <Loader color="white" /> : "Issue Credential"}
+          </Button>
+        </ModalContent>
+      </>
+    );
+  }
 
   return (
     <>
-      {goBack && <ModalBack onClick={goBack} />}
+      {showBackButton && <ModalBack onClick={goBack} />}
       <ModalHeader>Issue {schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
       <ModalContent>
-        <Form onSubmit={issueVc}>
+        <Form onSubmit={createVc}>
           {!credSchema?.properties ? (
             <Field label="Credential body JSON" width="100%">
               {/*@NOTE Rimble Textarea component doesn't work - uses <input> instead of <textarea> element*/}
@@ -233,30 +303,9 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
             </Flash>
           )}
           <Flex my={3} justifyContent="space-between">
-            <Button.Outline type="submit" width="49%" disabled={loading} onClick={() => setIssueAndSend(false)}>
-              {!issueAndSend && loading ? <Loader color="white" /> : "Issue & Save"}
-            </Button.Outline>
-            {context.sendVc && subjectSupportsMessaging ? (
-              <Button type="submit" width="49%" disabled={loading} onClick={() => setIssueAndSend(true)}>
-                {issueAndSend && loading ? <Loader color="white" /> : "Issue & Send"}
-              </Button>
-            ) : (
-              <Tooltip
-                placement="top"
-                message={
-                  context.sendVc
-                    ? "The subject DID you selected does not support DIDComm messaging."
-                    : "Missing send VC functionality"
-                }
-              >
-                {/*Need to wrap in a Box otherwise disabled button prevents cursor from triggering tooltip*/}
-                <Box width="49%">
-                  <Button type="submit" width="100%" disabled>
-                    Issue &amp; Send
-                  </Button>
-                </Box>
-              </Tooltip>
-            )}
+            <Button type="submit" width="100%">
+              Review Credential
+            </Button>
           </Flex>
         </Form>
       </ModalContent>
