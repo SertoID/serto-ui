@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tooltip, Flex, Box, Button, Checkbox, Field, Flash, Form, Input, Loader } from "rimble-ui";
 import { mutate } from "swr";
 import { JsonSchemaNode, VcSchema } from "vc-schema-tools";
-import { ModalContent, ModalHeader } from "../../../elements/Modals";
+import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
 import { Identifier } from "../../../../types";
 import { DidSelect } from "../../../elements/DidSelect";
 import { IssueVcFormInput } from "./IssueVcFormInput";
@@ -15,10 +15,11 @@ export interface IssueVcFormProps {
   subjectIdentifier?: Identifier;
   onSuccessResponse(response: any): void;
   onVcDataChange?(vcData: any): void;
+  goBack?(): void;
 }
 
 export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) => {
-  const { schema, subjectIdentifier, onSuccessResponse, onVcDataChange } = props;
+  const { schema, subjectIdentifier, onSuccessResponse, onVcDataChange, goBack } = props;
 
   const context = React.useContext<SertoUiContextInterface>(SertoUiContext);
   let identifiers = props.identifiers || context.userDids;
@@ -181,6 +182,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
   return (
     <>
+      {goBack && <ModalBack onClick={goBack} />}
       <ModalHeader>Issue {schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
       <ModalContent>
         <Form onSubmit={issueVc}>

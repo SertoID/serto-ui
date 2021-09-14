@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "rimble-ui";
 import { ModalWithX } from "../../elements/Modals";
-import { IssueVc } from "./IssueVc/IssueVc";
+import { IssueVcFlow } from "./IssueVc/IssueVcFlow";
 import { Identifier } from "../../../types";
 
 export interface IssueCredentialButtonProps {
@@ -19,7 +19,7 @@ export const IssueCredentialButton: React.FunctionComponent<IssueCredentialButto
         Issue Credential
       </Button.Outline>
       <ModalWithX isOpen={isIssueModalOpen} close={() => setIsIssueModalOpen(false)} minWidth={9} maxWidth={11}>
-        <IssueVc
+        <IssueVcFlow
           subjectIdentifier={props.subjectIdentifier}
           identifiers={props.issuerIdentifiers}
           onComplete={() => {

@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { Check } from "@rimble/icons";
-import { Box, Button, Text } from "rimble-ui";
-import { Credential } from "../Credential";
-import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
+import { Button, Text } from "rimble-ui";
+import { ModalContent, ModalHeader } from "../../../elements/Modals";
 import { SchemaDataResponse } from "../../Schemas";
 import { SchemasTable } from "../../Schemas/SchemasTable";
-import { H3 } from "../../../layouts";
-import { colors } from "../../../../themes";
 import { IssueVcForm } from "./IssueVcForm";
+import { IssueVcSuccess } from "./IssueVcSuccess";
 import { Identifier } from "../../../../types";
 import { hexEllipsis } from "../../../../utils";
 
@@ -17,7 +14,7 @@ export interface IssueVcProps {
   onComplete(): void;
 }
 
-export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
+export const IssueVcFlow: React.FunctionComponent<IssueVcProps> = (props) => {
   const [response, setResponse] = useState<any>();
   const [schema, setSchema] = useState<SchemaDataResponse | null | undefined>();
 
@@ -28,26 +25,7 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   if (response && typeof schema !== "undefined") {
     return (
       <ModalContent>
-        <Text textAlign="center" color={colors.success.base}>
-          <Text
-            bg={colors.success.light}
-            borderRadius="50%"
-            p={2}
-            width="50px"
-            height="50px"
-            fontSize={4}
-            style={{ display: "inline-block" }}
-          >
-            <Check />
-          </Text>
-          <H3>Credential Issued</H3>
-        </Text>
-        <Credential vc={response.issueResponse} />
-        <Box my={2}>
-          <Button width="100%" onClick={props.onComplete}>
-            Done
-          </Button>
-        </Box>
+        <IssueVcSuccess vc={response.issueResponse} onComplete={props.onComplete} />
       </ModalContent>
     );
   }
@@ -106,14 +84,12 @@ export const IssueVc: React.FunctionComponent<IssueVcProps> = (props) => {
   }
 
   return (
-    <>
-      <ModalBack onClick={goBack} />
-      <IssueVcForm
-        identifiers={props.identifiers}
-        subjectIdentifier={props.subjectIdentifier}
-        schema={schema}
-        onSuccessResponse={setResponse}
-      />
-    </>
+    <IssueVcForm
+      identifiers={props.identifiers}
+      subjectIdentifier={props.subjectIdentifier}
+      schema={schema}
+      onSuccessResponse={setResponse}
+      goBack={goBack}
+    />
   );
 };
