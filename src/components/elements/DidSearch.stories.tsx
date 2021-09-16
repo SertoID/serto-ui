@@ -83,7 +83,7 @@ storiesOf("DID Search", module)
           },
         }}
       >
-        <DidSearch identifiers={identifiers} onChange={(value: any) => console.log(value)} />
+        <DidSearch identifiers={identifiers} onChange={(value: any) => console.log("changed to:", value)} />
       </SertoUiProvider>
     );
   })
@@ -101,7 +101,7 @@ storiesOf("DID Search", module)
           supportsMessaging={supportsMessaging}
           setSupportsMessaging={setSupportsMessaging}
           identifiers={identifiers}
-          onChange={(value: any) => console.log(value)}
+          onChange={(value: any) => console.log("changed to:", value)}
         />
       </SertoUiProvider>
     );

@@ -73,8 +73,8 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
       <Search color={colors.primary.base} size="24" style={{ position: "absolute", left: "10px", top: "12px" }} />
       <Input
         borderRadius={isOpen ? "4px 4px 0 0" : 1}
-        onChange={(event: any) => {
-          onChange(event.target.value);
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          onChange({ did: event.target.value });
           setValue(event.target.value);
           searchInternalIdentifiers(event.target.value);
           searchExternalIdentifiers(event.target.value);
