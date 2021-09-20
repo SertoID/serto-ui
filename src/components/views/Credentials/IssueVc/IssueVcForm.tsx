@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Flex, Button, Field, Flash, Form, Input, Loader, Checkbox } from "rimble-ui";
+import { Flex, Button, Field, Flash, Form, Input, Loader, Checkbox, Text } from "rimble-ui";
+import { Warning } from "@rimble/icons";
 import { mutate } from "swr";
 import { JsonSchemaNode, VcSchema, VC } from "vc-schema-tools";
 import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
@@ -11,6 +12,7 @@ import { SchemaDataInput } from "../../Schemas";
 import { IssueVcSuccess } from "./IssueVcSuccess";
 import { Credential } from "../Credential";
 import { H4 } from "../../../layouts/LayoutComponents";
+import { colors } from "../../../../themes";
 
 const STEPS = ["FORM", "REVIEW", "ISSUED"];
 
@@ -171,7 +173,6 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       mutate("/v1/agent/dataStoreORMGetVerifiableCredentials");
       setIssuedVc(issueResponse);
 
-      let sendResponse: any;
       if (issueAndSend) {
         const subject = issueResponse.credentialSubject?.id;
         if (!subject) {
@@ -179,19 +180,32 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
           setMessagingError(
             'Sending credential to subject failed: credential does not contain "credentialSubject.id" property to send to.',
           );
+        } else if (!context.sendVc) {
+          console.error("serto-ui context missing sendVc", context);
+          setMessagingError("This Serto instance is missing the ability to send VCs via DIDComm.");
+        } else {
+          try {
+            const sendResponse = await context.sendVc(issuer, subject, issueResponse);
+            console.log("sent VC, response:", sendResponse);
+
+            // We're done - no need to show final share step.
+            context.toastProvider.addMessage("Credential issued & sent", {
+              colorTheme: "light",
+              variant: "success",
+            });
+            onComplete();
+            return;
+          } catch (err) {
+            console.error("failed to send VC:", err);
+            setMessagingError("Sending credential to subject failed: " + err.message);
+          }
         }
-        try {
-          sendResponse = await context.sendVc?.(issuer, subject, issueResponse);
-        } catch (err) {
-          console.error("failed to send VC:", err);
-          setMessagingError("Sending credential to subject failed: " + err.message);
-        }
-        console.log("sent VC, response:", sendResponse);
-        // We're done - no need to show final share step.
-        // @TODO/tobek Show success toaster
-        onComplete();
-        return;
       }
+
+      context.toastProvider.addMessage("Credential issued", {
+        colorTheme: "light",
+        variant: "success",
+      });
 
       setLoading(false);
       setStep(STEPS[2]);
@@ -225,15 +239,42 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
       <>
         {showBackButton && <ModalBack onClick={goBack} />}
         <ModalHeader>Issue {schema?.name?.replace(/\s?Credential$/, "")} Credential</ModalHeader>
-        <ModalContent>
+        <ModalContent width={9}>
           <Credential vc={vcToIssue} isOpen={true} />
 
-          <H4 mb={3}>Recipient Information</H4>
-          <Checkbox
-            label="Recipient same as credential subject"
-            checked={issueAndSend}
-            onChange={() => setIssueAndSend(!issueAndSend)}
-          />
+          {schema && (
+            <>
+              <H4 mt={5} mb={3}>
+                Recipient Information
+              </H4>
+              {!subjectSupportsMessaging && (
+                <Flash my={3} variant="warning">
+                  <Flex>
+                    <Warning color={colors.warning.dark} />
+                    <Text ml={2} fontSize={1}>
+                      {vcToIssue.credentialSubject?.id ? (
+                        <>
+                          The credential subject DID you selected (
+                          <code style={{ wordBreak: "break-word" }}>{vcToIssue.credentialSubject.id}</code>) does not
+                          support receiving credentials.
+                        </>
+                      ) : (
+                        "Your credential doesn't have a subject DID to automatically send the issued credential to."
+                      )}{" "}
+                      You may send it via link, QR code, or email after issuing the credential.
+                    </Text>
+                  </Flex>
+                </Flash>
+              )}
+              <Checkbox
+                label="Recipient same as credential subject"
+                checked={issueAndSend}
+                onChange={() => setIssueAndSend(!issueAndSend)}
+                disabled={!subjectSupportsMessaging}
+              />
+            </>
+          )}
+          {/* If there's no schema, then there's no VC wizard form, just the generic VC JSON textarea, so there's no DidSearch component checking for messaging support. We could in theory fire off a check for messaging support here, but not worth building that right now: the JSON input is a power user/edge case feature, and they can still go ahead to the post-issue step and send via DIDComm or whatever from there. */}
 
           {error && (
             <Flash my={3} variant="danger">

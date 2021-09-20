@@ -15,36 +15,49 @@ export interface IssueVcSuccessProps {
 export const IssueVcSuccess: React.FunctionComponent<IssueVcSuccessProps> = (props) => {
   const { onComplete, vc, messagingError } = props;
   return (
-    <>
-      <Text textAlign="center" color={colors.success.base}>
-        <Text
-          bg={messagingError ? colors.warning.dark : colors.success.light}
-          borderRadius="50%"
-          p={2}
-          width="50px"
-          height="50px"
-          fontSize={4}
-          style={{ display: "inline-block" }}
-        >
-          {messagingError ? <Warning /> : <Check />}
-        </Text>
-        <H3>{messagingError ? "Failed to Send Credential" : "Credential Issued"}</H3>
+    <Box maxWidth={9}>
+      <Text textAlign="center">
+        {messagingError ? (
+          <>
+            <Warning size={64} color={colors.warning.base} />
+          </>
+        ) : (
+          <>
+            <Text
+              bg={colors.success.light}
+              borderRadius="50%"
+              p={2}
+              width="50px"
+              height="50px"
+              fontSize={4}
+              style={{ display: "inline-block" }}
+            >
+              <Check color={colors.success.base} />
+            </Text>
+          </>
+        )}
+
+        <H3 mt={2} mb={2} color={messagingError ? colors.warning.dark : colors.success.base}>
+          {messagingError ? "Failed to Send Credential" : "Credential Issued"}
+        </H3>
         {messagingError && (
           <>
             <p>
-              Your credential has been created, but we were unable to send it to {vc.credentialSubject.id}:{" "}
+              Your credential has been created, but we were unable to send it to <code>{vc.credentialSubject.id}</code>.{" "}
               {messagingError}.
             </p>
             <p>Please try a different sending via method.</p>
           </>
         )}
       </Text>
-      <CredentialShare vc={vc} />
+      <Box mt={4}>
+        <CredentialShare vc={vc} />
+      </Box>
       <Box my={2}>
         <Button.Text width="100%" onClick={onComplete}>
           Skip for now
         </Button.Text>
       </Box>
-    </>
+    </Box>
   );
 };
