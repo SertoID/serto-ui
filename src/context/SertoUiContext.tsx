@@ -6,7 +6,20 @@ import { SertoSearchService, mockSertoSearchService } from "../services/SertoSea
 import { NavItemProps } from "../components/layouts/Global/Nav";
 import { Identifier, VeramoIssueVcOptions } from "../types";
 
+export interface ToastInterface {
+  addMessage(
+    message: string,
+    options: {
+      colorTheme?: string;
+      variant?: string;
+      [key: string]: any;
+    },
+  ): void;
+  [key: string]: any;
+}
+
 export interface SertoUiContextInterface {
+  toastProvider: ToastInterface;
   navItems: NavItemProps[];
   schemasService: Omit<SertoSchemasService, "url" | "request" | "ensureAuthenticated">;
   schemasUiUrl?: string;
@@ -17,6 +30,7 @@ export interface SertoUiContextInterface {
 }
 
 export const defaultSertoUiContext: SertoUiContextInterface = {
+  toastProvider: window.toastProvider,
   navItems: [
     { text: "Home", url: "/", icon: Home, section: "home" },
     { text: "Nowhere", url: "/nowhere", icon: Send, section: "nowhere" },
