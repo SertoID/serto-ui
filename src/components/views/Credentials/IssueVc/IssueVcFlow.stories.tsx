@@ -5,7 +5,7 @@ import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
 import { Identifier } from "../../../../types";
 import { SertoUiProvider } from "../../../../context/SertoUiProvider";
 import { createMockApiRequest } from "../../../../utils/helpers";
-import { IssueVc } from "./IssueVc";
+import { IssueVcFlow } from "./IssueVcFlow";
 
 const IDENTIFIERS: Identifier[] = [
   { did: "did:ethr:rinkeby:0xcfa8829812f1b4fe09b27cacf7d36e4d1b5dce76", provider: "did:ethr:rinkeby", alias: "Admin" },
@@ -32,7 +32,7 @@ storiesOf("Credential", module).add("IssueVc flow", () => {
             sendVc: createMockApiRequest(),
           }}
         >
-          <IssueVc identifiers={IDENTIFIERS} onComplete={() => {}} />
+          <IssueVcFlow identifiers={IDENTIFIERS} onComplete={() => {}} />
         </SertoUiProvider>
       </IdentityThemeProvider>
     </BrowserRouter>

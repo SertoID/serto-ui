@@ -1,9 +1,16 @@
 import * as React from "react";
+import { ToastMessage } from "rimble-ui";
 import { IdentityThemeProvider } from "../themes/IdentityTheme";
-import { SertoUiContext, SertoUiContextInterface, defaultSertoUiContext } from "./SertoUiContext";
+import { SertoUiContext, SertoUiContextInterface, defaultSertoUiContext, ToastInterface } from "./SertoUiContext";
 import { SertoSearchService } from "../services/SertoSearchService";
 import { SertoSchemasService } from "../services/SertoSchemasService";
 import { JwtUserData } from "../types";
+
+declare global {
+  interface Window {
+    toastProvider: ToastInterface;
+  }
+}
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
@@ -35,11 +42,15 @@ export const SertoUiProvider: React.FunctionComponent<SertoUiContextProviderProp
     ...props.context,
     schemasService,
     searchService,
+    toastProvider: window.toastProvider,
   } as SertoUiContextInterface;
 
   return (
     <SertoUiContext.Provider value={context}>
-      <IdentityThemeProvider theme={props.theme}>{props.children}</IdentityThemeProvider>
+      <IdentityThemeProvider theme={props.theme}>
+        {props.children}
+        <ToastMessage.Provider ref={(node: any) => (window.toastProvider = node)} />
+      </IdentityThemeProvider>
     </SertoUiContext.Provider>
   );
 };

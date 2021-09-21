@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Box, Button, Flex, Form, Flash, Loader } from "rimble-ui";
 import { Send } from "@rimble/icons";
 import { VC } from "vc-schema-tools";
@@ -18,9 +18,18 @@ export const ShareViaDidComm: React.FunctionComponent<ShareViaDidCommProps> = (p
   const [recipientDid, setRecipientDid] = useState("");
   const [recipientSupportsMessaging, setRecipientSupportsMessaging] = useState(false);
 
+  useEffect(() => {
+    setError("");
+  }, [recipientDid, recipientSupportsMessaging]);
+
   async function sendVc(e: Event) {
     e.preventDefault();
     if (!recipientDid || !recipientSupportsMessaging) {
+      return;
+    }
+    if (!context.sendVc) {
+      console.error("serto-ui context missing sendVc", context);
+      setError("This Serto instance is missing the ability to send VCs via DIDComm.");
       return;
     }
 
@@ -46,7 +55,7 @@ export const ShareViaDidComm: React.FunctionComponent<ShareViaDidCommProps> = (p
         senderDid = context.userDids[0].did;
       }
 
-      await context.sendVc?.(senderDid, recipientDid, vc);
+      await context.sendVc(senderDid, recipientDid, vc);
     } catch (err) {
       console.error("failed to send VC:", err);
       setError("Failed to send credential to subject: " + err.message);

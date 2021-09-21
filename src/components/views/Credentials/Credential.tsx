@@ -35,7 +35,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
     expirationDate && `${expirationDate.dateFormatted} at ${expirationDate.timeFormatted}`;
   const expired = vc.expirationDate && new Date(vc.expirationDate) < new Date(Date.now());
   const issuer = typeof vc.issuer === "string" ? vc.issuer : vc.issuer.id;
-  const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
+  const vcUrl = vc.proof?.jwt && `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
   const [isOpen, setIsOpen] = useState<boolean>(props.isOpen || false);
 
   return (
@@ -124,11 +124,13 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               </Table>
             </Box>
           )}
-          <Box my={4} px={3}>
-            <Button.Outline as="a" href={vcUrl} size="small" target="_blank" width="100%">
-              Verify on Serto Search
-            </Button.Outline>
-          </Box>
+          {vcUrl && (
+            <Box my={4} px={3}>
+              <Button.Outline as="a" href={vcUrl} size="small" target="_blank" width="100%">
+                Verify on Serto Search
+              </Button.Outline>
+            </Box>
+          )}
         </>
       )}
       <Box pb={1} px={2} pt={2}>

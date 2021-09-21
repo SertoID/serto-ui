@@ -15,7 +15,7 @@ import {
 } from "../../elements";
 import { baseColors, fonts, colors } from "../../../themes";
 import { useVcSchema } from "../../../services/useVcSchema";
-import { CredentialShare } from "./CredentialShare";
+import { CredentialShareButton } from "./CredentialShare";
 
 const StyledQRCode = styled(QRCode)`
   max-width: 100%;
@@ -25,7 +25,7 @@ const StyledQRCode = styled(QRCode)`
 
 export interface CredentialFooterProps {
   vc: VC;
-  vcUrl: string;
+  vcUrl?: string;
   expired: any;
   isOpen: boolean;
   setIsOpen(isOpen: boolean): void;
@@ -37,16 +37,20 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
       <Flex>
         <CredentialJsonDownload vc={props.vc} />
         <Box mr={2}>
-          <CredentialShare vc={props.vc} />
+          <CredentialShareButton vc={props.vc} />
         </Box>
-        <QRCodeExpand vcUrl={props.vcUrl} />
-        <CopyToClipboard
-          color={colors.midGray}
-          iconPadding={1}
-          hoverTitle="Copy Token"
-          size="15px"
-          text={props.vc.proof.jwt}
-        />
+        {props.vcUrl && (
+          <>
+            <QRCodeExpand vcUrl={props.vcUrl} />
+            <CopyToClipboard
+              color={colors.midGray}
+              iconPadding={1}
+              hoverTitle="Copy Token"
+              size="15px"
+              text={props.vc.proof.jwt}
+            />
+          </>
+        )}
       </Flex>
       {props.expired && <ExpiredPill />}
       <Flex
