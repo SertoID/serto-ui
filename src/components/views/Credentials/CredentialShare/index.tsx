@@ -17,7 +17,7 @@ export interface CredentialShareProps {
 
 export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
   const { vc } = props;
-  const vcUrl = `${config.DEFAULT_SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
+  const vcUrl = `${config.SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
   return (
     <>
       <Box borderBottom={4} p={4} pt={0}>

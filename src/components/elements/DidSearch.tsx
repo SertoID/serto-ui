@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { config } from "../../config";
 import { SertoUiContext, SertoUiContextInterface } from "../../context/SertoUiContext";
 import { Identifier, DidSearchResult, SelectedDid } from "../../types";
 import { Launch, Search } from "@rimble/icons";
@@ -150,7 +151,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
             )}
           </Box>
           <Flex justifyContent="flex-end" p={3}>
-            <StyledLink href="http://beta.search.serto.id" target="_blank">
+            <StyledLink href={config.SEARCH_UI_URL} target="_blank">
               <Launch color={colors.primary.base} mr={1} size="16px" style={{ verticalAlign: "text-bottom" }} />
               Go to Serto Search
             </StyledLink>

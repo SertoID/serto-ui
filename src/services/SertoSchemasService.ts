@@ -1,5 +1,5 @@
 import { SchemaDataInput, SchemaDataResponse } from "../components/views/Schemas/types";
-import { config } from "../config";
+import { config, links } from "../config";
 import { createMockApiRequest } from "../utils/helpers";
 import { JwtUserData } from "../types";
 
@@ -27,11 +27,11 @@ export class SertoSchemasService {
   public createSchemaPath: string;
 
   constructor(url?: string, jwt?: string, userData?: JwtUserData, createSchemaPath?: string) {
-    this.url = url || config.DEFAULT_SCHEMA_API_URL;
+    this.url = url || config.SCHEMAS_API_URL;
     this.jwt = jwt;
     this.userData = userData;
     this.isAuthenticated = !!(jwt && userData);
-    this.createSchemaPath = createSchemaPath || config.DEFAULT_CREATE_SCHEMA_PATH;
+    this.createSchemaPath = createSchemaPath || links.CREATE_SCHEMA_PATH;
   }
 
   /** Build URL at which a given schema will be hosted. */
