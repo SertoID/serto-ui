@@ -6,7 +6,7 @@ export class SertoSearchService {
   public url;
 
   constructor(url?: string) {
-    this.url = url || config.DEFAULT_SEARCH_API_URL;
+    this.url = url || config.SEARCH_API_URL;
   }
 
   public async getEntries(domain?: string): Promise<DidSearchResult[]> {

@@ -5,7 +5,7 @@ import { mutate } from "swr";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import { useDebounce } from "use-debounce";
-import { config } from "../../../../config";
+import { links } from "../../../../config";
 import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema, SchemaDataResponse } from "../types";
 import { createSchemaInput, ldContextPlusToSchemaInput, schemaResponseToWorkingSchema } from "../utils";
 import { AttributesStep } from "./AttributesStep";
@@ -219,7 +219,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
                   JSON-LD Context Plus schema
                 </Link>{" "}
                 spec for more info, and view examples at the{" "}
-                <Link href={config.SCHEMA_PLAYGROUND} target="_blank" fontSize={0}>
+                <Link href={links.SCHEMAS_PLAYGROUND} target="_blank" fontSize={0}>
                   Schema Playground
                 </Link>
                 .

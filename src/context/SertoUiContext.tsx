@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Home, Send } from "@rimble/icons";
 
+import { config } from "../config";
 import { SertoSchemasService, mockSertoSchemasService } from "../services/SertoSchemasService";
 import { SertoSearchService, mockSertoSearchService } from "../services/SertoSearchService";
 import { NavItemProps } from "../components/layouts/Global/Nav";
@@ -36,7 +37,7 @@ export const defaultSertoUiContext: SertoUiContextInterface = {
     { text: "Nowhere", url: "/nowhere", icon: Send, section: "nowhere" },
   ],
   schemasService: mockSertoSchemasService,
-  schemasUiUrl: "https://beta.schemas.serto.id",
+  schemasUiUrl: config.SCHEMAS_UI_URL,
   searchService: mockSertoSearchService,
 };
 
