@@ -25,9 +25,7 @@ function getShareLink(
 
   const shareText = `I'm linking this account to my Decentralized Identifier (DID)
 
-My credential 👉 ${vcUrl}
-
-#SertoID`;
+My credential 👉 ${vcUrl}`;
 
   let shareLink: string | undefined;
   let Icon: React.FC | undefined;
@@ -35,7 +33,7 @@ My credential 👉 ${vcUrl}
   let siteName: string | undefined;
 
   if (profileUrl.includes("twitter.com")) {
-    shareLink = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText);
+    shareLink = "https://twitter.com/intent/tweet?hashtags=SertoID&text=" + encodeURIComponent(shareText);
     Icon = TwitterBird;
     siteName = "Twitter";
   } else if (profileUrl.includes("linkedin.com")) {
@@ -81,12 +79,17 @@ export const SocialMediaVerify: React.FunctionComponent<{ vc: VC; vcUrl: string 
 
       <ModalWithX borderRadius={2} isOpen={isModalOpen} close={() => setIsModalOpen(false)}>
         <Box maxWidth={9} px={5} py={3}>
-          <Text my={4}>Copy and paste the following message into your {siteName} profile:</Text>
+          <Text my={4}>
+            Copy and paste the following message into your {siteName} about page, or into{" "}
+            {siteName === "YouTube" ? "the description of a video (can be unlisted)" : "a post"} on your account:
+          </Text>
           <ShareTextTextarea value={shareText} readOnly />
           <Box mt={3}>
             <CopyToClipboard textButton text={shareText} />
           </Box>
-          <Text my={4}>Note that you may change the message, but must include the link for verification.</Text>
+          <Text my={4}>
+            Note that you may change the message, but the URL itself must be included for verification.
+          </Text>
         </Box>
       </ModalWithX>
     </>
