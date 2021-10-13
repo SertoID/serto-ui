@@ -14,7 +14,7 @@ import {
 import { baseColors, fonts, colors } from "../../../themes";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialShareButton } from "./CredentialShare";
-import { SocialMediaVerify } from "./SocialMediaVerify";
+import { SocialMediaVerify } from "./CredentialShare/SocialMediaVerify";
 import { ShareViaQr } from "./CredentialShare/ShareViaQr";
 
 export interface CredentialFooterProps {
@@ -43,7 +43,7 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
               size="15px"
               text={props.vc.proof.jwt}
             />
-            <Box ml={2} p="3px">
+            <Box mt="1px" ml={2} p="3px">
               <SocialMediaVerify vc={props.vc} vcUrl={props.vcUrl} />
             </Box>
           </>
