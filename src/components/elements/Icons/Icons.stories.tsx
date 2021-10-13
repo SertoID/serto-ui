@@ -94,7 +94,7 @@ storiesOf("Icons", module)
     return <ShareIcon size="50px" />;
   })
   .add("TwitterBird", () => {
-    return <TwitterBird size="50px" />;
+    return <TwitterBird size={50} />;
   })
   .add("Verified", () => {
     return <Verified />;

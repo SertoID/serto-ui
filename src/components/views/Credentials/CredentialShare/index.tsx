@@ -1,42 +1,58 @@
+import styled from "styled-components";
 import { useState } from "react";
 import { Box, Button, Text, Flex } from "rimble-ui";
 import { ContentCopy } from "@rimble/icons";
 import { VC } from "vc-schema-tools";
 import { HoverPathFill, ShareIcon, UnstyledButton } from "../../../elements";
-import { ModalContentFullWidth, ModalFooter, ModalWithX } from "../../../elements/Modals";
+import { ModalContentFullWidth, ModalWithX } from "../../../elements/Modals";
 import { H3, H6 } from "../../../layouts/LayoutComponents";
 import { colors, fonts } from "../../../../themes";
 import { config } from "../../../../config";
 import { CopyableTruncatableText } from "../../../elements/CopyableTruncatableText/CopyableTruncatableText";
 import { ShareViaDidComm } from "./ShareViaDidComm";
 import { ShareViaQr } from "./ShareViaQr";
+const _ShareBox: React.FC<{ className?: string }> = (props) => (
+  <Box borderBottom={4} p={4} className={props.className}>
+    {props.children}
+  </Box>
+);
+const ShareBox = styled(_ShareBox)`
+  &:first-child {
+    padding-top: 0;
+  }
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+`;
 
 export interface CredentialShareProps {
   vc: VC;
+  issueVcFlow?: boolean;
 }
 
 export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
-  const { vc } = props;
+  const { vc, issueVcFlow } = props;
   const vcUrl = `${config.SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
   return (
     <>
-      <Box borderBottom={4} p={4} pt={0}>
+      <ShareBox>
         <H3 mt={0} mb={1}>
-          Recipient Information
+          {issueVcFlow ? "Recipient Information" : "Share Credential"}
         </H3>
         <Text color={colors.silver} fontFamily={fonts.sansSerif} fontSize={1}>
           Choose any methods below to send or share credential.
         </Text>
-      </Box>
+      </ShareBox>
 
-      <Box borderBottom={4} p={4}>
+      <ShareBox>
         <H6 mt={0} mb={2}>
           Send by Identifier (DID)
         </H6>
         <ShareViaDidComm vc={vc} />
-      </Box>
+      </ShareBox>
 
-      <Box borderBottom={4} p={4}>
+      <ShareBox>
         <H6 mt={0} mb={2}>
           Share by link
         </H6>
@@ -51,14 +67,16 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
             </Button>
           )}
         />
-      </Box>
+      </ShareBox>
 
-      <Box p={4} pb={0}>
-        <H6 mt={0} mb={3}>
-          Share by QR code
-        </H6>
-        <ShareViaQr url={vcUrl} />
-      </Box>
+      {issueVcFlow && (
+        <ShareBox>
+          <H6 mt={0} mb={3}>
+            Share by QR code
+          </H6>
+          <ShareViaQr url={vcUrl} inline />
+        </ShareBox>
+      )}
     </>
   );
 };
@@ -88,11 +106,7 @@ export const CredentialShareButton: React.FC<CredentialShareProps> = (props) => 
         <ModalContentFullWidth>
           <CredentialShare vc={vc} />
         </ModalContentFullWidth>
-        <ModalFooter mt={3}>
-          <Button width="100%" onClick={() => setModalOpen(false)}>
-            Close
-          </Button>
-        </ModalFooter>
+        <Box p={3} />
       </ModalWithX>
     </>
   );

@@ -1,6 +1,7 @@
 import { Tooltip } from "rimble-ui";
 import { VC } from "vc-schema-tools";
 import { TwitterBird } from "../../elements/Icons/TwitterBird";
+import { baseColors } from "../../../themes/colors";
 
 function getShareLink(vc: VC, vcUrl: string): string | undefined {
   const profileUrl: string | false =
@@ -28,7 +29,7 @@ export const SocialMediaVerify: React.FunctionComponent<{ vc: VC; vcUrl: string 
   return (
     <Tooltip placement="top" message="Verify account by publishing this credential">
       <a href={shareLink} target="_blank">
-        <TwitterBird />
+        <TwitterBird color={baseColors.warning} />
       </a>
     </Tooltip>
   );

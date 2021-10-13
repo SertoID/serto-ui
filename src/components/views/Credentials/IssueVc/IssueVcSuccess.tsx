@@ -51,9 +51,9 @@ export const IssueVcSuccess: React.FunctionComponent<IssueVcSuccessProps> = (pro
         )}
       </Text>
       <Box mt={4}>
-        <CredentialShare vc={vc} />
+        <CredentialShare vc={vc} issueVcFlow={true} />
       </Box>
-      <Box my={2}>
+      <Box mt={2}>
         <Button.Text width="100%" onClick={onComplete}>
           Skip for now
         </Button.Text>

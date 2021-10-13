@@ -1,6 +1,4 @@
 import { useState } from "react";
-import styled from "styled-components";
-import QRCode from "qrcode.react";
 import { VC } from "vc-schema-tools";
 import { FileDownload, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
 import { Box, Flex, Link, Text } from "rimble-ui";
@@ -17,12 +15,7 @@ import { baseColors, fonts, colors } from "../../../themes";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialShareButton } from "./CredentialShare";
 import { SocialMediaVerify } from "./SocialMediaVerify";
-
-const StyledQRCode = styled(QRCode)`
-  max-width: 100%;
-  height: auto !important;
-  width: 100%;
-`;
+import { ShareViaQr } from "./CredentialShare/ShareViaQr";
 
 export interface CredentialFooterProps {
   vc: VC;
@@ -99,9 +92,9 @@ export const QRCodeExpand: React.FunctionComponent<QRCodeExpandProps> = (props) 
       <ModalWithX borderRadius={2} isOpen={isQrModalOpen} close={() => setIsQrModalOpen(false)}>
         <Box bg={baseColors.white} borderRadius={2} maxWidth="450px" pb={5} px={6}>
           <Text color={colors.midGray} my={3} textAlign="center">
-            Scan to Verify
+            Scan to Verify on Serto Search
           </Text>
-          <StyledQRCode value={props.vcUrl} renderAs="canvas" size={512} bgColor="transparent" />
+          <ShareViaQr url={props.vcUrl} />
         </Box>
       </ModalWithX>
     </>
