@@ -10,8 +10,10 @@ import {
   GreenCircleCheck,
   IcoWeb,
   IndentedArrow,
+  LinkedIn,
   LockUnverified,
   LockVerified,
+  Medium,
   OutlineOne,
   OutlineTwo,
   QrCode,
@@ -23,6 +25,7 @@ import {
   SertoVerifiedCheckmark,
   SertoVerificationError,
   ShareIcon,
+  Youtube,
   Verified,
 } from "./";
 
@@ -57,11 +60,17 @@ storiesOf("Icons", module)
   .add("IndentedArrow", () => {
     return <IndentedArrow />;
   })
+  .add("LinkedIn", () => {
+    return <LinkedIn />;
+  })
   .add("LockUnverified", () => {
     return <LockUnverified />;
   })
   .add("LockVerified", () => {
     return <LockVerified />;
+  })
+  .add("Medium", () => {
+    return <Medium />;
   })
   .add("OutlineOne", () => {
     return <OutlineOne />;
@@ -95,6 +104,9 @@ storiesOf("Icons", module)
   })
   .add("ShareIcon", () => {
     return <ShareIcon size="50px" />;
+  })
+  .add("Youtube", () => {
+    return <Youtube />;
   })
   .add("Verified", () => {
     return <Verified />;
