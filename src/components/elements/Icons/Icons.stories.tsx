@@ -22,6 +22,7 @@ import {
   SertoVerifiedCheckmark,
   SertoVerificationError,
   ShareIcon,
+  TwitterBird,
   Verified,
 } from "./";
 
@@ -91,6 +92,9 @@ storiesOf("Icons", module)
   })
   .add("ShareIcon", () => {
     return <ShareIcon size="50px" />;
+  })
+  .add("TwitterBird", () => {
+    return <TwitterBird size="50px" />;
   })
   .add("Verified", () => {
     return <Verified />;

@@ -16,6 +16,7 @@ import {
 import { baseColors, fonts, colors } from "../../../themes";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialShareButton } from "./CredentialShare";
+import { SocialMediaVerify } from "./SocialMediaVerify";
 
 const StyledQRCode = styled(QRCode)`
   max-width: 100%;
@@ -49,6 +50,9 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
               size="15px"
               text={props.vc.proof.jwt}
             />
+            <Box ml={2} p="3px">
+              <SocialMediaVerify vc={props.vc} vcUrl={props.vcUrl} />
+            </Box>
           </>
         )}
       </Flex>

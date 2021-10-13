@@ -19,4 +19,5 @@ export * from "./SertoVerifiedCheckmark";
 export * from "./SertoVerificationError";
 export * from "./ShareIcon";
 export * from "./SvgProps";
+export * from "./TwitterBird";
 export * from "./Verified";
