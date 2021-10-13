@@ -1,4 +1,5 @@
 import * as React from "react";
+import Linkify from "linkify-react";
 import styled from "styled-components";
 import { Box, Flex, Text } from "rimble-ui";
 import { OpenInNew } from "@rimble/icons";
@@ -88,7 +89,9 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
         {fullPage && (
           <Box maxWidth="340px">
             <SidebarHeading>Description</SidebarHeading>
-            <Text>{schema.description}</Text>
+            <Text>
+              <Linkify options={{ target: "_blank" }}>{schema.description}</Linkify>
+            </Text>
 
             <SidebarHeading>Schema Author</SidebarHeading>
             <Text>

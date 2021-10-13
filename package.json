@@ -36,6 +36,8 @@
     "@rimble/icons": "ConsenSysMesh/rimble-icons",
     "@sindresorhus/slugify": "^1.1.0",
     "deepdash": "^5.3.9",
+    "linkify-react": "^3.0.1",
+    "linkifyjs": "^3.0.1",
     "prismjs": "^1.23.0",
     "qrcode.react": "^1.0.1",
     "react-scripts": "4.0.1",
