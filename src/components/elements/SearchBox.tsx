@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Input } from "rimble-ui";
+import { SearchIcon } from ".";
 
 export interface SearchBoxProps {
   placeholderText?: string;
@@ -28,12 +29,9 @@ export const SearchBox: React.FunctionComponent<SearchBoxProps> = (props) => {
         value={search}
         width="100%"
       />
-      <Button.Text
-        icononly
-        icon="Search"
-        onClick={() => props.onSearch(search)}
-        style={{ position: "absolute", top: 0, right: 0, zIndex: 9 }}
-      />
+      <Button.Text onClick={() => props.onSearch(search)} style={{ position: "absolute", top: 0, right: 0, zIndex: 9 }}>
+        <SearchIcon size="24px" />
+      </Button.Text>
     </Box>
   );
 };

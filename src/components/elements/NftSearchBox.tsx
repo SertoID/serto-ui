@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Info, Search } from "@rimble/icons";
+import { Info } from "@rimble/icons";
 import { Box, Button, Input, Flash, Flex, Tooltip } from "rimble-ui";
 import { H5, H6 } from "../layouts/LayoutComponents";
 import { getNftIdentifiersFromUrl } from "../../utils";
 import { baseColors, colors } from "../../themes";
 import { StyledTabbedInput } from "./";
+import { SearchIcon } from "./Icons";
 
 export interface NftSearchBoxProps {
   onSearch(value: string, id: string): void;
@@ -52,7 +53,7 @@ export const NftSearchBox: React.FunctionComponent<NftSearchBoxProps> = (props) 
           value={search}
         />
         <Button.Text onClick={() => onTrySearch()} style={{ position: "absolute", top: 10, right: 5, zIndex: 9 }}>
-          <Search color={colors.primary.base} size="32px" />
+          <SearchIcon />
         </Button.Text>
       </Box>
       <Box bg={baseColors.white} border={2} borderRadius={1} pb={5} pt={3} px={4} width="100%">
