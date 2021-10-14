@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Flex, Pill, Text } from "rimble-ui";
-import { LinkedIn, Medium, Youtube } from "./Icons";
-import { colors, fonts } from "../../themes";
+import { Facebook, LinkedIn, Medium, TwitterBird, YouTube } from "./Icons";
+import { baseColors, colors, fonts } from "../../themes";
 
 export const ExpiredPill: React.FunctionComponent = () => {
   return (
@@ -15,12 +15,14 @@ export const ExpiredPill: React.FunctionComponent = () => {
 
 const PillImg = styled.div`
   align-items: center;
+  background-color: ${baseColors.white};
+  border: 1px solid ${colors.nearWhite};
   border-radius: 50%;
   display: flex;
-  height: 24px;
+  height: 22px;
   justify-content: center;
   overflow: hidden;
-  width: 24px;
+  width: 22px;
 `;
 
 export interface PillWithImgProps {
@@ -37,7 +39,7 @@ export const PillWithImg: React.FunctionComponent<PillWithImgProps> = (props) =>
       fontFamily={fonts.sansSerif}
       height={4}
       justifyContent={props.icon ? "flex-start" : "center"}
-      width="94px"
+      width="100px"
     >
       {props.icon && <PillImg>{props.icon}</PillImg>}
       <Text fontSize={0} px={2}>
@@ -55,14 +57,16 @@ export const SocialPills: React.FunctionComponent<SocialPillsProps> = (props) =>
   const { platform } = props;
   return (
     <>
-      {platform === "linkedin" ? (
-        <PillWithImg icon={<LinkedIn size="24px" />} text="LinkedIn" />
+      {platform === "facebook" ? (
+        <PillWithImg icon={<Facebook size="22" />} text="Facebook" />
+      ) : platform === "linkedin" ? (
+        <PillWithImg icon={<LinkedIn size="22" />} text="LinkedIn" />
       ) : platform === "medium" ? (
-        <PillWithImg icon={<Medium size="24px" />} text="Medium" />
+        <PillWithImg icon={<Medium size="22" />} text="Medium" />
       ) : platform === "twitter" ? (
-        <PillWithImg icon={<LinkedIn size="24px" />} text="Twitter" />
+        <PillWithImg icon={<TwitterBird size={18} />} text="Twitter" />
       ) : platform === "youtube" ? (
-        <PillWithImg icon={<Youtube height="18px" width="24px" />} text="YouTube" />
+        <PillWithImg icon={<YouTube size={20} />} text="YouTube" />
       ) : (
         <PillWithImg text={platform} />
       )}

@@ -25,6 +25,9 @@ storiesOf("Pills", module)
         <Box mb={3}>
           <SocialPills platform="facebook" />
         </Box>
+        <Box mb={3}>
+          <SocialPills platform="reddit" />
+        </Box>
       </IdentityThemeProvider>
     );
   });
