@@ -41,7 +41,6 @@ export const PillWithImg: React.FunctionComponent<PillWithImgProps> = (props) =>
       fontFamily={fonts.sansSerif}
       height={4}
       justifyContent={props.icon ? "flex-start" : "center"}
-      {...props}
     >
       {props.icon ? (
         <>
@@ -53,18 +52,19 @@ export const PillWithImg: React.FunctionComponent<PillWithImgProps> = (props) =>
       ) : (
         <Text color={baseColors.black} fontSize={0} px={3}>
           {props.text}
-        </Text>)}
+        </Text>
+      )}
     </Flex>
   );
 };
 
 const StyledLink = styled.a`
+  margin-right: 16px;
   text-decoration: none;
 `;
 
 export interface SocialPillsProps {
   linkedId: LinkedId;
-  [key: string]: any;
 }
 
 export const SocialPills: React.FunctionComponent<SocialPillsProps> = (props) => {
@@ -73,27 +73,27 @@ export const SocialPills: React.FunctionComponent<SocialPillsProps> = (props) =>
     <>
       {linkedId.platform === "Facebook" ? (
         <StyledLink href={linkedId.proofUrl} target="_blank">
-          <PillWithImg icon={<Facebook size="22" />} text={linkedId.linkedId} {...props} />
+          <PillWithImg icon={<Facebook size="22" />} text={linkedId.linkedId} />
         </StyledLink>
       ) : linkedId.platform === "LinkedIn" ? (
         <StyledLink href={linkedId.proofUrl} target="_blank">
-          <PillWithImg icon={<LinkedIn size="22" />} text={linkedId.linkedId} {...props} />
+          <PillWithImg icon={<LinkedIn size="22" />} text={linkedId.linkedId} />
         </StyledLink>
       ) : linkedId.platform === "Medium" ? (
         <StyledLink href={linkedId.proofUrl} target="_blank">
-          <PillWithImg icon={<Medium size="22" />} text={linkedId.linkedId} {...props} />
+          <PillWithImg icon={<Medium size="22" />} text={linkedId.linkedId} />
         </StyledLink>
       ) : linkedId.platform === "Twitter" ? (
         <StyledLink href={linkedId.proofUrl} target="_blank">
-          <PillWithImg icon={<TwitterBird size={18} />} text={linkedId.linkedId} {...props} />
+          <PillWithImg icon={<TwitterBird size={18} />} text={linkedId.linkedId} />
         </StyledLink>
       ) : linkedId.platform === "Youtube" ? (
         <StyledLink href={linkedId.proofUrl} target="_blank">
-          <PillWithImg icon={<YouTube size={20} />} text={linkedId.linkedId} {...props} />
+          <PillWithImg icon={<YouTube size={20} />} text={linkedId.linkedId} />
         </StyledLink>
       ) : (
         <StyledLink href={linkedId.proofUrl} target="_blank">
-          <PillWithImg text={linkedId.linkedId} {...props} />
+          <PillWithImg text={linkedId.linkedId} />
         </StyledLink>
       )}
     </>
