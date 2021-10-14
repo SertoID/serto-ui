@@ -14,6 +14,7 @@ export * from "./Medium";
 export * from "./OutlineOne";
 export * from "./OutlineTwo";
 export * from "./QrCode";
+export * from "./SearchIcon";
 export * from "./SertoAgentLogo";
 export * from "./SertoLogo";
 export * from "./SertoSchemasLogo";

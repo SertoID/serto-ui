@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Search } from "@rimble/icons";
 import { Box, Button, Input } from "rimble-ui";
 import { colors } from "../../themes";
 import { Tabs } from "../layouts";
+import { SearchIcon } from "./Icons";
 
 export const StyledTabbedInput = styled(Input)`
   border-radius: 0 0 4px 4px !important;
@@ -42,7 +42,7 @@ export const TabbedSearchBox: React.FunctionComponent<TabbedSearchBoxProps> = (p
         onClick={() => props.onSearch(search)}
         style={{ position: "absolute", top: 10, right: 5, zIndex: 9 }}
       >
-        <Search color={colors.primary.base} size="32px" />
+        <SearchIcon />
       </Button.Text>
     </Box>
   );

@@ -25,16 +25,22 @@ export const DidView: React.FunctionComponent<DidViewProps> = (props) => {
         <DidMethodIcon did={did} size={iconSize} />
       </Flex>
       {size === "large" ? (
-        <H4 m={0} maxWidth="100%" title={did}>
+        <H4 m={0} maxWidth={copy ? "calc(100% - 30px)" : "100%"} title={did}>
           <DidTruncate did={did} />
         </H4>
       ) : (
-        <Text color={colors.midGray} fontSize={2} fontWeight={2} maxWidth="100%" title={did}>
+        <Text
+          color={colors.midGray}
+          fontSize={2}
+          fontWeight={2}
+          maxWidth={copy ? "calc(100% - 30px)" : "100%"}
+          title={did}
+        >
           <DidTruncate did={did} />
         </Text>
       )}
       {copy && (
-        <Box ml={1}>
+        <Box ml={2}>
           <CopyToClipboard color={colors.primary.base} hoverTitle="Copy DID" size={copyIconSize} text={did} />
         </Box>
       )}

@@ -18,6 +18,7 @@ import {
   OutlineOne,
   OutlineTwo,
   QrCode,
+  SearchIcon,
   SertoAgentLogo,
   SertoLogo,
   SertoSchemasLogo,
@@ -84,6 +85,9 @@ storiesOf("Icons", module)
   })
   .add("QrCode", () => {
     return <QrCode />;
+  })
+  .add("SearchIcon", () => {
+    return <SearchIcon />;
   })
   .add("SertoAgentLogo", () => {
     return <SertoAgentLogo />;

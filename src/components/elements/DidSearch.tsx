@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { config } from "../../config";
 import { SertoUiContext, SertoUiContextInterface } from "../../context/SertoUiContext";
 import { Identifier, DidSearchResult, SelectedDid } from "../../types";
-import { Launch, Search } from "@rimble/icons";
+import { Launch } from "@rimble/icons";
 import { Box, Flex, Input } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../themes";
 import { DidSearchOption, DidSearchOptionDid } from "./DidSearchOption";
+import { SearchIcon } from "./Icons/SearchIcon";
 
 const StyledLink = styled.a`
   color: ${colors.primary.base};
@@ -71,7 +72,7 @@ export const DidSearch: React.FunctionComponent<DidSearchProps> = (props) => {
 
   return (
     <Box position="relative" ref={node} width="100%">
-      <Search color={colors.primary.base} size="24" style={{ position: "absolute", left: "10px", top: "12px" }} />
+      <SearchIcon size="20" style={{ position: "absolute", left: "12px", top: "14px" }} />
       <Input
         borderRadius={isOpen ? "4px 4px 0 0" : 1}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

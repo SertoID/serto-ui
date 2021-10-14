@@ -5,6 +5,9 @@ import { Box, Flex, Text } from "rimble-ui";
 import { baseColors, colors, fonts } from "../../../themes";
 
 export const Option = styled(Box)`
+  &:hover {
+    background-color: ${colors.primary.background};
+  }
   &:hover span {
     color: ${colors.primary.base};
   }
@@ -58,6 +61,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   });
 
   const optionsTextProps = {
+    color: colors.silver,
     fontSize: 2,
     fontFamily: fonts.sansSerif,
     ...props.optionsTextProps,
@@ -65,6 +69,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const selectedOptionTextProps = {
     ...optionsTextProps,
     style: {
+      color: baseColors.black,
       whiteSpace: "nowrap",
       overflow: "hidden",
       textOverflow: "ellipsis",
@@ -123,10 +128,9 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
       {isOpen && (
         <Box
           bg={baseColors.white}
-          borderBottomLeftRadius={1}
-          borderBottomRightRadius={1}
-          borderTop={1}
-          boxShadow={1}
+          borderRadius={1}
+          border={4}
+          boxShadow={combinedSearch ? 0 : 1}
           width="100%"
           style={{ position: "absolute", left: "0" }}
         >
@@ -137,8 +141,9 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
                   <Option
                     onClick={onOptionClicked(option)}
                     key={key}
-                    borderBottom={1}
-                    p={3}
+                    borderBottom={combinedSearch ? 0 : 1}
+                    px={3}
+                    py={2}
                     style={{ cursor: "pointer" }}
                   >
                     <Text.span {...optionsTextProps}>{option.name}</Text.span>

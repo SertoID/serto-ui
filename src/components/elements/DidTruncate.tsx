@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import { Flex, Text } from "rimble-ui";
+import { Flex } from "rimble-ui";
 
-const DidPart1 = styled(Text.span)`
+const DidPart1 = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
 
-const DidPart2 = styled(Text.span)`
+const DidPart2 = styled.span`
   flex-shrink: 0;
 `;
 
