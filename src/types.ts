@@ -51,3 +51,9 @@ export interface JwtUserData {
   /** JWT subject identifier */
   sub?: string;
 }
+
+export interface LinkedId {
+  linkedId: string;
+  platform: string;
+  proofUrl: string;
+}
