@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Flex, Pill, Text } from "rimble-ui";
 import { Facebook, LinkedIn, Medium, TwitterBird, YouTube } from "./Icons";
 import { baseColors, colors, fonts } from "../../themes";
+import { LinkedId } from "../../types";
 
 export const ExpiredPill: React.FunctionComponent = () => {
   return (
@@ -40,38 +41,60 @@ export const PillWithImg: React.FunctionComponent<PillWithImgProps> = (props) =>
       fontFamily={fonts.sansSerif}
       height={4}
       justifyContent={props.icon ? "flex-start" : "center"}
-      width="100px"
       {...props}
     >
-      {props.icon && <PillImg>{props.icon}</PillImg>}
-      <Text fontSize={0} px={2}>
-        {props.text}
-      </Text>
+      {props.icon ? (
+        <>
+          <PillImg>{props.icon}</PillImg>
+          <Text color={baseColors.black} fontSize={0} pl={2} pr={3}>
+            {props.text}
+          </Text>
+        </>
+      ) : (
+        <Text color={baseColors.black} fontSize={0} px={3}>
+          {props.text}
+        </Text>)}
     </Flex>
   );
 };
 
+const StyledLink = styled.a`
+  text-decoration: none;
+`;
+
 export interface SocialPillsProps {
-  platform: string;
+  linkedId: LinkedId;
   [key: string]: any;
 }
 
 export const SocialPills: React.FunctionComponent<SocialPillsProps> = (props) => {
-  const { platform } = props;
+  const { linkedId } = props;
   return (
     <>
-      {platform === "Facebook" ? (
-        <PillWithImg icon={<Facebook size="22" />} text="Facebook" {...props} />
-      ) : platform === "LinkedIn" ? (
-        <PillWithImg icon={<LinkedIn size="22" />} text="LinkedIn" {...props} />
-      ) : platform === "Medium" ? (
-        <PillWithImg icon={<Medium size="22" />} text="Medium" {...props} />
-      ) : platform === "Twitter" ? (
-        <PillWithImg icon={<TwitterBird size={18} />} text="Twitter" {...props} />
-      ) : platform === "Youtube" ? (
-        <PillWithImg icon={<YouTube size={20} />} text="YouTube" {...props} />
+      {linkedId.platform === "Facebook" ? (
+        <StyledLink href={linkedId.proofUrl} target="_blank">
+          <PillWithImg icon={<Facebook size="22" />} text={linkedId.linkedId} {...props} />
+        </StyledLink>
+      ) : linkedId.platform === "LinkedIn" ? (
+        <StyledLink href={linkedId.proofUrl} target="_blank">
+          <PillWithImg icon={<LinkedIn size="22" />} text={linkedId.linkedId} {...props} />
+        </StyledLink>
+      ) : linkedId.platform === "Medium" ? (
+        <StyledLink href={linkedId.proofUrl} target="_blank">
+          <PillWithImg icon={<Medium size="22" />} text={linkedId.linkedId} {...props} />
+        </StyledLink>
+      ) : linkedId.platform === "Twitter" ? (
+        <StyledLink href={linkedId.proofUrl} target="_blank">
+          <PillWithImg icon={<TwitterBird size={18} />} text={linkedId.linkedId} {...props} />
+        </StyledLink>
+      ) : linkedId.platform === "Youtube" ? (
+        <StyledLink href={linkedId.proofUrl} target="_blank">
+          <PillWithImg icon={<YouTube size={20} />} text={linkedId.linkedId} {...props} />
+        </StyledLink>
       ) : (
-        <PillWithImg text={platform} {...props} />
+        <StyledLink href={linkedId.proofUrl} target="_blank">
+          <PillWithImg text={linkedId.linkedId} {...props} />
+        </StyledLink>
       )}
     </>
   );
