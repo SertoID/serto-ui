@@ -4,6 +4,7 @@ import { Box, Button, Input, Flex } from "rimble-ui";
 import { getNftIdentifiersFromUrl } from "../../utils";
 import { baseColors, colors } from "../../themes";
 import { DropDown } from "./DropDown/DropDown";
+import { SearchIcon } from "./Icons";
 
 const StyledWrap = styled(Flex)`
   &:focus-within {
@@ -96,13 +97,9 @@ export const CombinedSearchBar: React.FunctionComponent<CombinedSearchBarProps> 
           type="text"
           value={search}
         />
-        <Button.Text
-          mainColor={colors.primary.base}
-          icononly
-          icon="Search"
-          onClick={() => doSearch()}
-          style={{ position: "absolute", top: 0, right: 0, zIndex: 9 }}
-        />
+        <Button.Text onClick={() => doSearch()} style={{ position: "absolute", top: 0, right: 0, zIndex: 9 }}>
+          <SearchIcon size="20px" />
+        </Button.Text>
       </Flex>
     </StyledWrap>
   );
