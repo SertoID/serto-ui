@@ -28,6 +28,7 @@ const PillImg = styled.div`
 export interface PillWithImgProps {
   icon?: JSX.Element;
   text: string;
+  [key: string]: any;
 }
 
 export const PillWithImg: React.FunctionComponent<PillWithImgProps> = (props) => {
@@ -40,6 +41,7 @@ export const PillWithImg: React.FunctionComponent<PillWithImgProps> = (props) =>
       height={4}
       justifyContent={props.icon ? "flex-start" : "center"}
       width="100px"
+      {...props}
     >
       {props.icon && <PillImg>{props.icon}</PillImg>}
       <Text fontSize={0} px={2}>
@@ -51,24 +53,25 @@ export const PillWithImg: React.FunctionComponent<PillWithImgProps> = (props) =>
 
 export interface SocialPillsProps {
   platform: string;
+  [key: string]: any;
 }
 
 export const SocialPills: React.FunctionComponent<SocialPillsProps> = (props) => {
   const { platform } = props;
   return (
     <>
-      {platform === "facebook" ? (
-        <PillWithImg icon={<Facebook size="22" />} text="Facebook" />
-      ) : platform === "linkedin" ? (
-        <PillWithImg icon={<LinkedIn size="22" />} text="LinkedIn" />
-      ) : platform === "medium" ? (
-        <PillWithImg icon={<Medium size="22" />} text="Medium" />
-      ) : platform === "twitter" ? (
-        <PillWithImg icon={<TwitterBird size={18} />} text="Twitter" />
-      ) : platform === "youtube" ? (
-        <PillWithImg icon={<YouTube size={20} />} text="YouTube" />
+      {platform === "Facebook" ? (
+        <PillWithImg icon={<Facebook size="22" />} text="Facebook" {...props} />
+      ) : platform === "LinkedIn" ? (
+        <PillWithImg icon={<LinkedIn size="22" />} text="LinkedIn" {...props} />
+      ) : platform === "Medium" ? (
+        <PillWithImg icon={<Medium size="22" />} text="Medium" {...props} />
+      ) : platform === "Twitter" ? (
+        <PillWithImg icon={<TwitterBird size={18} />} text="Twitter" {...props} />
+      ) : platform === "Youtube" ? (
+        <PillWithImg icon={<YouTube size={20} />} text="YouTube" {...props} />
       ) : (
-        <PillWithImg text={platform} />
+        <PillWithImg text={platform} {...props} />
       )}
     </>
   );
