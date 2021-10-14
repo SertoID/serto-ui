@@ -83,6 +83,10 @@
     "rimraf": "^3.0.2",
     "storybook-dark-mode": "^1.0.8"
   },
+  "resolutions": {
+    "//": "babel-loader resolution is workaround for storybook/react-scripts bug https://github.com/storybookjs/storybook/issues/5183",
+    "babel-loader": "8.1.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged",
