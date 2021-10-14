@@ -1,4 +1,5 @@
 import * as React from "react";
+import Linkify from "linkify-react";
 import { Box, Button, Flex, Text, Flash } from "rimble-ui";
 import { Send, KeyboardArrowDown } from "@rimble/icons";
 import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "vc-schema-tools";
@@ -216,7 +217,11 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
           {!fullPage && <MetadataText fontFamily={fonts.monospace}>{schema.slug}</MetadataText>}
           <MetadataText>Version {schema.version}</MetadataText>
           <MetadataText>{!schema.discoverable && "Not "}Searchable</MetadataText>
-          {!fullPage && schema.description && <MetadataText>{schema.description}</MetadataText>}
+          {!fullPage && schema.description && (
+            <MetadataText>
+              <Linkify options={{ target: "_blank" }}>{schema.description}</Linkify>
+            </MetadataText>
+          )}
 
           {requiredSchemaProperties.map((prop) => renderProperty(prop["@id"], prop))}
           {innerContext &&

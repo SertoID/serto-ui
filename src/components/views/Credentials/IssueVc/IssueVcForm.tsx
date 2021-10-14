@@ -3,7 +3,7 @@ import { Flex, Button, Field, Flash, Form, Input, Loader, Checkbox, Text } from 
 import { Warning } from "@rimble/icons";
 import { mutate } from "swr";
 import { JsonSchemaNode, VcSchema, VC } from "vc-schema-tools";
-import { ModalBack, ModalContent, ModalHeader } from "../../../elements/Modals";
+import { ModalBack, ModalContent, ModalContentFullWidth, ModalHeader } from "../../../elements/Modals";
 import { Identifier } from "../../../../types";
 import { DidSelect } from "../../../elements/DidSelect";
 import { IssueVcFormInput } from "./IssueVcFormInput";
@@ -228,9 +228,9 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
 
   if (step === STEPS[2] && issuedVc) {
     return (
-      <ModalContent>
+      <ModalContentFullWidth>
         <IssueVcSuccess vc={issuedVc} onComplete={onComplete} messagingError={messagingError} />
-      </ModalContent>
+      </ModalContentFullWidth>
     );
   }
 

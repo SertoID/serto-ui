@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import Linkify from "linkify-react";
 import { Flex, Box, Text } from "rimble-ui";
 import { StarBorder, CallSplit, Send } from "@rimble/icons";
 import { SchemaDataResponse, SchemaDataInput } from "./types";
@@ -59,7 +60,11 @@ export const SchemaCard: React.FunctionComponent<SchemaCardProps> = (props) => {
             <Send size="18px" ml={3} /> 0
           </IconWrap>
         )}
-        {schema.description && <Text my={2}>{schema.description}</Text>}
+        {schema.description && (
+          <Text my={2} onClick={(event: any) => event.stopPropagation()}>
+            <Linkify options={{ target: "_blank" }}>{schema.description}</Linkify>
+          </Text>
+        )}
       </Box>
       <Flex px={3} borderTop={2} height="48px" fontSize={1} justifyContent="space-between" alignItems="center">
         {"creator" in schema && schema.creator ? (

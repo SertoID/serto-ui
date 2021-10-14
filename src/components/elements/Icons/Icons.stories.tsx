@@ -5,13 +5,16 @@ import {
   DidKeyIcon,
   DidSovIcon,
   DidWebIcon,
+  Facebook,
   Fingerprint,
   GitHub,
   GreenCircleCheck,
   IcoWeb,
   IndentedArrow,
+  LinkedIn,
   LockUnverified,
   LockVerified,
+  Medium,
   OutlineOne,
   OutlineTwo,
   QrCode,
@@ -22,7 +25,9 @@ import {
   SertoVerifiedCheckmark,
   SertoVerificationError,
   ShareIcon,
+  TwitterBird,
   Verified,
+  YouTube,
 } from "./";
 
 storiesOf("Icons", module)
@@ -41,6 +46,9 @@ storiesOf("Icons", module)
   .add("DidWebIcon", () => {
     return <DidWebIcon />;
   })
+  .add("Facebook", () => {
+    return <Facebook />;
+  })
   .add("Fingerprint", () => {
     return <Fingerprint />;
   })
@@ -56,11 +64,17 @@ storiesOf("Icons", module)
   .add("IndentedArrow", () => {
     return <IndentedArrow />;
   })
+  .add("LinkedIn", () => {
+    return <LinkedIn />;
+  })
   .add("LockUnverified", () => {
     return <LockUnverified />;
   })
   .add("LockVerified", () => {
     return <LockVerified />;
+  })
+  .add("Medium", () => {
+    return <Medium />;
   })
   .add("OutlineOne", () => {
     return <OutlineOne />;
@@ -92,6 +106,12 @@ storiesOf("Icons", module)
   .add("ShareIcon", () => {
     return <ShareIcon size="50px" />;
   })
+  .add("TwitterBird", () => {
+    return <TwitterBird size={50} />;
+  })
   .add("Verified", () => {
     return <Verified />;
+  })
+  .add("YouTube", () => {
+    return <YouTube />;
   });

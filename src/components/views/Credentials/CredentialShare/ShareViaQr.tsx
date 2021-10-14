@@ -13,10 +13,11 @@ const StyledQRCode = styled(QRCode)`
 
 export interface ShareViaQrProps {
   url: string;
+  inline?: boolean;
 }
 
 export const ShareViaQr: React.FunctionComponent<ShareViaQrProps> = (props) => {
-  const { url } = props;
+  const { url, inline } = props;
   const [canvas, setCanvas] = useState<HTMLCanvasElement | undefined>();
   const [copied, setCopied] = useState(false);
   useEffect(() => {
@@ -31,19 +32,33 @@ export const ShareViaQr: React.FunctionComponent<ShareViaQrProps> = (props) => {
     setCanvas(node?.querySelector("canvas"));
   }, []);
 
+  const PrimaryButton = inline ? Button : Button.Text;
+  const SecondaryButton = inline ? Button.Outline : Button.Text;
+
   return (
-    <Flex>
-      <Box ref={getCanvasNode} p={3} border={4} backgroundColor={colors.nearWhite} maxWidth={8}>
+    <Flex flexDirection={inline ? "row" : "column"} alignItems="center">
+      <Box
+        ref={getCanvasNode}
+        p={3}
+        mb={inline ? 0 : 4}
+        border={inline ? 4 : undefined}
+        backgroundColor={inline ? colors.nearWhite : "transparent"}
+        maxWidth={8}
+      >
         <StyledQRCode value={url} renderAs="canvas" size={512} bgColor="transparent" />
       </Box>
-      <Flex pl={4} flexDirection="column" justifyContent="center">
-        <Button size="small" mb={3} onClick={() => canvas && downloadCanvasImage(canvas, "credential-QR-code.png")}>
+      <Flex pl={inline ? 4 : 0} flexDirection="column" justifyContent="center">
+        <PrimaryButton
+          size="small"
+          mb={3}
+          onClick={() => canvas && downloadCanvasImage(canvas, "credential-QR-code.png")}
+        >
           <FileDownload size="15px" mr={2} /> Download QR code
-        </Button>
+        </PrimaryButton>
         {copyImageSupported && (
-          <Button.Outline size="small" onClick={() => canvas && setCopied(copyCanvasImage(canvas))}>
+          <SecondaryButton size="small" onClick={() => canvas && setCopied(copyCanvasImage(canvas))}>
             <ContentCopy size="15px" mr={2} /> {copied ? "Copied" : "Copy to clipboard"}
-          </Button.Outline>
+          </SecondaryButton>
         )}
       </Flex>
     </Flex>

@@ -29,6 +29,7 @@ export function useVcSchema(
   loading?: boolean;
   error?: any;
   vcSchema?: SchemaDataResponseWithJsonSchema;
+  vcSchemaName: string;
 } {
   const schemasService = useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
 
@@ -73,9 +74,19 @@ export function useVcSchema(
     }
   }, [data, vc]);
 
+  let vcSchemaName = "VerifiableCredential";
+  if (vcSchema?.name) {
+    vcSchemaName = vcSchema.name;
+  } else if (Array.isArray(vc.type) && vc.type.length) {
+    vcSchemaName = vc.type[vc.type.length - 1];
+  } else if (typeof vc.type === "string") {
+    vcSchemaName = vc.type;
+  }
+
   return {
     loading,
     error,
     vcSchema,
+    vcSchemaName,
   };
 }
