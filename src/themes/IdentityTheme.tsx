@@ -28,9 +28,9 @@ const identityTheme = {
     sansSerif: fonts.sansSerif,
     mono: fonts.monospace,
   },
-  space: [0, 4, 8, 16, 24, 32, 64, 128, 256],
+  space: [0, 4, 8, 16, 24, 32, 64, 128, 256], // last index is 8
   radii: [0, 4, 8, 16, 24, 32],
-  sizes: [0, 4, 8, 16, 24, 32, 64, 128, 256, 512, 768, 1024, 1536],
+  sizes: [0, 4, 8, 16, 24, 32, 64, 128, 256, 512, 768, 1024, 1536], // last is index 12
   borders: [
     0,
     "1px solid " + colors.moonGray,

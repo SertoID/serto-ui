@@ -11,6 +11,8 @@ import { config } from "../../../../config";
 import { CopyableTruncatableText } from "../../../elements/CopyableTruncatableText/CopyableTruncatableText";
 import { ShareViaDidComm } from "./ShareViaDidComm";
 import { ShareViaQr } from "./ShareViaQr";
+import { ShareViaSocial } from "./ShareViaSocial";
+
 const _ShareBox: React.FC<{ className?: string }> = (props) => (
   <Box borderBottom={4} p={4} className={props.className}>
     {props.children}
@@ -67,6 +69,13 @@ export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
             </Button>
           )}
         />
+      </ShareBox>
+
+      <ShareBox>
+        <H6 mt={0} mb={3}>
+          Share on social media
+        </H6>
+        <ShareViaSocial vc={vc} vcUrl={vcUrl} />
       </ShareBox>
 
       {issueVcFlow && (

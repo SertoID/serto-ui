@@ -36,7 +36,7 @@ export const ShareViaQr: React.FunctionComponent<ShareViaQrProps> = (props) => {
   const SecondaryButton = inline ? Button.Outline : Button.Text;
 
   return (
-    <Flex flexDirection={inline ? "row" : "column"}>
+    <Flex flexDirection={inline ? "row" : "column"} alignItems="center">
       <Box
         ref={getCanvasNode}
         p={3}
