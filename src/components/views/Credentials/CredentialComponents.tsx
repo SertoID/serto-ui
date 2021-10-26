@@ -33,7 +33,7 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
     <Flex alignItems="center" justifyContent="space-between">
       <Flex>
         <CredentialJsonDownload vc={props.vc} />
-        {props.renderContext !== RENDER_CONTEXT.EMBED && (
+        {props.renderContext !== RENDER_CONTEXT.VC_EMBED && (
           <>
             <Box mr={2}>
               <CredentialShareButton vc={props.vc} />
@@ -43,7 +43,7 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
         )}
         {props.vcUrl && (
           <>
-            {props.renderContext !== RENDER_CONTEXT.EMBED && <QRCodeExpand vcUrl={props.vcUrl} />}
+            {props.renderContext !== RENDER_CONTEXT.VC_EMBED && <QRCodeExpand vcUrl={props.vcUrl} />}
             <CopyToClipboard
               color={colors.midGray}
               iconPadding={1}
@@ -58,7 +58,7 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
         )}
       </Flex>
       {props.expired && <ExpiredPill />}
-      {props.renderContext !== RENDER_CONTEXT.EMBED ? (
+      {props.renderContext !== RENDER_CONTEXT.VC_EMBED ? (
         <Flex
           alignItems="center"
           color={colors.silver}
@@ -100,7 +100,7 @@ export interface CredentialEmbedProps {
 
 export const CredentialEmbed: React.FunctionComponent<CredentialEmbedProps> = (props) => {
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
-  const embedHtml = `<iframe src="https://search.serto.id/vc-embed?vc=${props.jwt}" sandbox="allow-popups allow-same-origin" style="border: none;" width="450px" height="160px"></iframe>`;
+  const embedHtml = `<iframe src="https://search.serto.id/vc-embed?vc=${props.jwt}" sandbox="allow-popups allow-same-origin allow-scripts" style="border: none;" width="480px" height="160px"></iframe>`;
 
   return (
     <>

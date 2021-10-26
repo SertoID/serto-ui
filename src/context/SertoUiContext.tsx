@@ -9,9 +9,9 @@ import { Identifier, VeramoIssueVcOptions } from "../types";
 
 export enum RENDER_CONTEXT {
   AGENT,
-  EMBED,
   SCHEMAS,
   SEARCH,
+  VC_EMBED,
 }
 
 export interface ToastInterface {
