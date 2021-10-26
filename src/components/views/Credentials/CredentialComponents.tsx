@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { VC } from "vc-schema-tools";
-import { FileDownload, KeyboardArrowDown, KeyboardArrowUp } from "@rimble/icons";
-import { Box, Flex, Link, Text } from "rimble-ui";
+import { Code, FileDownload, KeyboardArrowDown, KeyboardArrowUp, OpenInNew } from "@rimble/icons";
+import { Box, Button, Flex, Link, Text } from "rimble-ui";
 import {
   CopyToClipboard,
   ExpiredPill,
@@ -11,6 +11,8 @@ import {
   QrCode,
   UnstyledButton,
 } from "../../elements";
+import { H3 } from "../../layouts";
+import { RENDER_CONTEXT } from "../../../context";
 import { baseColors, fonts, colors } from "../../../themes";
 import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialShareButton } from "./CredentialShare";
@@ -22,6 +24,7 @@ export interface CredentialFooterProps {
   vcUrl?: string;
   expired: any;
   isOpen: boolean;
+  renderContext?: RENDER_CONTEXT;
   setIsOpen(isOpen: boolean): void;
 }
 
@@ -30,12 +33,17 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
     <Flex alignItems="center" justifyContent="space-between">
       <Flex>
         <CredentialJsonDownload vc={props.vc} />
-        <Box mr={2}>
-          <CredentialShareButton vc={props.vc} />
-        </Box>
+        {props.renderContext !== RENDER_CONTEXT.EMBED && (
+          <>
+            <Box mr={2}>
+              <CredentialShareButton vc={props.vc} />
+            </Box>
+            <CredentialEmbed jwt={props.vc.proof.jwt} />
+          </>
+        )}
         {props.vcUrl && (
           <>
-            <QRCodeExpand vcUrl={props.vcUrl} />
+            {props.renderContext !== RENDER_CONTEXT.EMBED && <QRCodeExpand vcUrl={props.vcUrl} />}
             <CopyToClipboard
               color={colors.midGray}
               iconPadding={1}
@@ -50,27 +58,79 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
         )}
       </Flex>
       {props.expired && <ExpiredPill />}
-      <Flex
-        alignItems="center"
-        color={colors.silver}
-        fontSize={0}
-        fontFamily={fonts.sansSerif}
-        onClick={() => props.setIsOpen(!props.isOpen)}
-        style={{ cursor: "pointer" }}
-      >
-        {props.isOpen ? (
-          <>
-            Collapse
-            <KeyboardArrowUp color={colors.midGray} ml={1} size="18px" />
-          </>
-        ) : (
-          <>
-            Expand
-            <KeyboardArrowDown color={colors.midGray} ml={1} size="18px" />
-          </>
-        )}
-      </Flex>
+      {props.renderContext !== RENDER_CONTEXT.EMBED ? (
+        <Flex
+          alignItems="center"
+          color={colors.silver}
+          fontSize={0}
+          fontFamily={fonts.sansSerif}
+          onClick={() => props.setIsOpen(!props.isOpen)}
+          style={{ cursor: "pointer" }}
+        >
+          {props.isOpen ? (
+            <>
+              Collapse
+              <KeyboardArrowUp color={colors.midGray} ml={1} size="18px" />
+            </>
+          ) : (
+            <>
+              Expand
+              <KeyboardArrowDown color={colors.midGray} ml={1} size="18px" />
+            </>
+          )}
+        </Flex>
+      ) : (
+        <>
+          {props.vcUrl && (
+            <Button.Text as="a" href={props.vcUrl} size="small" target="_blank">
+              <Flex alignItems="center">
+                Verify on Serto Search <OpenInNew color={colors.primary.base} ml={1} size="18px" />
+              </Flex>
+            </Button.Text>
+          )}
+        </>
+      )}
     </Flex>
+  );
+};
+
+export interface CredentialEmbedProps {
+  jwt: string;
+}
+
+export const CredentialEmbed: React.FunctionComponent<CredentialEmbedProps> = (props) => {
+  const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  const embedHtml = `<iframe src="https://search.serto.id/vc-embed?vc=${props.jwt}" sandbox="allow-popups allow-same-origin" style="border: none;" width="450px" height="160px"></iframe>`;
+
+  return (
+    <>
+      <UnstyledButton onClick={() => setIsEmbedModalOpen(true)} mr={2}>
+        <Box p={1} title="View Embed Code">
+          <HoverSvgFill>
+            <Code color={colors.midGray} size="18px" />
+          </HoverSvgFill>
+        </Box>
+      </UnstyledButton>
+      <ModalWithX borderRadius={2} isOpen={isEmbedModalOpen} close={() => setIsEmbedModalOpen(false)}>
+        <Box borderRadius={2} maxWidth="450px" pb={3} px={3}>
+          <H3 mt={0}>Embed Credential</H3>
+          <Box position="relative">
+            <Box position="absolute" right={3} top={3} zIndex={1}>
+              <CopyToClipboard text={embedHtml} />
+            </Box>
+            <Box
+              bg={colors.nearWhite}
+              borderRadius={1}
+              maxHeight="300px"
+              p={3}
+              style={{ overflow: "scroll", overflowWrap: "break-word" }}
+            >
+              <code style={{ fontSize: "12px" }}>{embedHtml}</code>
+            </Box>
+          </Box>
+        </Box>
+      </ModalWithX>
+    </>
   );
 };
 
