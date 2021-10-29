@@ -19,6 +19,7 @@ export * from "./NftSearchBox";
 export * from "./Pills";
 export * from "./Popup";
 export * from "./SearchBox";
+export * from "./SocialIcons";
 export * from "./SplitButton";
 export * from "./TabbedSearch";
 export * from "./Toggle";

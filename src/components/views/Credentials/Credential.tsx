@@ -15,10 +15,12 @@ import { useVcSchema } from "../../../services/useVcSchema";
 import { CredentialHeader } from "./CredentialHeader";
 import { CredentialProperty } from "./CredentialProperty";
 import { ViewSchemaButton } from "../Schemas/ViewSchemaButton";
+import { RENDER_CONTEXT } from "../../../context";
 
 export interface CredentialProps {
   vc: VC;
   isOpen?: boolean;
+  renderContext?: RENDER_CONTEXT;
 }
 
 export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
@@ -124,7 +126,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
               </Table>
             </Box>
           )}
-          {vcUrl && (
+          {vcUrl && props.renderContext !== RENDER_CONTEXT.SEARCH && (
             <Box my={4} px={3}>
               <Button.Outline as="a" href={vcUrl} size="small" target="_blank" width="100%">
                 Verify on Serto Search
@@ -137,6 +139,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
         <CredentialFooter
           expired={expired}
           isOpen={isOpen}
+          renderContext={props.renderContext}
           setIsOpen={(isOpen) => setIsOpen(isOpen)}
           vc={vc}
           vcUrl={vcUrl}

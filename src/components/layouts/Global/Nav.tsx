@@ -18,7 +18,7 @@ export const Nav: React.FunctionComponent<NavProps> = (props) => {
   const navItems = props.navItems || context.navItems;
   return (
     <>
-      {navItems.map((navItemProps) => (
+      {navItems?.map((navItemProps) => (
         <NavItem
           {...navItemProps}
           currentUrl={props.currentUrl}

@@ -7,6 +7,13 @@ import { SertoSearchService, mockSertoSearchService } from "../services/SertoSea
 import { NavItemProps } from "../components/layouts/Global/Nav";
 import { Identifier, VeramoIssueVcOptions } from "../types";
 
+export enum RENDER_CONTEXT {
+  AGENT,
+  SCHEMAS,
+  SEARCH,
+  VC_EMBED,
+}
+
 export interface ToastInterface {
   addMessage(
     message: string,
@@ -21,7 +28,8 @@ export interface ToastInterface {
 
 export interface SertoUiContextInterface {
   toastProvider: ToastInterface;
-  navItems: NavItemProps[];
+  navItems?: NavItemProps[];
+  renderContext?: RENDER_CONTEXT;
   schemasService: Omit<SertoSchemasService, "url" | "request" | "ensureAuthenticated">;
   schemasUiUrl?: string;
   searchService: Omit<SertoSearchService, "url" | "request">;
