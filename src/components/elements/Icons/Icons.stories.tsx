@@ -128,13 +128,13 @@ storiesOf("Icons", module)
     return <ReverseOutlineOne />;
   })
   .add("ReverseOutlineTwo", () => {
-    return <ReverseOutlineTwo color="green"/>;
+    return <ReverseOutlineTwo color="green" />;
   })
   .add("ReverseOutlineThree", () => {
     return <ReverseOutlineThree />;
   })
   .add("ReverseOutlineFour", () => {
-    return <ReverseOutlineFour color="black"/>;
+    return <ReverseOutlineFour color="black" />;
   })
   .add("ReverseOutlineFive", () => {
     return <ReverseOutlineFive />;
