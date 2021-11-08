@@ -18,6 +18,11 @@ import {
   OutlineOne,
   OutlineTwo,
   QrCode,
+  ReverseOutlineOne,
+  ReverseOutlineTwo,
+  ReverseOutlineThree,
+  ReverseOutlineFour,
+  ReverseOutlineFive,
   SearchIcon,
   SertoAgentLogo,
   SertoLogo,
@@ -118,4 +123,19 @@ storiesOf("Icons", module)
   })
   .add("YouTube", () => {
     return <YouTube />;
+  })
+  .add("ReverseOutlineOne", () => {
+    return <ReverseOutlineOne />;
+  })
+  .add("ReverseOutlineTwo", () => {
+    return <ReverseOutlineTwo color="green"/>;
+  })
+  .add("ReverseOutlineThree", () => {
+    return <ReverseOutlineThree />;
+  })
+  .add("ReverseOutlineFour", () => {
+    return <ReverseOutlineFour color="black"/>;
+  })
+  .add("ReverseOutlineFive", () => {
+    return <ReverseOutlineFive />;
   });
