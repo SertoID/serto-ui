@@ -1,4 +1,5 @@
 import { storiesOf } from "@storybook/react";
+import { CircleFive, CircleFour, CircleOne, CircleThree, CircleTwo } from "..";
 import {
   CredentialCheck,
   CredentialCheckFilled,
@@ -138,4 +139,19 @@ storiesOf("Icons", module)
   })
   .add("ReverseOutlineFive", () => {
     return <ReverseOutlineFive />;
+  })
+  .add("CircleOne", () => {
+    return <CircleOne />;
+  })
+  .add("CircleTwo", () => {
+    return <CircleTwo />;
+  })
+  .add("CircleThree", () => {
+    return <CircleThree />;
+  })
+  .add("CircleFour", () => {
+    return <CircleFour />;
+  })
+  .add("CircleFive", () => {
+    return <CircleFive />;
   });

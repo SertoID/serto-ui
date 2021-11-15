@@ -4,7 +4,7 @@
   "author": "Serto",
   "homepage": "https://serto.id",
   "repository": "SertoID/serto-ui",
-  "version": "0.3.46",
+  "version": "0.3.47",
   "main": "dist/serto-ui.js",
   "types": "dist/serto-ui.d.ts",
   "scripts": {
@@ -13,7 +13,7 @@
     "clean": "rimraf dist/",
     "test": "react-scripts test",
     "test-ci": "react-scripts test --coverage=true",
-    "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
+    "prettier": "prettier --config .prettierrc.yaml --write --list-different \"./**/*.{ts,tsx,json,md}\"",
     "prettier:lint": "prettier --config .prettierrc.yaml --list-different './**/*.{ts,tsx,json,md}'",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
