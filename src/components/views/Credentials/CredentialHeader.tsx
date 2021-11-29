@@ -8,13 +8,14 @@ import { DomainImage, LockUnverified, LockVerified } from "../../elements";
 import { H4 } from "../../layouts";
 import { baseColors, colors, fonts } from "../../../themes";
 import { validateVc } from "vc-schema-tools";
+import { SchemaDataResponse } from "../Schemas/types";
 
 export interface CredentialHeaderProps {
   issuer: string;
   issuerDomain?: string;
   vc: VC;
-  vcSchema: any;
-  vcType: any;
+  vcSchema?: SchemaDataResponse;
+  vcType: string;
 }
 
 export const CredentialHeader: React.FunctionComponent<CredentialHeaderProps> = (props) => {
@@ -34,7 +35,7 @@ export const CredentialHeader: React.FunctionComponent<CredentialHeaderProps> = 
   useEffect(() => {
     return void (async function validate() {
       try {
-        const { valid } = await validateVc(JSON.stringify(vc));
+        const { valid } = await validateVc(vc);
         if (valid) {
           setIsValid(true);
         } else {

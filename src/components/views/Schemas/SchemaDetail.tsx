@@ -5,7 +5,7 @@ import { Box, Flex, Text } from "rimble-ui";
 import { OpenInNew } from "@rimble/icons";
 import { H5 } from "../../layouts";
 import { baseColors, colors } from "../../../themes";
-import { SchemaDataInput, SchemaDataResponse } from "./types";
+import { SchemaDataResponse, SchemaDataInput } from "./types";
 import { SchemaSaves } from "./SchemaSaves";
 import { SchemaHeader } from "./SchemaHeader";
 import { SchemaPreview, SchemaViewTypes, SCHEMA_VIEWS } from "./SchemaPreview";
@@ -95,7 +95,7 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
 
             <SidebarHeading>Schema Author</SidebarHeading>
             <Text>
-              {"creator" in schema && schema.creator ? (
+              {"creator" in schema && schema.creator?.name && schema.creator.nickName ? (
                 <>
                   {schema.creator.name && (
                     <Text>

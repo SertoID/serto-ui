@@ -35,11 +35,11 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
   const [privateBetaModalOpen, setPrivateBetaModalOpen] = useState(false);
   const [exampleVcModalOpen, setExampleVcModalOpen] = useState(false);
 
-  const ldContextPlus = JSON.parse(schema.ldContextPlus);
-  const uris = schema.uris || ldContextPlus?.["@context"]?.["@metadata"]?.uris;
+  const jsonSchema = JSON.parse(schema.jsonSchema);
+  const uris = schema.uris || jsonSchema?.$metadata?.uris;
 
-  // @TODO/tobek Need a more elegant way to get root type. Probably VcSchema library should have a utility that creates an example VC that actually has all the fields filled in based on schema.
-  const rootType = ldContextPlus?.["@context"]?.["@rootType"];
+  const rootType = jsonSchema.$linkedData?.term;
+  // @TODO/tobek Need a more elegant way to do this, probably VcSchema library should have a utility that creates an example VC that actually has all the fields filled in based on schema.
   const exampleVc = {
     "@context": ["https://www.w3.org/2018/credentials/v1", ...(uris?.jsonLdContext ? [uris.jsonLdContext] : [])],
     ...(uris?.jsonSchema && {

@@ -2,10 +2,9 @@ import * as React from "react";
 import Linkify from "linkify-react";
 import { Box, Button, Flex, Text, Flash } from "rimble-ui";
 import { Send, KeyboardArrowDown } from "@rimble/icons";
-import { LdContextPlusInnerNode, LdContextPlusNode, LdContextPlusRootNode, VcSchema } from "vc-schema-tools";
+import { VcSchema, JsonSchemaNode, nodeToTypeName } from "vc-schema-tools";
 import { baseColors, colors, fonts } from "../../../themes";
-import { SchemaDataInput, SchemaDataResponse, requiredSchemaProperties } from "./types";
-import { typeOptions } from "./utils";
+import { SchemaDataInput, SchemaDataResponse, defaultSchemaProperties, defaultSchemaPropertiesRequired } from "./types";
 import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson";
 import { ModalWithX } from "../../elements/Modals";
 import { SchemaUsage } from "./SchemaUsage";
@@ -28,54 +27,61 @@ const PropertyRequired: React.FunctionComponent = (props) => (
   <PropertyText fontWeight={3}>{props.children}</PropertyText>
 );
 const PropertyType: React.FunctionComponent<any> = (props) => (
-  <PropertyText color={baseColors.black} fontSize={2} mb={0} {...props}>
+  <PropertyText
+    color={baseColors.black}
+    fontSize={2}
+    mb={0}
+    maxWidth="75%"
+    style={{ wordBreak: "break-all" }}
+    {...props}
+  >
     {props.children}
   </PropertyText>
 );
 const PropertyName: React.FunctionComponent = (props) => <PropertyType fontWeight={3}>{props.children}</PropertyType>;
 
-const renderProperty = (
-  key: string,
-  prop?: LdContextPlusNode,
-  outerContext?: LdContextPlusRootNode,
-): React.ReactNode => {
+const renderProperty = (key: string, prop: JsonSchemaNode, required?: boolean): React.ReactNode => {
   if (!prop) {
     console.warn("Could not find prop for key:", key);
     return <></>;
   }
-  if (outerContext && "@replaceWith" in prop && prop["@replaceWith"]) {
-    return renderProperty(key, outerContext[prop["@replaceWith"]] as any, outerContext);
-  }
-  let propType: string;
-  if ("@type" in prop && prop["@type"]) {
-    propType = typeOptions[prop["@type"]]?.niceName || prop["@type"];
-  } else if ("@context" in prop && prop["@context"]) {
-    // Nested object will be displayed underneath
+  let propType: string | undefined;
+  if (prop.type === "object") {
+    // Looks nicer with blank type name - nested object will be displayed underneath
     propType = "";
+  } else if (prop.$ref) {
+    propType = "ref: " + prop.$ref;
+  } else if (prop.type === "array" && prop.items?.$ref) {
+    propType = `List (ref: ${prop.items.$ref})`;
   } else {
-    console.warn("Unrecognized property:", { key, prop, outerContext });
-    propType = "[unknown]";
+    propType = nodeToTypeName(prop);
+    if (!propType) {
+      propType = "[unknown]";
+      console.warn("Unrecognized property:", { key, prop });
+    }
   }
 
   return (
     <Box key={key} my={3}>
       <Flex justifyContent="space-between">
-        <PropertyName>{prop["@title"] || key}</PropertyName>
+        <PropertyName>{prop.title || key}</PropertyName>
         <PropertyType>{propType}</PropertyType>
       </Flex>
-      {prop["@description"] && <PropertyText>{prop["@description"]}</PropertyText>}
-      {prop["@required"] && <PropertyRequired>Required</PropertyRequired>}
+      {prop.description && <PropertyText>{prop.description}</PropertyText>}
+      {required && <PropertyRequired>Required</PropertyRequired>}
 
-      {"@context" in prop && prop["@context"] && (
+      {prop.properties && (
         <Box pl={3} mt={3}>
-          {Object.entries(prop["@context"]).map((entry) => renderProperty(entry[0], entry[1], outerContext))}
+          {Object.entries(prop.properties).map((entry) =>
+            renderProperty(entry[0], entry[1], prop.required?.includes(entry[0])),
+          )}
         </Box>
       )}
     </Box>
   );
 };
 
-export const SCHEMA_VIEWS = ["Formatted View", "JSON source", "JSON-LD Context", "JSON Schema"] as const;
+export const SCHEMA_VIEWS = ["Formatted View", "JSON Schema", "JSON-LD Context"] as const;
 export type SchemaViewTypes = typeof SCHEMA_VIEWS[number];
 
 export interface SchemaPreviewProps {
@@ -103,7 +109,7 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
   const schemaInstance = React.useMemo(() => {
     try {
       setError("");
-      return new VcSchema(schema.ldContextPlus);
+      return new VcSchema(schema.jsonSchema);
     } catch (err) {
       console.error("Failed to generate schema instance:", err);
       setError(err.message || JSON.stringify(err));
@@ -115,32 +121,18 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
       return {};
     }
     return {
-      [SCHEMA_VIEWS[1]]: schemaInstance?.getLdContextPlusString(true),
+      [SCHEMA_VIEWS[1]]: schemaInstance?.getJsonSchemaString(true),
       [SCHEMA_VIEWS[2]]: schemaInstance?.getJsonLdContextString(true),
-      [SCHEMA_VIEWS[3]]: schemaInstance?.getJsonSchemaString(true),
     };
   }, [schemaInstance]);
 
-  let outerContext: LdContextPlusRootNode | undefined;
-  let innerContext:
-    | {
-        [key: string]: LdContextPlusNode<any>;
-      }
-    | undefined;
-  let credContains: string[] | undefined;
-
-  if (schemaInstance) {
-    outerContext = schemaInstance.schema["@context"];
-    const credentialSubject = outerContext?.credentialSubject as LdContextPlusInnerNode;
-    innerContext = credentialSubject?.["@context"];
-    if (!innerContext) {
-      setError("Invalid schema format: could not find `credentialSubject`");
+  const credentialSubject = React.useMemo(() => {
+    const credentialSubject = schemaInstance?.jsonSchema?.properties?.credentialSubject as JsonSchemaNode;
+    if (!credentialSubject) {
+      console.error("Invalid schema format: could not find `credentialSubject`");
     }
-    credContains =
-      typeof credentialSubject?.["@contains"] === "string"
-        ? [credentialSubject["@contains"]]
-        : credentialSubject?.["@contains"];
-  }
+    return credentialSubject;
+  }, [schemaInstance]);
 
   return (
     <Box {...rimbleProps}>
@@ -223,13 +215,13 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
             </MetadataText>
           )}
 
-          {requiredSchemaProperties.map((prop) => renderProperty(prop["@id"], prop))}
-          {innerContext &&
-            Object.entries(innerContext).map((entry) => renderProperty(entry[0], entry[1], outerContext))}
-          {credContains?.map(
-            (contained) =>
-              outerContext?.[contained] && renderProperty(contained, outerContext[contained] as any, outerContext),
+          {defaultSchemaProperties.map((prop, i) =>
+            renderProperty(prop.$linkedData.term, prop, defaultSchemaPropertiesRequired[i]),
           )}
+          {credentialSubject?.properties &&
+            Object.entries(credentialSubject.properties).map((entry) =>
+              renderProperty(entry[0], entry[1], credentialSubject.required?.includes(entry[0])),
+            )}
 
           {error && <Flash variant="danger">Error: {error}</Flash>}
         </Box>

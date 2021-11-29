@@ -6,8 +6,8 @@ import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import { useDebounce } from "use-debounce";
 import { links } from "../../../../config";
-import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema, SchemaDataResponse } from "../types";
-import { createSchemaInput, ldContextPlusToSchemaInput, schemaResponseToWorkingSchema } from "../utils";
+import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
+import { createSchemaInput } from "../utils";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
@@ -63,7 +63,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   React.useEffect(() => {
     if (inputMode === "JSON") {
-      setInputJson(JSON.stringify(JSON.parse(builtSchema.ldContextPlus), null, 2));
+      setInputJson(JSON.stringify(JSON.parse(builtSchema.jsonSchema), null, 2));
       setInputJsonError("");
     }
     // Hook relies on `builtSchema` but would be huge waste to run this hook every time that changes. We only need to run it when input mode changes so we can populate the JSON textarea with the current state of the schema. So:
@@ -75,11 +75,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       return;
     }
     try {
-      setSchema(
-        schemaResponseToWorkingSchema(
-          ldContextPlusToSchemaInput(JSON.parse(debouncedInputSchemaJson)) as SchemaDataResponse,
-        ),
-      );
+      setSchema(JSON.parse(debouncedInputSchemaJson));
       setInputJsonError("");
     } catch (err) {
       setInputJsonError(err.toString());
@@ -304,7 +300,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       >
         <SchemaDetail
           schema={builtSchema}
-          primaryView={inputMode === "JSON" ? "Formatted View" : "JSON source"}
+          primaryView={inputMode === "JSON" ? "Formatted View" : "JSON Schema"}
           hideTools={true}
           paneView={true}
         />

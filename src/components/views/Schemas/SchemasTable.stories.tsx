@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { storiesOf } from "@storybook/react";
 import { EXAMPLE_SCHEMAS } from "vc-schema-tools";
-import { ldContextPlusToSchemaInput } from "./utils";
+import { jsonSchemaToSchemaInput } from "./utils";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { SertoUiProvider } from "../../../context/SertoUiProvider";
 import { SchemasTable } from "./SchemasTable";
@@ -10,7 +10,7 @@ import { SchemasTable } from "./SchemasTable";
 const schemas = Object.values(EXAMPLE_SCHEMAS)
   .map((schema) => {
     try {
-      return ldContextPlusToSchemaInput(JSON.parse(schema));
+      return jsonSchemaToSchemaInput(schema);
     } catch {
       return undefined;
     }

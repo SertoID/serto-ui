@@ -13,6 +13,7 @@ const schemaToUpdate = {
   description: "Credential representing employment at an employer.",
   version: "1.0",
   icon: "👔",
+  required: ["id", "employeeName"],
   properties: [
     {
       "@id": "id",

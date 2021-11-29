@@ -1,4 +1,4 @@
-import { LdContextPlusNode, DefaultSchemaMetadata } from "vc-schema-tools";
+import { baseVcJsonSchema, DefaultSchemaMetadata, JsonSchema, JsonSchemaNode } from "vc-schema-tools";
 
 /** Metadata fields specific to our use-case (i.e. not part of the LdContextPlus spec) intended to be passed in to the LdContextPlus generic types where it will be stored in the "@metadata" object. */
 export interface SchemaMetadata extends DefaultSchemaMetadata {
@@ -8,25 +8,18 @@ export interface SchemaMetadata extends DefaultSchemaMetadata {
   discoverable?: boolean;
 }
 
-/** In-progress schema interface during CreateSchema flow that will be transformed into final output. */
-export interface WorkingSchema extends SchemaMetadata {
-  name: string;
-  properties: Partial<LdContextPlusNode<SchemaMetadata>>[];
-  description?: string;
-}
-
-/** Completed schema data from CreateSchema flow. */
-export interface CompletedSchema extends WorkingSchema {
-  properties: LdContextPlusNode<SchemaMetadata>[];
-}
+/** In-progress schema interface during CreateSchema flow. */
+export type WorkingSchema = Partial<JsonSchema<Partial<SchemaMetadata>>>;
+export type CompletedSchema = JsonSchema<SchemaMetadata>;
 
 /** Data format expected by API. */
 export interface SchemaDataInput extends SchemaMetadata {
   name: string;
   description?: string;
-  ldContextPlus: string;
-  ldContext: string;
   jsonSchema: string;
+  ldContext: string;
+  /** DEPRECATED */
+  ldContextPlus?: string;
 }
 
 /** Data format returned by API. */
@@ -48,60 +41,78 @@ export interface SchemaDataResponse extends SchemaDataInput {
   };
 }
 
-export const requiredSchemaProperties = [
+export const defaultSchemaProperties = [
   {
-    "@id": "credentialId",
-    "@type": "@id",
-    "@title": "Credential ID",
-    "@required": true,
+    $linkedData: {
+      term: "id",
+      "@id": "@id",
+    },
+    title: "Credential ID",
+    type: "string",
+    format: "uri",
   },
   {
-    "@id": "issuanceDate",
-    "@type": "http://schema.org/DateTime",
-    "@title": "Issuance Date",
-    "@required": true,
+    $linkedData: {
+      term: "issuanceDate",
+      "@id": "http://schema.org/DateTime",
+    },
+    title: "Issuance Date",
+    type: "string",
+    format: "date-time",
   },
   {
-    "@id": "issuer",
-    "@type": "@id",
-    "@title": "Issuer ID",
-    "@required": true,
+    $linkedData: {
+      term: "issuer",
+      "@id": "@id",
+    },
+    title: "Issuer ID",
+    type: "string",
+    format: "uri",
   },
 ];
+export const defaultSchemaPropertiesRequired = [false, true, true];
 
-export const newSchemaAttribute = {
-  "@id": "",
-  "@type": "http://schema.org/Text",
-  "@dataType": "string",
-  "@title": "",
-  "@description": "",
+export const newSchemaAttribute: JsonSchemaNode = {
+  $linkedData: {
+    term: "",
+    "@id": "http://schema.org/Text",
+  },
+  title: "",
+  description: "",
+  type: "string",
 };
 
 export const baseWorkingSchema: WorkingSchema = {
-  name: "",
+  $schema: "http://json-schema.org/draft-07/schema#",
+
+  $metadata: {
+    slug: "",
+    version: "1.0",
+    icon: "",
+    discoverable: false,
+  },
+  title: "",
   description: "",
-  slug: "",
-  version: "1.0",
-  icon: "",
-  discoverable: false,
-  properties: [
-    {
-      "@id": "id",
-      "@type": "@id",
-      "@dataType": "string",
-      "@format": "uri",
-      "@title": "Credential Subject ID",
-      "@required": true,
+
+  ...baseVcJsonSchema,
+
+  properties: {
+    ...baseVcJsonSchema.properties,
+    credentialSubject: {
+      $linkedData: { term: "credentialSubject", "@id": "https://www.w3.org/2018/credentials#credentialSubject" },
+      type: "object",
+      required: [],
+      properties: {
+        id: {
+          $linkedData: { term: "id", "@id": "@id" },
+          title: "Credential Subject ID",
+          type: "string",
+          format: "uri",
+        },
+        "": {
+          ...newSchemaAttribute,
+        },
+      },
     },
-    // {
-    //   "@id": "title",
-    //   "@type": "http://schema.org/Text",
-    //   "@dataType": "string",
-    //   "@title": "Title",
-    //   "@description": "A human-friendly name for this verified credential.",
-    // },
-    {
-      ...newSchemaAttribute,
-    },
-  ],
+  },
 };

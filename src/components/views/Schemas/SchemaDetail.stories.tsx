@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { Box, Flash } from "rimble-ui";
 import { EXAMPLE_SCHEMAS } from "vc-schema-tools";
 import { SchemaDetail } from "./SchemaDetail";
-import { ldContextPlusToSchemaInput } from "./utils";
+import { jsonSchemaToSchemaInput } from "./utils";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { SertoUiProvider } from "../../../context/SertoUiProvider";
@@ -27,10 +27,10 @@ const IDENTIFIERS: Identifier[] = [
 const SchemaDetailStory = () => {
   const [schemaKey, setSchemaKey] = React.useState<string>(DEFAULT_SCHEMA);
 
-  let ldContextPlus: SchemaDataInput | undefined;
+  let schemaData: SchemaDataInput | undefined;
   let error: string | undefined;
   try {
-    ldContextPlus = ldContextPlusToSchemaInput(JSON.parse(EXAMPLE_SCHEMAS[schemaKey]));
+    schemaData = jsonSchemaToSchemaInput(EXAMPLE_SCHEMAS[schemaKey]);
   } catch (err) {
     console.error("Failed to generate schema input from schema:", err);
     error = err.message || JSON.stringify(err);
@@ -49,7 +49,7 @@ const SchemaDetailStory = () => {
       </Box>
 
       <Box key={schemaKey}>
-        {ldContextPlus && <SchemaDetail schema={ldContextPlus} />}
+        {schemaData && <SchemaDetail schema={schemaData} />}
         {error && <Flash variant="danger">Error: {error}</Flash>}
       </Box>
     </IdentityThemeProvider>
