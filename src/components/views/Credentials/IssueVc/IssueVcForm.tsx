@@ -22,15 +22,15 @@ function buildCredential(
   issuer: string,
   vcData: { [key: string]: any },
 ): Partial<VC> {
-  const credType = schemaInstance.schema["@context"]["@rootType"];
+  const credType = schemaInstance.jsonSchema.$linkedData?.term;
 
-  let ldContext: string | any = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonLdContext;
+  let ldContext: string | any = schemaInstance.jsonSchema.$metadata?.uris?.jsonLdContext;
   if (!ldContext) {
     console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
-    ldContext = schemaInstance.jsonLdContext["@context"];
+    ldContext = schemaInstance.jsonLdContext?.["@context"];
   }
 
-  const jsonSchemaUrl = schemaInstance.schema["@context"]["@metadata"]?.uris?.jsonSchema;
+  const jsonSchemaUrl = schemaInstance.jsonSchema.$metadata?.uris?.jsonSchema;
   if (!jsonSchemaUrl) {
     console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
   }
@@ -104,7 +104,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
     if (schema) {
       try {
         setError("");
-        return new VcSchema(schema.ldContextPlus);
+        return new VcSchema(schema.jsonSchema);
       } catch (err) {
         console.error("Failed to generate schema instance:", err);
         setError(err.toString());
@@ -329,7 +329,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
                   value={vcData[key]}
                   identifiers={identifiers || []}
                   defaultSubjectDid={key === "id" && node.format === "uri" ? subjectIdentifier?.did : undefined}
-                  required={credSchema?.required?.indexOf(key) !== -1}
+                  required={credSchema?.required?.includes(key)}
                   onChange={(value) => setVcData({ ...vcData, [key]: value })}
                   subjectSupportsMessaging={subjectSupportsMessaging}
                   setSubjectSupportsMessaging={setSubjectSupportsMessaging}

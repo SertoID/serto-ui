@@ -2,12 +2,16 @@ import { useMemo, useContext } from "react";
 import useSWR from "swr";
 import { VC, JsonSchema } from "vc-schema-tools";
 import { SertoUiContext, SertoUiContextInterface } from "../context/SertoUiContext";
-import { SchemaDataResponse } from "../components/views/Schemas/types";
+import { SchemaDataResponse, SchemaMetadata } from "../components/views/Schemas/types";
+
+export type SchemaDataResponseWithParsedJson = SchemaDataResponse & {
+  parsedJsonSchema: JsonSchema<SchemaMetadata>;
+};
 
 /** To improve lookup times and save computation on parsing JSON */
 const schemaCache: {
   [contextUrl: string]: {
-    [type: string]: SchemaDataResponse;
+    [type: string]: SchemaDataResponseWithParsedJson;
   };
 } = {};
 
@@ -23,7 +27,7 @@ export function useVcSchema(
 ): {
   loading?: boolean;
   error?: any;
-  vcSchema?: SchemaDataResponse;
+  vcSchema?: SchemaDataResponseWithParsedJson;
   vcSchemaName: string;
 } {
   const schemasService = useContext<SertoUiContextInterface>(SertoUiContext).schemasService;
@@ -46,23 +50,27 @@ export function useVcSchema(
     }
 
     for (let i = 0; i < data.length; ++i) {
-      let jsonSchema: JsonSchema | undefined;
+      let jsonSchema: JsonSchema<SchemaMetadata> | undefined;
       let ldTerm: string | undefined;
       for (let j = 0; j < contextUrls.length; ++j) {
         if (data[i].jsonSchema.includes(`"jsonLdContext":"${contextUrls[j]}"`)) {
-          jsonSchema = jsonSchema || JSON.parse(data[i].jsonSchema);
-          ldTerm = ldTerm || jsonSchema?.$linkedData?.term;
-          for (let k = 0; k < types.length; ++k) {
-            if (types[k] === ldTerm) {
-              try {
+          try {
+            jsonSchema = jsonSchema || JSON.parse(data[i].jsonSchema);
+            ldTerm = ldTerm || jsonSchema?.$linkedData?.term;
+            for (let k = 0; k < types.length; ++k) {
+              if (types[k] === ldTerm && jsonSchema) {
+                const parsedSchema = {
+                  ...data[i],
+                  parsedJsonSchema: jsonSchema,
+                };
                 schemaCache[contextUrls[j]] = schemaCache[contextUrls[j]] || {};
-                schemaCache[contextUrls[j]][types[k]] = data[i];
-                return data[i];
-              } catch (err) {
-                console.error("Failed to parse JSON Schema:", err);
-                continue;
+                schemaCache[contextUrls[j]][types[k]] = parsedSchema;
+                return parsedSchema;
               }
             }
+          } catch (err) {
+            console.error("Failed to parse JSON Schema:", err);
+            continue;
           }
         }
       }
