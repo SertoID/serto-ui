@@ -1,3 +1,4 @@
+import slugify from "@sindresorhus/slugify";
 import { convertToPascalCase } from "../../../utils";
 import { VcSchema, jsonLdSchemaTypeMap, JsonSchema, JsonSchemaNode } from "vc-schema-tools";
 import { SchemaDataInput, WorkingSchema, SchemaMetadata, SchemaDataResponse, newSchemaAttribute } from "./types";
@@ -57,16 +58,19 @@ export function createSchemaInput(
 
 
 export function jsonSchemaToSchemaInput(jsonSchema: JsonSchema): SchemaDataInput {
+  if (!jsonSchema.title) {
+    throw Error("JSON Schema is missing required property `title`");
+  }
+
   const schemaInstance = new VcSchema(jsonSchema);
   const metadata = jsonSchema.$metadata || {};
 
   return {
-    name: jsonSchema.title || metadata.slug,
+    name: jsonSchema.title,
     description: jsonSchema.description,
 
     version: "1.0",
-    slug: "",
-    // @TODO/tobek Handle empty slug in JSON editor
+    slug: slugify(jsonSchema.title),
     ...metadata,
 
     ldContext: schemaInstance.getJsonLdContextString(),

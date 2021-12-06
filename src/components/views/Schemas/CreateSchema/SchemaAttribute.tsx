@@ -50,13 +50,6 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
     updateAttribute?.(updatedProperty);
   }
 
-  function makeNotRequired() {
-    const term = attr.$linkedData?.term || "";
-    if (parentRequired?.includes(term)) {
-      const requiredI = parentRequired.indexOf(term);
-      setParentRequired?.([...parentRequired.slice(0, requiredI), ...parentRequired.slice(requiredI + 1)]);
-    }
-  }
   function toggleRequired() {
     const term = attr.$linkedData?.term || "";
     if (parentRequired?.includes(term)) {
@@ -87,11 +80,6 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
       updatedAttr.$linkedData["@id"] = updatedAttr.$linkedData.term;
     } else if (type !== NESTED_TYPE_KEY) {
       delete updatedAttr.properties;
-      makeNotRequired();
-    }
-
-    if (type === "boolean") {
-      makeNotRequired();
     }
 
     updateAttribute?.(updatedAttr);
@@ -114,22 +102,42 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
 
   const updateNestedAttribute = (key: string, updatedAttr: Partial<JsonSchemaNode>) => {
     let updatedProperties: { [key: string]: Partial<JsonSchemaNode> } = {};
+    let updatedRequired = attr.required || [];
     if (updatedAttr.$linkedData?.term !== key) {
-      // Key has changed. Since nested attributes are listed by iterating over object keys, if we rename object key by deleting and adding, React will reorder inputs while user is typing and lose focus. So here we re-create object key by key in order to rename the updated key while preserving order.
-      Object.keys(attr.properties || {}).forEach((nestedKey) => {
-        if (nestedKey === key) {
-          updatedProperties[updatedAttr.$linkedData!.term] = updatedAttr;
+      // Key has changed. Since nested attributes are listed by iterating over object keys, if we rename object key by deleting and adding, React will reorder inputs while user is typing and lose focus. So here we re-create object key by key in order to rename the updated key while preserving order. (Yes order isn't necessarily stable in JS objects but it's better than nothing and converting everything to use Maps would be a pain.)
+      const oldKey = key;
+      let newKey = updatedAttr.$linkedData?.term || "";
+
+      if (attr.properties && newKey in attr.properties) {
+        // Edge case but will clobber existing property with that key so let's give it a different one.
+        newKey = `${newKey}2`;
+      }
+
+      Object.keys(attr.properties || {}).forEach((existingKey) => {
+        if (existingKey === oldKey) {
+          updatedProperties[newKey] = updatedAttr;
         } else {
-          updatedProperties[nestedKey] = attr.properties![nestedKey];
+          updatedProperties[existingKey] = attr.properties![existingKey];
         }
       });
+
+      if (attr.required?.includes(oldKey)) {
+        // We need to update this too when the key changes
+        const requiredI = attr.required.indexOf(oldKey);
+        updatedRequired = [...attr.required.slice(0, requiredI), ...attr.required.slice(requiredI + 1), newKey];
+      }
     } else {
       updatedProperties = {
         ...attr.properties,
         [key]: updatedAttr,
       };
     }
-    updateAttrProperty("properties", updatedProperties);
+
+    updateAttribute?.({
+      ...attr,
+      properties: updatedProperties,
+      required: updatedRequired,
+    });
   };
 
   const removeNestedAttribute = (key: string) => {
