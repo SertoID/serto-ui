@@ -242,6 +242,7 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
           checked={attr.$linkedData?.term && parentRequired?.includes(attr.$linkedData?.term)}
           onChange={toggleRequired}
           disabled={readOnly}
+          mt={readOnly ? 2 : 0}
         />
         {attr.type === "object" && (
           <Button.Text onClick={addNestedAttribute} fontSize={1}>

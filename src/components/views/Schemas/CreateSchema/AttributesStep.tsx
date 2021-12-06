@@ -71,7 +71,7 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
   return (
     <Form validated={doValidation} onSubmit={goNext}>
       {defaultSchemaProperties.map((prop, i) => (
-        <SchemaAttribute key={i + "required"} attr={prop} readOnly={true} />
+        <SchemaAttribute key={i + "required"} attr={prop} readOnly={true} parentRequired={["issuanceDate", "issuer"]} />
       ))}
 
       {schema.properties?.credentialSubject && (
