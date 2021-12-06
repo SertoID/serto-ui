@@ -228,17 +228,13 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
       {attr.type === "object" && <Box mt={3}>{renderNestedAttributes()}</Box>}
 
       <Flex justifyContent="space-between">
-        {attr.type !== "boolean" ? (
-          <Checkbox
-            fontFamily={fonts.sansSerif}
-            label="Required"
-            checked={attr.$linkedData?.term && parentRequired?.includes(attr.$linkedData?.term)}
-            onChange={toggleRequired}
-            disabled={readOnly}
-          />
-        ) : (
-          <div></div>
-        )}
+        <Checkbox
+          fontFamily={fonts.sansSerif}
+          label="Required"
+          checked={attr.$linkedData?.term && parentRequired?.includes(attr.$linkedData?.term)}
+          onChange={toggleRequired}
+          disabled={readOnly}
+        />
         {attr.type === "object" && (
           <Button.Text onClick={addNestedAttribute} fontSize={1}>
             Add Nested Attribute

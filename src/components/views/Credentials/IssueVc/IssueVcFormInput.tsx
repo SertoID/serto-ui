@@ -36,6 +36,18 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
   const isDid = node.type === "string" && node.format === "uri" && node.$linkedData?.["@id"] === "@id";
   const isSubjectDid = isDid && name === "id" && !isNested;
 
+  React.useEffect(() => {
+    // Most required fields will be handled by form validation, but requiring a boolean or a nested object is not.
+    // @TODO/tobek In some cases this isn't handling nested required booleans but that's a heck of an edge case and ideally we should check final VC against JSON Schema anyway which would catch this.
+    if (required && typeof value === "undefined") {
+      if (node.type === "boolean") {
+        onChange(false);
+      } else if (node.type === "object") {
+        onChange({});
+      }
+    }
+  }, [node.type, required, value, onChange]);
+
   const renderInput = () => {
     if (node.properties && node.type === "object") {
       return (
