@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Checkbox, Input, Field, Text } from "rimble-ui";
 import { JsonSchemaNode } from "vc-schema-tools";
 import { DidSearchWithMessagingInfo } from "../../../elements/DidSearchWithMessagingInfo";
+import { DidSearch } from "../../../elements/DidSearch";
 import { Identifier } from "../../../../types";
 import { isoToDatetimeLocal } from "../../../../utils/helpers";
 
@@ -13,6 +14,7 @@ export interface IssueVcFormInputProps {
   required?: boolean;
   defaultSubjectDid?: string;
   subjectSupportsMessaging?: boolean;
+  isNested?: boolean;
   onChange(value: any): void;
   setSubjectSupportsMessaging(supported: boolean): void;
 }
@@ -28,10 +30,11 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
     defaultSubjectDid,
     subjectSupportsMessaging,
     setSubjectSupportsMessaging,
+    isNested,
   } = props;
 
-  // @TODO/tobek Ideally we could detect DIDs in values other than ones keyed `id` but for that we'd have to traverse the `LdContextPlusNode`s instead of `JsonSchemaNode`s which would be more complicated
-  const isDid = name === "id" && node.type === "string" && node.format === "uri";
+  const isDid = node.type === "string" && node.format === "uri" && node.$linkedData?.["@id"] === "@id";
+  const isSubjectDid = isDid && name === "id" && !isNested;
 
   const renderInput = () => {
     if (node.properties && node.type === "object") {
@@ -53,13 +56,14 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
               }
               subjectSupportsMessaging={subjectSupportsMessaging}
               setSubjectSupportsMessaging={setSubjectSupportsMessaging}
+              isNested
             />
           ))}
         </Box>
       );
     }
 
-    if (isDid) {
+    if (isSubjectDid) {
       return (
         <Box mb={3}>
           <DidSearchWithMessagingInfo
@@ -70,6 +74,18 @@ export const IssueVcFormInput: React.FunctionComponent<IssueVcFormInputProps> = 
             defaultSelectedDid={defaultSubjectDid}
             supportsMessaging={subjectSupportsMessaging}
             setSupportsMessaging={setSubjectSupportsMessaging}
+          />
+        </Box>
+      );
+    } else if (isDid) {
+      return (
+        <Box mb={3}>
+          <DidSearch
+            key={name}
+            onChange={(val) => onChange(val.did)}
+            required={required}
+            identifiers={identifiers}
+            defaultSelectedDid={defaultSubjectDid}
           />
         </Box>
       );
