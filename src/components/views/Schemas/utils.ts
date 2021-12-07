@@ -55,8 +55,6 @@ export function createSchemaInput(
   };
 }
 
-
-
 export function jsonSchemaToSchemaInput(jsonSchema: JsonSchema): SchemaDataInput {
   if (!jsonSchema.title) {
     throw Error("JSON Schema is missing required property `title`");
