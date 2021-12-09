@@ -7,12 +7,15 @@ import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 import { SertoUiProvider } from "../../../context/SertoUiProvider";
 import { SchemaCards } from "./SchemaCards";
 
-const schemas = Object.values(EXAMPLE_SCHEMAS)
-  .map((schema) => {
+const schemas = Object.entries(EXAMPLE_SCHEMAS)
+  .map(([key, schema]) => {
+    if (key === "[no schema]") {
+      return undefined;
+    }
     try {
       return jsonSchemaToSchemaInput(schema);
     } catch (err) {
-      console.error("failed to create schema input", err);
+      console.error(`failed to create schema input for schema "${key}"`, err);
       return undefined;
     }
   })

@@ -1,5 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
+import styled from "styled-components";
 import { baseVcJsonSchema } from "vc-schema-tools";
 import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
 import { CreateSchema } from "./";
@@ -110,10 +111,28 @@ const schemaToUpdate = {
   },
 };
 
+const StyledCreateSchema = styled(CreateSchema)`
+  position: relative;
+
+  max-height: calc(100vh - 50px);
+
+  .right-pane {
+    pre,
+    .schema-formatted-preview {
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+  }
+
+  textarea {
+    box-sizing: inherit;
+  }
+`;
+
 const createSchemaStory = (schemaToUpdate?: WorkingSchema) => () => {
   return (
     <IdentityThemeProvider>
-      <CreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} />
+      <StyledCreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} />
     </IdentityThemeProvider>
   );
 };
