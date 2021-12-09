@@ -1,4 +1,5 @@
 import * as React from "react";
+import slugify from "@sindresorhus/slugify";
 import { Check, ArrowBack, KeyboardArrowDown } from "@rimble/icons";
 import { Flash, Link, Box, Button, Flex, Text } from "rimble-ui";
 import { mutate } from "swr";
@@ -7,7 +8,7 @@ import Prism from "prismjs";
 import { useDebounce } from "use-debounce";
 import { links } from "../../../../config";
 import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
-import { createSchemaInput } from "../utils";
+import { jsonSchemaToSchemaInput, isFullSchema, ensureFullSchema } from "../utils";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
@@ -37,6 +38,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   const [error, setError] = React.useState("");
   const [schema, setSchema] = React.useState<WorkingSchema>(baseWorkingSchema);
   const [debouncedSchema] = useDebounce(schema, 500);
+  const [builtSchema, setBuiltSchema] = React.useState<SchemaDataInput | undefined>();
   const [inputMode, setInputMode] = React.useState<"UI" | "JSON">("UI");
   const [inputJson, setInputJson] = React.useState("");
   const [debouncedInputSchemaJson] = useDebounce(inputJson, 500);
@@ -52,17 +54,28 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     }
   }, [initialSchemaState]);
 
-  const builtSchema: SchemaDataInput = React.useMemo(() => {
+  React.useEffect(() => {
+    if (!debouncedSchema?.$metadata?.slug && debouncedSchema?.title) {
+      setSchema((oldSchema) => ({
+        ...oldSchema,
+        $metadata: {
+          ...oldSchema.$metadata,
+          slug: slugify(debouncedSchema?.title || ""),
+        },
+      }));
+    }
+
     try {
-      return createSchemaInput(debouncedSchema as CompletedSchema, schemasService.buildSchemaUrl);
+      setInputJsonError("");
+      setBuiltSchema(jsonSchemaToSchemaInput(debouncedSchema as CompletedSchema, schemasService.buildSchemaUrl));
     } catch (err) {
-      console.warn("Failed to build schema. Schema:", debouncedSchema, "Error:", err);
-      return builtSchema;
+      console.error("Failed to build schema. Schema:", debouncedSchema, "Error:", err);
+      setInputJsonError("Failed to build schema from JSON: " + err.toString());
     }
   }, [debouncedSchema, schemasService.buildSchemaUrl]);
 
   React.useEffect(() => {
-    if (inputMode === "JSON") {
+    if (inputMode === "JSON" && builtSchema) {
       setInputJson(JSON.stringify(JSON.parse(builtSchema.jsonSchema), null, 2));
       setInputJsonError("");
     }
@@ -75,13 +88,19 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       return;
     }
     try {
-      setSchema(JSON.parse(debouncedInputSchemaJson));
       setInputJsonError("");
+      const parsedSchema = JSON.parse(debouncedInputSchemaJson);
+      const fullSchema = ensureFullSchema(parsedSchema, schemasService.buildSchemaUrl);
+      if (!isFullSchema(parsedSchema)) {
+        // We've transformed the JSON that they put in the JSON editor, so let's update the JSON editor
+        setInputJson(JSON.stringify(fullSchema, null, 2));
+      }
+      setSchema(fullSchema);
     } catch (err) {
       setInputJsonError(err.toString());
       console.warn("Error creating schema from JSON", err);
     }
-  }, [debouncedInputSchemaJson]);
+  }, [debouncedInputSchemaJson, schemasService.buildSchemaUrl]);
 
   React.useEffect(() => {
     onSchemaUpdate?.(debouncedSchema);
@@ -104,6 +123,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     if (nextStep === "DONE") {
       setLoading(true);
       try {
+        if (!builtSchema) {
+          throw Error("Failed to build schema");
+        }
         await publishSchema();
         setCurrentStep(nextStep);
         onSchemaSaved?.(builtSchema);
@@ -119,6 +141,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   async function publishSchema() {
     onSchemaUpdate?.(schema);
+    if (!builtSchema) {
+      throw Error("Failed to build schema");
+    }
     if (isUpdate && userOwnsSchema) {
       await schemasService.updateSchema(builtSchema);
     } else {
@@ -158,7 +183,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   return (
     <Flex className={className}>
-      <Box px={5} py={3} width={9} minWidth={9} maxHeight="100%" overflowY="auto">
+      <Box px={5} pt={3} pb={5} width={9} minWidth={9} maxHeight="100%" overflowY="auto">
         <Box pb={3} mb={4} borderBottom={1}>
           <Flex justifyContent="space-between">
             <Box>
@@ -222,7 +247,11 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
               </Text>
             </Flash>
             <PrismHighlightedCodeWrap
-              style={{ background: "white", borderColor: inputJsonError && colors.danger.base }}
+              style={{
+                background: "white",
+                border: "1px solid transparent",
+                borderColor: inputJsonError && colors.danger.base,
+              }}
             >
               <Editor
                 value={inputJson}
@@ -243,7 +272,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
               width="100%"
               disabled={inputJsonError}
               onClick={() => {
-                setCurrentStep("CONFIRM");
+                setCurrentStep("INFO");
                 setInputMode("UI");
               }}
             >
@@ -273,7 +302,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
               />
             ) : currentStep === "ATTRIBUTES" ? (
               <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
-            ) : (
+            ) : builtSchema ? (
               <Box mt={4}>
                 <ConfirmStep
                   builtSchema={builtSchema}
@@ -285,6 +314,8 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
                   error={error}
                 />
               </Box>
+            ) : (
+              <></>
             )}
           </>
         )}
@@ -298,12 +329,14 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
         py={3}
         flexGrow="1"
       >
-        <SchemaDetail
-          schema={builtSchema}
-          primaryView={inputMode === "JSON" ? "Formatted View" : "JSON Schema"}
-          hideTools={true}
-          paneView={true}
-        />
+        {builtSchema && (
+          <SchemaDetail
+            schema={builtSchema}
+            primaryView={inputMode === "JSON" ? "Formatted View" : "JSON Schema"}
+            hideTools={true}
+            paneView={true}
+          />
+        )}
       </Box>
     </Flex>
   );

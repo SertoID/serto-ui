@@ -46,17 +46,20 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     let missingField = false;
     let duplicateId = false;
     // @TODO/tobek These checks should be recursive. Empty `title`'s are already handled by native browser form checks, but `$linkedData.term` collisions (which would have to be unique only among sibling properties) are not handled.
-    Object.values(schema.properties?.credentialSubject?.properties || {}).forEach((prop) => {
-      if (!prop.title) {
+    Object.entries(schema.properties?.credentialSubject?.properties || {}).forEach(([key, prop]) => {
+      if (key === "") {
         missingField = true;
       }
-      if (!prop.$linkedData?.term) {
-        missingField = true;
-      } else if (propertyIds.has(prop.$linkedData.term)) {
-        setError(`Two attribute names result in ID "${prop.$linkedData.term}" - all attributes must have unique IDs.`);
-        duplicateId = true;
-      } else {
-        propertyIds.add(prop.$linkedData.term);
+
+      if (prop.$linkedData?.term) {
+        if (propertyIds.has(prop.$linkedData.term)) {
+          setError(
+            `Two attribute names result in ID "${prop.$linkedData.term}" - all attributes must have unique IDs.`,
+          );
+          duplicateId = true;
+        } else {
+          propertyIds.add(prop.$linkedData.term);
+        }
       }
     });
 

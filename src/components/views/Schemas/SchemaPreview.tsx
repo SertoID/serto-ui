@@ -49,10 +49,6 @@ const renderProperty = (key: string, prop: JsonSchemaNode, required?: boolean): 
   if (prop.type === "object") {
     // Looks nicer with blank type name - nested object will be displayed underneath
     propType = "";
-  } else if (prop.$ref) {
-    propType = "ref: " + prop.$ref;
-  } else if (prop.type === "array" && prop.items?.$ref) {
-    propType = `List (ref: ${prop.items.$ref})`;
   } else {
     propType = nodeToTypeName(prop);
     if (!propType) {
