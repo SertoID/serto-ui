@@ -65,7 +65,7 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
     setError("");
     // If *not* authenticated they won't be able to save changes anyway, so we can let them explore the editor without worrying about what values need updating.
     if (isAuthenticated) {
-      if (isUpdate && userOwnsSchema && $metadata.version === initialSchemaState?.version) {
+      if (isUpdate && userOwnsSchema && $metadata.version === initialSchemaState?.$metadata?.version) {
         setError("You must update the version number when updating a schema.");
         return;
       }
