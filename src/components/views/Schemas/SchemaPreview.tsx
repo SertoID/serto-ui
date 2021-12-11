@@ -116,11 +116,19 @@ export const SchemaPreview: React.FunctionComponent<SchemaPreviewProps> = (props
     if (!schemaInstance) {
       return {};
     }
+    let jsonLdContextString: string;
+    if (schema.ldContextPlus) {
+      // old format with manually created LD context, so use that:
+      jsonLdContextString = schema.ldContext;
+    } else {
+      // new format, with manually created JSON Schema and schema instance will have generated JSON LD context from that:
+      jsonLdContextString = schemaInstance?.getJsonLdContextString(true);
+    }
     return {
       [SCHEMA_VIEWS[1]]: schemaInstance?.getJsonSchemaString(true),
-      [SCHEMA_VIEWS[2]]: schemaInstance?.getJsonLdContextString(true),
+      [SCHEMA_VIEWS[2]]: jsonLdContextString,
     };
-  }, [schemaInstance]);
+  }, [schemaInstance, schema.ldContext, schema.ldContextPlus]);
 
   const credentialSubject = React.useMemo(() => {
     const credentialSubject = schemaInstance?.jsonSchema?.properties?.credentialSubject as JsonSchemaNode;

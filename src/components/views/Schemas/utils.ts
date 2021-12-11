@@ -135,3 +135,30 @@ export function jsonSchemaToSchemaInput(
     jsonSchema: schemaInstance.getJsonSchemaString(),
   };
 }
+
+/** Used e.g. for taking an existing schema response from DB and using it to populate the schema creator/editor when editing a schema. */
+export function schemaResponseToWorkingSchema(schemaResponse: SchemaDataResponse): WorkingSchema {
+  const jsonSchema = JSON.parse(schemaResponse.jsonSchema);
+  if (!schemaResponse.ldContextPlus) {
+    // new version, everything is in JSON Schema
+    return jsonSchema;
+  }
+
+  // old version, grab metadata from old LD Context Plus:
+  const ldContextPlus = JSON.parse(schemaResponse.ldContextPlus);
+  jsonSchema.$metadata = ldContextPlus["@context"]["@metadata"];
+  delete jsonSchema.$metadata.uris.jsonLdContextPlus;
+
+  const { subjectLdType, credLdType } = getLdTypesFromSchemaResponse(schemaResponse);
+  jsonSchema.$linkedData = { term: credLdType, "@id": credLdType };
+
+  if (jsonSchema.properties?.credentialSubject) {
+    jsonSchema.properties.credentialSubject = generateLinkedData(jsonSchema.properties?.credentialSubject);
+    jsonSchema.properties.credentialSubject.$linkedData = {
+      term: subjectLdType,
+      "@id": subjectLdType,
+    };
+  }
+
+  return jsonSchema;
+}
