@@ -99,7 +99,6 @@ export const baseWorkingSchema: WorkingSchema = {
   properties: {
     ...baseVcJsonSchema.properties,
     credentialSubject: {
-      $linkedData: { term: "credentialSubject", "@id": "https://www.w3.org/2018/credentials#credentialSubject" },
       type: "object",
       required: [],
       properties: {

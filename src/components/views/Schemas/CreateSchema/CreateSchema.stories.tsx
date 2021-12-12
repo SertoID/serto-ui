@@ -24,15 +24,15 @@ const schemaToUpdate = {
   description: "Credential representing employment at an employer.",
   $linkedData: {
     term: "EmploymentCredential",
-    "@id": "https://example.com/schemas/employment-credential/1.0/ld-context.json#",
+    "@id": "https://example.com/schemas/employment-credential/1.0/ld-context.json#EmploymentCredential",
   },
 
   properties: {
     ...baseVcJsonSchema.properties,
     credentialSubject: {
       $linkedData: {
-        term: "credentialSubject",
-        "@id": "https://www.w3.org/2018/credentials#credentialSubject",
+        term: "Employment",
+        "@id": "Employment",
       },
       type: "object",
       required: ["jobTitle", "employer", "employeeSubjectId"],

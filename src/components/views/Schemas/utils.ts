@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import slugify from "@sindresorhus/slugify";
-import { convertToPascalCase } from "../../../utils";
 import {
   VcSchema,
   jsonLdSchemaTypeMap,
   JsonSchema,
   JsonSchemaNode,
   baseVcJsonSchema,
-  jsonSchemaCommentToLinkedData,
+  generateLinkedData,
+  generateSchemaLdTypes,
 } from "vc-schema-tools";
-import { SchemaDataInput, WorkingSchema, SchemaMetadata, newSchemaAttribute } from "./types";
+import { SchemaDataInput, SchemaDataResponse, WorkingSchema, SchemaMetadata, newSchemaAttribute } from "./types";
 import { SertoUiContextInterface } from "../../../context/SertoUiContext";
 
 export const NESTED_TYPE_KEY = "NESTED";
@@ -39,7 +39,7 @@ export function ensureFullSchema(
     return _schema as JsonSchema<SchemaMetadata>;
   }
 
-  const schema = jsonSchemaCommentToLinkedData(_schema) as JsonSchema<SchemaMetadata>;
+  const schema = generateLinkedData(_schema) as JsonSchema<SchemaMetadata>;
 
   const name = schema.title || "";
   const slug = schema.$metadata?.slug || slugify(name);
@@ -48,16 +48,12 @@ export function ensureFullSchema(
   const jsonSchemaUrl = buildSchemaUrl(slug, "json-schema", version);
   const jsonLdContextUrl = buildSchemaUrl(slug, "ld-context", version);
 
-  const ldTypeName = schema.$linkedData?.term || convertToPascalCase(name);
-  const ldId = schema.$linkedData?.["@id"] || jsonLdContextUrl + "#";
+  const { subjectLdType, credLdType } = generateSchemaLdTypes(schema);
 
   return {
     $schema: "http://json-schema.org/draft-07/schema#",
     $id: jsonSchemaUrl,
-    $linkedData: {
-      term: ldTypeName,
-      "@id": ldId,
-    },
+    $linkedData: { term: credLdType, "@id": credLdType },
     $metadata: {
       slug,
       version,
@@ -75,7 +71,7 @@ export function ensureFullSchema(
     properties: {
       ...baseVcJsonSchema.properties,
       credentialSubject: {
-        $linkedData: { term: "credentialSubject", "@id": "https://www.w3.org/2018/credentials#credentialSubject" },
+        $linkedData: { term: subjectLdType, "@id": subjectLdType },
         type: "object",
         required: schema.required || [],
         properties: schema.properties,
@@ -96,10 +92,6 @@ export function jsonSchemaToSchemaInput(
       uris: {} as SchemaMetadata["uris"],
       ...schema.$metadata,
     },
-    $linkedData: {
-      term: convertToPascalCase(schema.title || ""),
-      ...schema.$linkedData,
-    },
   };
 
   const metadata = schema.$metadata || ({} as SchemaMetadata);
@@ -117,10 +109,7 @@ export function jsonSchemaToSchemaInput(
     }
   }
   if (jsonLdContextUrl) {
-    if (!schemaData.$linkedData?.["@id"]) {
-      schemaData.$linkedData!["@id"] = jsonLdContextUrl + "#";
-    }
-    if (!schemaData.$metadata?.uris?.jsonSchema) {
+    if (!schemaData.$metadata?.uris?.jsonLdContext) {
       schemaData.$metadata!.uris!.jsonLdContext = jsonLdContextUrl;
     }
   }
@@ -133,6 +122,8 @@ export function jsonSchemaToSchemaInput(
     description: schema.description,
     ldContext: schemaInstance.getJsonLdContextString(),
     jsonSchema: schemaInstance.getJsonSchemaString(),
+    // @TODO/tobek Deprecated and unused, but needed until API is updated to not require it
+    ldContextPlus: "",
   };
 }
 
@@ -161,4 +152,25 @@ export function schemaResponseToWorkingSchema(schemaResponse: SchemaDataResponse
   }
 
   return jsonSchema;
+}
+
+export function getLdTypesFromSchemaResponse(
+  schemaResponse: SchemaDataInput,
+): { subjectLdType?: string; credLdType: string } {
+  const jsonSchema = JSON.parse(schemaResponse.jsonSchema);
+
+  const subjectLdType = jsonSchema.properties?.credentialSubject?.$linkedData?.term;
+
+  let credLdType = jsonSchema.$linkedData?.term;
+  if (!credLdType && schemaResponse.ldContextPlus) {
+    // old schema, we can get the type this way:
+    credLdType = JSON.parse(schemaResponse.ldContextPlus)["@context"]["@rootType"];
+  }
+
+  if (!credLdType) {
+    console.error("Invalid schema: Could not obtain LD types for schema", schemaResponse);
+    throw Error("Invalid schema: Could not obtain LD types for schema");
+  }
+
+  return { subjectLdType, credLdType };
 }

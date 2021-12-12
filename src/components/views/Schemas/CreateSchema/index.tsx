@@ -18,6 +18,7 @@ import { SertoUiContext, SertoUiContextInterface } from "../../../../context/Ser
 import { SchemaDetail } from "../SchemaDetail";
 import { Popup, PopupGroup } from "../../../elements/Popup/Popup";
 import { PrismHighlightedCodeWrap } from "../../../elements/HighlightedJson/HighlightedJson";
+import { convertToPascalCase } from "../../../../utils/helpers";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -107,10 +108,19 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   }, [debouncedSchema, onSchemaUpdate]);
 
   function updateSchema(updates: Partial<WorkingSchema>) {
-    setSchema({
+    const newSchema = {
       ...schema,
       ...updates,
-    });
+    };
+    if (updates.title) {
+      const subjectLdTerm = convertToPascalCase(updates.title);
+      const credLdTerm = subjectLdTerm + "Credential";
+      newSchema.$linkedData = { term: credLdTerm, "@id": credLdTerm };
+      if (newSchema.properties?.credentialSubject) {
+        newSchema.properties.credentialSubject.$linkedData = { term: subjectLdTerm, "@id": subjectLdTerm };
+      }
+    }
+    setSchema(newSchema);
   }
 
   function goBack() {

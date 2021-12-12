@@ -10,6 +10,7 @@ import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson"
 import { Tabs } from "../../layouts/Tabs/Tabs";
 import { ModalContent, ModalWithX } from "../../elements/Modals";
 import { PopupGroup } from "../../elements/Popup/Popup";
+import { getLdTypesFromSchemaResponse } from "./utils";
 
 const StyledTabs = styled(Tabs)`
   li:first-child {
@@ -35,10 +36,9 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
   const [privateBetaModalOpen, setPrivateBetaModalOpen] = useState(false);
   const [exampleVcModalOpen, setExampleVcModalOpen] = useState(false);
 
-  const jsonSchema = JSON.parse(schema.jsonSchema);
-  const uris = schema.uris || jsonSchema?.$metadata?.uris;
+  const uris = schema.uris || JSON.parse(schema.jsonSchema)?.$metadata?.uris;
 
-  const rootType = jsonSchema.$linkedData?.term;
+  const { subjectLdType, credLdType } = getLdTypesFromSchemaResponse(schema);
   // @TODO/tobek Need a more elegant way to do this, probably VcSchema library should have a utility that creates an example VC that actually has all the fields filled in based on schema.
   const exampleVc = {
     "@context": ["https://www.w3.org/2018/credentials/v1", ...(uris?.jsonLdContext ? [uris.jsonLdContext] : [])],
@@ -48,10 +48,11 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
         type: "JsonSchemaValidator2018",
       },
     }),
-    type: ["VerifiableCredential", ...(rootType ? [rootType] : [])],
+    type: ["VerifiableCredential", ...(credLdType ? [credLdType] : [])],
     issuer: "[ISSUER]",
     issuanceDate: "[DATE]",
     credentialSubject: {
+      ...(subjectLdType ? { type: subjectLdType } : {}),
       id: "[SUBJECT]",
       "...": "...",
     },
