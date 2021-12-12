@@ -82,7 +82,6 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
           icon: $metadata.icon || defaultIcon,
         },
       });
-      // @TODO set $linkedData based on pascal case and also set ID and URIs or does that happen later?
       props.onComplete();
     } else {
       setDoValidation(true);

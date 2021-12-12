@@ -62,7 +62,7 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
                     key={key}
                     keyName={key}
                     value={value}
-                    schema={vcSchema?.jsonSchema?.properties?.credentialSubject?.properties?.[key]}
+                    schema={vcSchema?.parsedJsonSchema.properties?.credentialSubject?.properties?.[key]}
                   />
                 ))}
               </tbody>

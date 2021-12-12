@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { Box, Button, Text, Flex } from "rimble-ui";
+import { Box, Button, Text, Flex, Flash } from "rimble-ui";
 import { ContentCopy } from "@rimble/icons";
 import { VC } from "vc-schema-tools";
 import { HoverPathFill, ShareIcon, UnstyledButton } from "../../../elements";
@@ -35,6 +35,11 @@ export interface CredentialShareProps {
 
 export const CredentialShare: React.FC<CredentialShareProps> = (props) => {
   const { vc, issueVcFlow } = props;
+
+  if (!vc.proof?.jwt) {
+    return <Flash variant="danger">Cannot share VC: missing proof.jwt</Flash>;
+  }
+
   const vcUrl = `${config.SEARCH_UI_URL}/vc-validator?vc=${vc.proof.jwt}`;
   return (
     <>
