@@ -56,6 +56,8 @@ if (ENVIRONMENT !== "development") {
 
 export const links = {
   CONTACT: "https://www.serto.id/about#contact-section",
+  SUITE: "https://www.serto.id/products",
+  SCHEMAS_FEEDBACK: "https://forms.gle/tGLwuYTc1VkKFmhs6",
   SCHEMAS_PLAYGROUND: `${config.SCHEMAS_UI_URL}/playground`,
   CREATE_SCHEMA_PATH: "/schemas/",
 };
