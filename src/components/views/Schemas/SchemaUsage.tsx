@@ -10,7 +10,7 @@ import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson"
 import { Tabs } from "../../layouts/Tabs/Tabs";
 import { ModalContent, ModalWithX } from "../../elements/Modals";
 import { PopupGroup } from "../../elements/Popup/Popup";
-import { getLdTypesFromSchemaResponse } from "./utils";
+import { getLdTypesFromSchemaResponse, getSchemaUris } from "./utils";
 
 const StyledTabs = styled(Tabs)`
   li:first-child {
@@ -36,7 +36,7 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
   const [privateBetaModalOpen, setPrivateBetaModalOpen] = useState(false);
   const [exampleVcModalOpen, setExampleVcModalOpen] = useState(false);
 
-  const uris = schema.uris || JSON.parse(schema.jsonSchema)?.$metadata?.uris;
+  const uris = getSchemaUris(schema);
 
   const { subjectLdType, credLdType } = getLdTypesFromSchemaResponse(schema);
   // @TODO/tobek Need a more elegant way to do this, probably VcSchema library should have a utility that creates an example VC that actually has all the fields filled in based on schema.

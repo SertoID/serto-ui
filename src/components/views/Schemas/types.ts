@@ -39,6 +39,10 @@ export interface SchemaDataResponse extends SchemaDataInput {
     /** JWT subject */
     identifier: string;
   };
+  ipfsHash?: {
+    jsonSchema?: string;
+    ldContext?: string;
+  };
 }
 
 export const defaultSchemaProperties = [

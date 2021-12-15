@@ -13,26 +13,26 @@ import { IssueVcSuccess } from "./IssueVcSuccess";
 import { Credential } from "../Credential";
 import { H4 } from "../../../layouts/LayoutComponents";
 import { colors } from "../../../../themes";
-import { getLdTypesFromSchemaResponse } from "../../Schemas/utils";
+import { getLdTypesFromSchemaResponse, getSchemaUris } from "../../Schemas/utils";
 
 const STEPS = ["FORM", "REVIEW", "ISSUED"];
 
 function buildCredential(
   schema: SchemaDataInput,
-  schemaInstance: VcSchema,
   initialCred: Partial<VC>,
   issuer: string,
   vcData: { [key: string]: any },
 ): Partial<VC> {
   const { subjectLdType, credLdType } = getLdTypesFromSchemaResponse(schema);
+  const uris = getSchemaUris(schema);
 
-  let ldContext: string | any = schemaInstance.jsonSchema.$metadata?.uris?.jsonLdContext;
+  let ldContext = uris.jsonLdContext;
   if (!ldContext) {
     console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
-    ldContext = schemaInstance.jsonLdContext?.["@context"];
+    ldContext = JSON.parse(schema.ldContext || "{}")?.["@context"];
   }
 
-  const jsonSchemaUrl = schemaInstance.jsonSchema.$metadata?.uris?.jsonSchema;
+  const jsonSchemaUrl = uris.jsonSchema;
   if (!jsonSchemaUrl) {
     console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
   }
@@ -144,7 +144,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
           setError("Could not initialize schema instance");
           return;
         }
-        credential = buildCredential(schema, schemaInstance, initialCred, issuer, vcData);
+        credential = buildCredential(schema, initialCred, issuer, vcData);
       } else {
         credential = JSON.parse(rawJsonVc);
       }
