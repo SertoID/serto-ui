@@ -1,10 +1,8 @@
 import * as React from "react";
 import { Box, Button, Flash, Form } from "rimble-ui";
-import { LdContextPlusNode } from "vc-schema-tools";
 import { colors } from "../../../../themes";
-import { WorkingSchema, newSchemaAttribute, requiredSchemaProperties } from "../types";
+import { WorkingSchema, newSchemaAttribute, defaultSchemaProperties } from "../types";
 import { SchemaAttribute } from "./SchemaAttribute";
-import { SchemaMetadata } from "../types";
 
 export interface AttributesStepProps {
   schema: WorkingSchema;
@@ -18,25 +16,26 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
   const [error, setError] = React.useState("");
 
   function addAttribute(e: Event) {
+    if (schema.properties?.credentialSubject?.properties?.[""]) {
+      // We have a property with no name - have them update that before creating a no one. We don't have to do anything, since the un-preventDefaulted event will trigger browser UI on empty required title field
+      return;
+    }
+
     e.preventDefault();
+
     updateSchema({
-      properties: [
+      ...schema,
+      properties: {
         ...schema.properties,
-        {
-          ...newSchemaAttribute,
+        credentialSubject: {
+          ...schema.properties?.credentialSubject,
+          properties: {
+            ...schema.properties?.credentialSubject?.properties,
+            "": { ...newSchemaAttribute },
+          },
         },
-      ],
+      },
     });
-  }
-
-  function updateAttribute(i: number, attribute: Partial<LdContextPlusNode<SchemaMetadata>>) {
-    updateSchema({
-      properties: [...schema.properties.slice(0, i), attribute, ...schema.properties.slice(i + 1)],
-    });
-  }
-
-  function removeAttribute(i: number) {
-    updateSchema({ properties: [...schema.properties.slice(0, i), ...schema.properties.slice(i + 1)] });
   }
 
   function goNext(e: Event) {
@@ -46,20 +45,31 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
     const propertyIds = new Set();
     let missingField = false;
     let duplicateId = false;
-    // @TODO/tobek These checks should be recursive. Empty `@title`'s are already handled by native browser form checks, but `@id` collisions (which would have to be unique only among sibling properties) are not handled.
-    schema.properties.forEach((prop) => {
-      if (!prop["@title"]) {
+    let invalidId = false;
+    // @TODO/tobek These checks should be recursive. Empty `title`'s are already handled by native browser form checks, but `$linkedData.term` collisions (which would have to be unique only among sibling properties) are not handled.
+    Object.entries(schema.properties?.credentialSubject?.properties || {}).forEach(([key, prop]) => {
+      if (key === "") {
         missingField = true;
       }
-      if (propertyIds.has(prop["@id"])) {
-        setError(`Two attribute names result in ID "${prop["@id"]}" - all attributes must have unique IDs.`);
-        duplicateId = true;
-      } else {
-        propertyIds.add(prop["@id"]);
+
+      if (prop.$linkedData?.term) {
+        if (prop.$linkedData?.term === "type") {
+          setError(
+            `An attribute name result in ID "${prop.$linkedData.term}" - this is a reserved keyword in the JSON-LD specification that VCs use. Please use a different name.`,
+          );
+          invalidId = true;
+        } else if (propertyIds.has(prop.$linkedData.term)) {
+          setError(
+            `Two attribute names result in ID "${prop.$linkedData.term}" - all attributes must have unique IDs.`,
+          );
+          duplicateId = true;
+        } else {
+          propertyIds.add(prop.$linkedData.term);
+        }
       }
     });
 
-    if (missingField || duplicateId) {
+    if (missingField || duplicateId || invalidId) {
       setDoValidation(true);
     } else {
       setDoValidation(false);
@@ -69,17 +79,27 @@ export const AttributesStep: React.FunctionComponent<AttributesStepProps> = (pro
 
   return (
     <Form validated={doValidation} onSubmit={goNext}>
-      {requiredSchemaProperties.map((prop, i) => (
-        <SchemaAttribute key={i + "required"} attr={prop} readOnly={true} />
+      {defaultSchemaProperties.map((prop, i) => (
+        <SchemaAttribute key={i + "required"} attr={prop} readOnly={true} parentRequired={["issuanceDate", "issuer"]} />
       ))}
-      {schema.properties.map((prop, i) => (
+
+      {schema.properties?.credentialSubject && (
         <SchemaAttribute
-          key={i}
-          attr={prop}
-          updateAttribute={(attr) => updateAttribute(i, attr)}
-          removeAttribute={() => removeAttribute(i)}
+          key={"credentialSubject"}
+          attr={schema.properties.credentialSubject}
+          isCredSubject
+          updateAttribute={(attr) => {
+            updateSchema({
+              ...schema,
+              properties: {
+                ...schema.properties,
+                credentialSubject: attr,
+              },
+            });
+          }}
         />
-      ))}
+      )}
+
       <Box mt={3}>
         <Button.Outline
           mb={3}

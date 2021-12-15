@@ -4,7 +4,7 @@ import { EXAMPLE_VCS } from "vc-schema-tools";
 import { CredentialShare } from "./";
 import { SertoUiProvider } from "../../../../context/SertoUiProvider";
 
-const vc = JSON.parse(EXAMPLE_VCS.DiplomaCredential);
+const vc = EXAMPLE_VCS.DiplomaCredential;
 
 storiesOf("Share", module)
   .add("CredentialShare", () => {

@@ -1,95 +1,138 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Box } from "rimble-ui";
+import styled from "styled-components";
+import { baseVcJsonSchema } from "vc-schema-tools";
 import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
 import { CreateSchema } from "./";
-import { HighlightedJson } from "../../../elements/HighlightedJson/HighlightedJson";
 import { WorkingSchema } from "../types";
 
 const schemaToUpdate = {
-  discoverable: true,
-  slug: "employment-credential",
-  name: "Employment Credential",
+  ...baseVcJsonSchema,
+  $id: "https://example.com/schemas/employment-credential/1.0/json-schema.json",
+  $schema: "http://json-schema.org/draft-07/schema#",
+  $metadata: {
+    slug: "employment-credential",
+    version: "1.0",
+    icon: "👔",
+    discoverable: false,
+    uris: {
+      jsonLdContext: "https://example.com/schemas/employment-credential/1.0/ld-context.json",
+      jsonSchema: "https://example.com/schemas/employment-credential/1.0/json-schema.json",
+    },
+  },
+  title: "Employment Credential",
   description: "Credential representing employment at an employer.",
-  version: "1.0",
-  icon: "👔",
-  properties: [
-    {
-      "@id": "id",
-      "@type": "@id",
-      "@dataType": "string",
-      "@format": "uri",
-      "@title": "Employee ID",
-      "@required": true,
-    },
-    {
-      "@id": "employeeName",
-      "@type": "http://schema.org/Text",
-      "@dataType": "string",
-      "@title": "Employee Name",
-      "@description": "",
-      "@required": true,
-    },
-    {
-      "@id": "jobTitle",
-      "@type": "http://schema.org/Text",
-      "@dataType": "string",
-      "@title": "Job Title",
-      "@description": "",
-      "@required": true,
-    },
-    {
-      "@id": "hireDate",
-      "@type": "http://schema.org/Date",
-      "@dataType": "string",
-      "@title": "Hire Date",
-      "@description": "",
-      "@format": "date",
-    },
-    {
-      "@id": "employer",
-      "@title": "Employer",
-      "@description": "",
-      "@context": {
-        employerId: {
-          "@id": "employerId",
-          "@type": "@id",
-          "@dataType": "string",
-          "@title": "Employer ID",
-          "@description": "",
-          "@format": "uri",
+  $linkedData: {
+    term: "EmploymentCredential",
+    "@id": "https://example.com/schemas/employment-credential/1.0/ld-context.json#EmploymentCredential",
+  },
+
+  properties: {
+    ...baseVcJsonSchema.properties,
+    credentialSubject: {
+      $linkedData: {
+        term: "Employment",
+        "@id": "Employment",
+      },
+      type: "object",
+      required: ["jobTitle", "employer", "employeeSubjectId"],
+      properties: {
+        employeeSubjectId: {
+          $linkedData: {
+            term: "employeeSubjectId",
+            "@id": "@id",
+          },
+          title: "Employee DID",
+          type: "string",
+          format: "uri",
         },
-        name: {
-          "@id": "name",
-          "@type": "http://schema.org/Text",
-          "@dataType": "string",
-          "@title": "Name",
-          "@description": "",
+        jobTitle: {
+          $linkedData: {
+            term: "jobTitle",
+            "@id": "http://schema.org/Text",
+          },
+          title: "Job Title",
+          description: "",
+          type: "string",
         },
-        website: {
-          "@id": "website",
-          "@type": "http://schema.org/URL",
-          "@dataType": "string",
-          "@title": "Website",
-          "@description": "",
-          "@format": "uri",
+        hireDate: {
+          $linkedData: {
+            term: "hireDate",
+            "@id": "http://schema.org/Date",
+          },
+          title: "Hire Date",
+          description: "",
+          type: "string",
+          format: "date",
+        },
+        employer: {
+          $linkedData: {
+            term: "employer",
+            "@id": "employer",
+          },
+          title: "Employer",
+          description: "",
+          type: "object",
+          required: ["employerId", "name"],
+          properties: {
+            employerId: {
+              $linkedData: {
+                term: "employerId",
+                "@id": "@id",
+              },
+              title: "Employer DID",
+              description: "",
+              type: "string",
+              format: "uri",
+            },
+            name: {
+              $linkedData: {
+                term: "name",
+                "@id": "http://schema.org/Text",
+              },
+              title: "Name",
+              description: "",
+              type: "string",
+            },
+            website: {
+              $linkedData: {
+                term: "website",
+                "@id": "http://schema.org/URL",
+              },
+              title: "Website",
+              description: "",
+              type: "string",
+              format: "uri",
+            },
+          },
         },
       },
     },
-  ],
+  },
 };
 
+const StyledCreateSchema = styled(CreateSchema)`
+  position: relative;
+
+  max-height: calc(100vh - 50px);
+
+  .right-pane {
+    pre,
+    .schema-formatted-preview {
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+  }
+
+  textarea {
+    box-sizing: inherit;
+  }
+`;
+
 const createSchemaStory = (schemaToUpdate?: WorkingSchema) => () => {
-  const [schema, setSchema] = React.useState({});
   return (
     <IdentityThemeProvider>
-      <CreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} onSchemaUpdate={setSchema} />
-      <Box mt={3}>
-        <Box mb={1}>
-          debug <code>schema</code> prop:
-        </Box>
-        <HighlightedJson json={schema} />
-      </Box>
+      <StyledCreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} />
     </IdentityThemeProvider>
   );
 };

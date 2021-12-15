@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { Box, Flash } from "rimble-ui";
 import { EXAMPLE_SCHEMAS } from "vc-schema-tools";
 import { SchemaUsage } from "./SchemaUsage";
-import { ldContextPlusToSchemaInput } from "./utils";
+import { jsonSchemaToSchemaInput } from "./utils";
 import { SchemaDataInput } from "./types";
 import { IdentityThemeProvider } from "../../../themes/IdentityTheme";
 
@@ -12,10 +12,10 @@ const DEFAULT_SCHEMA = "ContentPublishCredential";
 const SchemaUsageStory = () => {
   const [schemaKey, setSchemaKey] = React.useState<string>(DEFAULT_SCHEMA);
 
-  let ldContextPlus: SchemaDataInput | undefined;
+  let schemaData: SchemaDataInput | undefined;
   let error: string | undefined;
   try {
-    ldContextPlus = ldContextPlusToSchemaInput(JSON.parse(EXAMPLE_SCHEMAS[schemaKey]));
+    schemaData = jsonSchemaToSchemaInput(EXAMPLE_SCHEMAS[schemaKey]);
   } catch (err) {
     console.error("Failed to generate schema input from schema:", err);
     error = err.message || JSON.stringify(err);
@@ -34,7 +34,7 @@ const SchemaUsageStory = () => {
       </Box>
 
       <Box width={350} key={schemaKey} border={1}>
-        {ldContextPlus && <SchemaUsage schema={ldContextPlus} />}
+        {schemaData && <SchemaUsage schema={schemaData} />}
         {error && <Flash variant="danger">Error: {error}</Flash>}
       </Box>
     </IdentityThemeProvider>

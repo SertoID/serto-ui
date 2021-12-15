@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { Box, Flex, Flash } from "rimble-ui";
 import { EXAMPLE_SCHEMAS } from "vc-schema-tools";
 import { SchemaDataInput, SchemaDataResponse } from "../../Schemas";
-import { ldContextPlusToSchemaInput } from "../../Schemas/utils";
+import { jsonSchemaToSchemaInput } from "../../Schemas/utils";
 import { IssueVcForm } from "./IssueVcForm";
 import { HighlightedJson } from "../../../elements/HighlightedJson/HighlightedJson";
 import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
@@ -33,11 +33,11 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
   const [error, setError] = React.useState("");
   const [schemaKey, setSchemaKey] = React.useState<string>(DEFAULT_SCHEMA);
 
-  const ldContextPlus: SchemaDataInput | undefined = React.useMemo(() => {
+  const schemaData: SchemaDataInput | undefined = React.useMemo(() => {
     setError("");
     if (schemaKey) {
       try {
-        return ldContextPlusToSchemaInput(JSON.parse(EXAMPLE_SCHEMAS[schemaKey]));
+        return jsonSchemaToSchemaInput(EXAMPLE_SCHEMAS[schemaKey]);
       } catch (err) {
         console.error("Failed to generate schema input from schema:", err);
         setError(err.toString());
@@ -77,7 +77,7 @@ storiesOf("Credential", module).add("IssueVcForm", () => {
               {error && <Flash variant="danger">{error}</Flash>}
               <IssueVcForm
                 key={schemaKey}
-                schema={ldContextPlus as SchemaDataResponse}
+                schema={schemaData as SchemaDataResponse}
                 identifiers={IDENTIFIERS}
                 onComplete={() => {}}
                 onVcDataChange={setVcData}

@@ -1,162 +1,188 @@
-import mapValuesDeep from "deepdash/mapValuesDeep";
-import { convertToPascalCase } from "../../../utils";
-import { VcSchema, jsonLdContextTypeMap, LdContextPlus, LdContextPlusNode } from "vc-schema-tools";
-import {
-  WorkingSchema,
-  CompletedSchema,
-  SchemaMetadata,
-  SchemaDataInput,
-  SchemaDataResponse,
-  newSchemaAttribute,
-} from "./types";
-import { SertoUiContextInterface } from "../../../context/SertoUiContext";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-/** Adding `niceName` so that we can know what type to show in type selection dropdown. */
-type NamedLdContextPlusNode = Partial<LdContextPlusNode<SchemaMetadata>> & { niceName?: string };
+import slugify from "@sindresorhus/slugify";
+import {
+  VcSchema,
+  jsonLdSchemaTypeMap,
+  JsonSchema,
+  JsonSchemaNode,
+  baseVcJsonSchema,
+  generateLinkedData,
+  generateSchemaLdTypes,
+} from "vc-schema-tools";
+import { SchemaDataInput, SchemaDataResponse, WorkingSchema, SchemaMetadata, newSchemaAttribute } from "./types";
+import { SertoUiContextInterface } from "../../../context/SertoUiContext";
 
 export const NESTED_TYPE_KEY = "NESTED";
 
-export const typeOptions: { [key: string]: NamedLdContextPlusNode } = {};
+export const typeOptions: { [typeName: string]: JsonSchemaNode } = { ...jsonLdSchemaTypeMap } as any;
 typeOptions[NESTED_TYPE_KEY] = {
-  "@context": {
+  type: "object",
+  required: [],
+  properties: {
     "": {
       ...newSchemaAttribute,
     },
   },
-  niceName: "[nest attributes]",
 };
-Object.keys(jsonLdContextTypeMap).forEach((type) => {
-  if (type !== "@id" && type.indexOf("http://schema.org/") !== 0) {
-    return;
-  }
-  typeOptions[type] = {
-    "@format": jsonLdContextTypeMap[type].format,
-    "@dataType": jsonLdContextTypeMap[type].type,
-    "@type": type,
-    niceName: type === "@id" ? "DID" : type.replace("http://schema.org/", "").replace("URL", "URI"),
-  };
-});
 
-export function createSchemaInput(
-  schema: CompletedSchema,
-  buildSchemaUrl: SertoUiContextInterface["schemasService"]["buildSchemaUrl"],
-): SchemaDataInput {
-  const schemaInstance = new VcSchema(createLdContextPlusSchema(schema, buildSchemaUrl));
-  const schemaInput = { ...schema };
-  delete (schemaInput as any).properties;
-  return {
-    ...schemaInput,
-    ldContextPlus: schemaInstance.getLdContextPlusString(),
-    ldContext: schemaInstance.getJsonLdContextString(),
-    jsonSchema: schemaInstance.getJsonSchemaString(),
-  };
+export function isFullSchema(schema: WorkingSchema): boolean {
+  return !!(schema.$metadata && schema.properties?.credentialSubject);
 }
 
-export function createLdContextPlusSchema(
-  schema: CompletedSchema,
+/** Some imported/pasted schemas (like traceability ones) may only represent `credentialSubject`. This function creates a full JSON Schema document for VC from that: adding required VC properties, nesting schema properties under `credentialSubject`, adding metadata, $id, etc. */
+export function ensureFullSchema(
+  _schema: WorkingSchema,
   buildSchemaUrl: SertoUiContextInterface["schemasService"]["buildSchemaUrl"],
-): LdContextPlus<SchemaMetadata> {
-  const schemaTypeName = convertToPascalCase(schema.name);
+): JsonSchema<SchemaMetadata> {
+  if (_schema.$metadata && _schema.properties?.credentialSubject) {
+    return _schema as JsonSchema<SchemaMetadata>;
+  }
 
-  // Prefix each `@id` value with "schema-id:" to make it a valid JSON-LD Context identifier:
-  // @TODO/tobek In the edge case where a nested property has the same ID as another property elsewhere in the schema, the resulting `@id`s will be duplicates which would result in a technically incorrect JSON-LD Context.
-  const schemaProperties: { [key: string]: LdContextPlusNode<SchemaMetadata> } = {};
-  schema.properties.forEach((prop) => {
-    schemaProperties[prop["@id"]] = mapValuesDeep({ ...prop }, (value: any, key: string) => {
-      if (key === "@id") {
-        return `schema-id:${value}`;
-      } else if (typeof value === "object") {
-        return { ...value }; // new object reference to avoid changing deeper values in-place
-      } else {
-        return value;
-      }
-    });
-  });
+  const schema = generateLinkedData(_schema) as JsonSchema<SchemaMetadata>;
+
+  const name = schema.title || "";
+  const slug = schema.$metadata?.slug || slugify(name);
+  const version = schema.$metadata?.version || "1.0";
+
+  const jsonSchemaUrl = buildSchemaUrl(slug, "json-schema", version);
+  const jsonLdContextUrl = buildSchemaUrl(slug, "ld-context", version);
+
+  const { subjectLdType, credLdType } = generateSchemaLdTypes(schema);
 
   return {
-    "@context": {
-      "@metadata": {
-        slug: schema.slug,
-        version: schema.version,
-        icon: schema.icon,
-        discoverable: schema.discoverable,
-        uris: {
-          jsonLdContextPlus: buildSchemaUrl(schema.slug, "ld-context-plus", schema.version),
-          jsonLdContext: buildSchemaUrl(schema.slug, "ld-context", schema.version),
-          jsonSchema: buildSchemaUrl(schema.slug, "json-schema", schema.version),
-        },
+    $schema: "http://json-schema.org/draft-07/schema#",
+    $id: jsonSchemaUrl,
+    $linkedData: { term: credLdType, "@id": credLdType },
+    $metadata: {
+      slug,
+      version,
+      uris: {
+        jsonLdContext: jsonLdContextUrl,
+        jsonSchema: jsonSchemaUrl,
       },
-      "@title": schema.name,
-      "@description": schema.description,
-      w3ccred: "https://www.w3.org/2018/credentials#",
-      "schema-id": buildSchemaUrl(schema.slug, "ld-context", schema.version) + "#",
-      "@rootType": schemaTypeName,
-      [schemaTypeName]: {
-        "@id": "schema-id",
-        "@contains": "credentialSubject",
-      },
+      ...schema.$metadata,
+    },
+    title: name,
+    description: schema.description,
+
+    ...baseVcJsonSchema,
+
+    properties: {
+      ...baseVcJsonSchema.properties,
       credentialSubject: {
-        "@id": "w3ccred:credentialSubject",
-        "@required": true,
-        "@context": schemaProperties,
+        $linkedData: { term: subjectLdType, "@id": subjectLdType },
+        type: "object",
+        required: schema.required || [],
+        properties: schema.properties,
       },
     },
   };
 }
 
-/** Convert raw LdContextPlus into data format used by API and some components. */
-export function ldContextPlusToSchemaInput(ldContextPlus: LdContextPlus<SchemaMetadata>): SchemaDataInput {
-  // @TODO/tobek VcSchema constructor should check that input conforms to schema for ldContextPlus but doesn't do that yet - here are some ultra basic checks for now so code doesn't break.
-  if (!ldContextPlus["@context"]) {
-    throw Error('Missing property "@context"');
-  }
-  if (!ldContextPlus["@context"].credentialSubject) {
-    throw Error('Missing property "credentialSubject" in "@context"');
+/** Take a JSON Schema source, fill in any missing pieces, and wrap it in the metadata expected in the SchemaDataInput type. */
+export function jsonSchemaToSchemaInput(
+  schema: WorkingSchema,
+  buildSchemaUrl?: SertoUiContextInterface["schemasService"]["buildSchemaUrl"],
+): SchemaDataInput {
+  const schemaData = {
+    ...schema,
+    $metadata: {
+      slug: slugify(schema.title || ""),
+      uris: {} as SchemaMetadata["uris"],
+      ...schema.$metadata,
+    },
+  };
+
+  const metadata = schema.$metadata || ({} as SchemaMetadata);
+  let jsonSchemaUrl = metadata.uris?.jsonSchema;
+  let jsonLdContextUrl = metadata.uris?.jsonLdContext;
+  if (buildSchemaUrl) {
+    jsonSchemaUrl = jsonSchemaUrl || buildSchemaUrl(metadata.slug || "", "json-schema", metadata.version);
+    jsonLdContextUrl = jsonLdContextUrl || buildSchemaUrl(metadata.slug || "", "ld-context", metadata.version);
   }
 
-  const metadata = ldContextPlus["@context"]["@metadata"];
-  if (!metadata) {
-    throw Error('Missing property "@metadata" in "@context"');
+  if (jsonSchemaUrl) {
+    schemaData.$id = schemaData.$id || jsonSchemaUrl;
+    if (!schemaData.$metadata?.uris?.jsonSchema) {
+      schemaData.$metadata!.uris!.jsonSchema = jsonSchemaUrl;
+    }
+  }
+  if (jsonLdContextUrl) {
+    if (!schemaData.$metadata?.uris?.jsonLdContext) {
+      schemaData.$metadata!.uris!.jsonLdContext = jsonLdContextUrl;
+    }
   }
 
-  const schemaInstance = new VcSchema(ldContextPlus);
+  const schemaInstance = new VcSchema(schemaData as JsonSchema);
+
   return {
-    ...metadata,
-    name: ldContextPlus["@context"]["@title"] || ldContextPlus["@context"]["@rootType"],
-    description: ldContextPlus["@context"]["@description"],
-    ldContextPlus: schemaInstance.getLdContextPlusString(),
+    ...(schemaData.$metadata as SchemaMetadata),
+    name: schema.title || "",
+    description: schema.description,
     ldContext: schemaInstance.getJsonLdContextString(),
     jsonSchema: schemaInstance.getJsonSchemaString(),
+    // @TODO/tobek Deprecated and unused, but needed until API is updated to not require it
+    ldContextPlus: "",
   };
 }
 
-/* Convert API response into local format `WorkingSchema` for managing schema state during UI flow. */
-export function schemaResponseToWorkingSchema(schemaReponse: SchemaDataResponse): WorkingSchema {
-  let propertiesMap: { [key: string]: LdContextPlusNode<SchemaMetadata> };
-  try {
-    propertiesMap = JSON.parse(schemaReponse.ldContextPlus)["@context"].credentialSubject["@context"];
-  } catch (err) {
-    console.warn("Failed to parse JSON and identify credentialSubject properties from schema response:", schemaReponse);
-    propertiesMap = {};
+/** Used e.g. for taking an existing schema response from DB and using it to populate the schema creator/editor when editing a schema. */
+export function schemaResponseToWorkingSchema(schemaResponse: SchemaDataResponse): WorkingSchema {
+  const jsonSchema = JSON.parse(schemaResponse.jsonSchema);
+  if (!schemaResponse.ldContextPlus) {
+    // new version, everything is in JSON Schema
+    return jsonSchema;
   }
 
-  // Coming from the completed schema, all of the `@id` values will be namespaced according in JSON-LD context, e.g. a "name" property might have `@id` "schema-id:name". If we leave these intact, when the schema is built again we'll end up with "schema-id:schema-id:name". So deep rename these `@id`s according to their keys, which aren't namespaced:
-  const renamedIds = mapValuesDeep(
-    { ...propertiesMap },
-    (value: any, key: string) => {
-      if (typeof value === "object" && "@id" in value) {
-        return {
-          ...value,
-          "@id": key,
-        };
-      }
-      return value;
-    },
-    { callbackAfterIterate: true },
-  );
+  // old version, grab metadata from old LD Context Plus:
+  const ldContextPlus = JSON.parse(schemaResponse.ldContextPlus);
+  jsonSchema.$metadata = ldContextPlus["@context"]["@metadata"];
+  delete jsonSchema.$metadata.uris.jsonLdContextPlus;
 
-  return {
-    ...schemaReponse,
-    properties: Object.values(renamedIds),
-  };
+  const { subjectLdType, credLdType } = getLdTypesFromSchemaResponse(schemaResponse);
+  jsonSchema.$linkedData = { term: credLdType, "@id": credLdType };
+
+  if (jsonSchema.properties?.credentialSubject) {
+    jsonSchema.properties.credentialSubject = generateLinkedData(jsonSchema.properties?.credentialSubject);
+    jsonSchema.properties.credentialSubject.$linkedData = {
+      term: subjectLdType,
+      "@id": subjectLdType,
+    };
+  }
+
+  return jsonSchema;
+}
+
+export function getLdTypesFromSchemaResponse(
+  schemaResponse: SchemaDataInput,
+): { subjectLdType?: string; credLdType: string } {
+  const jsonSchema = JSON.parse(schemaResponse.jsonSchema);
+
+  const subjectLdType = jsonSchema.properties?.credentialSubject?.$linkedData?.term;
+
+  let credLdType = jsonSchema.$linkedData?.term;
+  if (!credLdType && schemaResponse.ldContextPlus) {
+    // old schema, we can get the type this way:
+    credLdType = JSON.parse(schemaResponse.ldContextPlus)["@context"]["@rootType"];
+  }
+
+  if (!credLdType) {
+    console.error("Invalid schema: Could not obtain LD types for schema", schemaResponse);
+    throw Error("Invalid schema: Could not obtain LD types for schema");
+  }
+
+  return { subjectLdType, credLdType };
+}
+
+export function getSchemaUris(
+  schema: SchemaDataInput | SchemaDataResponse,
+): { jsonSchema?: string; jsonLdContext?: string } {
+  if (schema.ipfsHash?.jsonSchema && schema.ipfsHash?.ldContext) {
+    return {
+      jsonSchema: "https://ipfs.infura.io/ipfs/" + schema.ipfsHash.jsonSchema,
+      jsonLdContext: "https://ipfs.infura.io/ipfs/" + schema.ipfsHash.ldContext,
+    };
+  }
+  return schema.uris || JSON.parse(schema.jsonSchema)?.$metadata?.uris;
 }

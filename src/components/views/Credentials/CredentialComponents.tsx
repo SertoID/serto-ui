@@ -38,10 +38,10 @@ export const CredentialFooter: React.FunctionComponent<CredentialFooterProps> = 
             <Box mr={2}>
               <CredentialShareButton vc={props.vc} />
             </Box>
-            <CredentialEmbed jwt={props.vc.proof.jwt} />
+            {props.vc.proof?.jwt && <CredentialEmbed jwt={props.vc.proof.jwt} />}
           </>
         )}
-        {props.vcUrl && (
+        {props.vcUrl && props.vc.proof?.jwt && (
           <>
             {props.renderContext !== RENDER_CONTEXT.VC_EMBED && <QRCodeExpand vcUrl={props.vcUrl} />}
             <CopyToClipboard

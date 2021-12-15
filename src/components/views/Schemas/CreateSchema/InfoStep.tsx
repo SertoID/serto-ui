@@ -42,41 +42,45 @@ export interface InfoStepProps {
 
 export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
   const { isUpdate, userOwnsSchema, isAuthenticated, initialSchemaState, schema, updateSchema } = props;
+  const $metadata = schema.$metadata || {};
   const [doValidation, setDoValidation] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [useDefaultSlug, setUseDefaultSlug] = React.useState(!schema.slug);
+  const [useDefaultSlug, setUseDefaultSlug] = React.useState(!$metadata.slug);
 
   /** Convert first latin character in name to bubble unicode char (🅐-🅩) as default icon. */
   const defaultIcon = React.useMemo(() => {
-    if (!schema.name) {
+    if (!schema.title) {
       return "";
     }
-    const firstCharMatch = schema.name.match(/[a-zA-Z]/);
+    const firstCharMatch = schema.title.match(/[a-zA-Z]/);
     if (!firstCharMatch?.[0]) {
       return "⓿";
     }
     const char = firstCharMatch[0].toLowerCase();
     return String.fromCodePoint(127302 + parseInt(char, 36));
-  }, [schema.name]);
+  }, [schema.title]);
 
   function goNext(e: Event) {
     e.preventDefault();
     setError("");
     // If *not* authenticated they won't be able to save changes anyway, so we can let them explore the editor without worrying about what values need updating.
     if (isAuthenticated) {
-      if (isUpdate && userOwnsSchema && schema.version === initialSchemaState?.version) {
+      if (isUpdate && userOwnsSchema && $metadata.version === initialSchemaState?.$metadata?.version) {
         setError("You must update the version number when updating a schema.");
         return;
       }
-      if (isUpdate && !userOwnsSchema && schema.slug === initialSchemaState?.slug) {
+      if (isUpdate && !userOwnsSchema && $metadata.slug === initialSchemaState?.$metadata?.slug) {
         setError("You must update the slug when forking a schema.");
         return;
       }
     }
-    if (schema.name && schema.slug && schema.version) {
+    if (schema.title && $metadata.slug && $metadata.version) {
       setDoValidation(false);
       updateSchema({
-        icon: schema.icon || defaultIcon,
+        $metadata: {
+          ...$metadata,
+          icon: $metadata.icon || defaultIcon,
+        },
       });
       props.onComplete();
     } else {
@@ -92,11 +96,14 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
           type="text"
           required={true}
           placeholder="Enter name"
-          value={schema.name || ""}
+          value={schema.title || ""}
           onChange={(event: any) =>
             updateSchema({
-              name: event.target.value,
-              slug: useDefaultSlug ? slugify(event.target.value) : schema.slug,
+              title: event.target.value,
+              $metadata: {
+                ...$metadata,
+                slug: useDefaultSlug ? slugify(event.target.value) : $metadata.slug,
+              },
             })
           }
         />
@@ -107,10 +114,18 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
           type="text"
           required={true}
           placeholder="Enter slug/ID"
-          value={schema.slug}
+          value={$metadata.slug}
           onChange={(event: any) => updateSchema({ slug: event.target.value })}
           onBlur={() => {
-            updateSchema({ slug: slugify(schema.slug) });
+            if ($metadata.slug) {
+              return;
+            }
+            updateSchema({
+              $metadata: {
+                ...$metadata,
+                slug: slugify($metadata.slug || ""),
+              },
+            });
             setUseDefaultSlug(false);
           }}
         />
@@ -121,8 +136,15 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             width="100%"
             type="text"
             required={true}
-            value={schema.version}
-            onChange={(event: any) => updateSchema({ version: event.target.value })}
+            value={$metadata.version}
+            onChange={(event: any) =>
+              updateSchema({
+                $metadata: {
+                  ...$metadata,
+                  version: event.target.value,
+                },
+              })
+            }
           />
         </SchemaField>
         <SchemaLabel>
@@ -142,8 +164,15 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
             width="100%"
             type="text"
             placeholder={defaultIcon}
-            value={schema.icon}
-            onChange={(event: any) => updateSchema({ icon: event.target.value })}
+            value={$metadata.icon}
+            onChange={(event: any) =>
+              updateSchema({
+                $metadata: {
+                  ...$metadata,
+                  icon: event.target.value,
+                },
+              })
+            }
           />
         </SchemaLabel>
       </Flex>
@@ -160,8 +189,15 @@ export const InfoStep: React.FunctionComponent<InfoStepProps> = (props) => {
         <Checkbox
           fontFamily={fonts.sansSerif}
           label="Searchable"
-          checked={schema.discoverable}
-          onChange={() => updateSchema({ discoverable: !schema.discoverable })}
+          checked={$metadata.discoverable}
+          onChange={() =>
+            updateSchema({
+              $metadata: {
+                ...$metadata,
+                discoverable: !$metadata.discoverable,
+              },
+            })
+          }
         />
         <Text mt={1} fontSize={1} fontFamily={fonts.sansSerif} color={colors.gray60}>
           If checked, this schema will be listed in the public schema registry. If unchecked, your schema will still be

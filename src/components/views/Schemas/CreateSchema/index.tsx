@@ -1,4 +1,5 @@
 import * as React from "react";
+import slugify from "@sindresorhus/slugify";
 import { Check, ArrowBack, KeyboardArrowDown } from "@rimble/icons";
 import { Flash, Link, Box, Button, Flex, Text } from "rimble-ui";
 import { mutate } from "swr";
@@ -6,8 +7,8 @@ import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import { useDebounce } from "use-debounce";
 import { links } from "../../../../config";
-import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema, SchemaDataResponse } from "../types";
-import { createSchemaInput, ldContextPlusToSchemaInput, schemaResponseToWorkingSchema } from "../utils";
+import { SchemaDataInput, CompletedSchema, baseWorkingSchema, WorkingSchema } from "../types";
+import { jsonSchemaToSchemaInput, isFullSchema, ensureFullSchema } from "../utils";
 import { AttributesStep } from "./AttributesStep";
 import { ConfirmStep } from "./ConfirmStep";
 import { InfoStep } from "./InfoStep";
@@ -17,6 +18,7 @@ import { SertoUiContext, SertoUiContextInterface } from "../../../../context/Ser
 import { SchemaDetail } from "../SchemaDetail";
 import { Popup, PopupGroup } from "../../../elements/Popup/Popup";
 import { PrismHighlightedCodeWrap } from "../../../elements/HighlightedJson/HighlightedJson";
+import { convertToPascalCase } from "../../../../utils/helpers";
 
 const STEPS = ["INFO", "ATTRIBUTES", "CONFIRM", "DONE"];
 
@@ -37,6 +39,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
   const [error, setError] = React.useState("");
   const [schema, setSchema] = React.useState<WorkingSchema>(baseWorkingSchema);
   const [debouncedSchema] = useDebounce(schema, 500);
+  const [builtSchema, setBuiltSchema] = React.useState<SchemaDataInput | undefined>();
   const [inputMode, setInputMode] = React.useState<"UI" | "JSON">("UI");
   const [inputJson, setInputJson] = React.useState("");
   const [debouncedInputSchemaJson] = useDebounce(inputJson, 500);
@@ -52,18 +55,29 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     }
   }, [initialSchemaState]);
 
-  const builtSchema: SchemaDataInput = React.useMemo(() => {
+  React.useEffect(() => {
+    if (!debouncedSchema?.$metadata?.slug && debouncedSchema?.title) {
+      setSchema((oldSchema) => ({
+        ...oldSchema,
+        $metadata: {
+          ...oldSchema.$metadata,
+          slug: slugify(debouncedSchema?.title || ""),
+        },
+      }));
+    }
+
     try {
-      return createSchemaInput(debouncedSchema as CompletedSchema, schemasService.buildSchemaUrl);
+      setInputJsonError("");
+      setBuiltSchema(jsonSchemaToSchemaInput(debouncedSchema as CompletedSchema, schemasService.buildSchemaUrl));
     } catch (err) {
-      console.warn("Failed to build schema. Schema:", debouncedSchema, "Error:", err);
-      return builtSchema;
+      console.error("Failed to build schema. Schema:", debouncedSchema, "Error:", err);
+      setInputJsonError("Failed to build schema from JSON: " + err.toString());
     }
   }, [debouncedSchema, schemasService.buildSchemaUrl]);
 
   React.useEffect(() => {
-    if (inputMode === "JSON") {
-      setInputJson(JSON.stringify(JSON.parse(builtSchema.ldContextPlus), null, 2));
+    if (inputMode === "JSON" && builtSchema) {
+      setInputJson(JSON.stringify(JSON.parse(builtSchema.jsonSchema), null, 2));
       setInputJsonError("");
     }
     // Hook relies on `builtSchema` but would be huge waste to run this hook every time that changes. We only need to run it when input mode changes so we can populate the JSON textarea with the current state of the schema. So:
@@ -75,27 +89,38 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
       return;
     }
     try {
-      setSchema(
-        schemaResponseToWorkingSchema(
-          ldContextPlusToSchemaInput(JSON.parse(debouncedInputSchemaJson)) as SchemaDataResponse,
-        ),
-      );
       setInputJsonError("");
+      const parsedSchema = JSON.parse(debouncedInputSchemaJson);
+      const fullSchema = ensureFullSchema(parsedSchema, schemasService.buildSchemaUrl);
+      if (!isFullSchema(parsedSchema)) {
+        // We've transformed the JSON that they put in the JSON editor, so let's update the JSON editor
+        setInputJson(JSON.stringify(fullSchema, null, 2));
+      }
+      setSchema(fullSchema);
     } catch (err) {
       setInputJsonError(err.toString());
       console.warn("Error creating schema from JSON", err);
     }
-  }, [debouncedInputSchemaJson]);
+  }, [debouncedInputSchemaJson, schemasService.buildSchemaUrl]);
 
   React.useEffect(() => {
     onSchemaUpdate?.(debouncedSchema);
   }, [debouncedSchema, onSchemaUpdate]);
 
   function updateSchema(updates: Partial<WorkingSchema>) {
-    setSchema({
+    const newSchema = {
       ...schema,
       ...updates,
-    });
+    };
+    if (updates.title) {
+      const subjectLdTerm = convertToPascalCase(updates.title);
+      const credLdTerm = subjectLdTerm + "Credential";
+      newSchema.$linkedData = { term: credLdTerm, "@id": credLdTerm };
+      if (newSchema.properties?.credentialSubject) {
+        newSchema.properties.credentialSubject.$linkedData = { term: subjectLdTerm, "@id": subjectLdTerm };
+      }
+    }
+    setSchema(newSchema);
   }
 
   function goBack() {
@@ -108,6 +133,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
     if (nextStep === "DONE") {
       setLoading(true);
       try {
+        if (!builtSchema) {
+          throw Error("Failed to build schema");
+        }
         await publishSchema();
         setCurrentStep(nextStep);
         onSchemaSaved?.(builtSchema);
@@ -123,6 +151,9 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   async function publishSchema() {
     onSchemaUpdate?.(schema);
+    if (!builtSchema) {
+      throw Error("Failed to build schema");
+    }
     if (isUpdate && userOwnsSchema) {
       await schemasService.updateSchema(builtSchema);
     } else {
@@ -162,7 +193,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
 
   return (
     <Flex className={className}>
-      <Box px={5} py={3} width={9} minWidth={9} maxHeight="100%" overflowY="auto">
+      <Box px={5} pt={3} pb={5} width={9} minWidth={9} maxHeight="100%" overflowY="auto">
         <Box pb={3} mb={4} borderBottom={1}>
           <Flex justifyContent="space-between">
             <Box>
@@ -210,23 +241,28 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
             <Flash variant="warning" mt={-2} mb={3}>
               <Text fontSize={0}>
                 Warning: This feature is for advanced users, and it is possible to create an unusable schema. Please
-                check the preview on the right to ensure that your schema is as intended. You may also view the{" "}
+                check the preview on the right to ensure that your schema is as intended. The expected format is JSON
+                Schema{" "}
                 <Link
-                  href="https://docs.google.com/document/d/1l41XsI1nTCxx3T6IpAV59UkBrMfRzC89TZRPYiDjOC4/edit?usp=sharing"
+                  href="https://github.com/w3c-ccg/traceability-vocab#ontology-structure"
                   target="_blank"
                   fontSize={0}
                 >
-                  JSON-LD Context Plus schema
-                </Link>{" "}
-                spec for more info, and view examples at the{" "}
+                  with embedded JSON-LD data
+                </Link>
+                . View examples at the{" "}
                 <Link href={links.SCHEMAS_PLAYGROUND} target="_blank" fontSize={0}>
                   Schema Playground
                 </Link>
-                .
+                , or start with the UI editor and then adjust as needed.
               </Text>
             </Flash>
             <PrismHighlightedCodeWrap
-              style={{ background: "white", borderColor: inputJsonError && colors.danger.base }}
+              style={{
+                background: "white",
+                border: "1px solid transparent",
+                borderColor: inputJsonError && colors.danger.base,
+              }}
             >
               <Editor
                 value={inputJson}
@@ -247,7 +283,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
               width="100%"
               disabled={inputJsonError}
               onClick={() => {
-                setCurrentStep("CONFIRM");
+                setCurrentStep("INFO");
                 setInputMode("UI");
               }}
             >
@@ -277,7 +313,7 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
               />
             ) : currentStep === "ATTRIBUTES" ? (
               <AttributesStep schema={schema} updateSchema={updateSchema} onComplete={goForward} />
-            ) : (
+            ) : builtSchema ? (
               <Box mt={4}>
                 <ConfirmStep
                   builtSchema={builtSchema}
@@ -289,6 +325,8 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
                   error={error}
                 />
               </Box>
+            ) : (
+              <></>
             )}
           </>
         )}
@@ -302,12 +340,14 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
         py={3}
         flexGrow="1"
       >
-        <SchemaDetail
-          schema={builtSchema}
-          primaryView={inputMode === "JSON" ? "Formatted View" : "JSON source"}
-          hideTools={true}
-          paneView={true}
-        />
+        {builtSchema && (
+          <SchemaDetail
+            schema={builtSchema}
+            primaryView={inputMode === "JSON" ? "Formatted View" : "JSON Schema"}
+            hideTools={true}
+            paneView={true}
+          />
+        )}
       </Box>
     </Flex>
   );
