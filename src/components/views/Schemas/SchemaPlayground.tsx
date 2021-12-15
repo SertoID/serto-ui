@@ -119,11 +119,11 @@ export const SchemaPlayground: React.FunctionComponent = () => {
                 <Text fontSize={1} style={{ wordBreak: "break-word", float: "left", display: "inline-block" }}>
                   {inputVcValidityMessage}
                 </Text>
-                <Tooltip placement="top" message="@context output below left will be added to the VC sent to the tool">
+                <Tooltip placement="top" message="@context output below will be added to the VC sent to the tool">
                   <Text fontSize={1} style={{ float: "right", display: "inline-block" }}>
                     Open in{" "}
-                    <Button.Outline size="small" onClick={() => vcSchema?.openGoogleJsonLdValidatorPage(inputVc)}>
-                      Google JSON-LD Tool
+                    <Button.Outline size="small" onClick={() => vcSchema?.openJsonLdChecker(inputVc)}>
+                      JSON-LD Checker
                     </Button.Outline>
                     <Button.Outline size="small" ml={2} onClick={() => vcSchema?.openJsonLdPlaygroundPage(inputVc)}>
                       JSON-LD Playground

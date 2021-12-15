@@ -1,6 +1,6 @@
 import { baseVcJsonSchema, DefaultSchemaMetadata, JsonSchema, JsonSchemaNode } from "vc-schema-tools";
 
-/** Metadata fields specific to our use-case (i.e. not part of the LdContextPlus spec) intended to be passed in to the LdContextPlus generic types where it will be stored in the "@metadata" object. */
+/** Metadata fields specific to our use-case, intended to be stored in the `$metadata` object in a JSON Schema. */
 export interface SchemaMetadata extends DefaultSchemaMetadata {
   version: string;
   slug: string;
@@ -38,6 +38,10 @@ export interface SchemaDataResponse extends SchemaDataInput {
     picture: string;
     /** JWT subject */
     identifier: string;
+  };
+  ipfsHash?: {
+    jsonSchema?: string;
+    ldContext?: string;
   };
 }
 
@@ -99,7 +103,6 @@ export const baseWorkingSchema: WorkingSchema = {
   properties: {
     ...baseVcJsonSchema.properties,
     credentialSubject: {
-      $linkedData: { term: "credentialSubject", "@id": "https://www.w3.org/2018/credentials#credentialSubject" },
       type: "object",
       required: [],
       properties: {

@@ -13,32 +13,36 @@ import { IssueVcSuccess } from "./IssueVcSuccess";
 import { Credential } from "../Credential";
 import { H4 } from "../../../layouts/LayoutComponents";
 import { colors } from "../../../../themes";
+import { getLdTypesFromSchemaResponse, getSchemaUris } from "../../Schemas/utils";
 
 const STEPS = ["FORM", "REVIEW", "ISSUED"];
 
 function buildCredential(
-  schemaInstance: VcSchema,
+  schema: SchemaDataInput,
   initialCred: Partial<VC>,
   issuer: string,
   vcData: { [key: string]: any },
 ): Partial<VC> {
-  const credType = schemaInstance.jsonSchema.$linkedData?.term;
+  const { subjectLdType, credLdType } = getLdTypesFromSchemaResponse(schema);
+  const uris = getSchemaUris(schema);
 
-  let ldContext: string | any = schemaInstance.jsonSchema.$metadata?.uris?.jsonLdContext;
+  let ldContext = uris.jsonLdContext;
   if (!ldContext) {
     console.warn("Could not find JSON-LD context URL - embedding entire context in VC");
-    ldContext = schemaInstance.jsonLdContext?.["@context"];
+    ldContext = JSON.parse(schema.ldContext || "{}")?.["@context"];
   }
 
-  const jsonSchemaUrl = schemaInstance.jsonSchema.$metadata?.uris?.jsonSchema;
+  const jsonSchemaUrl = uris.jsonSchema;
   if (!jsonSchemaUrl) {
     console.warn("Could not find JSON Schema URL - excluding `credentialSchema` property from VC");
   }
 
   return {
     ...initialCred,
-    "@context": ["https://www.w3.org/2018/credentials/v1", ldContext],
-    type: credType ? [...(initialCred.type || []), credType] : initialCred.type,
+    "@context": ldContext
+      ? ["https://www.w3.org/2018/credentials/v1", ldContext]
+      : "https://www.w3.org/2018/credentials/v1",
+    type: credLdType ? [...(initialCred.type || []), credLdType] : initialCred.type,
     issuer: {
       id: issuer,
     },
@@ -48,7 +52,10 @@ function buildCredential(
           type: "JsonSchemaValidator2018",
         }
       : undefined,
-    credentialSubject: vcData,
+    credentialSubject: {
+      ...(subjectLdType ? { type: subjectLdType } : {}),
+      ...vcData,
+    },
   };
 }
 
@@ -139,7 +146,7 @@ export const IssueVcForm: React.FunctionComponent<IssueVcFormProps> = (props) =>
           setError("Could not initialize schema instance");
           return;
         }
-        credential = buildCredential(schemaInstance, initialCred, issuer, vcData);
+        credential = buildCredential(schema, initialCred, issuer, vcData);
       } else {
         credential = JSON.parse(rawJsonVc);
       }

@@ -103,11 +103,13 @@ export const SchemaDetail: React.FunctionComponent<SchemaDetailProps> = (props) 
                       {userOwnsSchema && " (you)"}
                     </Text>
                   )}
-                  <UserLink href={`https://github.com/${schema.creator.nickName}`} target="_blank">
-                    <GitHub style={{ width: 16, height: "auto" }} />
-                    {schema.creator.nickName}
-                    <OpenInNew size="16px" />
-                  </UserLink>
+                  {schema.creator.identifier.includes("github") && (
+                    <UserLink href={`https://github.com/${schema.creator.nickName}`} target="_blank">
+                      <GitHub style={{ width: 16, height: "auto" }} />
+                      {schema.creator.nickName}
+                      <OpenInNew size="16px" />
+                    </UserLink>
+                  )}
                 </>
               ) : (
                 <i>Author details coming soon</i>

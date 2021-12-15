@@ -27,6 +27,7 @@ const IconButton = styled(Button.Text)`
 
 export interface SchemaAttributeProps {
   attr: Partial<JsonSchemaNode>;
+  attrName?: string;
   /** For the credential subject attribute we only want to display the nested attributes. */
   isCredSubject?: boolean;
   parentRequired?: string[];
@@ -37,7 +38,16 @@ export interface SchemaAttributeProps {
 }
 
 export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (props) => {
-  const { attr, isCredSubject, parentRequired, readOnly, setParentRequired, updateAttribute, removeAttribute } = props;
+  const {
+    attr,
+    attrName,
+    isCredSubject,
+    parentRequired,
+    readOnly,
+    setParentRequired,
+    updateAttribute,
+    removeAttribute,
+  } = props;
 
   function updateAttrProperty(attrProperty: keyof JsonSchemaNode, value: any) {
     const updatedProperty = { ...attr, [attrProperty]: value };
@@ -170,10 +180,11 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
   function renderNestedAttributes(): JSX.Element {
     return (
       <>
-        {Object.entries(attr.properties || {}).map(([key, node]) => {
+        {Object.entries(attr.properties || {}).map(([key, node], i) => {
           return (
             <SchemaAttribute
-              key={Object.keys(attr.properties!).indexOf(key)}
+              key={i}
+              attrName={key}
               attr={node}
               updateAttribute={(attr) => updateNestedAttribute(key, attr)}
               removeAttribute={() => removeNestedAttribute(key)}
@@ -189,6 +200,8 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
   if (isCredSubject) {
     return renderNestedAttributes();
   }
+
+  const currentTypeValue = attr.type === "object" ? NESTED_TYPE_KEY : nodeToTypeName(attr);
 
   return (
     <AttributeBox
@@ -206,21 +219,35 @@ export const SchemaAttribute: React.FunctionComponent<SchemaAttributeProps> = (p
           required={true}
           placeholder="Attribute Name"
           mr={2}
-          value={attr.title || ""}
+          value={attr.title || attr.$linkedData?.term || attrName || ""}
           onChange={(event: any) => updateAttrProperty("title", event.target.value)}
           disabled={readOnly}
           style={{ borderColor: colors.lightGray }}
         />
-        <DropDown
-          onChange={(value) => updateType(value)}
-          defaultSelectedValue={attr.type === "object" ? NESTED_TYPE_KEY : nodeToTypeName(attr)}
-          disabled={readOnly}
-          options={Object.keys(typeOptions).map((typeName) => ({
-            name: typeName === NESTED_TYPE_KEY ? "[nested properties]" : typeName,
-            value: typeName,
-          }))}
-          style={{ borderColor: colors.lightGray }}
-        />
+
+        {currentTypeValue && currentTypeValue in typeOptions ? (
+          <DropDown
+            onChange={(value) => updateType(value)}
+            defaultSelectedValue={currentTypeValue}
+            disabled={readOnly}
+            options={Object.keys(typeOptions).map((typeName) => ({
+              name: typeName === NESTED_TYPE_KEY ? "[nested properties]" : typeName,
+              value: typeName,
+            }))}
+            style={{ borderColor: colors.lightGray }}
+          />
+        ) : (
+          <Box
+            width="100%"
+            maxWidth="50%"
+            pt={1}
+            px={2}
+            style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+            title={currentTypeValue}
+          >
+            {currentTypeValue}
+          </Box>
+        )}
         {/* @TODO/tobek Add "custom" option that opens fields to manually enter type details. */}
       </Flex>
       {!readOnly && (

@@ -1,5 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
+import styled from "styled-components";
 import { baseVcJsonSchema } from "vc-schema-tools";
 import { IdentityThemeProvider } from "../../../../themes/IdentityTheme";
 import { CreateSchema } from "./";
@@ -23,15 +24,15 @@ const schemaToUpdate = {
   description: "Credential representing employment at an employer.",
   $linkedData: {
     term: "EmploymentCredential",
-    "@id": "https://example.com/schemas/employment-credential/1.0/ld-context.json#",
+    "@id": "https://example.com/schemas/employment-credential/1.0/ld-context.json#EmploymentCredential",
   },
 
   properties: {
     ...baseVcJsonSchema.properties,
     credentialSubject: {
       $linkedData: {
-        term: "credentialSubject",
-        "@id": "https://www.w3.org/2018/credentials#credentialSubject",
+        term: "Employment",
+        "@id": "Employment",
       },
       type: "object",
       required: ["jobTitle", "employer", "employeeSubjectId"],
@@ -110,10 +111,28 @@ const schemaToUpdate = {
   },
 };
 
+const StyledCreateSchema = styled(CreateSchema)`
+  position: relative;
+
+  max-height: calc(100vh - 50px);
+
+  .right-pane {
+    pre,
+    .schema-formatted-preview {
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+  }
+
+  textarea {
+    box-sizing: inherit;
+  }
+`;
+
 const createSchemaStory = (schemaToUpdate?: WorkingSchema) => () => {
   return (
     <IdentityThemeProvider>
-      <CreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} />
+      <StyledCreateSchema isUpdate={!!schemaToUpdate} initialSchemaState={schemaToUpdate} />
     </IdentityThemeProvider>
   );
 };

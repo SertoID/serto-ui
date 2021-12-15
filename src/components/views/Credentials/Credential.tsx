@@ -57,14 +57,18 @@ export const Credential: React.FunctionComponent<CredentialProps> = (props) => {
           <Box borderBottom={2} mb={3} pb={1} pt={2} px={3}>
             <Table border={0} boxShadow={0} mb={2} width="100%" style={{ tableLayout: "fixed" }}>
               <tbody>
-                {Object.entries(vc.credentialSubject).map(([key, value]) => (
-                  <CredentialProperty
-                    key={key}
-                    keyName={key}
-                    value={value}
-                    schema={vcSchema?.parsedJsonSchema.properties?.credentialSubject?.properties?.[key]}
-                  />
-                ))}
+                {Object.entries(vc.credentialSubject).map(
+                  ([key, value]) =>
+                    // "type" is a reserved keyword in JSON-LD, and `credentialSubject.type` is just used to define what semantic type of linked data the VC subject is, and we present that info elsewhere as the schema, so would be redundant to list it. Some issuers include `credentialSubject.type` in every single VC.
+                    key !== "type" && (
+                      <CredentialProperty
+                        key={key}
+                        keyName={key}
+                        value={value}
+                        schema={vcSchema?.parsedJsonSchema.properties?.credentialSubject?.properties?.[key]}
+                      />
+                    ),
+                )}
               </tbody>
             </Table>
           </Box>
