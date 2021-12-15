@@ -15332,10 +15332,10 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vc-schema-tools@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/vc-schema-tools/-/vc-schema-tools-0.3.3.tgz#cb105ffbddbed0f1c86410dae43d38471ec154b3"
-  integrity sha512-sUtS+83s9yK9GRDaSkLocU4B5qMZ4dQLB1CbNriP8wiFTx6tEumG9qDuMUUpdRWQrPriCIz6MncmnobbR45Usg==
+vc-schema-tools@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/vc-schema-tools/-/vc-schema-tools-0.3.4.tgz#c5d765392b03ac793729b581c4fa36e13bfa0962"
+  integrity sha512-+NwjCtl08HJDr6HfP0vqET1mCvWo6OBGu8m3ZMaKzKhUWrUEagZ0uDDOdpKkIqH/ikXz/krqhWpBO8owy5E5AQ==
   dependencies:
     "@transmute/jsonld-schema" "^0.7.0-unstable.28"
     ajv "^8.7.1"
