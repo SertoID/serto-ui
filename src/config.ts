@@ -55,6 +55,7 @@ if (ENVIRONMENT !== "development") {
 }
 
 export const links = {
+  CONTACT: "https://www.serto.id/about#contact-section",
   SCHEMAS_PLAYGROUND: `${config.SCHEMAS_UI_URL}/playground`,
   CREATE_SCHEMA_PATH: "/schemas/",
 };

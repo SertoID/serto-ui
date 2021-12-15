@@ -39,7 +39,9 @@ function buildCredential(
 
   return {
     ...initialCred,
-    "@context": ["https://www.w3.org/2018/credentials/v1", ldContext],
+    "@context": ldContext
+      ? ["https://www.w3.org/2018/credentials/v1", ldContext]
+      : "https://www.w3.org/2018/credentials/v1",
     type: credLdType ? [...(initialCred.type || []), credLdType] : initialCred.type,
     issuer: {
       id: issuer,
