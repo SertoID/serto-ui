@@ -174,3 +174,15 @@ export function getLdTypesFromSchemaResponse(
 
   return { subjectLdType, credLdType };
 }
+
+export function getSchemaUris(
+  schema: SchemaDataInput | SchemaDataResponse,
+): { jsonSchema?: string; jsonLdContext?: string } {
+  if (schema.ipfsHash?.jsonSchema && schema.ipfsHash?.ldContext) {
+    return {
+      jsonSchema: "https://ipfs.infura.io/ipfs/" + schema.ipfsHash.jsonSchema,
+      jsonLdContext: "https://ipfs.infura.io/ipfs/" + schema.ipfsHash.ldContext,
+    };
+  }
+  return schema.uris || JSON.parse(schema.jsonSchema)?.$metadata?.uris;
+}

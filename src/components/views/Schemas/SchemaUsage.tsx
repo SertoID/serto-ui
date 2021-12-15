@@ -10,7 +10,8 @@ import { HighlightedJson } from "../../elements/HighlightedJson/HighlightedJson"
 import { Tabs } from "../../layouts/Tabs/Tabs";
 import { ModalContent, ModalWithX } from "../../elements/Modals";
 import { PopupGroup } from "../../elements/Popup/Popup";
-import { getLdTypesFromSchemaResponse } from "./utils";
+import { getLdTypesFromSchemaResponse, getSchemaUris } from "./utils";
+import { links } from "../../../config";
 
 const StyledTabs = styled(Tabs)`
   li:first-child {
@@ -33,10 +34,9 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
   const [urlTab, setUrlTab] = useState("jsonLd");
   const [issueTab, setIssueTab] = useState("sertoAgent");
   const [infoModalOpen, setInfoModalOpen] = useState(false);
-  const [privateBetaModalOpen, setPrivateBetaModalOpen] = useState(false);
   const [exampleVcModalOpen, setExampleVcModalOpen] = useState(false);
 
-  const uris = schema.uris || JSON.parse(schema.jsonSchema)?.$metadata?.uris;
+  const uris = getSchemaUris(schema);
 
   const { subjectLdType, credLdType } = getLdTypesFromSchemaResponse(schema);
   // @TODO/tobek Need a more elegant way to do this, probably VcSchema library should have a utility that creates an example VC that actually has all the fields filled in based on schema.
@@ -135,7 +135,7 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
                   <Text fontSize={0} my={2}>
                     Use Serto Agent, our user-friendly admin tool, to issue VCs.
                   </Text>
-                  <Button.Outline size="small" width="100%" onClick={() => setPrivateBetaModalOpen(true)}>
+                  <Button.Outline as="a" size="small" width="100%" href={links.SUITE} target="_blank">
                     <Send size="15px" mr={2} />
                     Issue VC with Serto Agent
                   </Button.Outline>
@@ -201,19 +201,6 @@ export const SchemaUsage: React.FunctionComponent<SchemaUsageProps> = (props) =>
             .
           </Text>
           <Text my={3}></Text>
-        </ModalContent>
-      </ModalWithX>
-
-      <ModalWithX isOpen={privateBetaModalOpen} close={() => setPrivateBetaModalOpen(false)} width={9}>
-        <ModalContent onClick={(e: Event) => e.stopPropagation()}>
-          <Text my={3}>
-            {/*@TODO/tobek Update with link to Serto Agent when launched*/}
-            Serto Agent is still in private beta. Please{" "}
-            <StyledLink href="https://www.serto.id/contact" target="_blank">
-              get in touch
-            </StyledLink>{" "}
-            if you would like to try it out!
-          </Text>
         </ModalContent>
       </ModalWithX>
 
