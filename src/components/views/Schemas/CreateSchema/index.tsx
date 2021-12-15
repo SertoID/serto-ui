@@ -241,19 +241,20 @@ export const CreateSchema: React.FunctionComponent<CreateSchemaProps> = (props) 
             <Flash variant="warning" mt={-2} mb={3}>
               <Text fontSize={0}>
                 Warning: This feature is for advanced users, and it is possible to create an unusable schema. Please
-                check the preview on the right to ensure that your schema is as intended. You may also view the{" "}
+                check the preview on the right to ensure that your schema is as intended. The expected format is JSON
+                Schema{" "}
                 <Link
-                  href="https://docs.google.com/document/d/1l41XsI1nTCxx3T6IpAV59UkBrMfRzC89TZRPYiDjOC4/edit?usp=sharing"
+                  href="https://github.com/w3c-ccg/traceability-vocab#ontology-structure"
                   target="_blank"
                   fontSize={0}
                 >
-                  JSON-LD Context Plus schema
-                </Link>{" "}
-                spec for more info, and view examples at the{" "}
+                  with embedded JSON-LD data
+                </Link>
+                . View examples at the{" "}
                 <Link href={links.SCHEMAS_PLAYGROUND} target="_blank" fontSize={0}>
                   Schema Playground
                 </Link>
-                .
+                , or start with the UI editor and then adjust as needed.
               </Text>
             </Flash>
             <PrismHighlightedCodeWrap

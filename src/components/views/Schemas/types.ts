@@ -1,6 +1,6 @@
 import { baseVcJsonSchema, DefaultSchemaMetadata, JsonSchema, JsonSchemaNode } from "vc-schema-tools";
 
-/** Metadata fields specific to our use-case (i.e. not part of the LdContextPlus spec) intended to be passed in to the LdContextPlus generic types where it will be stored in the "@metadata" object. */
+/** Metadata fields specific to our use-case, intended to be stored in the `$metadata` object in a JSON Schema. */
 export interface SchemaMetadata extends DefaultSchemaMetadata {
   version: string;
   slug: string;
